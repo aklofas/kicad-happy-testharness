@@ -77,12 +77,11 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "switches_on_matrix": 29
-        },
+        "field": "switches_on_matrix",
+        "pattern": "^29$",
         "detector_filter": "detect_key_matrices"
       },
-      "migration_note": "Path migrated from: signal_analysis.key_matrices",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"switches_on_matrix\": 29}, \"detector_filter\": \"detect_key_matrices\"})",
       "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous; switches_on_matrix now 29 (was 33)"
     }
   ]

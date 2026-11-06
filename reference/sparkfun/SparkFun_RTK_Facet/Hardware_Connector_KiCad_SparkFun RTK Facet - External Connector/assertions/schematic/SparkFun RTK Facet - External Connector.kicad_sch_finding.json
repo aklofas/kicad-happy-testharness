@@ -63,15 +63,14 @@
       "description": "INCORRECT: The design_observations reports USB_DM has has_esd_protection=true but USB_DP has has_esd_protection=false. D1 (DT1042-04SO) is a 4-data-line ESD IC that explicitly connects to both USB_DM (pin 4) and USB_DP (pin 6), as confirmed by the protection_devices entry which lists protected_nets: [USB_DM, USB_DP, ...]. The differential_pairs analysis also reports has_esd=false for the USB pair even though D1 appears in shared_ics. Both USB_DP and the USB differential pair should report ESD protection as true.",
       "created_from": "FND-00001522",
       "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "ref": "D1",
-          "type": "esd_ic"
-        },
-        "detector_filter": "detect_protection_devices"
+        "path": "design_analysis.differential_pairs",
+        "op": "field_equals",
+        "match_field": "positive",
+        "match_value": "USB_DP",
+        "assert_field": "has_esd",
+        "assert_value": true
       },
-      "migration_note": "Path migrated from: signal_analysis.protection_devices",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"D1\", \"type\": \"esd_ic\"}, \"detector_filter\": \"detect_protection_devices\"})",
       "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous; USB_DP has_esd_protection now true, diff pair has_esd true"
     },
     {

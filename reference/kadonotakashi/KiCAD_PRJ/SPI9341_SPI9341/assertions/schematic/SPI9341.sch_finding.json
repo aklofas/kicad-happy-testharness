@@ -23,10 +23,12 @@
       "created_from": "FND-00001693",
       "check": {
         "path": "design_analysis.bus_analysis.spi",
-        "value": 1,
-        "op": "min_count"
+        "op": "not_contains_match",
+        "field": "signals.SCK.net",
+        "pattern": "^\\+3\\.3V$"
       },
-      "incorrect_review": "graduate (TH-105, 2026-11-06): SCK now on __unnamed_13 (U? SCK + J? pin 7), not +3.3V; power-net SCK false positive gone"
+      "incorrect_review": "graduate (TH-105, 2026-11-06): SCK now on __unnamed_13 (U? SCK + J? pin 7), not +3.3V; power-net SCK false positive gone",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"design_analysis.bus_analysis.spi\", \"value\": 1, \"op\": \"min_count\"})"
     }
   ]
 }

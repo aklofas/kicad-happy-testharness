@@ -71,13 +71,11 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U1",
-          "topology": "switching"
-        },
+        "field": "output_rail",
+        "pattern": "^5V$",
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U1\", \"topology\": \"switching\"}, \"detector_filter\": \"detect_power_regulators\"})",
       "incorrect_review": "graduate (TH-105, 2026-11-06): AP3012 (U5) now output_rail 5V, switching; old check vacuous (dict value, wrong ref U1), suggested form passes"
     },
     {

@@ -57,13 +57,11 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U1",
-          "topology": "charge_pump"
-        },
+        "field": "topology",
+        "pattern": "^charge_pump$",
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U1\", \"topology\": \"charge_pump\"}, \"detector_filter\": \"detect_power_regulators\"})",
       "incorrect_review": "graduate (TH-105, 2026-11-06): U1 AP3602 now topology charge_pump; old check is vacuous (dict value ignored), suggested field/pattern form passes"
     },
     {

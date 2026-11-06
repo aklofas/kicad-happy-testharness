@@ -25,13 +25,12 @@
       "description": "INCORRECT: The net '/0187334c-67e7-4c37-9e56-a2c4a9ea8c19/SCLK' is the SPI clock signal connecting U1 (STM32F072) to U3 (ADC128S102). The bus_analysis.spi section correctly identifies this as a SPI SCK signal. However, in the net_classification cross-domain signals section, this same net is categorized as 'i2c' rather than 'spi'. The net name contains 'SCLK' which is SPI terminology (I2C uses SCL), and the SPI bus detection itself correctly identifies it \u2014 the mismatch in net_classification is an inconsistency.",
       "created_from": "FND-00000419",
       "check": {
-        "path": "design_analysis.net_classification",
-        "op": "not_contains_match",
-        "value": {
-          "/0187334c-67e7-4c37-9e56-a2c4a9ea8c19/SCLK": "i2c"
-        }
+        "path": "design_analysis.net_classification.SCKL",
+        "op": "equals",
+        "value": "clock"
       },
-      "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous (dict). ADC SCLK hier label now merges into root net SCKL, classified clock not i2c"
+      "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous (dict). ADC SCLK hier label now merges into root net SCKL, classified clock not i2c",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"design_analysis.net_classification\", \"op\": \"not_contains_match\", \"value\": {\"/0187334c-67e7-4c37-9e56-a2c4a9ea8c19/SCLK\": \"i2c\"}})"
     },
     {
       "id": "FND-00000419-AST-03",

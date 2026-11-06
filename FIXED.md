@@ -78,6 +78,7 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
   - unclear 47: made aspirational;
   - delete 19: no correct value is expressible.
   - Seven earlier product-ruled re-anchors got the same review record.
+  - 15 graduates whose check passed vacuously took the triage's corrected check (old check in `migration_note`); all 15 pass today. The general malformed-check class is TH-109.
   - Load-time guard: `checks.assertion_errors` rejects a non-aspirational lock whose description starts INCORRECT without `incorrect_review`. `run_checks` reports it as a load error (exit 1) and still runs the set's other assertions, and `findings.py promote` refuses to write one.
 - **Verification:** full-corpus `run_checks --json` vs product_4c2a0d6 (`results/v302_th105/checks_after.json`): 2,717,763 passed / 0 failed / 0 errors / 0 load errors; every rewrite fails as aspirational and every graduation passes live. `tests/test_run_checks.py::test_incorrect_lock_needs_aspirational_or_a_review`.
 

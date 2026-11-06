@@ -9,11 +9,13 @@
       "description": "INCORRECT: The placement_analysis reports 50 courtyard overlaps total, 40 of which involve U1 (ESP32-S2-WROVER). The ESP32-S2-WROVER is an 18x31mm RF module placed on B.Cu, and many small discrete SMD components are placed in the area beneath it on the same layer\u2014this is an intentionally dense layout where the discrete components are on the B.Cu layer under the module footprint area. The large module courtyard causes mass overlap reporting. The 10 non-U1 overlaps (SW1/J23, J22/J23, several J20 overlaps) may be more meaningful real DFM issues.",
       "created_from": "FND-00002094",
       "check": {
-        "path": "placement_analysis.overlap_count",
+        "path": "findings",
         "op": "less_than",
-        "value": 15
+        "value": 15,
+        "detector_filter": "analyze_placement"
       },
-      "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous (placement_analysis gone, null->0); now 1 PM-001 courtyard overlap (RF-module exclusion), was 50; new_check = live path"
+      "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous (placement_analysis gone, null->0); now 1 PM-001 courtyard overlap (RF-module exclusion), was 50; new_check = live path",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"placement_analysis.overlap_count\", \"op\": \"less_than\", \"value\": 15})"
     },
     {
       "id": "FND-00002094-AST-02",

@@ -30,12 +30,12 @@
       "created_from": "FND-00000170",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
-        "field": "ref",
+        "op": "contains_match",
+        "field": "value",
         "pattern": "^L7805$",
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"ref\", \"pattern\": \"^L7805$\", \"detector_filter\": \"detect_power_regulators\"})",
       "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous (ref is U1, not L7805); U1 L7805 now detected as LDO +12V->+5V"
     },
     {

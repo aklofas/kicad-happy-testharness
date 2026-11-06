@@ -20,16 +20,14 @@
       "created_from": "FND-00001591",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "rail": "+5V",
-          "total_capacitance_uF": {
-            "less_than": 100
-          }
-        },
+        "op": "field_equals",
+        "match_field": "rail",
+        "match_value": "+5V",
+        "assert_field": "total_capacitance_uF",
+        "assert_value": 10.2,
         "detector_filter": "detect_decoupling"
       },
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"+5V\", \"total_capacitance_uF\": {\"less_than\": 100}}, \"detector_filter\": \"detect_decoupling\"})",
       "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous; +5V total now 10.2 uF, C1 1e-7 F, C3 1e-5 F - unicode mu fixed"
     },
     {

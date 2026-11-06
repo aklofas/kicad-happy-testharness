@@ -82,17 +82,14 @@
       "created_from": "FND-00001485",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "ref": "D5",
-          "protected_nets": [
-            "D+",
-            "D-"
-          ]
-        },
-        "detector_filter": "detect_protection_devices"
+        "op": "field_equals",
+        "match_field": "net",
+        "match_value": "D-",
+        "assert_field": "has_esd_protection",
+        "assert_value": true,
+        "detector_filter": "detect_design_observations"
       },
-      "migration_note": "Path migrated from: signal_analysis.protection_devices",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"D5\", \"protected_nets\": [\"D+\", \"D-\"]}, \"detector_filter\": \"detect_protection_devices\"})",
       "incorrect_review": "graduate (TH-105, 2026-11-06): lock malformed (vacuous); bug fixed: D- observation has_esd_protection=true, D5 protects D+/D-"
     },
     {

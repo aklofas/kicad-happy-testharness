@@ -38,10 +38,12 @@
       "created_from": "FND-00001405",
       "check": {
         "path": "statistics.power_rails",
-        "value": "3V3",
-        "op": "contains_match"
+        "op": "contains_match",
+        "field": "name",
+        "pattern": "^3V3$"
       },
-      "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous; power_rails now includes 3V3"
+      "incorrect_review": "graduate (TH-105, 2026-11-06): as written vacuous; power_rails now includes 3V3",
+      "migration_note": "TH-105: graduated with a corrected check (the old one passed vacuously: {\"path\": \"statistics.power_rails\", \"value\": \"3V3\", \"op\": \"contains_match\"})"
     },
     {
       "id": "FND-00001405-AST-04",
