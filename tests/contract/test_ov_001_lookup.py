@@ -26,6 +26,7 @@ def _build_facts(rec_specs, power_domain="VDD", pin_name="VDD"):
     fake_pin.numbers = ["1"]
     fake_pin.name = pin_name
     fake_pin.power_domain = power_domain
+    fake_pin.type = "power_in"  # OV-001 reads only supply pins
     fake_pin.recommended = None
 
     fake_pinout = MagicMock()

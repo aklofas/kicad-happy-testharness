@@ -16,8 +16,8 @@ regulator output/input capacitor collection):
 (c) The transient-current fallback silently doubled a 0.5A default to 1.0A
     (`pdiss.get('estimated_iout_A', 0.5)` then `min(i_out*2, 5.0)`) even
     with zero power-budget data. Fix: configurable via
-    project.pdn_transient_current_a > power_budget-derived > true 0.5A
-    default, each labeled with `transient_source`.
+    project.pdn_transient_current_a > twice the regulator's output-cap-sized
+    current estimate > true 0.5A default, each labeled with `transient_source`.
 (d) Anti-resonance peaks far above any frequency relevant to board-level
     decoupling (> PDN_RELEVANT_FMAX_HZ = 200 MHz) were treated the same as
     in-band peaks, driving a HIGH severity PD-001 finding. Fix: only
@@ -207,7 +207,7 @@ def test_transient_current_from_config():
         er.find_anti_resonances = orig
 
 
-def test_transient_current_from_power_budget():
+def test_transient_current_from_output_cap_proxy():
     def fake_peaks(sweep, z_target=None):
         return _one_in_band_peak()
     import emc_rules as er
@@ -220,13 +220,13 @@ def test_transient_current_from_power_budget():
         pd001 = _pd001_findings(findings)
         assert len(pd001) == 1
         assert pd001[0]["transient_a"] == 0.6
-        assert pd001[0]["transient_source"] == "power_budget"
+        assert pd001[0]["transient_source"] == "output_cap_proxy"
     finally:
         er.find_anti_resonances = orig
 
 
 def test_transient_current_default_is_not_doubled():
-    """Regression: with neither config nor power_budget data, the fallback
+    """Regression: with neither config nor an output-current estimate, the fallback
     must be the true 0.5A default, not the pre-fix doubled 1.0A."""
     import emc_rules as er
     orig = er.find_anti_resonances
