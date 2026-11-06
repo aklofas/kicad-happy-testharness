@@ -13,6 +13,8 @@ import os
 import secrets
 import signal
 import subprocess
+import sys
+import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -84,6 +86,7 @@ class RunResult:
     elapsed_s: float
     stderr_tail: str
     detail: str
+    peak_rss_mb: float | None = None   # the child's ru_maxrss (None where wait4 is unavailable)
 
 
 def _quarantine(dest: Path) -> None:
@@ -115,17 +118,65 @@ def _kill_group(proc: subprocess.Popen) -> None:
         pass
 
 
+class _Reaped:
+    """Collect a child's stdout/stderr on threads and reap it with os.wait4, so its own peak
+    RSS is known (Popen.communicate reaps with waitpid and loses the rusage)."""
+
+    def __init__(self, proc: subprocess.Popen):
+        self.proc, self.out, self.err, self.rss_mb = proc, b"", b"", None
+        self._readers = [threading.Thread(target=self._read, args=(name,), daemon=True)
+                         for name in ("stdout", "stderr")]
+        self._waiter = threading.Thread(target=self._wait, daemon=True)
+        for t in (*self._readers, self._waiter):
+            t.start()
+
+    def _read(self, name):
+        data = getattr(self.proc, name).read()
+        setattr(self, "out" if name == "stdout" else "err", data)
+
+    def _wait(self):
+        if not hasattr(os, "wait4"):   # Windows: no rusage, peak RSS stays None
+            self.proc.wait()
+            return
+        _pid, status, usage = os.wait4(self.proc.pid, 0)
+        self.proc.returncode = os.waitstatus_to_exitcode(status)
+        self.rss_mb = usage.ru_maxrss / 1024.0   # KiB on Linux
+
+    def join(self, timeout=None) -> bool:
+        """True when the child exited (and its pipes closed) within `timeout`."""
+        self._waiter.join(timeout)
+        if self._waiter.is_alive():
+            return False
+        for t in self._readers:
+            t.join()
+        return True
+
+
+def _limit_memory(proc: subprocess.Popen, mem_limit_mb: int | None) -> None:
+    if mem_limit_mb and sys.platform.startswith("linux"):
+        import resource
+        limit = int(mem_limit_mb) * 1024 * 1024
+        try:
+            resource.prlimit(proc.pid, resource.RLIMIT_AS, (limit, limit))
+        except (OSError, ValueError):
+            pass
+
+
 def run_once(make_cmd: Callable[[Path], list[str]], dest: Path, *, analyzer: str,
-             timeout: float, env: Mapping[str, str]) -> RunResult:
+             timeout: float, env: Mapping[str, str], mem_limit_mb: int | None = None) -> RunResult:
+    """Run one analyzer subprocess. `mem_limit_mb` caps the child's address space (Linux
+    RLIMIT_AS) so a runaway unit crashes instead of driving the host into OOM (TH-071)."""
     dest = Path(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
     temp = dest.with_name(dest.name + f".tmp-{os.getpid()}-{secrets.token_hex(4)}")
     t0 = time.time()
 
+    rss = [None]
+
     def fail(status, code, tail, detail):
         _cleanup(temp)
         _quarantine(dest)
-        return RunResult(status, code, None, None, time.time() - t0, tail, detail)
+        return RunResult(status, code, None, None, time.time() - t0, tail, detail, rss[0])
 
     try:
         try:
@@ -134,16 +185,20 @@ def run_once(make_cmd: Callable[[Path], list[str]], dest: Path, *, analyzer: str
                                     env=dict(env), start_new_session=True)
         except Exception as exc:  # make_cmd failure or spawn failure
             return fail("crash", None, "", f"spawn failed: {exc!r}")
+        _limit_memory(proc, mem_limit_mb)
+        child = _Reaped(proc)
         try:
-            _out, err = proc.communicate(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            _kill_group(proc)
-            proc.communicate()
-            return fail("timeout", None, "", f"timeout after {timeout}s")
+            exited = child.join(timeout)
         except BaseException:
             _kill_group(proc)
-            proc.communicate()
+            child.join()
             raise
+        if not exited:
+            _kill_group(proc)
+            child.join()
+            return fail("timeout", None, "", f"timeout after {timeout}s")
+        err = child.err
+        rss[0] = child.rss_mb
         elapsed = time.time() - t0
         tail = "\n".join((err or b"").decode("utf-8", "replace").strip().splitlines()[-5:])
         rc = proc.returncode
@@ -151,6 +206,8 @@ def run_once(make_cmd: Callable[[Path], list[str]], dest: Path, *, analyzer: str
         if not ok:
             status = "crash" if detail == "no_output" and rc != 0 else \
                 ("no_output" if detail == "no_output" else "invalid_output")
+            if mem_limit_mb and "MemoryError" in tail:
+                detail = f"{detail}: memory limit {mem_limit_mb} MB (MemoryError)"
             return fail(status, rc, tail, detail)
         accepted = ACCEPTED_EXITS.get(analyzer, frozenset({0}))
         if rc not in accepted:
@@ -160,6 +217,6 @@ def run_once(make_cmd: Callable[[Path], list[str]], dest: Path, *, analyzer: str
             os.replace(temp, dest)
         except OSError as exc:
             return fail("invalid_output", rc, tail, f"publish failed: {exc}")
-        return RunResult("ok", rc, dest, sha256_file(dest), elapsed, tail, "ok")
+        return RunResult("ok", rc, dest, sha256_file(dest), elapsed, tail, "ok", rss[0])
     finally:
         _cleanup(temp)  # temp and any sidecars; harmless after a successful publish

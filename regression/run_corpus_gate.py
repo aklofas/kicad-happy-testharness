@@ -81,7 +81,7 @@ from harnesslib.identity import (RunSpec, git_worktree_ref, sha256_path, input_d
                                  write_manifest, finish_manifest, read_manifest,
                                  manifests_match, identity_key, unit_is_current,
                                  MANIFEST_VERSION, UnitLog)
-from harnesslib.profiles import PROFILES  # noqa: E402
+from harnesslib.profiles import PROFILES, default_jobs, mem_available_mb  # noqa: E402
 from regression.gate_policy import (BAD_SKIP_REASONS, OK_STATUSES, BUDGETED_KINDS,  # noqa: E402,F401
                                      CANDIDATE_FAILED_REASON, CRITERIA, KIND_CHOICES,
                                      WORKER_EXCEPTION_REASON, _both_ok, _compute_pass_criteria,
@@ -157,7 +157,8 @@ def chained_cmd(analyzer, kh_dir, sch_json, pcb_json, out_path, profile):
 def _side(res) -> dict:
     return {"status": res.status, "exit_code": res.exit_code,
             "output_sha256": res.output_sha256, "elapsed_s": round(res.elapsed_s, 3),
-            "detail": res.detail}
+            "detail": res.detail,
+            "peak_rss_mb": None if res.peak_rss_mb is None else round(res.peak_rss_mb, 1)}
 
 
 def diff_envelopes(a_path, b_path, a_ok, b_ok):
@@ -208,9 +209,11 @@ def phase_a_job(args):
     base_out = lay.snap("baseline", analyzer, repo, key)
     cand_out = lay.snap("candidate", analyzer, repo, key)
     base = run_once(lambda o: file_cmd(analyzer, baseline_dir, input_path, o, profile),
-                    base_out, analyzer=analyzer, timeout=profile.timeout_s, env=env)
+                    base_out, analyzer=analyzer, timeout=profile.timeout_s, env=env,
+                    mem_limit_mb=profile.unit_mem_limit_mb)
     cand = run_once(lambda o: file_cmd(analyzer, candidate_dir, input_path, o, profile),
-                    cand_out, analyzer=analyzer, timeout=profile.timeout_s, env=env)
+                    cand_out, analyzer=analyzer, timeout=profile.timeout_s, env=env,
+                    mem_limit_mb=profile.unit_mem_limit_mb)
     rec = {"analyzer": analyzer, "repo": repo, "identity": unit_id, "unit_id": unit_id,
            "input_sha256": sha256_path(input_path),
            "baseline": _side(base), "candidate": _side(cand)}
@@ -448,7 +451,8 @@ def phase_b_job(args):
         pcb = lay.snap(slot, "pcb", repo, pcb_key) if pcb_key else None
         out = lay.snap(slot, analyzer, repo, sch_key)
         sides[slot] = run_once(lambda o, k=kh_dir, s=sch, p=pcb: chained_cmd(analyzer, k, s, p, o, profile),
-                               out, analyzer=analyzer, timeout=profile.timeout_s, env=env)
+                               out, analyzer=analyzer, timeout=profile.timeout_s, env=env,
+                               mem_limit_mb=profile.unit_mem_limit_mb)
     base, cand = sides["baseline"], sides["candidate"]
     unit_id = f"{repo}/{sch_key}"
     rec = {"analyzer": analyzer, "repo": repo, "identity": unit_id, "unit_id": unit_id,
@@ -703,7 +707,9 @@ def build_arg_parser():
     ap.add_argument("--profile", default="standard", choices=sorted(PROFILES))
     ap.add_argument("--kind", default="structural", choices=KIND_CHOICES,
                     help="round kind (decides whether --budget is forbidden or required); 'gate' is a deprecated alias for structural")
-    ap.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS)
+    ap.add_argument("--jobs", "-j", type=int, default=None,
+                    help="parallel units (default: the CPU count, capped so jobs x the profile's "
+                         "per-unit RSS hint fits in MemAvailable)")
     ap.add_argument("--label", default=None, help="rollup filename label (default: section)")
     ap.add_argument("--resume", action="store_true",
                     help="reuse units from a previous run ONLY if its manifest identity matches")
@@ -819,6 +825,12 @@ def main(argv=None):
     args.kind = resolve_kind(args.kind)
 
     profile = PROFILES[args.profile]
+    mem_cap = default_jobs(profile, cpu=DEFAULT_JOBS, mem_available_mb=mem_available_mb())
+    if args.jobs is None:
+        args.jobs = mem_cap
+    elif args.jobs > mem_cap:
+        print(f"warning: --jobs {args.jobs} x {profile.max_rss_mb} MB per unit ({args.profile}) exceeds "
+              f"the memory-capped default {mem_cap}; the host may swap or OOM", file=sys.stderr)
     if not any(a in PHASE_A for a in profile.analyzers):
         # spice-offline / distributor-offline are declared here for their caps and flags but
         # run through their own runners; a corpus gate over them would record zero units

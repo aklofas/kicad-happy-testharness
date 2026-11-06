@@ -205,3 +205,32 @@ def test_timeout_reaches_quarantine_without_killpg(tmp_path, monkeypatch):
     r = ex.run_once(_cmd("sleep"), dest, analyzer="pcb", timeout=1, env=_env())
     assert r.status == "timeout" and not dest.exists()
     assert dest.with_name("out.json.stale").exists()
+
+
+# --- TH-071: per-unit peak RSS and memory ceiling -----------------------------------
+
+_ALLOC = ("import json, sys; b = bytearray({mb} * 1024 * 1024); b[::4096] = b'x' * len(b[::4096]); "
+          "json.dump({{'analyzer_type': 'pcb'}}, open(sys.argv[1], 'w'))")
+
+
+def _alloc_cmd(mb):
+    return lambda out: [sys.executable, "-c", _ALLOC.format(mb=mb), str(out)]
+
+
+def test_run_once_records_peak_rss(tmp_path):
+    r = ex.run_once(_alloc_cmd(80), tmp_path / "snap.json", analyzer="pcb", timeout=30, env=_env())
+    assert r.status == "ok"
+    assert r.peak_rss_mb is not None and r.peak_rss_mb >= 80
+
+
+import pytest  # noqa: E402
+
+
+@pytest.mark.skipif(not sys.platform.startswith("linux"), reason="RLIMIT_AS ceiling is Linux-only")
+def test_run_once_memory_ceiling_turns_a_runaway_into_a_crash(tmp_path):
+    r = ex.run_once(_alloc_cmd(600), tmp_path / "snap.json", analyzer="pcb", timeout=30, env=_env(),
+                    mem_limit_mb=300)
+    assert r.status == "crash" and "memory limit 300 MB" in r.detail
+    ok = ex.run_once(_alloc_cmd(50), tmp_path / "snap2.json", analyzer="pcb", timeout=30, env=_env(),
+                     mem_limit_mb=300)
+    assert ok.status == "ok"

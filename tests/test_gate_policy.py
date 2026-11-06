@@ -63,3 +63,12 @@ def test_apply_modes_budgeted_verdict_overrides_findings_level_pass():
 def test_gate_policy_does_not_import_the_driver():
     import regression.gate_policy as p
     assert "run_corpus_gate" not in Path(p.__file__).read_text()
+
+
+def test_default_jobs_is_capped_by_memory():
+    """TH-071: the gate's default job count fits the profile's per-unit RSS hint in MemAvailable."""
+    from harnesslib.profiles import PROFILES, default_jobs
+    hier = PROFILES["hierarchy"]
+    assert default_jobs(hier, cpu=32, mem_available_mb=60_000) == 60_000 // hier.max_rss_mb
+    assert default_jobs(PROFILES["standard"], cpu=32, mem_available_mb=None) == 32
+    assert default_jobs(hier, cpu=32, mem_available_mb=100) == 1

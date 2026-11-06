@@ -11,6 +11,21 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — TH-071: `run_corpus_gate.py --jobs` was not memory-aware, and one runaway unit could take the host to the OOM killer
+
+**Severity:** LOW (operator hazard on a shared box)
+**File:** `harnesslib/execution.py` (`run_once`: `mem_limit_mb`, `_Reaped`, `RunResult.peak_rss_mb`), `harnesslib/profiles.py` (`max_rss_mb`, `unit_mem_limit_mb`, `default_jobs`, `mem_available_mb`), `regression/run_corpus_gate.py`
+**Discovered:** 2026-10-16, round-4 hierarchy gate at 32 jobs (Marble ~3 GB per unit); round-5 full-chain (LT3514 KH-447 ~20 GB at 77 s)
+
+- **Root cause:** the only throttle was the job count (default: the CPU count), with no per-unit memory record and no ceiling.
+- **Fix:**
+  - `run_once` reaps the child with `os.wait4` (stdout/stderr read on threads; plain wait on Windows) and records its own `peak_rss_mb`, which the gate writes into every `units.jsonl` side;
+  - `mem_limit_mb` sets the child's `RLIMIT_AS` (Linux, `resource.prlimit` after spawn), so a runaway unit ends as a `crash` whose detail names the memory limit;
+  - `Profile` gains `max_rss_mb` (scheduling hint: 1 GB default, 6 GB for full-chain / hierarchy / long-tail) and `unit_mem_limit_mb` (16 GB for those three, none for standard / spice-offline, so the standard profile behaves as before);
+  - without `--jobs` the gate uses `default_jobs` = min(CPU count, MemAvailable ÷ `max_rss_mb`), and an explicit `--jobs` above that warns.
+  - RUNBOOK preflight updated. Consequence to plan for: LT3514's full-chain entry (formerly an OOM SIGKILL) will crash at the ceiling with a different exit code; re-key it at the first full-chain gate.
+- **Verification:** `tests/test_harnesslib_execution.py` (peak RSS recorded; a 600 MB allocation under a 300 MB ceiling is a `crash` naming the limit, 50 MB passes); `tests/test_gate_policy.py::test_default_jobs_is_capped_by_memory`; 30 corpus schematics through the old and new `run_once`: same statuses, 5.22 s vs 5.21 s. Unit + offline_contract 3,649 / 0 / 8 / 4.
+
 ## 2026-11-06 — TH-067: batch-runner pool workers outlived a killed parent and kept running the corpus
 
 **Severity:** MEDIUM (unsupervised corpus writes; the mechanism behind TH-063)

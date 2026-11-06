@@ -4500,32 +4500,6 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 
 **Fix direction:** stream deltas to a JSONL file and keep counts in memory; evaluate the budget per unit when no class carries a cross-unit bound (bounds can aggregate claimed counts per class); give the comparator its own worker cap.
 
-### TH-071: `run_corpus_gate.py --jobs` is not memory-aware — the hierarchy profile at 32 jobs drives the box into OOM on multi-GB units
-
-**Severity:** LOW (operator hazard; the run was killed and re-run at 10 jobs with an identical verdict, but nothing in the tool stops the next operator from repeating it)
-**File:** `regression/run_corpus_gate.py` (`--jobs`, default `os.cpu_count()`), `harnesslib/profiles.py` (profile declares a timeout, not a memory envelope)
-**Discovered:** 2026-10-16, v3 round-4 hierarchy-profile gate attempt 1 (`results/v3_round4_gate_aux/hier_attempt1_jobs32/`): 32 analyzer subprocesses on `BerkeleyLab/Marble` sub-sheets (KH-448, ~2.2–3 GB RSS each) → 60 of 62 GB used, kernel OOM killer active on the host; the attempt was stopped at 3,691 / 9,848 units and re-run at `--jobs 10` (`results/v3_round4_gate_hier/`, 9,848 PASS).
-
-**Symptom:** the gate's only throttle is the job count; a profile that redirects
-sub-sheet units to a large root multiplies the per-unit footprint by the worker
-count with no cap. The standard profile (`--no-hierarchy`) never shows it.
-
-**Fix direction:** give `Profile` a `max_rss_mb` hint and let the gate derive a
-default job cap from `MemAvailable` / hint (override with an explicit `--jobs`);
-record peak RSS per unit in `units.jsonl` (`resource.getrusage` after each
-subprocess) so the budget can be measured rather than guessed. RUNBOOK gate
-preflight now says: hierarchy profile ≤ 10 jobs on a 62 GB box.
-
-**Addendum 2026-10-16 (round-5):** the full-chain profile at 32 jobs reproduced
-it: `cristobalcuevas/Kicad` LT3514 (KH-447) is a memory blow-up (~20 GB at
-77 s, still climbing) that the standard profile's 120 s cap truncates and the
-600 s cap lets run into the host OOM killer — both gate sides died with
-SIGKILL at ~400 s and the user's concurrent work was exposed. A per-profile
-`max_rss_mb` hint is not enough on its own; the gate also needs a per-unit
-RSS ceiling (rlimit on the child, recorded as a `crash`/`oom` status) so one
-runaway unit cannot take the host down regardless of the job count. RUNBOOK
-preflight now lists the full-chain profile with the hierarchy profile.
-
 ### TH-061: `tests/test_datasheet_db_cli.py` plants and deletes a file under `HARNESS_DIR/repos/.test_fallback/` — a write into the corpus checkout tree
 
 **Severity:** LOW (corpus inputs must be immutable; the fixture cleans up after
