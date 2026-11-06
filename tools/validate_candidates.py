@@ -87,7 +87,10 @@ def _count_footprints_pcb(path):
         return 0
 
 
-def _shallow_clone(url, dest, timeout=60):
+CLONE_TIMEOUT_S = 180   # a ~200 MB packed repo needs ~80 s on a home connection (TH-038)
+
+
+def _shallow_clone(url, dest, timeout=CLONE_TIMEOUT_S):
     """Shallow clone a repo. Returns True on success."""
     try:
         subprocess.run(
@@ -243,7 +246,7 @@ def merge_validated(existing, new):
     return [c for c in existing if key(c) not in fresh] + list(new)
 
 
-def validate_one(candidate, temp_base, min_components):
+def validate_one(candidate, temp_base, min_components, clone_timeout=CLONE_TIMEOUT_S):
     """Validate a single candidate. Returns (candidate, scan_result, status) or None.
 
     Clones into a scratch dir this job owns, scans, classifies, then deletes that dir.
@@ -256,7 +259,7 @@ def validate_one(candidate, temp_base, min_components):
 
     try:
         # Clone
-        if not _shallow_clone(url, dest):
+        if not _shallow_clone(url, dest, timeout=clone_timeout):
             return candidate, None, "clone_failed"
 
         # Scan
@@ -299,6 +302,8 @@ def main():
                         help="Minimum total component count to pass (default: 5)")
     parser.add_argument("--min-score", type=int, default=0,
                         help="Minimum quality score to include (default: 0)")
+    parser.add_argument("--clone-timeout", type=int, default=CLONE_TIMEOUT_S,
+                        help=f"seconds allowed for each shallow clone (default: {CLONE_TIMEOUT_S})")
     parser.add_argument("--jobs", "-j", type=int, default=4,
                         help="Parallel validation workers (default: 4)")
     parser.add_argument("--dry-run", action="store_true",
@@ -392,7 +397,7 @@ def main():
         if args.jobs <= 1:
             # Sequential
             for i, candidate in enumerate(pending):
-                cand, scan, status = validate_one(candidate, temp_base, args.min_components)
+                cand, scan, status = validate_one(candidate, temp_base, args.min_components, args.clone_timeout)
                 _record_result(cand, scan, status)
                 done = i + 1
                 _print_progress(done, len(pending))
@@ -402,7 +407,7 @@ def main():
             done = 0
             with ThreadPoolExecutor(max_workers=args.jobs) as pool:
                 futures = {
-                    pool.submit(validate_one, c, temp_base, args.min_components): c
+                    pool.submit(validate_one, c, temp_base, args.min_components, args.clone_timeout): c
                     for c in pending
                 }
                 for future in as_completed(futures):

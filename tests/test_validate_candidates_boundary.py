@@ -45,3 +45,12 @@ def test_resume_merge_dedupes_by_owner_repo():
     new = [{"owner": "b", "repo": "y", "v": 2}, {"owner": "c", "repo": "z", "v": 2}]
     merged = vc.merge_validated(old + new[:1], new)
     assert [(c["owner"], c["v"]) for c in merged] == [("a", 1), ("b", 2), ("c", 2)]
+
+
+def test_clone_timeout_default_and_flag_reach_the_clone(monkeypatch, tmp_path):
+    """TH-038: a 60 s clone timeout misread 200 MB repos as clone_failed."""
+    seen = []
+    monkeypatch.setattr(vc, "_shallow_clone", lambda url, dest, timeout: seen.append(timeout) or False)
+    vc.validate_one(OK, str(tmp_path), 10)
+    vc.validate_one(OK, str(tmp_path), 10, clone_timeout=300)
+    assert seen == [180, 300]

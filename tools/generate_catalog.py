@@ -252,6 +252,21 @@ def _output_files(d):
     run-level _*.json file."""
     return json_files(d, sort=True, skip_underscore=True, skip_sidecar=True)
 
+def _max_hierarchy_sheets(sch_outputs):
+    """Most sheets any one schematic output parsed: the top-level `sheets` list the analyzer
+    writes for a multi-sheet parse (v3 outputs carry no `hierarchy_context`, so the old read
+    was always 0 — TH-044), else the legacy `hierarchy_context.sheets_in_project`."""
+    best = 0
+    for data in sch_outputs:
+        sheets = data.get("sheets")
+        if not isinstance(sheets, list):
+            hc = data.get("hierarchy_context")
+            sheets = hc.get("sheets_in_project") if isinstance(hc, dict) else None
+        if isinstance(sheets, list):
+            best = max(best, len(sheets))
+    return best
+
+
 def build_repo_entry(repo_name, categories, repo_urls):
     """Build a complete catalog entry for one repo."""
     entry = {
@@ -346,14 +361,7 @@ def build_repo_entry(repo_name, categories, repo_urls):
     smd_counts = sum(d.get("statistics", {}).get("smd_count", 0) for d in pcb_outputs)
     tht_counts = sum(d.get("statistics", {}).get("tht_count", 0) for d in pcb_outputs)
 
-    # Max hierarchical sheets in any single project (from hierarchy_context)
-    max_hierarchy_sheets = 0
-    for data in sch_outputs:
-        hc = data.get("hierarchy_context")
-        if isinstance(hc, dict):
-            sip = hc.get("sheets_in_project", [])
-            if isinstance(sip, list) and len(sip) > max_hierarchy_sheets:
-                max_hierarchy_sheets = len(sip)
+    max_hierarchy_sheets = _max_hierarchy_sheets(sch_outputs)
 
     entry["complexity"] = {
         "total_components": total_comps,

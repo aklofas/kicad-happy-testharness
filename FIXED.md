@@ -11,6 +11,23 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — TH-047: BUGFIX-KH-198-01 corpus anchor lost — the lock now lives on a fixture
+
+**Severity:** LOW
+**File:** `tests/test_kh198_lc_ref_collision.py` (new), `tests/fixtures/_build_sch.py` (`inductor`, `Device:L`), `regression/bugfix_registry.json` (KH-198 note)
+**Discovered:** 2026-08-20, v2.2.0 regen
+
+- **Root cause:** the v2.0 mirror fix dissolved the Caffeinated-AFTONSPARV L1/C5 LC group, and no other corpus board has the KH-198 shape: a 2026-11-06 scan of all 36,463 schematic outputs found no LC-DET net with a capacitor ref on two or more of its pins.
+- **Fix:** a synthetic fixture: L1 into a net with two distinct 10 µF capacitors that share the reference C5. `detect_lc_filters` must report one LC-DET `[C5, L1]` at 15.9 kHz, one capacitor; the same circuit with C5 + C6 gives `[C5, C6, L1]` at 11.25 kHz, so the test discriminates the dedup. `Schematic.inductor()` added to the fixture builder.
+- **Verification:** the test passes vs product_4c2a0d6; the C6 control measured as above.
+
+## 2026-11-06 — TH-038: `validate_candidates.py` 60 s clone timeout too tight for medium repos
+
+**Severity:** LOW
+**File:** `tools/validate_candidates.py` (`CLONE_TIMEOUT_S`, `--clone-timeout`)
+- **Fix:** the default is 180 s (Easyduino, 215 MB packed, cloned in 78 s), and `--clone-timeout` reaches every clone through `validate_one`.
+- **Verification:** `tests/test_validate_candidates_boundary.py::test_clone_timeout_default_and_flag_reach_the_clone`.
+
 ## 2026-11-06 — TH-070: the scan-coverage check reported every moved constant and moved-from file as lost
 
 **Severity:** MEDIUM (`test_scan_coverage_not_lost` red against every structural round until `--accept-baseline`)

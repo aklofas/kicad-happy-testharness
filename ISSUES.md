@@ -4655,27 +4655,6 @@ consider a guard: corpus runners refuse unscoped (no --repo /
 --cross-section) invocation unless an explicit --all flag is passed —
 would also prevent accidental full-corpus runs from test/CI contexts.
 
-### TH-038: `validate_candidates.py` 60s clone timeout too tight for medium repos
-
-**Severity:** LOW
-**File:** `tools/validate_candidates.py:90` (`_shallow_clone(timeout=60)`)
-**Discovered:** 2026-04-27 while adding Hanqaqa/Easyduino
-
-**Symptom:** Repos in the 200MB+ class (Easyduino is 605MB unpacked / 215MB packed)
-exceed the 60s shallow-clone timeout on a typical home connection, causing
-`validate_candidates.py` to mis-classify them as `clone_failed`. Bumping the
-timeout to 180s allowed Easyduino to clone in 78s and pass validation cleanly.
-
-**Repro:** Run `python3 tools/validate_candidates.py` against any repo whose
-`--depth 1` clone exceeds 60s. Output reports `Clone failed: 1` and writes 0
-validated candidates.
-
-**Likely fix:** Bump default to 180s, or scale by repo size if the candidates
-file carries one. The 60s default was probably set for small repos and never
-revisited.
-
----
-
 ### TH-042: `test_schema_completeness_zebra_x` fails — 7 new v1.4 detectors lack `SCHEMAS` entries
 
 **Severity:** LOW
@@ -4765,29 +4744,7 @@ meant to enable IS blocked until the field is repopulated.
 **Not tag-blocking** — cosmetic gap in cross-section coverage; no
 release-quality impact.
 
-### TH-047: BUGFIX-KH-198-01 corpus anchor lost — LC-DET no longer fires on Caffeinated-AFTONSPARV; lock needs a new host board
-
-**Severity:** LOW
-**File:** `regression/bugfix_registry.json` (KH-198 entry, `assertions` now
-empty with `corpus_anchor_lost` note)
-**Discovered:** 2026-08-20 (v2.2.0 combined corpus regen adjudication)
-
-**Symptom:** the KH-198 regression lock (LC-DET components exactly
-`[C5, L1]`, guarding the capacitor-ref dedup fix) failed at regen with
-`rule_id=LC-DET not found`. Root cause is NOT a KH-198 regression: the
-board is in the v2.0 mirror-fix affected set
-(`results/v20_mirror_gate/affected_repos.txt`) and the ratified
-connectivity change dissolved the L1/C5 LC group, so `detect_lc_filters`
-legitimately no longer fires there (verified absent at `fc94a3d` and
-`43dad23`; v2.1/v2.2 gate diff records show zero movement — the change
-predates the v2.1 baseline).
-
-**Fix direction:** find another corpus board where LC-DET fires with a
-capacitor whose ref collides across sub-projects (the KH-198 trigger
-shape), re-anchor the registry assertion there, and regenerate. Until
-then KH-198 is covered only by main-repo unit tests.
-
----
+**Addendum 2026-11-06 (code fixed, data pending):** `tools/generate_catalog.py` now reads the v3 top-level `sheets` list (`_max_hierarchy_sheets`; v3 outputs carry no `hierarchy_context`). A dry run (`generate_catalog.py --json`) gives 1,589 repos with `max_hierarchy_sheets > 1`. The tracked `reference/repo_catalog.json` was not regenerated: it is stale on 17 fields (emc_summary 4,380 repos, assertions 4,243, ...) and moves VALIDATION.md's corpus numbers, so regenerate it, then `generate_cross_sections.py`, at the v3.0.2 corpus regen and close this then.
 
 ## Priority Queue
 

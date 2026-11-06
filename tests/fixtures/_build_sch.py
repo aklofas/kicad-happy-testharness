@@ -115,6 +115,23 @@ _LIB_DEVICE_C = '''    (symbol "Device:C" (pin_numbers hide) (pin_names (offset 
       )
     )'''
 
+_LIB_DEVICE_L = '''    (symbol "Device:L" (pin_numbers hide) (pin_names (offset 1.016) hide) (in_bom yes) (on_board yes)
+      (property "Reference" "L" (at -1.27 0 90) (effects (font (size 1.27 1.27))))
+      (property "Value" "L" (at 1.905 0 90) (effects (font (size 1.27 1.27))))
+      (property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (property "Datasheet" "~" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (property "ki_keywords" "inductor choke coil reactor magnetic" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (property "ki_description" "Inductor" (at 0 0 0) (effects (font (size 1.27 1.27)) hide))
+      (symbol "L_0_1"
+        (rectangle (start -1.016 -2.54) (end 1.016 2.54)
+          (stroke (width 0) (type default)) (fill (type none)))
+      )
+      (symbol "L_1_1"
+        (pin passive line (at 0 3.81 270) (length 1.27) (name "1" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+        (pin passive line (at 0 -3.81 90) (length 1.27) (name "2" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+      )
+    )'''
+
 _LIB_DEVICE_CRYSTAL = '''    (symbol "Device:Crystal" (pin_numbers hide) (pin_names (offset 1.016)) (in_bom yes) (on_board yes)
       (property "Reference" "Y" (at 2.032 0 90) (effects (font (size 1.27 1.27))))
       (property "Value" "Crystal" (at 0 0 90) (effects (font (size 1.27 1.27))))
@@ -239,6 +256,14 @@ class Schematic:
         })
         return self
 
+    def inductor(self, ref, value, at=(50, 50), angle=0):
+        self._lib_ids.add("Device:L")
+        self._symbols.append({
+            "lib_id": "Device:L", "ref": ref, "value": value,
+            "x": at[0], "y": at[1], "angle": angle,
+        })
+        return self
+
     def power(self, name, at=(50, 50)):
         self._power_names.add(name)
         ref = f"#{name}"
@@ -305,6 +330,8 @@ class Schematic:
             lines.append(_LIB_DEVICE_R)
         if "Device:C" in self._lib_ids:
             lines.append(_LIB_DEVICE_C)
+        if "Device:L" in self._lib_ids:
+            lines.append(_LIB_DEVICE_L)
         if "Device:Crystal" in self._lib_ids:
             lines.append(_LIB_DEVICE_CRYSTAL)
         for variant in sorted(self._diode_variants):

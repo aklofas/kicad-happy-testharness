@@ -44,3 +44,12 @@ def test_catalog_counts_skip_the_capability_sidecar(tmp_path):
     (tmp_path / "capability_mode.json").write_text("{}")
     (tmp_path / "_timing.json").write_text("{}")
     assert [f.name for f in gc._output_files(tmp_path)] == ["a.kicad_sch.json"]
+
+
+def test_max_hierarchy_sheets_reads_the_v3_sheets_list():
+    """TH-044: v3 outputs have no hierarchy_context, so max_hierarchy_sheets was always 0."""
+    import generate_catalog as gc
+    outs = [{"sheets": ["/r/top.kicad_sch", "/r/a.kicad_sch", "/r/b.kicad_sch"]}, {},
+            {"hierarchy_context": {"sheets_in_project": ["x", "y"]}}]
+    assert gc._max_hierarchy_sheets(outs) == 3
+    assert gc._max_hierarchy_sheets([{}]) == 0
