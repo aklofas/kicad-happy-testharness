@@ -25,6 +25,28 @@ from harnesslib.profiles import PROFILES
 
 ANALYZER_TIMEOUT = PROFILES["standard"].timeout_s
 
+_PR_SET_PDEATHSIG = 1
+
+
+def _die_with_parent():
+    """Pool initializer: the worker is killed when its parent dies (Linux PR_SET_PDEATHSIG),
+    and exits at once if the parent is already gone (orphaned to PID 1). Without it a killed
+    runner's workers drain the submitted queue against the live corpus (TH-067)."""
+    if sys.platform.startswith("linux"):
+        import ctypes
+        import signal
+        try:
+            ctypes.CDLL(None, use_errno=True).prctl(_PR_SET_PDEATHSIG, signal.SIGKILL, 0, 0, 0)
+        except (OSError, AttributeError):
+            pass
+    if os.getppid() == 1:
+        os._exit(1)
+
+
+def worker_pool(jobs: int) -> ProcessPoolExecutor:
+    """The process pool every batch runner and the corpus gate use: workers die with the parent."""
+    return ProcessPoolExecutor(max_workers=jobs, initializer=_die_with_parent)
+
 
 @dataclass(frozen=True)
 class BatchConfig:
@@ -325,7 +347,7 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
             print(msg)
     else:
         tasks = {}
-        with ProcessPoolExecutor(max_workers=jobs) as pool:
+        with worker_pool(jobs) as pool:
             for i, file_path in enumerate(files, 1):
                 relpath, outfile, errfile = _prepare(file_path)
                 if _current(file_path, outfile):
@@ -408,7 +430,7 @@ def map_units(fn, units, jobs, *, unpack=False):
     if jobs <= 1:
         return [fn(*u) if unpack else fn(u) for u in units]
     results = [None] * len(units)
-    with ProcessPoolExecutor(max_workers=jobs) as pool:
+    with worker_pool(jobs) as pool:
         futures = {(pool.submit(fn, *u) if unpack else pool.submit(fn, u)): i
                    for i, u in enumerate(units)}
         for future in as_completed(futures):

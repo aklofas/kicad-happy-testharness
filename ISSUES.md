@@ -4618,25 +4618,6 @@ the upstream file → "linked file missing", 36 violations / 18 source_hashes de
 tree (or the recipe keeps both basetemps in place and passes them as root prefixes), so
 the fixture lane covers all six analyzers in strict mode.
 
-### TH-067: batch-runner pool workers outlive a killed parent and keep running the corpus
-
-**Severity:** MEDIUM (unsupervised corpus writes; the actual mechanism behind TH-063's 16,909-file rewrite)
-**File:** `run/run_emc.py` (`ProcessPoolExecutor` at ~l.200; same pattern in `run_thermal.py`, `run_spice.py`, `utils.run_analyzer`)
-**Discovered:** 2026-10-15 05:50 local — 32 `run_emc.py` worker processes found with ppid 1, state S, age 21,216 s (started 2026-10-14 23:57 = the TH-063 RED step), environment `PYTEST_CURRENT_TEST=tests/test_run_chained_execution.py::test_unqualified_runs_exit_2_without_all`, no `KICAD_HAPPY_TESTHARNESS_DATA_DIR`
-
-**Symptom:** the TDD RED run launched the then-ungated `run_emc.py` under
-`subprocess.run(..., timeout=60)`. The timeout SIGKILLed the parent, but the
-32 forked pool workers were never signalled: they drained the already-submitted
-work queue against the LIVE tree (every emc unit — the TH-063 rewrite), then sat
-idle as orphans for ~6 h until killed by hand. Any killed batch run (Ctrl-C to a
-wrapper, a gate timeout, an OOM kill of the parent) can do the same.
-
-**Fix direction:** make workers die with the parent — a pool `initializer` that
-sets `PR_SET_PDEATHSIG` via `ctypes` on Linux (stdlib only) and/or a cheap
-`os.getppid() == 1` check at the top of each unit task; run every batch runner in
-its own process group and have `harness.py`/gate wrappers kill the group; add a
-test that kills a runner parent mid-run and asserts no worker survives.
-
 ### TH-064: emc/thermal/spice runners have no identity-based `--resume`
 
 **Severity:** LOW (the flag is refused, so nothing runs on stale identity)

@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — TH-067: batch-runner pool workers outlived a killed parent and kept running the corpus
+
+**Severity:** MEDIUM (unsupervised corpus writes; the mechanism behind TH-063)
+**File:** `harnesslib/batch.py` (`worker_pool`, `_die_with_parent`; used by `run_batch` and `map_units`, i.e. every batch runner including EMC / thermal / SPICE), `regression/run_corpus_gate.py` (`_run_jobs`)
+**Discovered:** 2026-10-15, 32 orphaned `run_emc.py` workers after a test timeout killed their parent
+
+- **Root cause:** `ProcessPoolExecutor` workers are not signalled when their parent is SIGKILLed; they drain the submitted queue.
+- **Fix:** one pool factory, `harnesslib.batch.worker_pool(jobs)`, whose initializer sets `PR_SET_PDEATHSIG` = SIGKILL (Linux, `ctypes`) and exits at once if the worker is already orphaned to PID 1; the batch runners and the corpus gate use it. Residual: the analyzer subprocess a worker has in flight runs in its own session (`run_once`, for timeouts), so at most one unit per worker can still finish after the parent dies.
+- **Verification:** `tests/test_batch_pool_dies_with_parent.py` SIGKILLs a parent holding a 3-worker pool with queued work and asserts every worker is gone within 10 s (failed before the fix: the workers lived on).
+
 ## 2026-11-06 — TH-105: FND locks on findings marked INCORRECT were not aspirational, so some pinned the value their own finding calls the defect
 
 **Severity:** MEDIUM (false regressions at every fix)

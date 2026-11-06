@@ -66,7 +66,7 @@ import sys
 import time
 import uuid
 from collections import Counter, defaultdict
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import as_completed
 from dataclasses import asdict
 from pathlib import Path
 
@@ -75,6 +75,7 @@ sys.path.insert(0, str(HARNESS_DIR))
 sys.path.insert(0, str(HARNESS_DIR / "regression"))
 
 import regression_diff as rdiff  # noqa: E402
+from harnesslib.batch import worker_pool  # noqa: E402
 from harnesslib.execution import run_once, build_env, recorded_env  # noqa: E402
 from harnesslib.identity import (RunSpec, git_worktree_ref, sha256_path, input_digest,  # noqa: E402
                                  write_manifest, finish_manifest, read_manifest,
@@ -563,7 +564,7 @@ def _run_jobs(jobs, worker, jobs_n, label, sink, on_error):
         for job in jobs:
             finish(job, lambda j=job: worker(j))
     else:
-        with ProcessPoolExecutor(max_workers=jobs_n) as pool:
+        with worker_pool(jobs_n) as pool:
             futs = {pool.submit(worker, job): job for job in jobs}
             for fut in as_completed(futs):
                 finish(futs[fut], fut.result)
