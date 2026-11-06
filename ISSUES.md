@@ -34,7 +34,7 @@ Last updated: 2026-11-06
 
 Issue numbers are **globally unique and never reused**. Before assigning a new
 number, check both ISSUES.md (open) and FIXED.md (closed) for the current
-maximum. Next KH number: **KH-974** (KH-968..973 filed 2026-11-06 by the harness from SacMap rev2 soak run 11 at the v3.0.1 release `7d9d4d9f`, each verified by code read there — footprint keepouts never read, GP-001 per-net 95 % threshold without gap location, lifecycle MPN-only search, XV-004 blank-MPN / distributor-PN sub-cases, silent capability-loss diagnostics umbrella, `diff_analysis` tool-version grading and missing gerber / cross_analysis diffs; addenda on KH-433, KH-930, KH-462; KH-967 filed 2026-11-06 from the product ruling on the Wave 10b gate — `<n>V<n>_N` split rails read positive, verified in the candidate; KH-957..966 filed 2026-11-05 by the harness at the product 3.0.x Wave 10b gate (unreleased, candidate `2abc8496`) from the handoff's new-KH list, each claim re-read in the candidate — PM-001 ignores `drc_exclusions` (the handoff's graze-tolerance cause refuted: 0.119 mm overlaps) and both-layer tie order, duplicate courtyard outlines without `malformed_courtyard`, RP-001 power / high-speed classifiers, VS-001 branch disagreement (vias but no ground via), RP-002 `ran: true` without coverage, pin-only regulator outputs leaving `rail_voltages`, power-budget LDO sign guard, `VSS*` as ground for EN, DFM vs market-inferred IPC class, op-amp dead-output gain error (the 0.00 dB half refuted: deliberate below-minimum demotion); KH-947..956 filed 2026-11-05 by the harness at the product 3.0.x Wave 10a gate (unreleased, candidate `e60d03b5`) from the handoff's new-KH list, each claim re-read in the candidate — nested `.kicad_dru` bound ignored, `analysis: null` / non-string power_rails patterns, BOM-prefixed config, `RecursionError` at ~45 JSON loads, `--v14` null pin, Deep Review split exponent, SPICE LCSC `mfr`, Action residue, fab gate text, lazy `kicad_core.executables` import; addenda on KH-924 (nested condition) and KH-910 (still present); KH-915..946 filed 2026-11-04 by the harness at the product 3.0.x Waves 9b + 9c gate (unreleased, candidate `8c42799`) from the handoff's new-KH list, each claim re-read in the candidate — KH-920 filed FIXED-direct (load switches typed LDO, see FIXED.md) and KH-946 its open residual (dual-switch pin pairing); KH-912..914 filed 2026-11-03 by the harness at the product 3.0.x Wave 9d (docs) gate (unreleased, candidate `389fbd5`) from the handoff's new-KH list, each re-read in the candidate — gerber X2 docstring, unverified gerber version rows, raw `<MPN>` schema / provider text; KH-904..911 filed 2026-11-03 by the harness at the product 3.0.x Waves 9a + 9e gate (unreleased, candidate `6009004`) from the handoff's new-KH list, each claim re-read in the candidate — SPICE model-manifest reset, silent stale for PDFs outside `datasheets/`, `load_manifest` FIFO, abandoned download thread, LTspice/Xyce metadata, Action Top Risks severity, `test_cache_reader` isolation, deep-review partial pin names; KH-870 FIXED in 3.0.x Wave 9a, see FIXED.md; KH-895..903 filed 2026-11-03 by the harness on the product's request from SacMap rev2 soak run 10 at `07b7fb1` (v3.0.0 release base), each verified by code read at `07b7fb1` and v3.0.x-dev `5687ee1` — TE-001 touch pads, lifecycle `sources_available`, LC-007 contradiction, LC-004 multi-MPN wording, report-section gate, SPICE simulator version, two run ids, `power_domain` warning dedup, SKILL.md migration note; KH-894 filed 2026-11-03 by the harness on the product's request after the Wave 8c + 8b acceptance — supply-rail recognition by name only, su-pcb decoupling → rc_filter under KH-800's KiCad names; KH-867..893 filed 2026-11-03 by the harness at the product 3.0.x Wave 8c + 8b gate (unreleased, candidate `0efc012`) — KH-867..873 from the 8c handoff (other `--output` CLIs, `/dev/` link write-through, raw pipeline cache reads, PDF FIFO hash hang, Windows identity fallback, wrong-part `ok` refresh, Windows replace-onto-open-file), KH-874..892 from the 8b handoff (bus members as naming candidates, VM-001 cascade / multi-unit voltage, `4.5V-28V IN` rail, `SCLn`/`SDAn`, legacy and multi-root tie-break, stripline, plain `routing_complete` wording, ferrite `@` / `0R/2A` parsing, HS classifier, split-detection geometry gaps, SW-003 dead note), KH-893 by the harness (text-oracle jlcsearch call); each claim re-read in the candidate; KH-806/791/811/797/807/813 FIXED in 3.0.x Wave 8c and KH-851/820/825/863/850/800/864 FIXED in 3.0.x Wave 8b, KH-795 narrowed to the void half, KH-643 addendum, see FIXED.md; KH-863..866 filed 2026-11-02 by the harness at the product 3.0.x Wave 8a gate (unreleased, candidate `647bc85`) from the handoff's new-KH list, each claim re-read in the candidate — OR-001 angle rounding, EMC limit band edges, the Action's no-op `derating-profile`, what_if no-affected `--output` stdout; KH-818/819/821/822/826/827/828/849/852/853/854 FIXED in 3.0.x Wave 8a, KH-814 narrowed to the schematic / PCB `error` opt-in half, see FIXED.md; KH-829..848 assigned FIXED-direct 2026-11-01 from the product 3.0.x Wave 7 (architecture) close handoff (unreleased, candidate `988d576`) — the range's output-neutral slugs, each landed and closed by its named commit: UTF-8 register sites, dead `NetlistQueries` surface, dead core helpers, unread what-if / thermal / cross inputs, dead provider members, EMC severity-map duplicate, dead datasheet v2 validator / SPICE tables / smoke check, named-pin net / `pin_nets` annotation / S-expression property-decode duplicates, lifecycle derived writer, dead cache / context helpers, run-folder name, verifier helper names, detector netlist inline, lifecycle engine owner, PCB `--schema` thickness / `via_analysis` text, `summarize_findings` help vocabulary, see FIXED.md; KH-659 FIXED in 3.0.x Wave 7, see FIXED.md; KH-849..854 filed 2026-11-01 from the Wave 7 handoff's found-and-not-fixed list (each output-changing) — ~45 more locale-default text sites, ferrite `600R/200mA` parsed as 600 Ω, `(general (thickness))` dropped without `(setup)`, the Action's EMC / thermal "blocking findings" notice (thermal twin added by the harness), LC-007 text naming `lifecycle_audit.py`, undeclared `fix_params`; KH-855..862 filed 2026-11-01 from the Wave 7 deferred-by-ruling list — detector-family move, what-if engine extraction, vendor clients, PCB point-to-segment merge, SPICE kind registry, Action Python runner, `build_connectivity_graph` move (harness patch targets first), Phase 4 exercise script; KH-814..828 filed 2026-11-01 by the harness at the product 3.0.x Wave 6 (docs) gate (unreleased, candidate `c0a8a62`) from the handoff's new-KH list, every claim re-read in the candidate — Action `has-critical` / `findings-count` scope with the retired `voltage_derating` read (MEDIUM), per-CLI output-flag precedence, TW-001 width-table provenance, SPICE extraction-tier key and `meta` mismatch, EMC score after `--severity`, typed-lookup parent-folder cache (Security, MEDIUM, KH-782 residue), microstrip impedance on bulk εr (MEDIUM, output-changing under `--full`), five undeclared PCB envelope keys, silent missing `--config`, Action EMC/SPICE base lanes, Mouser default delay, PCB routing note as a `ValueError` diagnostic, what_if / detector `vref_source` confidence, what_if sweep `±tol` and `--output`; KH-636, 637, 638, 639, 640, 641, 642 FIXED (docs) in 3.0.x Wave 6, see FIXED.md; KH-329 doc halves fixed, entry narrowed to the `--use-cached-scout` traceback; addenda on KH-592 and 554, and on KH-633 in FIXED.md; KH-780..790 assigned FIXED-direct 2026-10-31 from the product 3.0.x Wave 5 handoff (unreleased, candidate `698116c`) — generic-transistor audit sync-manifest `parts`, multi-unit IC verification, extraction caches from a shared temp / parent directory (Security), review-plan run dir, Gerber job-file inner-layer completeness, Gerber X2 reader, Gerber drill model, empty return-path result (GitHub #60.1), `--gp001-debug` path (#60.4), Type-C detection (#61.2), degenerate switching-loop area (#62); KH-330, 484, 488, 571, 572, 577, 578, 579, 580, 595, 596, 600, 601, 602, 603, 604, 605, 614, 615, 616, 617, 620, 621, 622, 624, 625, 633, 646, 652 FIXED in 3.0.x Wave 5, see FIXED.md (commit-message omissions recorded under KH-571 / 572 / 578 / 617 / 646 / 652 / 781 / 786); KH-492, 606, 634, 636, 637 partly fixed (entries stay open with addenda); KH-791..813 filed 2026-10-31 from the Wave 5 handoff follow-ups — `analysis/manifest.json` 0600, SPICE model cache in a shared cwd, `capability_mode` cwd output, relative `inputs.source_files`, reference-net change under a trace (GitHub #60.2/#60.3, MEDIUM), pad-based hot loop, non-atomic `merge_results`, extraction lookup order, multi-condition SpecValue, root-sheet order dependence (MEDIUM), back-mounted THT side, Gerber outline choice, nightly job ids, Type-C CC reader, lifecycle / gerber carry-forward, `--output` atomic writes, spaced `±` in the Deep Review gate, family digit boundary, unnamed supplier slot, DNP value markers, cache-read nofollow, `export_issues` paging, orphan PDF on `--force-all`; addenda on KH-487 (GitHub #61.3), 585, 592, 495, 606, 634 (and 492, 636, 637); note on KH-522 (GitHub #61.1, already fixed); KH-779 filed 2026-10-29 from the product ruling on the 3.0.x relock FND locks — RT-001 gives no hint when a net's zones are unfilled, LOW; addenda on KH-484 (5 FND ids kept failing) and KH-685 (stacked NC pins, RTK Facet); KH-751..777 filed 2026-10-29 (+ KH-778 filed by the harness for the KH-575 KO-001 bounding-box residue) from the product 3.0.x Wave 4 Part B handoff — C14 board contact-model umbrella KH-751 (pad-to-fill misses, 11/296 false-incomplete boards; home of KH-701/702/710 (a)(b)(c)(i)), inferred stackup absent from output and EMC, PM-002 edge-mount keywords, ergogen nested modules / locked reference, IO-001 DNP / net identity / unclassified VBUS, schematic PDN DNP caps, PDN plane-area and grid residue, low-frequency PDN wording, EF rail-tap direction, legacy non-copper rule layers, legacy project rules reported, `.kicad_dru` expressions, custom-rule / annulus edge cases, per-side malformed courtyards, footprint parse edge cases, inferred-stackup edge cases, repeated stackup layer, small-patch return-path reference, KH-750 residue KH-771, SK-001 footprint text / rotated pads, `courtyard_clearance` for PM-001, `net_tie_pad_groups`, PD-003 dead key, board-setup annular width, TV-001 `drill_penalized`; KH-427 and 750 FIXED in 3.0.x Wave 4 Part B (unreleased, candidate `40b8ff3`), KH-364 track-in-zone half and KH-710 (d) fixed (entries stay open), KH-417 return-path half closed by construction (addendum on the FIXED entry), see FIXED.md; KH-711..749 filed 2026-10-28 from the product 3.0.x Wave 4 Part A handoff — case-insensitive mandatory fields, PCB rail set from board nets, op-amp bench below the feedback pole (gates KH-507), PNP bench never on (MEDIUM), P-ch `vth_V`, SPICE presence passes (KH-618 remainder, MEDIUM), `is_power_net_name` signal suffixes stop divider chains (MEDIUM), family Vref table values (MEDIUM), rail-sign readers (KH-675 remainder), CAN split termination (MEDIUM), VM-001 PG exemption unconditional, label-like regulator values, field-trim residue (KH-708 residue), reference nodes as rails, pre-KiCad 7 PCB rule / EG-001, `/x/PGND`, `ctx.rail_by_net` phase order, config-override consistency, regulator/half-bridge misdetections, DO-DET provenance, Vref rows awaiting datasheets, diff-pair ESD / USB-name / SPI-CAN / I2C VOL / family nickname / ERC / RC / LED / COMP / domain-advisory residues, alternate SPICE backends, op-amp `supply_min`, Monte Carlo parallel arms, bench-input residue, Vref key core cut, crystal residue, follow-up umbrella KH-749; KH-750 filed 2026-10-28 by the harness at the Wave 4 Part A gate — `/fpga-pg5/VCCINT` classed `interrupt` once KH-678 drops its rail match (KH-678 census); KH-675 (partly, → KH-719), 678, 699, 705, 708 (residue → KH-723), 672, 442, 676, 611, 612, 618 (partly, → KH-716), 619, 539, 669 FIXED in 3.0.x Wave 4 Part A (unreleased, candidate `b31d4ff`) and KH-709 closed as answered by ruling entry 54, see FIXED.md (commit-message corrections recorded under KH-675 / 678 / 676, the KH-509 CHANGELOG slip under KH-669); addenda on KH-548 / 667 / 483 / 707; KH-701..710 filed 2026-10-27 from the product 3.0.x Wave 3b Part B handoff §Asks 4 — net propagation onto net-less copper, custom-pad residue, instance-aware property writers, JLCPCB CPL convention reference, analyzer sheet-file case / KiCad 6 value settle, bom_manager diagnostics, unit-count semantics, mandatory-field whitespace trim, KiCad 5 `~` ruling question, follow-up umbrella; KH-417 / KH-426 FIXED in 3.0.x Wave 3b Part B (unreleased), see FIXED.md; KH-700 reclassified (R33 / R34: (a) budgeted class, (b) conformant, (c) → KH-708); addenda on KH-574 / 364 / 483; KH-699 / KH-700 filed 2026-10-27 by the harness at the Wave 3b Part A gate — `D_Zener` from an `*LED*` nickname typed `led` (false LR-001), `~` empty-field placeholder kept as a BOM footprint/datasheet on legacy schematics (MEDIUM); KH-679..698 filed 2026-10-27 from the product 3.0.x Wave 3b Part A handoff §Asks 4 — sibling-sheet driver ties, bus member fallbacks, hierarchical-label ERC, ktiger hierarchy join, PU-001 `MISO`, DO-DET port-name exemption, wired NC pins, bus group/quoted/mixed parsing, `~` pin names, bus-member naming, brace decode table, multi-root projects, unresolved text variables, CG-AUD by name, sheet-pin shape preference, follow-up umbrella KH-695; addenda on KH-483 / 667 / 669 / 671 / 677; KH-403 / KH-404 FIXED in 3.0.x Wave 3b Part A (unreleased) and KH-664 closed as conformant, see FIXED.md; KH-662 completion addendum in FIXED.md; KH-678 filed 2026-10-26 at the Wave 3 verdict — sheet net promoted to power by a same-named rail elsewhere (`/HVIL/HVIL_N`), Wave 4 group 1; KH-663..674 filed 2026-10-26 from the product 3.0.x Wave 3 handoff §Asks 4 — legacy buses, `E` decimal mark, EMC BE-001 origin distance, footprint Edge.Cuts outline, VM-001 heuristics, CS-DET set order, root hierarchical label fusion, LR-001 resistor association, same-net pad overlap, follow-up umbrella; KH-675..677 filed 2026-10-26 by the harness at the Wave 3 gate — negative regulator estimates on positive-named rails (Wave 4 group 1), SPICE zero-step transistor sweep (the spice-offline candidate failure), six legacy boards worse against their KiCad-5 netlist; KH-510..519, 560, 575, 576 FIXED in 3.0.x Wave 3 (unreleased) and KH-662 / 668 / 670 assigned FIXED-direct, see FIXED.md; KH-574 / KH-364 narrowed; KH-404 re-verified (reproduces); KH-653..661 filed 2026-10-25 from the product 3.0.x Wave 2 handoff §Asks 4 — `PH0`/`PH1` read as a regulator SW pin (MEDIUM), `RF-C10` typed resistor, EG-001 / GR-005 / CC-001+TW-001 follow-ups, `ThermalSkipped.reason` description, dead `has_esd` line, cross_verify keep/retire, LOW; KH-655 assigned FIXED-direct (test-plan / op-amp 2-hop / what_if order, fixed on discovery); KH-563..570, 582, 584, 591, 509, 607, 421 FIXED in 3.0.x Wave 2 (unreleased), see FIXED.md; KH-620 / 581 / 579 narrowed to their non-order halves; addenda on KH-484 and KH-529; KH-647..652 filed 2026-10-25 from the product 3.0.x Wave 1 residue — DNS rebinding (MEDIUM), NAT64/6to4 `is_global` bypass (MEDIUM), browser-fallback deadline/buffering/WebSocket gaps, `provider_mouser` unbounded `product_url` fetch, SPICE model denylist, `datasheet_extract_cache` fixed temp names / unchecked manifest joins, LOW; KH-497..505 FIXED in 3.0.x Wave 1 (unreleased), see FIXED.md, KH-507 left open by that round; KH-646 filed 2026-10-25 — split from KH-626 at the 3.0.x Wave 0 handoff: `distributor_offline` evicts only the selected tree's provider modules (sk/R6-F4), LOW; KH-626 FIXED on `v3.0.x-dev` `b3e4954` except that finding, see FIXED.md; KH-645 filed 2026-10-25 by the harness audit fix session — netlist oracle m68k-hbc splits 16 `/Bus/PEP/AD*` nets (oracle 4/5 since at least `0490c49`), MEDIUM; KH-644 filed 2026-10-25 by the harness audit fix session — PCB zone `fill_ratio` sums every filled layer over one layer's outline (1.83 on a two-layer zone), LOW, surfaced when the assertion engine stopped truncating fractional values; KH-643 filed 2026-10-25 by the main-repo agent — EMC SW-001 ignores `--standard` and discards its harmonic amplitude, MEDIUM; KH-497..642 filed 2026-10-25 from the external audit round 1 at `07b7fb1` — 30 static reviews in five bundles, every finding re-verified against the code, one entry per fix group; records and the wave plan in the main repo at `docs/audit/FIX-PLAN.md` and `docs/audit/0*/findings/VERIFICATION.md`; addenda added to KH-329, KH-331, KH-428, KH-432, KH-433, KH-437, KH-439, KH-442, KH-443, KH-470, KH-481, KH-482, KH-484, KH-487, KH-494; KH-480..496 filed 2026-10-24 from the v3 round-9b handoff §7 — the review-period bug-hunt deferrals, every claim re-verified in source at `07b7fb1` (19 confirmed / 4 partly), each with its budget or oracle re-freeze: failed-SPICE-run diagnostics (93 units), missing-sheet / truncated-input diagnostics, unannotated duplicate-ref collapse (1,598 units / 466 repos), GR-002 extents-only (MEDIUM), root-only `inputs` (4,261 multi-sheet units), suppressions only in EMC/thermal, `--parasitics` verbatim names, Mouser `""` key (4 frozen runs), SPICE cache hygiene, EMC `--severity` vocabulary, analysis_cache M3/M4, DigiKey 429, Action diff-base, three review-minor umbrellas; KH-479 assigned FIXED-direct 2026-10-24 to the review-period Critical A-C1 (analysis-dir containment, new in v3, fixed before release — see FIXED.md); KH-477 / KH-478 / KH-446 FIXED in round 9b (`cd2e49b` / `c6f4807`), KH-447 resolved for LT3514, see FIXED.md; KH-478 filed 2026-10-24 from the v3 round-9 handoff §11 — `emc_spice.run_distributed_pdn_spice` measurement tuples in the wrong shape → always `(False, None)`, temp dir never removed, no product caller, LOW; KH-472 / KH-464 / KH-466 / KH-475 FIXED in v3 round 9 (`ec81ca6`), see FIXED.md; KH-477 filed 2026-10-24 while fixing TH-077 — the SPICE model cache falls back to one global `/tmp` directory because `analyze_schematic.py` strips `file`; non-atomic manifest, cross-project leakage, LOW; KH-476 filed 2026-10-24 during the Checklist 11 `_KNOWN_FREQS` verification — the TPS62160 / TPS63000 keys miss the siblings of their own datasheets, 31 regulator findings default to 500 kHz, LOW; KH-470..475 filed 2026-10-23 from the v3 round-8 handoff §11 — thermal `title`+`summary` twin, `export_issues` severity vocabulary, `emc_spice.py` unquoted redirect without `cwd` (KH-463 sibling), RS-001 "carries power_in pins" wording on a name-admitted bootstrap-only rail, `lifecycle_audit` without `diagnostics`, Monte-Carlo per-trial fallback stderr noise; all pre-existing at `a0df172`, LOW; KH-454 / KH-455 / KH-463 FIXED in round 8 (`6222468`, `c598140`), see FIXED.md; KH-469 filed 2026-10-23 during the Checklist 11 SWITCHING_EFFICIENCY verification — three of the four `analyze_thermal.SWITCHING_EFFICIENCY` keys are unreachable and the schematic detector carries a third, different efficiency table; `ic_with_internal_regulator` regulators are costed as 85 %-efficient switchers, LOW; KH-468 filed 2026-10-23 during the Checklist 11 ADC-map verification — `_ADC_RESOLUTION_MAP` 15 of 29 part-number prefixes are wrong, span several resolutions, or name parts that do not exist, LOW; KH-467 filed 2026-10-23 during the Checklist 11 backlog pass — three divergent LED forward-voltage tables (`_LED_VF` / `_LED_VF_FLOOR` in domain_detectors, `_LED_VF_BY_COLOR` in validation_detectors) disagree per colour, LOW; KH-464..466 filed 2026-10-23 from the v3 round-7 handoff §11 — lifecycle_audit missing-input traceback, `is_cross_analysis_ground_name` exact-set policy (SGND/GNDPWR/GND_ISO/VSSA/`/Power/GND` not ground), `analyze_gerbers` exit 0 on a nonexistent dir; all pre-existing, verified at 0490c49, LOW; KH-463 filed 2026-10-23 at the v2.3.2 corpus regen — SPICE testbench `.control` `echo … > <path>` redirect unquoted, every measurement silently skips when the workdir path has whitespace or `,`/`&`/`'`/non-ASCII, the user-facing `analysis/<run>/spice_work/` default inherits the project path, MEDIUM; KH-456..462 filed 2026-10-22 from the SacMap rev2 run-9 soak at the v2.3.2 pre-tag `4701c26` — fab_release_gate counts `G***` logo footprints (false FAIL), silk revision regex misses `rev2`, `capability_mode` `datasheet_coverage_pct` is a hard-coded stub, `audit_pwr_flags` ignores `power_in` pins off named rails (ERC `power_pin_not_driven` ×3 unseen), EMC DC-002 fires on a part-numbered ESD array (dupes UC-001), `cross_domain_signals.needs_level_shifter` stale after KH-424, `datasheet_verify` rc 1 for warnings; riders on KH-431/432/436; all code-verified by the main-repo agent; KH-455 filed 2026-10-22 at the v2.3.2 backport gate — PP-001 `(ref, pin_number)` dedup masks a second symbol's power pin on unannotated `U?` designs, the gate's one residue unit, LOW; KH-454 filed 2026-10-22 at the v2.3.2 backport adoption — RS-001 fires on a bootstrap-only net whose sole `power_in` pin is the BST/BOOT pin, LOW, with the two GitHub #55 riders; KH-450..453 assigned 2026-10-22 FIXED-direct — GitHub #52–#55 / PRs #56–#59 by EldarPolitkin on `main` @ 4701c26, see FIXED.md; KH-449 filed 2026-10-16 at the v3 round-5 full-chain gate — pcb `--full` exceeds the 600 s cap on starshipraider MAXWELL both sides, LOW; KH-447 addendum: LT3514 is a ≥ 20 GB memory blow-up, OOM-killed under the 600 s cap; KH-448 filed 2026-10-16 at the v3 round-4 gate — hierarchy-mode `analyze_schematic.py` ~3 GB RSS on BerkeleyLab/Marble, both sides equal, LOW; KH-446/447 filed 2026-10-15 at the v3 round-2 reply per ruling Q3 — empty-input pcb traceback (hackclub/OnBoard placeholders), schematic 120 s timeouts on three hierarchical roots (discrete-nes ×2, LT3514); KH-445 filed 2026-10-15 at H0 plan 4 — `EQ-042` tags two different equations, LOW; KH-444 assigned 2026-10-14 FIXED-direct — PR #51 AM-001 `<domain>_max` key lookup, imrcly, see FIXED.md; KH-443 filed 2026-10-14 from GitHub #50 — net ties not bridged by RS-001/PP-001 DC-continuity audits, MEDIUM; KH-442 filed 2026-10-06 at the v2.3.1 regen — behavioral opamp model gain 0 false SP-WARN; KH-441 filed 2026-10-06 at the soak-fix gate — via_in_pad first-match attribution ambiguity on rotated QFN/DFN; KH-424 VM-001 trusted-extraction EN fallthrough + KH-425 diff_analysis float delta FIXED-direct and KH-419 FIXED at the SacMap soak fixes @ ef6d55c, see FIXED.md; KH-426..440 filed 2026-10-06 from the SacMap rev2 run-8 soak long tail — XV MPN compare, `.kicad_dru` hole_size precedence, has_pull_up sign, find_pdf glob, SOT-563/θJA, lifecycle finding_id, RGB-LED/PTC power budget, extraction local_path staleness, PD-001 silence, DS-003 sidecars, touch-pad test points, trust_summary provenance (Aug B13), datasheet_verification null rules, sleep-audit riders, DRC lib-table doc note; KH-421..423 filed 2026-10-06 at the KH-418/420 follow-up adoption — Marble U54 hash-seed nondeterminism, `--full` `_point_in_polygon` cost, legacy `.sch` empty-field skip; KH-418 + KH-420 FIXED on main @ 9fbbb26, see FIXED.md; KH-420 filed 2026-10-05 at the v2.3.1 gate — KH-413 THT touch-pad sampling 11× slower on a 130-touch-pad board, the only candidate-side timeout in 170,014 units; KH-416..419 filed 2026-10-05 at the v2.3.1 batch adoption — peer-sheet inner-hierarchy sheet-pin tagging, `_pad_on_layer` NPTH wildcard, KH-414 regression: generic `Part#` overrides explicit `MPN` with an LCSC code, KH-413 circle-pad bbox rider; KH-408..415 FIXED in v2.3.1, see FIXED.md; KH-415 filed 2026-10-05 — `capability_mode.get_capability_mode_ref` KeyError on a malformed `capability_mode.json`, LOW, found at the v2.3.0 regen via TH-054; KH-414 filed 2026-10-04 — GitHub #46 `Manufacturer P/N`/`Digikey P/N` alias gap, three divergent MPN alias lists, MEDIUM; KH-408..413 filed 2026-09-13 from the v2.3.0 correctness batch — thermal-pad-via rotation sign, Altium peer-sheet `_sheet` tagging, RP-001 touch-void wording, thermal skip-reason vocabulary, DFM `parameter` pad-drill, THT-only touch pads; KH-373..379/383/386/396..401/405..407 FIXED and KH-395 REFUTED in that batch, see FIXED.md; KH-407 filed 2026-09-13 — `0V<suffix>` ground spellings read as rails after PR #44, gate residue; KH-406 filed 2026-09-12 — `differential_pairs[].esd_protection` set-order nondeterminism, pre-existing, found during PR #44 review; KH-403/404 filed 2026-09-10 — schematic connectivity over-unions on MAXI030 / Olivetti M20 L1, kicad-cli-refuted, surfaced by PR #43's SH-001 sample; KH-405 filed 2026-09-10 — jlcsearch `extra` block gone, lcsc datasheet fetch degraded; KH-402 assigned 2026-09-01 at the
+maximum. Next KH number: **KH-980** (KH-974..979 filed 2026-11-06 from the product's v3.0.2 survey candidates, each verified by the harness at `4c2a0d6` (the LTspice/Xyce exponent crash is a KH-743 addendum, the corpus capability sidecars a KH-793 addendum); KH-968..973 filed 2026-11-06 by the harness from SacMap rev2 soak run 11 at the v3.0.1 release `7d9d4d9f`, each verified by code read there — footprint keepouts never read, GP-001 per-net 95 % threshold without gap location, lifecycle MPN-only search, XV-004 blank-MPN / distributor-PN sub-cases, silent capability-loss diagnostics umbrella, `diff_analysis` tool-version grading and missing gerber / cross_analysis diffs; addenda on KH-433, KH-930, KH-462; KH-967 filed 2026-11-06 from the product ruling on the Wave 10b gate — `<n>V<n>_N` split rails read positive, verified in the candidate; KH-957..966 filed 2026-11-05 by the harness at the product 3.0.x Wave 10b gate (unreleased, candidate `2abc8496`) from the handoff's new-KH list, each claim re-read in the candidate — PM-001 ignores `drc_exclusions` (the handoff's graze-tolerance cause refuted: 0.119 mm overlaps) and both-layer tie order, duplicate courtyard outlines without `malformed_courtyard`, RP-001 power / high-speed classifiers, VS-001 branch disagreement (vias but no ground via), RP-002 `ran: true` without coverage, pin-only regulator outputs leaving `rail_voltages`, power-budget LDO sign guard, `VSS*` as ground for EN, DFM vs market-inferred IPC class, op-amp dead-output gain error (the 0.00 dB half refuted: deliberate below-minimum demotion); KH-947..956 filed 2026-11-05 by the harness at the product 3.0.x Wave 10a gate (unreleased, candidate `e60d03b5`) from the handoff's new-KH list, each claim re-read in the candidate — nested `.kicad_dru` bound ignored, `analysis: null` / non-string power_rails patterns, BOM-prefixed config, `RecursionError` at ~45 JSON loads, `--v14` null pin, Deep Review split exponent, SPICE LCSC `mfr`, Action residue, fab gate text, lazy `kicad_core.executables` import; addenda on KH-924 (nested condition) and KH-910 (still present); KH-915..946 filed 2026-11-04 by the harness at the product 3.0.x Waves 9b + 9c gate (unreleased, candidate `8c42799`) from the handoff's new-KH list, each claim re-read in the candidate — KH-920 filed FIXED-direct (load switches typed LDO, see FIXED.md) and KH-946 its open residual (dual-switch pin pairing); KH-912..914 filed 2026-11-03 by the harness at the product 3.0.x Wave 9d (docs) gate (unreleased, candidate `389fbd5`) from the handoff's new-KH list, each re-read in the candidate — gerber X2 docstring, unverified gerber version rows, raw `<MPN>` schema / provider text; KH-904..911 filed 2026-11-03 by the harness at the product 3.0.x Waves 9a + 9e gate (unreleased, candidate `6009004`) from the handoff's new-KH list, each claim re-read in the candidate — SPICE model-manifest reset, silent stale for PDFs outside `datasheets/`, `load_manifest` FIFO, abandoned download thread, LTspice/Xyce metadata, Action Top Risks severity, `test_cache_reader` isolation, deep-review partial pin names; KH-870 FIXED in 3.0.x Wave 9a, see FIXED.md; KH-895..903 filed 2026-11-03 by the harness on the product's request from SacMap rev2 soak run 10 at `07b7fb1` (v3.0.0 release base), each verified by code read at `07b7fb1` and v3.0.x-dev `5687ee1` — TE-001 touch pads, lifecycle `sources_available`, LC-007 contradiction, LC-004 multi-MPN wording, report-section gate, SPICE simulator version, two run ids, `power_domain` warning dedup, SKILL.md migration note; KH-894 filed 2026-11-03 by the harness on the product's request after the Wave 8c + 8b acceptance — supply-rail recognition by name only, su-pcb decoupling → rc_filter under KH-800's KiCad names; KH-867..893 filed 2026-11-03 by the harness at the product 3.0.x Wave 8c + 8b gate (unreleased, candidate `0efc012`) — KH-867..873 from the 8c handoff (other `--output` CLIs, `/dev/` link write-through, raw pipeline cache reads, PDF FIFO hash hang, Windows identity fallback, wrong-part `ok` refresh, Windows replace-onto-open-file), KH-874..892 from the 8b handoff (bus members as naming candidates, VM-001 cascade / multi-unit voltage, `4.5V-28V IN` rail, `SCLn`/`SDAn`, legacy and multi-root tie-break, stripline, plain `routing_complete` wording, ferrite `@` / `0R/2A` parsing, HS classifier, split-detection geometry gaps, SW-003 dead note), KH-893 by the harness (text-oracle jlcsearch call); each claim re-read in the candidate; KH-806/791/811/797/807/813 FIXED in 3.0.x Wave 8c and KH-851/820/825/863/850/800/864 FIXED in 3.0.x Wave 8b, KH-795 narrowed to the void half, KH-643 addendum, see FIXED.md; KH-863..866 filed 2026-11-02 by the harness at the product 3.0.x Wave 8a gate (unreleased, candidate `647bc85`) from the handoff's new-KH list, each claim re-read in the candidate — OR-001 angle rounding, EMC limit band edges, the Action's no-op `derating-profile`, what_if no-affected `--output` stdout; KH-818/819/821/822/826/827/828/849/852/853/854 FIXED in 3.0.x Wave 8a, KH-814 narrowed to the schematic / PCB `error` opt-in half, see FIXED.md; KH-829..848 assigned FIXED-direct 2026-11-01 from the product 3.0.x Wave 7 (architecture) close handoff (unreleased, candidate `988d576`) — the range's output-neutral slugs, each landed and closed by its named commit: UTF-8 register sites, dead `NetlistQueries` surface, dead core helpers, unread what-if / thermal / cross inputs, dead provider members, EMC severity-map duplicate, dead datasheet v2 validator / SPICE tables / smoke check, named-pin net / `pin_nets` annotation / S-expression property-decode duplicates, lifecycle derived writer, dead cache / context helpers, run-folder name, verifier helper names, detector netlist inline, lifecycle engine owner, PCB `--schema` thickness / `via_analysis` text, `summarize_findings` help vocabulary, see FIXED.md; KH-659 FIXED in 3.0.x Wave 7, see FIXED.md; KH-849..854 filed 2026-11-01 from the Wave 7 handoff's found-and-not-fixed list (each output-changing) — ~45 more locale-default text sites, ferrite `600R/200mA` parsed as 600 Ω, `(general (thickness))` dropped without `(setup)`, the Action's EMC / thermal "blocking findings" notice (thermal twin added by the harness), LC-007 text naming `lifecycle_audit.py`, undeclared `fix_params`; KH-855..862 filed 2026-11-01 from the Wave 7 deferred-by-ruling list — detector-family move, what-if engine extraction, vendor clients, PCB point-to-segment merge, SPICE kind registry, Action Python runner, `build_connectivity_graph` move (harness patch targets first), Phase 4 exercise script; KH-814..828 filed 2026-11-01 by the harness at the product 3.0.x Wave 6 (docs) gate (unreleased, candidate `c0a8a62`) from the handoff's new-KH list, every claim re-read in the candidate — Action `has-critical` / `findings-count` scope with the retired `voltage_derating` read (MEDIUM), per-CLI output-flag precedence, TW-001 width-table provenance, SPICE extraction-tier key and `meta` mismatch, EMC score after `--severity`, typed-lookup parent-folder cache (Security, MEDIUM, KH-782 residue), microstrip impedance on bulk εr (MEDIUM, output-changing under `--full`), five undeclared PCB envelope keys, silent missing `--config`, Action EMC/SPICE base lanes, Mouser default delay, PCB routing note as a `ValueError` diagnostic, what_if / detector `vref_source` confidence, what_if sweep `±tol` and `--output`; KH-636, 637, 638, 639, 640, 641, 642 FIXED (docs) in 3.0.x Wave 6, see FIXED.md; KH-329 doc halves fixed, entry narrowed to the `--use-cached-scout` traceback; addenda on KH-592 and 554, and on KH-633 in FIXED.md; KH-780..790 assigned FIXED-direct 2026-10-31 from the product 3.0.x Wave 5 handoff (unreleased, candidate `698116c`) — generic-transistor audit sync-manifest `parts`, multi-unit IC verification, extraction caches from a shared temp / parent directory (Security), review-plan run dir, Gerber job-file inner-layer completeness, Gerber X2 reader, Gerber drill model, empty return-path result (GitHub #60.1), `--gp001-debug` path (#60.4), Type-C detection (#61.2), degenerate switching-loop area (#62); KH-330, 484, 488, 571, 572, 577, 578, 579, 580, 595, 596, 600, 601, 602, 603, 604, 605, 614, 615, 616, 617, 620, 621, 622, 624, 625, 633, 646, 652 FIXED in 3.0.x Wave 5, see FIXED.md (commit-message omissions recorded under KH-571 / 572 / 578 / 617 / 646 / 652 / 781 / 786); KH-492, 606, 634, 636, 637 partly fixed (entries stay open with addenda); KH-791..813 filed 2026-10-31 from the Wave 5 handoff follow-ups — `analysis/manifest.json` 0600, SPICE model cache in a shared cwd, `capability_mode` cwd output, relative `inputs.source_files`, reference-net change under a trace (GitHub #60.2/#60.3, MEDIUM), pad-based hot loop, non-atomic `merge_results`, extraction lookup order, multi-condition SpecValue, root-sheet order dependence (MEDIUM), back-mounted THT side, Gerber outline choice, nightly job ids, Type-C CC reader, lifecycle / gerber carry-forward, `--output` atomic writes, spaced `±` in the Deep Review gate, family digit boundary, unnamed supplier slot, DNP value markers, cache-read nofollow, `export_issues` paging, orphan PDF on `--force-all`; addenda on KH-487 (GitHub #61.3), 585, 592, 495, 606, 634 (and 492, 636, 637); note on KH-522 (GitHub #61.1, already fixed); KH-779 filed 2026-10-29 from the product ruling on the 3.0.x relock FND locks — RT-001 gives no hint when a net's zones are unfilled, LOW; addenda on KH-484 (5 FND ids kept failing) and KH-685 (stacked NC pins, RTK Facet); KH-751..777 filed 2026-10-29 (+ KH-778 filed by the harness for the KH-575 KO-001 bounding-box residue) from the product 3.0.x Wave 4 Part B handoff — C14 board contact-model umbrella KH-751 (pad-to-fill misses, 11/296 false-incomplete boards; home of KH-701/702/710 (a)(b)(c)(i)), inferred stackup absent from output and EMC, PM-002 edge-mount keywords, ergogen nested modules / locked reference, IO-001 DNP / net identity / unclassified VBUS, schematic PDN DNP caps, PDN plane-area and grid residue, low-frequency PDN wording, EF rail-tap direction, legacy non-copper rule layers, legacy project rules reported, `.kicad_dru` expressions, custom-rule / annulus edge cases, per-side malformed courtyards, footprint parse edge cases, inferred-stackup edge cases, repeated stackup layer, small-patch return-path reference, KH-750 residue KH-771, SK-001 footprint text / rotated pads, `courtyard_clearance` for PM-001, `net_tie_pad_groups`, PD-003 dead key, board-setup annular width, TV-001 `drill_penalized`; KH-427 and 750 FIXED in 3.0.x Wave 4 Part B (unreleased, candidate `40b8ff3`), KH-364 track-in-zone half and KH-710 (d) fixed (entries stay open), KH-417 return-path half closed by construction (addendum on the FIXED entry), see FIXED.md; KH-711..749 filed 2026-10-28 from the product 3.0.x Wave 4 Part A handoff — case-insensitive mandatory fields, PCB rail set from board nets, op-amp bench below the feedback pole (gates KH-507), PNP bench never on (MEDIUM), P-ch `vth_V`, SPICE presence passes (KH-618 remainder, MEDIUM), `is_power_net_name` signal suffixes stop divider chains (MEDIUM), family Vref table values (MEDIUM), rail-sign readers (KH-675 remainder), CAN split termination (MEDIUM), VM-001 PG exemption unconditional, label-like regulator values, field-trim residue (KH-708 residue), reference nodes as rails, pre-KiCad 7 PCB rule / EG-001, `/x/PGND`, `ctx.rail_by_net` phase order, config-override consistency, regulator/half-bridge misdetections, DO-DET provenance, Vref rows awaiting datasheets, diff-pair ESD / USB-name / SPI-CAN / I2C VOL / family nickname / ERC / RC / LED / COMP / domain-advisory residues, alternate SPICE backends, op-amp `supply_min`, Monte Carlo parallel arms, bench-input residue, Vref key core cut, crystal residue, follow-up umbrella KH-749; KH-750 filed 2026-10-28 by the harness at the Wave 4 Part A gate — `/fpga-pg5/VCCINT` classed `interrupt` once KH-678 drops its rail match (KH-678 census); KH-675 (partly, → KH-719), 678, 699, 705, 708 (residue → KH-723), 672, 442, 676, 611, 612, 618 (partly, → KH-716), 619, 539, 669 FIXED in 3.0.x Wave 4 Part A (unreleased, candidate `b31d4ff`) and KH-709 closed as answered by ruling entry 54, see FIXED.md (commit-message corrections recorded under KH-675 / 678 / 676, the KH-509 CHANGELOG slip under KH-669); addenda on KH-548 / 667 / 483 / 707; KH-701..710 filed 2026-10-27 from the product 3.0.x Wave 3b Part B handoff §Asks 4 — net propagation onto net-less copper, custom-pad residue, instance-aware property writers, JLCPCB CPL convention reference, analyzer sheet-file case / KiCad 6 value settle, bom_manager diagnostics, unit-count semantics, mandatory-field whitespace trim, KiCad 5 `~` ruling question, follow-up umbrella; KH-417 / KH-426 FIXED in 3.0.x Wave 3b Part B (unreleased), see FIXED.md; KH-700 reclassified (R33 / R34: (a) budgeted class, (b) conformant, (c) → KH-708); addenda on KH-574 / 364 / 483; KH-699 / KH-700 filed 2026-10-27 by the harness at the Wave 3b Part A gate — `D_Zener` from an `*LED*` nickname typed `led` (false LR-001), `~` empty-field placeholder kept as a BOM footprint/datasheet on legacy schematics (MEDIUM); KH-679..698 filed 2026-10-27 from the product 3.0.x Wave 3b Part A handoff §Asks 4 — sibling-sheet driver ties, bus member fallbacks, hierarchical-label ERC, ktiger hierarchy join, PU-001 `MISO`, DO-DET port-name exemption, wired NC pins, bus group/quoted/mixed parsing, `~` pin names, bus-member naming, brace decode table, multi-root projects, unresolved text variables, CG-AUD by name, sheet-pin shape preference, follow-up umbrella KH-695; addenda on KH-483 / 667 / 669 / 671 / 677; KH-403 / KH-404 FIXED in 3.0.x Wave 3b Part A (unreleased) and KH-664 closed as conformant, see FIXED.md; KH-662 completion addendum in FIXED.md; KH-678 filed 2026-10-26 at the Wave 3 verdict — sheet net promoted to power by a same-named rail elsewhere (`/HVIL/HVIL_N`), Wave 4 group 1; KH-663..674 filed 2026-10-26 from the product 3.0.x Wave 3 handoff §Asks 4 — legacy buses, `E` decimal mark, EMC BE-001 origin distance, footprint Edge.Cuts outline, VM-001 heuristics, CS-DET set order, root hierarchical label fusion, LR-001 resistor association, same-net pad overlap, follow-up umbrella; KH-675..677 filed 2026-10-26 by the harness at the Wave 3 gate — negative regulator estimates on positive-named rails (Wave 4 group 1), SPICE zero-step transistor sweep (the spice-offline candidate failure), six legacy boards worse against their KiCad-5 netlist; KH-510..519, 560, 575, 576 FIXED in 3.0.x Wave 3 (unreleased) and KH-662 / 668 / 670 assigned FIXED-direct, see FIXED.md; KH-574 / KH-364 narrowed; KH-404 re-verified (reproduces); KH-653..661 filed 2026-10-25 from the product 3.0.x Wave 2 handoff §Asks 4 — `PH0`/`PH1` read as a regulator SW pin (MEDIUM), `RF-C10` typed resistor, EG-001 / GR-005 / CC-001+TW-001 follow-ups, `ThermalSkipped.reason` description, dead `has_esd` line, cross_verify keep/retire, LOW; KH-655 assigned FIXED-direct (test-plan / op-amp 2-hop / what_if order, fixed on discovery); KH-563..570, 582, 584, 591, 509, 607, 421 FIXED in 3.0.x Wave 2 (unreleased), see FIXED.md; KH-620 / 581 / 579 narrowed to their non-order halves; addenda on KH-484 and KH-529; KH-647..652 filed 2026-10-25 from the product 3.0.x Wave 1 residue — DNS rebinding (MEDIUM), NAT64/6to4 `is_global` bypass (MEDIUM), browser-fallback deadline/buffering/WebSocket gaps, `provider_mouser` unbounded `product_url` fetch, SPICE model denylist, `datasheet_extract_cache` fixed temp names / unchecked manifest joins, LOW; KH-497..505 FIXED in 3.0.x Wave 1 (unreleased), see FIXED.md, KH-507 left open by that round; KH-646 filed 2026-10-25 — split from KH-626 at the 3.0.x Wave 0 handoff: `distributor_offline` evicts only the selected tree's provider modules (sk/R6-F4), LOW; KH-626 FIXED on `v3.0.x-dev` `b3e4954` except that finding, see FIXED.md; KH-645 filed 2026-10-25 by the harness audit fix session — netlist oracle m68k-hbc splits 16 `/Bus/PEP/AD*` nets (oracle 4/5 since at least `0490c49`), MEDIUM; KH-644 filed 2026-10-25 by the harness audit fix session — PCB zone `fill_ratio` sums every filled layer over one layer's outline (1.83 on a two-layer zone), LOW, surfaced when the assertion engine stopped truncating fractional values; KH-643 filed 2026-10-25 by the main-repo agent — EMC SW-001 ignores `--standard` and discards its harmonic amplitude, MEDIUM; KH-497..642 filed 2026-10-25 from the external audit round 1 at `07b7fb1` — 30 static reviews in five bundles, every finding re-verified against the code, one entry per fix group; records and the wave plan in the main repo at `docs/audit/FIX-PLAN.md` and `docs/audit/0*/findings/VERIFICATION.md`; addenda added to KH-329, KH-331, KH-428, KH-432, KH-433, KH-437, KH-439, KH-442, KH-443, KH-470, KH-481, KH-482, KH-484, KH-487, KH-494; KH-480..496 filed 2026-10-24 from the v3 round-9b handoff §7 — the review-period bug-hunt deferrals, every claim re-verified in source at `07b7fb1` (19 confirmed / 4 partly), each with its budget or oracle re-freeze: failed-SPICE-run diagnostics (93 units), missing-sheet / truncated-input diagnostics, unannotated duplicate-ref collapse (1,598 units / 466 repos), GR-002 extents-only (MEDIUM), root-only `inputs` (4,261 multi-sheet units), suppressions only in EMC/thermal, `--parasitics` verbatim names, Mouser `""` key (4 frozen runs), SPICE cache hygiene, EMC `--severity` vocabulary, analysis_cache M3/M4, DigiKey 429, Action diff-base, three review-minor umbrellas; KH-479 assigned FIXED-direct 2026-10-24 to the review-period Critical A-C1 (analysis-dir containment, new in v3, fixed before release — see FIXED.md); KH-477 / KH-478 / KH-446 FIXED in round 9b (`cd2e49b` / `c6f4807`), KH-447 resolved for LT3514, see FIXED.md; KH-478 filed 2026-10-24 from the v3 round-9 handoff §11 — `emc_spice.run_distributed_pdn_spice` measurement tuples in the wrong shape → always `(False, None)`, temp dir never removed, no product caller, LOW; KH-472 / KH-464 / KH-466 / KH-475 FIXED in v3 round 9 (`ec81ca6`), see FIXED.md; KH-477 filed 2026-10-24 while fixing TH-077 — the SPICE model cache falls back to one global `/tmp` directory because `analyze_schematic.py` strips `file`; non-atomic manifest, cross-project leakage, LOW; KH-476 filed 2026-10-24 during the Checklist 11 `_KNOWN_FREQS` verification — the TPS62160 / TPS63000 keys miss the siblings of their own datasheets, 31 regulator findings default to 500 kHz, LOW; KH-470..475 filed 2026-10-23 from the v3 round-8 handoff §11 — thermal `title`+`summary` twin, `export_issues` severity vocabulary, `emc_spice.py` unquoted redirect without `cwd` (KH-463 sibling), RS-001 "carries power_in pins" wording on a name-admitted bootstrap-only rail, `lifecycle_audit` without `diagnostics`, Monte-Carlo per-trial fallback stderr noise; all pre-existing at `a0df172`, LOW; KH-454 / KH-455 / KH-463 FIXED in round 8 (`6222468`, `c598140`), see FIXED.md; KH-469 filed 2026-10-23 during the Checklist 11 SWITCHING_EFFICIENCY verification — three of the four `analyze_thermal.SWITCHING_EFFICIENCY` keys are unreachable and the schematic detector carries a third, different efficiency table; `ic_with_internal_regulator` regulators are costed as 85 %-efficient switchers, LOW; KH-468 filed 2026-10-23 during the Checklist 11 ADC-map verification — `_ADC_RESOLUTION_MAP` 15 of 29 part-number prefixes are wrong, span several resolutions, or name parts that do not exist, LOW; KH-467 filed 2026-10-23 during the Checklist 11 backlog pass — three divergent LED forward-voltage tables (`_LED_VF` / `_LED_VF_FLOOR` in domain_detectors, `_LED_VF_BY_COLOR` in validation_detectors) disagree per colour, LOW; KH-464..466 filed 2026-10-23 from the v3 round-7 handoff §11 — lifecycle_audit missing-input traceback, `is_cross_analysis_ground_name` exact-set policy (SGND/GNDPWR/GND_ISO/VSSA/`/Power/GND` not ground), `analyze_gerbers` exit 0 on a nonexistent dir; all pre-existing, verified at 0490c49, LOW; KH-463 filed 2026-10-23 at the v2.3.2 corpus regen — SPICE testbench `.control` `echo … > <path>` redirect unquoted, every measurement silently skips when the workdir path has whitespace or `,`/`&`/`'`/non-ASCII, the user-facing `analysis/<run>/spice_work/` default inherits the project path, MEDIUM; KH-456..462 filed 2026-10-22 from the SacMap rev2 run-9 soak at the v2.3.2 pre-tag `4701c26` — fab_release_gate counts `G***` logo footprints (false FAIL), silk revision regex misses `rev2`, `capability_mode` `datasheet_coverage_pct` is a hard-coded stub, `audit_pwr_flags` ignores `power_in` pins off named rails (ERC `power_pin_not_driven` ×3 unseen), EMC DC-002 fires on a part-numbered ESD array (dupes UC-001), `cross_domain_signals.needs_level_shifter` stale after KH-424, `datasheet_verify` rc 1 for warnings; riders on KH-431/432/436; all code-verified by the main-repo agent; KH-455 filed 2026-10-22 at the v2.3.2 backport gate — PP-001 `(ref, pin_number)` dedup masks a second symbol's power pin on unannotated `U?` designs, the gate's one residue unit, LOW; KH-454 filed 2026-10-22 at the v2.3.2 backport adoption — RS-001 fires on a bootstrap-only net whose sole `power_in` pin is the BST/BOOT pin, LOW, with the two GitHub #55 riders; KH-450..453 assigned 2026-10-22 FIXED-direct — GitHub #52–#55 / PRs #56–#59 by EldarPolitkin on `main` @ 4701c26, see FIXED.md; KH-449 filed 2026-10-16 at the v3 round-5 full-chain gate — pcb `--full` exceeds the 600 s cap on starshipraider MAXWELL both sides, LOW; KH-447 addendum: LT3514 is a ≥ 20 GB memory blow-up, OOM-killed under the 600 s cap; KH-448 filed 2026-10-16 at the v3 round-4 gate — hierarchy-mode `analyze_schematic.py` ~3 GB RSS on BerkeleyLab/Marble, both sides equal, LOW; KH-446/447 filed 2026-10-15 at the v3 round-2 reply per ruling Q3 — empty-input pcb traceback (hackclub/OnBoard placeholders), schematic 120 s timeouts on three hierarchical roots (discrete-nes ×2, LT3514); KH-445 filed 2026-10-15 at H0 plan 4 — `EQ-042` tags two different equations, LOW; KH-444 assigned 2026-10-14 FIXED-direct — PR #51 AM-001 `<domain>_max` key lookup, imrcly, see FIXED.md; KH-443 filed 2026-10-14 from GitHub #50 — net ties not bridged by RS-001/PP-001 DC-continuity audits, MEDIUM; KH-442 filed 2026-10-06 at the v2.3.1 regen — behavioral opamp model gain 0 false SP-WARN; KH-441 filed 2026-10-06 at the soak-fix gate — via_in_pad first-match attribution ambiguity on rotated QFN/DFN; KH-424 VM-001 trusted-extraction EN fallthrough + KH-425 diff_analysis float delta FIXED-direct and KH-419 FIXED at the SacMap soak fixes @ ef6d55c, see FIXED.md; KH-426..440 filed 2026-10-06 from the SacMap rev2 run-8 soak long tail — XV MPN compare, `.kicad_dru` hole_size precedence, has_pull_up sign, find_pdf glob, SOT-563/θJA, lifecycle finding_id, RGB-LED/PTC power budget, extraction local_path staleness, PD-001 silence, DS-003 sidecars, touch-pad test points, trust_summary provenance (Aug B13), datasheet_verification null rules, sleep-audit riders, DRC lib-table doc note; KH-421..423 filed 2026-10-06 at the KH-418/420 follow-up adoption — Marble U54 hash-seed nondeterminism, `--full` `_point_in_polygon` cost, legacy `.sch` empty-field skip; KH-418 + KH-420 FIXED on main @ 9fbbb26, see FIXED.md; KH-420 filed 2026-10-05 at the v2.3.1 gate — KH-413 THT touch-pad sampling 11× slower on a 130-touch-pad board, the only candidate-side timeout in 170,014 units; KH-416..419 filed 2026-10-05 at the v2.3.1 batch adoption — peer-sheet inner-hierarchy sheet-pin tagging, `_pad_on_layer` NPTH wildcard, KH-414 regression: generic `Part#` overrides explicit `MPN` with an LCSC code, KH-413 circle-pad bbox rider; KH-408..415 FIXED in v2.3.1, see FIXED.md; KH-415 filed 2026-10-05 — `capability_mode.get_capability_mode_ref` KeyError on a malformed `capability_mode.json`, LOW, found at the v2.3.0 regen via TH-054; KH-414 filed 2026-10-04 — GitHub #46 `Manufacturer P/N`/`Digikey P/N` alias gap, three divergent MPN alias lists, MEDIUM; KH-408..413 filed 2026-09-13 from the v2.3.0 correctness batch — thermal-pad-via rotation sign, Altium peer-sheet `_sheet` tagging, RP-001 touch-void wording, thermal skip-reason vocabulary, DFM `parameter` pad-drill, THT-only touch pads; KH-373..379/383/386/396..401/405..407 FIXED and KH-395 REFUTED in that batch, see FIXED.md; KH-407 filed 2026-09-13 — `0V<suffix>` ground spellings read as rails after PR #44, gate residue; KH-406 filed 2026-09-12 — `differential_pairs[].esd_protection` set-order nondeterminism, pre-existing, found during PR #44 review; KH-403/404 filed 2026-09-10 — schematic connectivity over-unions on MAXI030 / Olivetti M20 L1, kicad-cli-refuted, surfaced by PR #43's SH-001 sample; KH-405 filed 2026-09-10 — jlcsearch `extra` block gone, lcsc datasheet fetch degraded; KH-402 assigned 2026-09-01 at the
 PR #41 fold adoption — no-connect mid-span connectivity, externally
 reported+fixed by danielboston38, FIXED-direct, never open here;
 KH-401 filed 2026-08-31 during the
@@ -79,6 +79,65 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 
 ## kicad-happy Analyzer Issues
 
+### KH-974: `parse_value("100N")` returns None — an uppercase `N` (nano) is not a multiplier
+
+**Severity:** MEDIUM (a capacitor value written `100N` / `10N` reads as no value, so every detector that needs it skips the part)
+**File:** `skills/kicad/scripts/kicad_core/values.py:90` `parse_value`, multiplier map `:174-178` (`p n u m k K M G R r`; no `N`, `U`, `P`)
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `parse_value("100N")` → None; `"100n"` → 1e-7, `"100nF"` → 1e-7.
+
+**Fix direction:** accept `N` / `U` / `P` (unambiguous: `M` stays mega, `m` milli); size the corpus values that change before the wave.
+
+### KH-975: comma-decimal crystal values (`9,84375 MHz`) parse four orders off — the comma is dropped
+
+**Severity:** MEDIUM (wrong crystal frequency on every comma-decimal value; feeds XL-DET, the load-cap check and EMC clock harmonics)
+**File:** `skills/kicad/scripts/signal_detectors.py:86` `_parse_crystal_frequency`
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `"9,84375 MHz"` → 84,375,000,000 Hz (84 GHz), `"32,768kHz"` → 768,000 Hz; `"9.84375 MHz"` → 9,843,750 Hz. Corpus: jpconstantineau/NRF52-Board outputs carry such values (several files).
+
+**Fix direction:** read a single comma between digits as the decimal separator (as `parse_value` should for passives too — check it).
+
+### KH-976: I2C SDA recognition misses `<prefix>_SDA` nets — `\bSDA\b` does not fire after an underscore
+
+**Severity:** MEDIUM (I2C buses on names such as `OLED_SDA`, `SENSOR_SDA` are not detected; the prefix twin of KH-878)
+**File:** `skills/kicad/scripts/signal_detectors.py:3835` (`re.search(r'\bSDA\b(?!T)', nn) or re.search(r'I2C.*SDA|SDA.*I2C', nn)`; the SCL line next to it has the same shape)
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `I2C_SDA` and `SDA` match; `OLED_SDA`, `SENSOR_SDA` and `SDA1` (KH-878) do not: `_` is a word character, so `\b` never sits between it and `SDA`.
+
+**Fix direction:** match `SDA` as an underscore- or boundary-delimited token (`(?:^|[_/\W])SDA\d*(?:$|[_/\W])`), together with KH-878's numbered suffix.
+
+### KH-977: the isolated-rail keyword `ISO` matches SPI `MISO` nets (IB-DET)
+
+**Severity:** LOW (false isolation-barrier evidence; product survey: 36 units)
+**File:** `skills/kicad/scripts/domain_detectors.py:269` `_ISOLATED_RAIL = re.compile(r'ISO|_(?:B|SEC)\d*(?=[_/]|$)')`, used by `_is_isolated_rail_name` `:272`
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `_ISOLATED_RAIL.search("SPI_MISO")` matches.
+
+**Fix direction:** `ISO` as a delimited token (`(?:^|[_/])ISO`), not a substring.
+
+### KH-978: thermal package fallback misses `SOT23-5` / `SOT223` names without the hyphen
+
+**Severity:** LOW (those parts get the 150 °C/W default Rθ_JA; product survey ≈ 38 default assessments)
+**File:** `skills/kicad/scripts/analyze_thermal.py:77-79` (patterns `SOT-223`, `SOT-23`), `_classify_package` `:129`
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `Package_TO_SOT_SMD:SOT-23-5` → (`SOT-23`, 250); `SOT23-5` and `SOT223` → (`unknown`, 150).
+
+**Fix direction:** an optional hyphen in the package patterns (`SOT-?223`, `SOT-?23`), longest first as today.
+
+### KH-979: EMC power-tree enrichment applies the first copper layer's thickness to every segment (the twin of KH-631)
+
+**Severity:** LOW (trace resistance / drop on inner or thicker-copper rails)
+**File:** `skills/emc/scripts/emc_formulas.py` `enrich_power_tree_with_pcb` `:1091-1101` (the stackup loop takes the first `copper` layer's `thickness` and `break`s)
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Fix direction:** look the thickness up per segment layer, as KH-631 asks for SPICE `--parasitics`; fix both together.
+
+
 ### KH-645: netlist oracle — m68k-hbc splits 16 `/Bus/PEP/AD*` nets into `/ATA/D*` + `/Processor/D*` (oracle 4/5)
 
 **Severity:** MEDIUM (hierarchical bus connectivity on one of the five oracle boards; was 5/5 at the v2.2 gate)
@@ -92,6 +151,8 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 **Repro:** `repos/ehbc-project/ehbc-proto1-board/projects/m68k-hbc/m68k-hbc.kicad_sch`; `KICAD_HAPPY_DIR=<product> python3 regression/run_netlist_oracle.py --board m68k-hbc`.
 
 **Discovered:** 2026-10-25, harness audit fix wave 4 (oracle re-run after moving its children onto `build_env`; the old runner fails identically).
+
+**Addendum 2026-11-06 (v3.0.2 survey):** a real analyzer bug, not oracle drift: kicad-cli 10.0.8 still joins `/Bus/PEP/AD0`.
 
 ### KH-644: PCB zone `fill_ratio` divides the filled area of every layer by one layer's outline — multi-layer zones report ratios above 1.0
 
@@ -253,16 +314,6 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 
 **Fix direction / budget:** measure the trace attached to the connector pad, use the input current (`Iout * Vout / (Vin * eff)`) for the input rail, mark the current "(est.)". Budget: CC-001 / TW-001 on full-chain cross units (Wave 2 product estimate CC-001 6 / 1 unit, TW-001 6 / 3 units).
 
-### KH-660: dead `has_esd` conditional in the EMC test plan
-
-**Severity:** LOW (cleanup)
-**File:** `skills/emc/scripts/emc_rules.py:4158-4159` (`if not pair.get('has_esd', True) if proto else True: pass`)
-**Discovered:** 2026-10-25, product 3.0.x Wave 2 task-6 review (handoff §Asks 4i); verified at `004bba5`
-
-**Symptom:** the conditional has a `pass` body and a misleading comment, so per-connector ESD never feeds the interface risk score.
-
-**Fix direction / budget:** delete it, or score missing ESD per pair for real (then budget `test_plan.interface_risks[*].risk_score`). Deleting is output-neutral.
-
 ### KH-661: decide whether `cross_verify` is kept or retired (its decoupling check, KH-566 half, and DNP handling, KH-594)
 
 **Severity:** LOW (decision item)
@@ -331,16 +382,6 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 
 **Addendum (2026-10-27, product 3.0.x Wave 3b Part A):** same-name hierarchical labels placed directly on two different top-level sheets join by bare name, where KiCad keeps them apart. Same fix: key root-level hierarchical labels per sheet.
 
-### KH-673: same-net pad-pad overlap (stacked footprints) is not joined in the `--full` connectivity graph
-
-**Severity:** LOW (opt-in `--full`)
-**File:** `pcb/connectivity.py` (`build_connectivity_graph`)
-**Discovered:** 2026-10-26, product 3.0.x Wave 3 (handoff §Asks 4); 2 reCamera USB nets split vs KiCad DRC
-
-**Symptom:** two overlapping pads of the same net on stacked/alternate footprints stay separate islands; KiCad joins them.
-
-**Fix direction / budget:** add a pad-pad overlap pass beside the track-pad and pad-via passes; full-chain budget (`connectivity_graph`, PS-002 / RP-002).
-
 ### KH-674: Wave 3 follow-up notes (umbrella)
 
 **Severity:** LOW (each item small; split out when picked up)
@@ -378,16 +419,6 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 
 **Addendum (2026-10-27, Wave 3b Part A legacy oracle):** one fresh legacy board is worse at `6c488c2` than at `d2b9e72` (2,234 fresh boards: clean 1,856 → 1,985, split rows 2,516 → 2,282, merged 571 → 564). Duet3D/Duet-2-Hardware `Duet2/EthernetModule/DuetEthernet.sch` (bisected to `3f9e218`, power nets named from the hidden pin): the cache DEF `+3V3_A` (pin `+3V3_A`) carries `ALIAS +3.3V`, so the `+3.3V` symbols now join `+3V3_A`; the shipped netlist (Eeschema 4.0.2, 2017) keeps `+3V3`, made when `+3.3V` was the stock `power` library alias of `+3V3`. The candidate follows the cache; KiCad with the stock `power` library present would not. A library-availability ambiguity, not a clear defect.
 
-### KH-679: equal-depth sibling-sheet driver ties resolve by sheet order; KiCad uses the sheet-name path
-
-**Severity:** LOW (names only; membership unchanged)
-**File:** `schematic/connectivity.py` (`build_net_map`, driver tie-break)
-**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part A (handoff 3b-A §Asks 4, ruling R5)
-
-**Symptom:** when two drivers of equal priority sit on sibling sheets at the same depth, the net takes its name from the first sheet in parse order; KiCad compares the sheet-name paths. 28 name diffs vs kicad-cli on 4 s_rand boards (akuker pixel_grid, ClemensElflein CoverUI, jirihusak TinySensor, Nixie Driver Tester). Full ties (same priority, sheet and bare name) still resolve by encounter order.
-
-**Fix direction / budget:** pass sheet names into `build_net_map` and break ties by sheet path; budget: net-name renames on boards with sibling-sheet ties.
-
 ### KH-680: `matchBusMember` flat-index-0 fallback for a group label on a group driver is not modelled
 
 **Severity:** LOW (reach ≈ 0)
@@ -414,6 +445,8 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 
 **Symptom:** the last power-sample merge outside the KH-403 class: a root net and a nested sheet net with the same leaf name join; KiCad keeps them apart. May share KH-671's mechanism.
 
+**Addendum 2026-11-06 (v3.0.2 survey):** local labels only, so it does not depend on KH-671.
+
 ### KH-683: PU-001 lists `MISO` among pull-up pin names
 
 **Severity:** LOW (Wave 4)
@@ -432,12 +465,6 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 
 **Fix direction / budget:** exempt by pin type / MCU part, or test the base name as well as the alternate.
 
-### KH-686: `{A{space}B C}` splits a bus group on the decoded space
-
-**Severity:** LOW (pre-existing, not yet checked against kicad-cli)
-**File:** `schematic/connectivity.py` (`expand_bus_name`)
-**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part A (handoff 3b-A §Asks 4)
-
 ### KH-687: `~` as `pin_name` / pin number reads as a literal in files < 20250318
 
 **Severity:** LOW (separately budgeted output change)
@@ -447,6 +474,8 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 **Symptom:** KiCad reads a `~` pin name (and number) as empty below 20250318, as it does for fields (hb-N2); the analyzer keeps `~`. Changing it moves 5,763 entries in 38 quick outputs plus nets movement corpus-wide.
 
 **Fix direction / budget:** apply the field rule to pin names/numbers in its own budgeted round.
+
+**Addendum 2026-11-06 (v3.0.2 survey):** reaches 28.9 M pins in 24 k outputs.
 
 ### KH-688: quoted bus names are not parsed
 
@@ -469,14 +498,6 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 **Symptom:** bus-member slot names are not naming candidates, for same-wire aliases (N1) and sheet-pin mappings. MAXI030 global `D[15..31]` + local `D[16..31]`: membership equals KiCad's but the name is `D16` vs KiCad `D31`; jotego ktiger has 18 nets with offset sheet-pin ranges (`/CPU_DB0` vs ours `/object/CPU_DB1`, `/MID12` vs `/object/MID28`). Reach: s_pwr 20 nets / 3 boards, s_f1r 1, and part of the s_busr residual.
 
 **Fix direction / budget:** make the driver's member name a naming candidate at bus priority; budget: net renames on bus designs.
-
-### KH-691: the tokenizer's brace-decode table differs from KiCad's `UnescapeString`
-
-**Severity:** LOW (reach ≈ 0)
-**File:** `kicad_core/sexp.py` (`_KICAD_UNESCAPE`)
-**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part A (handoff 3b-A §Asks 4)
-
-**Symptom:** the table lacks `{comma}` / `{dollar}`, decodes `{amp}` / `{newline}`, and ignores the `$ ~ ^ _` prefix rule. It affects non-net text and a power Value containing `{comma}`. Switching to KiCad's table would move values and descriptions.
 
 ### KH-692: multi-root projects share no text variables, power renames or root instances across peers
 
@@ -962,6 +983,8 @@ KHPA finding ID). Next TH number: **TH-110** (TH-109 filed 2026-11-06 from the T
 
 **Fix direction:** establish units per backend; fix the parser (see KH-629).
 
+**Addendum 2026-11-06 (v3.0.2 survey, verified at `4c2a0d6`):** the misread is a crash: the LTspice `.meas` regex `^(\w+):\s+.*?=\s*([-+]?[\d.eE]+)` (`spice_simulator.py:340`) and the Xyce one (`:442`) stop at the exponent sign, so `1.58e+04` / `1.58e-04` capture `1.58e` and `float()` raises `ValueError`, uncaught at `simulate_subcircuits.py:263`. Fix with an exponent-aware number pattern (`[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?`).
+
 ### KH-744: op-amp library `supply_min` values look high (OPA1612, TL07x, NE5532)
 
 **Severity:** LOW
@@ -1325,6 +1348,8 @@ Home of KH-701, KH-702 and KH-710 (a)(b)(c)(i).
 **Symptom:** the sidecar lands in the cwd's `analysis/`, not the project's or the run's, and datasheet coverage counts the cwd's extractions.
 
 **Fix direction / budget:** write beside the analyzer output (or into `--analysis-dir`) and list the project's own cache. Harness: runners already treat `capability_mode.json` as a sidecar (TH-050 / TH-089); check the corpus output trees for strays when it lands.
+
+**Addendum 2026-11-06 (v3.0.2 survey):** visible in the corpus: every `capability_mode.json` sidecar under `results/outputs/` reads `datasheet_extraction: partial` (3,000 / 3,000 sampled), because the batch runners and the gate inherit the harness cwd, which holds `datasheets/extracted`. Gate scope (checked): the sidecar sits in each unit's private dir beside `snap.json`; the strict and budgeted comparators read `snap.json` only (`field_compare.iter_units` / `_compare_unit`), and the envelope carries only `capability_mode_ref` (source + run_id, volatile-masked); only the informational raw mode sees the sidecar. Both gate sides see the same cwd, so the verdict is unaffected; a fix that changes what the analyzer does under `partial` is output-changing for the corpus.
 
 ### KH-794: `inputs.source_files` records paths as given, and consumers resolve relative paths against their own cwd
 
@@ -2120,16 +2145,6 @@ Home of KH-701, KH-702 and KH-710 (a)(b)(c)(i).
 
 **Fix direction / budget:** expand `F&B.Cu` / `*.Cu` / THT before the layer test, and apply `_area_copper_layers` to the footprint branch. With KH-778 (bbox residue). Output-changing: KO-001 on boards with such areas.
 
-### KH-922: RT-001 misses partly routed nets (keypad_w_leds: kicad-cli 42 unconnected, RT-001 0)
-
-**Severity:** MEDIUM (false negative on an error-level routing check)
-**File:** `skills/kicad/scripts/pcb/routing.py:42-61` (`analyze_connectivity`: a net counts as routed when any track, arc, via, net graphic or zone carries its number), `:63-66` (unrouted = net with 2+ pads and no routing at all), at `8c42799`
-**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-11-report.md` :15)
-
-**Symptom:** kicad-cli 10.0.7 DRC on keypad_w_leds with `unconnected_items` = error reports 42 unconnected items. The product reports 0 RT-001 with either setting, so `routing_complete` reads True. Pre-existing, not changed by 9b T11. By code read the cause fits: one segment on a net makes the whole net routed, so pads left off a partly routed net are never reported. This was not measured on the board here.
-
-**Fix direction / budget:** per-net island check (pads joined by copper, as `_build_routing_graph` already models for distances) and report the unjoined pad groups. Output-changing: RT-001 / `routing_complete` / `unrouted_count`, and every consumer of them (fab gate, Action). Measure against kicad-cli DRC on a sample first. Related: KH-779, KH-882.
-
 ### KH-923: `fab_release_gate` FAILs routing from `unrouted_count` when RT-001 is suppressed, with an empty net list
 
 **Severity:** LOW (fab gate verdict text)
@@ -2690,26 +2705,6 @@ SW-003 on SacMap U2 / U3 (TPS61023, boost) reports "Hot loop … not estimated":
 
 **Fix direction / budget:** test the courtyard polygon (pad outlines for pads) as KiCad does; KO-001 removals only, measured against kicad-cli on the pcbchecks sample.
 
-### KH-700: a KiCad `~` empty-field placeholder becomes a BOM footprint / datasheet value on legacy schematics
-
-**Severity:** MEDIUM (false negatives: `statistics.missing_footprint` drops parts that have no footprint; BOM shows `~`)
-**File:** `schematic/bom_stats.py` (package fields across units, `9ff9b48` / `4199900`); `schematic/legacy_reader.py` (quoted fields, `f907aa4`)
-**Discovered:** 2026-10-27, harness, Wave 3b Part A gate adjudication (residual units, bisected)
-
-**Symptom (two mechanisms, 4 legacy units + 1 modern):**
-- Multi-unit merge reads the library DEF's `F2 "~"` / `F3 "~"` (the `.lib` placeholder for an empty field) as a set value: RobertPHeller/RPi-RRCircuits `QuadSMC.sch` U3/U4 LM324N have `F 2 ""` / `F 3 ""` on every unit, the cache DEF has `"~"`, and the candidate BOM row reads footprint `~` / datasheet `~`; `missing_footprint` goes `['R1','U3','U4']` → `['R1']`. Same on cellularmitosis `CSI1802X.sch` (`U?`).
-- The legacy quoted-field reader keeps `F 3 "~<newline>"` (a quoted field spanning a line break) as `~`: immortalserg/Ass-shield `nanopi_neo_core.sch` and `v2_nanopi_neo_core.sch` J3 datasheet `""` → `~`.
-- Modern: RWeick/FCD-0003.1S-Xplorer64 `FCD-0003.1S.kicad_sch` BOM row J3 datasheet `""` → ` ~` (leading space, so H2's `~` rule misses it) on a duplicated `J3` that merges two different parts (KH-483 rider).
-
-**Fix direction / budget:** treat `~` (after trimming) as empty wherever a library or legacy field is read, as KiCad does; budget: `bom[]` / `statistics.missing_*` on the units above (5 units in the Wave 3b gate).
-
-**2026-10-27 reclassified (product 3.0.x Wave 3b Part B handoff; rulings R33 / R34; `task-kh700-report.md`):**
-- (a) The mechanism above is wrong: no library DEF field reaches a component. The `~` is the placed unit's own field (QuadSMC U3/U4 unit 3 carries `F 2 "~"` / `F 3 "~"`, units 1, 2 and 4 carry `""`). KiCad 10.0.7 keeps a legacy field's `~` literally (`sch_io_kicad_legacy.cpp:1279-1373`) and its multi-unit merge takes the lowest unit whose text is not empty (`netlist_exporter_xml.cpp:122-191`), so U3's footprint is `~` in KiCad 10 as well. **Ruling R33: KiCad 10's merge is kept; (a) is the multi-unit form of the R27 `~` class, budgeted, not fixed.** KiCad 5.1.12 voids it (`IsVoid`); that choice is KH-709. Size on the legacy leg sample: 12 multi-unit refs in 3 of 100 roots (5 footprints, 12 datasheets) plus QuadSMC and CSI1802X (`U?`, KH-483).
-- (b) **Closed as conformant:** for `F 3 "~<newline>"` KiCad 10.0.7 reads `~\n` and `SCH_FIELD::SetText` strips mandatory fields (`sch_field.cpp:1050-1061`), storing `~` as we do.
-- (c) Moved to **KH-708** (KiCad 10 trims the five mandatory fields; RWeick J3 is one part whose Datasheet is `" ~"`).
-- Remaining open: none in this entry; it stays as the record of the (a) class until KH-709 is ruled.
-
-
 ### KH-647: DNS rebinding between the download URL check and the connect
 
 **Severity:** MEDIUM
@@ -2780,16 +2775,6 @@ SW-003 on SacMap U2 / U3 (TPS61023, boost) reports "Hot loop … not estimated":
 
 **Fix direction / budget:** complex impedance in both sweeps; consumer reads `net` / `rail` (no producer key renamed); Z0_air/c; track max current in PD-004; remove or fix the dead PD-002 branch. Budget: PD-001/PD-002/PD-004 presence, peak values and risk score move; **PD-003 appears for the first time** — budget it separately and validate on a single-source rail first (size first, `--full` boards). Related: KH-478 (distributed SPICE helper with no caller) waits on ruling: keep or retire it. Harness `test_kh377_pd001.py` mocks the peak list, not the math.
 
-### KH-610: SPICE op-amp `phase_at_bw` measure has no `at=`, so the phase-at-bandwidth metric is never populated
-
-**Severity:** LOW (spice default path; a missing value, no false verdict)
-**File:** `skills/spice/scripts/spice_templates.py:599` (and `:565`, transimpedance) (`("phase_at_bw", "find", f"vp({out_net})", "bw_3db")`); consumer `spice_results.py:321`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R2-N2) — split from fix group 8 (the rest of that group is the KH-442 addendum below)
-
-**Symptom:** the tuple renders `meas ac phase_at_bw find vp(out) bw_3db`; ngspice-42 logs `find(FIND) : bad syntax of WHEN` on every op-amp run and `phase_at_bw` is always None.
-
-**Fix direction / budget:** emit `at=bw_3db` (and convert radians, see KH-619). Budget: adds a value to op-amp results under the spice-offline profile; land with the KH-442 fix.
-
 ### KH-609: EMC reads `pads` from PCB footprints that the PCB analyzer always strips, so the IO-001 schematic fallback never clears, test-plan protocols are always `unknown`, and BE-003 is unfirable
 
 **Severity:** HIGH (default EMC path, every board)
@@ -2799,16 +2784,6 @@ SW-003 on SacMap U2 / U3 (TPS61023, boost) reports "Hot loop … not estimated":
 **Symptom:** the three consumers see no pads. (1) The IO-001 schematic-protection fallback (`:842-854`) can never clear, so a connector whose TVS sits >25 mm away gets a false IO-001. (2) `test_plan.interface_risks[].protocol` is always `unknown`. (3) BE-003 frequency stays 100 MHz. Independently BE-003 cannot fire: max `avg_spacing` = sqrt(π·100) = 17.72 mm (1 via) vs `2·λ/20` = 142.9 mm at 100 MHz (εr 4.4); zero vias → `continue` (`:2614`). Even after a pads fix a 1 GHz knee gives a 14.3 mm limit that fires only with exactly 1 via.
 
 **Fix direction / budget:** read `pad_nets[*].net` in the three consumers. Budget: IO-001 count and `interface_risks` protocol/risk_score move (size first: EMC units with IO-001 and a schematic-side protection part). The BE-003 half waits on ruling: the BE-003 density model and the zero-ground-via policy (also RP-001 `:3903`, ES-002 `:3010`) — without it BE-003 stays silent.
-
-### KH-608: EMC DP-001 applies the USB High-Speed 25 ps skew limit to every USB-named pair, so routine Full-Speed boards get an error
-
-**Severity:** HIGH (default EMC path, every board with a USB pair)
-**File:** `skills/emc/scripts/emc_rules.py:2073` (DP-001 looks up `DIFF_PAIR_PROTOCOLS[protocol]` with no speed resolution); `emc_formulas.py:757` (`'USB'` = HS params, 25 ps); producer `schematic/net_analysis.py:1150-1151` → `:1232` (`_guess_diff_protocol` returns bare `"USB"`); DP-002 resolves speed at `emc_rules.py:2128-2147`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R1-F6) — split from fix group 6
-
-**Symptom:** `diff_pair_skew_ps(10 mm, 4.4)` = 54.8 ps → DP-001 error; the warning threshold 12.5 ps is ≈2.3 mm of mismatch and the error 25 ps ≈4.6 mm — routine on FS-only MCU boards (12 Mbit/s, 4–20 ns edges, where skew is irrelevant). DP-002 treats the same unresolved pair as FS, so the two rules disagree on one pair.
-
-**Fix direction / budget:** one USB endpoint-speed resolver shared by DP-001 and DP-002 (unresolved → FS, as DP-002 does). Budget: DP-001 severity/text on USB pairs moves error→warning/info (size first: DP-001 findings whose protocol is bare `USB`). Cross-bundle: `_guess_diff_protocol` has no FS/HS split.
 
 ### KH-606: `datasheet_verify` cannot find any extraction written by `datasheet_extract_cache` (hashed file names and manifest keys), and reads quality from a `meta` key no producer writes
 
@@ -2934,16 +2909,6 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 
 **Fix direction / budget:** key nodes by (layer, x, y) and add via edges across the via's layer span. Budget: `--full` `pad_to_pad_distances` values on affected boards (full-chain profile; size first).
 
-### KH-586: `connectivity.routing_complete` is True whenever every multi-pad net has any copper, although the envelope promises "no pads remain unrouted"
-
-**Severity:** HIGH (default path; feeds `statistics.routing_complete`, the diff engine and the fab gate)
-**File:** `skills/kicad/scripts/pcb/routing.py:30-49,77` (`analyze_connectivity` membership test only); `pcb/presentation.py:96`; envelope `envelopes/pcb.py:83-84`; consumer `diff_engine.py:516`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R9-F1)
-
-**Symptom:** a 3-pad net with one 1 mm stub gives `routing_complete=True`. The `--full` `connectivity_graph` islands / `disconnected_pads` (`connectivity.py:443-513`) are never reconciled with it. The docstring (`routing.py:15-18`) states the weak semantics, and the envelope description states the strong one.
-
-**Fix direction / budget:** either derive `routing_complete` / `unrouted_count` from pad-level connectivity, or narrow the envelope description to what the code does. Budget: if the semantics are strengthened, corpus output `routing_complete` / `unrouted_count` flips on partially routed boards (size first). If only the docs change, it is a `--schema` text change. Waits on ruling: R9-F1 `routing_complete` semantics. Not a KH-364 duplicate.
-
 ### KH-585: input-boundary crashes and silent drops — PCB `--schematic` with a non-dict JSON, a directory named `*.drl`, a truncated report input, and platform-encoding I/O in review/lifecycle/what_if
 
 **Severity:** MEDIUM (malformed or non-UTF-8 input; output-neutral on valid input)
@@ -2975,35 +2940,6 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 
 **Fix direction / budget:** make these fields optional in the envelope dataclasses. Budget: a `--schema` text change only, JSON-neutral. Declare it to the harness (schema artefacts and contract tests re-freeze). Waits on ruling: whether `diagnostics` also becomes schema-required in the same change.
 
-### KH-581: a config section set to `null` crashes thermal, and `_deep_merge` makes `project_config` key order depend on the hash seed
-
-**Severity:** MEDIUM (needs a user-written `.kicad-happy.json`; the corpus has none, so the gate cannot see it)
-**File:** `skills/kicad/scripts/project_config.py:258-259` (`_deep_merge` replaces the default `{}` with None), crash at `analyze_thermal.py:1018-1019`; `project_config.py:87-88` (merge iterates a set), emitted at `schematic/pipeline.py:1347-1349`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R13-F6, kc/R13-F5)
-
-**Symptom:** thermal with `--config {"project": null}` (or the same in a discovered `.kicad-happy.json`) raises `AttributeError: 'NoneType' object has no attribute 'get'` at `:1019`. The schematic survives because of a truthiness check at `pipeline.py:1348`. `analyze_schematic.py` on a copied simple-project with a 4-key `project` config gives 4 different `project_config` key orders under seeds 0-3, with identical values.
-
-**Fix direction / budget:** keep the default when a section is null, with a config type warning (the round-9b pattern). Merge keys in a deterministic order. Budget: corpus-neutral (0 corpus `.kicad-happy.json`). The crash becomes a result.
-
-**Status 2026-10-25 (3.0.x Wave 2, `c40e135`):** the `_deep_merge` key-order half is FIXED (deterministic merge order). Still open: a `null` config section crashes thermal.
-
-### KH-574: the `--full` connectivity graph unions a pad with only the nearest track endpoint, uses a max(w,h)/2 circle for pad copper, and leaves `F&B.Cu` pads on a fictitious layer
-
-**Severity:** HIGH (opt-in `--full`; changes `connectivity_graph` islands on 98 of 250 sampled boards / 259 nets)
-**File:** `skills/kicad/scripts/pcb/connectivity.py:402` (Phase 2 unions only `_SpatialGrid.nearest`, `:161-174`, and has no segment-interior pass); `:237`, `:401`, `:407-408`, `:26` (pad radius max(w,h)/2, tolerance and clearance, zone probe at 0.85·r); `:100-111`, `:234` (`_expand_copper_layers` does not expand `F&B.Cu`); `:200-213` (layer universe inferred from segments, vias and zones); `skills/kicad/scripts/pcb/geometry.py:316,352` (`CopperPresence` buckets `*.Cu` / `F&B.Cu` literally)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R8-F2, kc/R8-F7, kc/R8-F1)
-
-**Symptom:**
-- **Nearest endpoint only:** a three-pad case gives `islands: 2` and `disconnected_pads [['C:1','R:1']]`, and a pad in the middle of a 95→105 track also gives `islands: 2`. Unioning every endpoint within tolerance changes island counts on 98 of 250 random corpus boards (259 nets, an upper bound).
-- **Circle surrogate:** a 6×0.4 pad with a 0.7 mm bare gap to a same-net track gives `islands: 1`, because the radius is 3 and the threshold is 3 + 0.1 + 0.12 mm. A real gap is hidden. Consumers are cross_analysis RP-002 (`:614`) and PS-002 (`:754`).
-- **Layer wildcards:** an `F&B.Cu` pad with a B.Cu track gives `islands: 2`, and `has_coverage_near(..., 'B.Cu')` over a THT pad is False. This shifts the return-path % in `routing.py:453` (threshold 95 %, `:472`). `F&B.Cu` is the first layers clause in at least 1,026 KiCad-5/6 corpus files.
-
-**Fix direction / budget:** union every endpoint and segment interior inside the pad's real outline (rect/oval/polygon, not a circle). Expand `F&B.Cu` / `*.Cu` from the board layer table in both the graph and `CopperPresence`, and keep KH-417's NPTH type check. Build against a kicad-cli ratsnest/DRC oracle together with KH-364 (fills and arcs). Budget: `--full` only (`connectivity_graph`, PS-002 / RP-002, return-path coverage %), about 40 % of sampled boards. A full-chain profile class. Waits on ruling: R8 O2 (any-net copper credited as a return path), O4 (same-number pads force-unioned at `connectivity.py:346-350`), and O5 (confidence degradation for unmodelled shapes).
-
-**2026-10-26 narrowed (3.0.x Wave 3, `6f99b5c` / `3ad03ec`):** the graph half is fixed — exact pad contact, every touching track, arc tracks, track-track and pad-via overlap, `*.Cu` / `F&B.Cu` expanded from the board layer table, NPTH excluded. Open: the `CopperPresence` wildcard half (`pcb/geometry.py` buckets `*.Cu` / `F&B.Cu` literally) plus KH-417's NPTH check there, held for ruling R8 O2 (any-net copper as a return path).
-
-**Addendum (2026-10-27, product 3.0.x Wave 3b Part B, R8 O4 half):** the held same-`ref:number` force-union (`pcb/connectivity.py`) now also reaches netted NPTH pads with copper (mounting holes are often numbered `""` or `0`). KiCad joins same-number pads only under `duplicate_pad_numbers_are_jumpers` / `jumper_pad_groups`. Measured reach: 2 boards (alexdrymonitis module_specific_board / board2, NPTH pads numbered `0` on GND), where KiCad also reports one GND cluster, so 0 false signals. Belongs with O4.
-
 ### KH-573: thermal-pad via adequacy (TV-001) counts vias of any net and layer, and its exemption hides an untented via in a signal pad (VP-001)
 
 **Severity:** HIGH (TV-001 default path; feeds thermal's via correction factor)
@@ -3013,6 +2949,8 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 **Symptom:** a 2×2 mm GND exposed pad with 5 net-99 vias at x = 1.3 (outside the pad, inside the 1.5× box) gives `via_count 5`, `adequacy adequate`, `severity info`. Thermal then applies the via correction from those foreign vias. The VP-001 exemption set holds component refs from TV-001 entries, so every SMD pad of that footprint is skipped. A QFN with an untented via in signal pad 1 gives `[]` with the exemption and `Via in pad: U1:1 (untented)` without it (`--full`).
 
 **Fix direction / budget:** in Tier 1, count only vias on the pad's net that span the pad's layer. Exempt by `(ref, pad)` for the exposed pad only. Budget: corpus output, TV-001 `via_count` / `adequacy`, thermal via correction (Tj values), and VP-001 appearances (`--full`). Size first. This is distinct from KH-441 (via_in_pad first-pad attribution).
+
+**Addendum 2026-11-06 (v3.0.2 survey correction):** only partly stale: TV-001's first pass still ignores the via layer span (`pcb/copper.py:678-693`); a stacked microvia chain reaching the pad is the ruled case. Lands in Wave 11b.
 
 ### KH-562: `analyze_voltage_derating` IC abs-max read swallows JSON / OS errors with no `diagnostics` record [group 15]
 
@@ -3096,16 +3034,6 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 
 **Addendum 2026-11-01 (3.0.x Wave 6, candidate `c0a8a62`):** the docs now describe today's behaviour (ruling W6-11): `skills/datasheets/references/cache-layout.md:124-133` says `lookup()` only marks a stale entry, the regulator detector skips stale or low-score facts and the lookup detectors do not read `stale` yet (`0dd234e`, `7c55b17`, tagged KH-638). Re-edit that paragraph when this entry's per-consumer gating lands. Code unchanged.
 
-### KH-553: the pre-finalize severity histograms count only `critical` / `high` as errors — direct Python callers of `assemble_result` see zero errors [group 13]
-
-**Severity:** LOW (CLI recomputes in `finalize_for_cli`; direct-API callers only)
-**File:** `schematic/presentation.py:238` (`assemble_result`), `:453` (`assemble_legacy_result`); CLI recompute at `schematic/pipeline.py:1515`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R3-F9)
-
-**Symptom:** canonical findings use `error`, so the histogram built before finalize reports 0 errors. The only in-tree direct caller, `skills/datasheets/distributor_core/inputs.py:65`, uses components only.
-
-**Fix direction / budget:** count through `kicad_core/render.normalize_severity`. Budget: CLI output-neutral; changes the direct-API result. Waits on ruling: whether the phase functions are a supported Python API (decides whether signatures may change).
-
 ### KH-552: `unconnected_pin_list` in IC pinouts is effectively dead — every placed pin has a net, so `not net_name` almost never holds [group 13]
 
 **Severity:** MEDIUM (descriptive field the review LLM reads; NT-001 still reports the condition)
@@ -3126,25 +3054,7 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 
 **Fix direction / budget:** apply the modern path's object-id dedupe. Budget: duplicate findings disappear on the 59 legacy units.
 
-### KH-550: BOM groups by (value, footprint, MPN) without `dnp` — a fitted and a DNP part merge into one row and the first member decides the row's DNP flag [group 13]
-
-**Severity:** HIGH (fitted quantity wrong in the order sheet; 651 corpus files)
-**File:** `schematic/bom_stats.py:28` (`generate_bom` group key), `:44` (row state from the first member), `:70` / `:107` (statistics count DNP rows by that flag)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R3-F2)
-
-**Symptom:** R1 (fitted) and R2 (DNP), both 10k 0402 with the same MPN, become one row with quantity 2 and `dnp` from whichever came first; `statistics.unique_parts` / `dnp_parts` follow. Corpus: 651 result files have a mixed fitted/DNP group. Unrelated to KH-483 and KH-365. The same rule in `bom_manager` (audit row sk/R5-F1) is filed separately.
-
-**Fix direction / budget:** add `dnp` to the group key. Waits on ruling: whether `statistics.dnp_parts` includes `in_bom:false` parts (the merge is wrong either way; the ruling sets the target count). Budget: `bom[]` rows and `statistics.unique_parts` / `dnp_parts` on the 651 units.
-
-### KH-549: `opamp_circuits` detection identity is `["reference"]` only — the units of a dual / quad op-amp share one `detection_id` and the diff drops per-unit changes [group 12]
-
-**Severity:** HIGH (dual and quad op-amps are common; diff silently loses changes)
-**File:** `detection_schema.py:301-303` (`opamp_circuits` `identity_fields=["reference"]`); detector emits one record per (ref, unit) at `signal_detectors.py:2593-2596`, `:2803-2804`; `compute_detection_id` hashes identity fields only (`detection_schema.py:647-662`); `diff_engine.py:120-141` keys by `detection_id`, last wins
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F6)
-
-**Symptom:** a gain change on U1 unit B of an LM358 does not appear in `diff_analysis` output, because unit A's record overwrites unit B's in the map. Distinct from KH-483.
-
-**Fix direction / budget:** add `unit` to the op-amp identity. Budget: `detection_id` moves on every multi-unit op-amp record; stored IDs in saved runs and `diff_analysis` against an older run need a compatibility note. Coordinate with the kc-b R12 diff-consumer entry.
+**Addendum 2026-11-06 (v3.0.2 survey):** magnitude is 549 duplicate `finding_id`s on 376 units, not 59 outputs.
 
 ### KH-548: lower-reach domain-detector gaps — isolator shared-ground check skipped with one ground net, BMS cell taps named `VBAT_CELLn` dropped as power nets, `VBOOT` partner looked up as `VSOOT` [group 11]
 
@@ -3168,16 +3078,6 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 
 **Fix direction / budget:** one classifier-precedence fix (longest / most specific match, explicit tables per family, the optocoupler type accepted). Waits on ruling: the MPN / capability authority for family matching (shared with KH-546). Budget: info record labels on the overlapping families, VM-001 appearances on single-supply LVC nets, TF-001 appearances; size first.
 
-### KH-546: I2C address conflicts are grouped by `device_type:config`, so different models at the same address never collide, and two unresolved address pins collide as a deterministic error [group 11]
-
-**Severity:** HIGH (IA-001 misses real conflicts and raises false `error`s)
-**File:** `domain_detectors.py:5947-5971` (`detect_i2c_address_conflicts`: key at :5956; unresolved net → `'unknown'` at :5924; `severity='error', confidence='deterministic'` + `swap_connection` at :5968); table `:5906-5907`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R6-F2)
-
-**Symptom:** DS1307 and DS3231 (both 0x68, also in the table) never collide; INA219 / INA226 / PCA9685 at base 0x40 never collide. Two parts whose address nets the resolver does not recognise both get `'unknown'` and produce a deterministic `error` conflict. ADS1115 ADDR → GND/VDD/SDA/SCL is resolved correctly.
-
-**Fix direction / budget:** group by resolved address per bus; treat `unknown` as unknown (no conflict, or an info). Waits on ruling: the authoritative MPN / capability source for I2C address maps (without one the fix swaps one prefix list for another). Budget: IA-001 appearances (cross-model conflicts) and disappearances (`unknown` pairs); size first.
-
 ### KH-545: integrated-magnetics RJ45 jacks (HR911105A, MagJack, HFJ11, LPJ, ARJP) are not counted as magnetics — "No magnetics" warning on a very common Ethernet design [group 11]
 
 **Severity:** HIGH (common path; advisory sub-field)
@@ -3187,36 +3087,6 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 **Symptom:** PHY → HR911105A with no discrete transformer → `impedance_advisory.status="warning"` "No magnetics"; a design with an unconnected transformer anywhere passes.
 
 **Fix direction / budget:** treat integrated-magnetics jacks as magnetics, and credit a transformer only when it is connected to the PHY's MDI nets. Budget: Ethernet `impedance_advisory` status changes on magjack units; size first.
-
-### KH-544: LED audit picks the first resistor on any non-ground LED net, including the supply rail — any pull-up on +3V3 becomes the "series resistor" [group 11]
-
-**Severity:** HIGH (default path, every LED; current estimate from the wrong R)
-**File:** `domain_detectors.py:4916-4951` (`audit_led_circuits` → `_scan_net_for_resistor`: `check_nets` includes the supply rail, first resistor returned with no check that it is in the LED's current path); `:5040-5042` (a string uses one `_estimate_led_vf`)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R6-F1)
-
-**Symptom:** +3V3 → LED → R → GND: the rail is scanned first in pin order, so any 10 Ω–100 kΩ pull-up on +3V3 is reported as the LED's resistor. N-LED strings use a single Vf, over-estimating current ((12 − 3·2)/1k = 6 mA checks only with per-LED Vf). Distinct from KH-467 (Vf tables).
-
-**Fix direction / budget:** walk only the LED's own anode / cathode nets (excluding rails and ground) and require the resistor's other end to continue the current path; sum Vf over the string. Coordinate with KH-532 (LR-001) and KH-467. Budget: LED audit resistor / current / power on most LED units; size first.
-
-### KH-543: USB-PD controller exemption never fires (`pd_controller` key never set) and the source-Rp statuses can only be assigned to pull-downs [group 11]
-
-**Severity:** HIGH (every listed PD controller with CC pins gets false `missing` pull-down messages)
-**File:** `domain_detectors.py:2944-2992` (`detect_power_path`: `entry` never gets `pd_controller`, the only reference is the read at :2944; only ground-side resistors collected at :2961; the 56k / 22k / 10k "source" statuses at :2989- are reachable only for pull-downs)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R6-F5)
-
-**Symptom:** a controller with internal Rd/Rp (e.g. a PD sink IC) gets "missing CC pull-down"; a source design with Rp to VBUS is never recognised because Rp pulls up (56k / 22k / 10k to 5 V, or 36k / 12k / 4.7k to 3.3 V), while sink Rd is 5.1 kΩ to GND.
-
-**Fix direction / budget:** set `pd_controller` from the controller match and collect rail-side resistors for the Rp statuses. Budget: CC status / message changes on USB-C units with PD controllers or source Rp; size first.
-
-### KH-542: two consumer-producer key mismatches leave features dead corpus-wide — ADC `anti_aliasing` reads RC `reference` (producer writes `ref`), CD-DET reads `frequency_hz` (producer writes `frequency`) [group 11]
-
-**Severity:** HIGH (the `anti_aliasing` feature never emits; 0 of 692 ADC-bearing outputs)
-**File:** `domain_detectors.py:3116`, `:3276-3279` (`detect_adc_circuits` reads `reference`; producer `signal_detectors.py:630-631`, `:679-683` use `ref`); `domain_detectors.py:3748`, `:3758` (`detect_clock_distribution` reads `frequency_hz`; producer `signal_detectors.py:1065` writes `frequency`)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R6-F6, kc/R6 register CD-DET `frequency_hz`)
-
-**Symptom:** `rc_by_net` is always empty, so `anti_aliasing` is never emitted (grep of harness `results/outputs/schematic`: 0 files with `"anti_aliasing"` vs 692 with ADC records). CD-DET `frequency_hz` is always null and the MHz suffix never prints.
-
-**Fix direction / budget:** read the producer's key names; index the corrected high-pass `output_net` (land after KH-536). Budget: additive `anti_aliasing` records on ADC units with RC filters, and CD-DET `frequency_hz` / text on clock units; size both.
 
 ### KH-541: current-sense detection drops shunts whose two terminals are both power-classified; the second pass misses INA219-class pin names [group 10]
 
@@ -3238,56 +3108,6 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 
 **Fix direction / budget:** require cathode on the supply side and anode on the switched node. Budget: `has_flyback_diode` flips and any related observation, on reversed-diode units only (expected tiny; size first).
 
-### KH-538: op-amp `non_inverting` configuration is unreachable — a ground-ended Rg is rejected and `neg_has_signal` is always true in the Rf+Ri branch [group 10]
-
-**Severity:** HIGH (every non-inverting amplifier; dead SPICE template)
-**File:** `signal_detectors.py:2759` (Ri loop rejects a ground-ended resistor), `:2773-2776` (`detect_opamp_circuits`: `neg_has_signal = ri_ref is not None`, so :2775 is never reached); consumer `skills/spice/scripts/spice_templates.py:430`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R5-F2)
-
-**Symptom:** Rf = 100k, Rg = 10k to GND, signal on + → `('transimpedance_or_buffer', None)`; correct is non-inverting, gain +11.
-
-**Fix direction / budget:** treat a ground-ended resistor on the − input as Rg and decide inverting vs non-inverting by where the signal enters. Budget: `opamp_circuits` configuration / gain on non-inverting stages and the SPICE profile (the non-inverting template starts running); size both.
-
-### KH-537: ESD design observation reads the singular `protected_net`; the producer emits `protected_nets` [group 10]
-
-**Severity:** MEDIUM (DO-DET ESD observation only)
-**File:** `signal_detectors.py:3523`, `:3827` (`detect_design_observations` reads the singular field); producer `:2541-2542`, `:2364-2365` emits `protected_nets`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R5-F9)
-
-**Symptom:** `has_esd_protection` is false for nets that a TVS array protects; no other reader of the field exists in `skills/`.
-
-**Fix direction / budget:** read `protected_nets`. Budget: small; DO-DET observation text / flags on units with protection devices.
-
-### KH-536: high-pass RC filters report the ground node as `output_net` and the R/C junction as `input_net` — every high-pass is skipped by the SPICE template [group 10]
-
-**Severity:** HIGH (every high-pass RC; dead SPICE coverage)
-**File:** `signal_detectors.py:634-635` (`detect_rc_filters`; the KH-116 comment at :636-638 contradicts the code; merge key at :666 uses these fields); consumer `skills/spice/scripts/spice_templates.py:177` (skips `out_net == "0"`)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R5-F4)
-
-**Symptom:** C from IN to OUT, R from OUT to GND → `('high-pass','OUT','GND','GND')`. The input is the cap's far node and the output the shared node. Any spice-bundle report of "high-pass filters never simulated" has this root cause.
-
-**Fix direction / budget:** for high-pass, input = `c_other`, output = `shared_net`; recheck the merge key at :666. The ADC anti-aliasing consumer (KH-542) indexes `output_net`, so land them in order. Budget: `rc_filters[]` input/output nets on every high-pass, RC merge results, and the SPICE profile (high-pass sims start running); size both profiles.
-
-### KH-535: PS-001 regulator-cycle key repeats the closing node, so one 2-regulator cycle is reported once per start node [group 9]
-
-**Severity:** LOW (designs with a PG/EN cycle)
-**File:** `validation_detectors.py:1001-1019` (`validate_power_sequencing` → nested `dfs`: the cycle is `path[idx:] + [node]`; `sorted()` of A→B→A = [A,A,B] vs B→A→B = [A,B,B])
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-minor-2)
-
-**Symptom:** the A↔B cycle yields two PS-001 findings with different summaries.
-
-**Fix direction / budget:** key the cycle on its node set without the repeated closing node (or a canonical rotation). Budget: small; PS-001 duplicates disappear on cyclic units.
-
-### KH-534: VM-001 `skip_en` is one net-wide flag — a regulator EN pin on the net skips every other domain pair on it [group 9]
-
-**Severity:** MEDIUM (nets with three or more ICs, one of them a regulator EN)
-**File:** `validation_detectors.py:571-608` (`validate_voltage_levels`: the heuristic path :595-606 and the trusted-threshold path :587-588 set `skip_en` for the whole net)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F4)
-
-**Symptom:** a 5 V output fanning out to a 3.3 V IC input and a regulator EN reports no VM-001: the EN exemption also suppresses the 5 V → 3.3 V crossing. A new consequence of the fixed KH-424 path, separate from KH-461.
-
-**Fix direction / budget:** exempt the EN endpoint pair only, keep checking the others. Budget: VM-001 appearances on such nets; size first.
-
 ### KH-533: FS-001 "requires external compensation" lists internally compensated parts (LM2596/LM2576, LM317/337/350, TPS5430/5450, MC3406x) and prescribes a harmful 10 nF FB→GND cap [group 9]
 
 **Severity:** HIGH (every LM2596-ADJ / LM317 board with an empty FB net; the suggested fix can hurt the loop)
@@ -3297,16 +3117,6 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 **Symptom:** LM2596/LM2576 (Simple Switcher) and TPS5430/5450 are internally compensated; LM317/337/350 and LT108x ADJ bypass caps are optional ripple-rejection parts; MC3406x has no compensation pin. Only UC384x/UC282x COMP and TPS40xxx controllers need an external network. The fix prescribes 10 nF FB→GND, which adds a pole on a FB node. The low-impedance info also fires on the LM317 datasheet-standard 240 Ω / 720 Ω divider (180 Ω parallel, needed for the minimum load current).
 
 **Fix direction / budget:** reduce the keyword list to parts that really need external compensation (UC384x / UC282x / TPS40xxx), drop the FB→GND prescription, exempt LM317-class dividers from the low-impedance info. Budget: FS-001 disappearances on LM2596 / LM317 / TPS54xx units (size first) plus the info disappearances.
-
-### KH-532: LR-001 skips every low-side LED resistor — `series_resistors[].rail` is the resistor's far net, which is GND [group 9]
-
-**Severity:** HIGH (default path; low-side current limiting is a common topology)
-**File:** `validation_detectors.py:1159-1169`, `:1210-1213` (`validate_led_resistors`: `parse_voltage_from_net_name('GND')` → None, `continue` at :1213 skips both checks); `anode_net` / `cathode_net` computed at :1147-1157 and never read
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F2)
-
-**Symptom:** +5V → red LED (Vf 1.8 V, table :1091) → 47 Ω → GND: (5 − 1.8)/47 = 68.1 mA, above the 40 mA trigger (:1095, :1216), 0.218 W; no finding. With 10 Ω: 320 mA and 1.02 W; both the current and the dissipation findings are lost.
-
-**Fix direction / budget:** take the supply from the LED anode side (the far end of the LED string), not the resistor's far net. Coordinate with KH-544 (LED audit series resistor) and KH-467 (Vf tables). Budget: LR-001 appearances on low-side LED circuits; size first.
 
 ### KH-531: USB VBUS capacitance check has no upper bound — a device port with more than 10 µF passes [group 8]
 
@@ -3339,86 +3149,6 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 **Fix direction / budget:** two passes, build all dependencies, then join PG→EN. Budget: small; `power_sequencing` edges / `sequence_order` on multi-regulator units. The meaning of `sequence_order` (startup dependency vs PG→EN depth) is an open ruling but does not block this fix.
 
 **Note 2026-10-25 (product 3.0.x Wave 2):** not part of Wave 2; REPORT-4 A4-F7 (PG -> EN sequencing) stays with the system-analyses group.
-
-### KH-528: schematic `pdn_impedance` combines decoupling branches as Σ1/|Z| — antiresonance peaks understated (2.6× in the worked case) [group 8]
-
-**Severity:** HIGH (every schematic with decoupling caps; `pdn_impedance` section)
-**File:** `schematic/system_analyses.py:78-82` (`_cap_impedance` returns a real magnitude), `:177-180` (branches combined as Σ1/|Zi|), `:184` (VRM term, same real-only combination) in `analyze_pdn_impedance`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R4-F3)
-
-**Symptom:** two caps with ESR 0.005 / 0.0379 Ω give Z1 = 0.005 + j0.04879 and Z2 = 0.0379 − j0.05063 at 15.8489 MHz; the magnitude method gives 0.027622 Ω, the complex parallel 0.072232 Ω. The magnitude sum is bounded above by min|Zi|, so antiresonance peaks are always understated, never shown at full height.
-
-**Fix direction / budget:** complex admittance sum, VRM included. The EMC twin (`skills/emc/scripts/emc_formulas.py:646`, audit row sk/R1-F1) is filed separately; the two must be fixed together so the schematic and EMC PDN models agree. Budget: `pdn_impedance` values on every unit with decoupling (and the EMC PDN results via the twin); size first.
-
-### KH-527: I2C `vol_compatibility` treats the VOL limit as an upper bound on the pull-up — warns on every realistic pull-up (4.7 k, 10 k, 2.2 k) [group 8]
-
-**Severity:** HIGH (every I2C bus with a pull-up)
-**File:** `schematic/system_analyses.py:1059-1124` (`analyze_protocol_compliance`: `r_max_for_vol = 0.4/(iol_ma*1e-3)` → 133 Ω / 67 Ω; `:1112` `if min_pu_ohms > r_max_for_vol` warns); exported via `schematic/pipeline.py:1154` → `schematic/presentation.py:324` as `protocol_compliance.findings[].issues` + `checks.vol_compatibility`
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R4-F1)
-
-**Symptom:** VOL bounds the pull-up from below: R_min = (VDD − VOL_max) / I_OL (UM10204: 3 mA Standard/Fast, 20 mA Fm+), e.g. (3.3 − 0.4) / 3 mA = 967 Ω; the rise time gives the upper bound. Corpus: the warning is on 1,755 saved outputs / 2,229 buses; top flagged values 4.7 kΩ (685), 10 kΩ (679), 2.2 kΩ (344).
-
-**Fix direction / budget:** compute R_min from VDD, warn when the pull-up is below it, rename / document `max_for_vol`. Budget: the warning disappears on nearly all 2,229 buses (section output, not rich findings); `checks.vol_compatibility` values change on every I2C bus with a pull-up.
-
-### KH-526: `unconnected_hierarchical` lists hierarchical labels that ARE connected — membership is tested against net keys, not net labels [group 8]
-
-**Severity:** HIGH (every hierarchical design; informational section, essentially always false)
-**File:** `schematic/audits.py:1324-1326` (`validate_hierarchical_labels`: `scalar_hier_names - set(nets.keys())`); net naming at `schematic/connectivity.py:729-777` picks the parent-sheet / highest-priority label, so child labels are rarely keys
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R4-F8)
-
-**Symptom:** corpus: `unconnected_hierarchical` on 2,271 saved outputs; in a 400-output sample all 8,444 of 8,444 listed labels appear in some net's `labels[]`.
-
-**Fix direction / budget:** test membership against `nets[*].labels`. Budget: `unconnected_hierarchical` empties on most of the 2,271 units.
-
-### KH-525: I2C rise time over 1000 ns defaults the mode to "Standard" with no warning [group 7]
-
-**Severity:** MEDIUM (I2C buses with heavy RC; the over-limit case is silent)
-**File:** `schematic/net_analysis.py:698` (`_detect_i2c_buses`, no guard; the warning loop at :707 breaks only on a passing mode); `:664` (`load_count*5` pF)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R3-F7)
-
-**Symptom:** tr = 0.8473·RC > 1000 ns (UM10204 Standard limit; 300 / 120 ns Fast / Fm+ thresholds are correct) yields mode "Standard" and nothing flags the bus as out of spec. Side note: 5 pF per load is optimistic; the spec budgets about 10 pF per pin plus trace.
-
-**Fix direction / budget:** report "exceeds Standard-mode rise time" when tr > 1000 ns. Budget: small; I2C bus records with large pull-ups / many loads. Unify with the second I2C enrichment path at the same time (record's deferred item).
-
-### KH-524: CAN termination is computed once across all CANH×CANL nets and stamped on every bus [group 7]
-
-**Severity:** HIGH (multi-CAN designs; small reach, wrong every time)
-**File:** `schematic/net_analysis.py:975-995` (`_detect_can_buses`: one `termination` for all buses, :988 accepts any CANL net, not the paired one, :994-995 stamps it on every entry); same concept in the fallback `schematic/system_analyses.py:1287-1291` (`analyze_protocol_compliance`, "termination from any CAN pair")
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R3-F4, kc/R4 register CAN fallback)
-
-**Symptom:** corpus: 13 multi-bus files. FOME-Tech/Polygonus psu has CANH2/CANL2 credited with R9; USB2XXX has two hierarchical channels plus their CAN_TX/RX entries all credited with R10. Each bus segment is terminated independently.
-
-**Fix direction / budget:** pair CANH/CANL by name stem and judge termination per pair, in both sites. Budget: small (the 13 multi-bus files); split / off-board termination is a separate rule-design question.
-
-### KH-523: SPI `cs_conflicts` counts the controller on every CS net, substring-matches `SS` / `CS` in `VSS` / `SSP1_SCK`, and counts one IC twice [group 7]
-
-**Severity:** HIGH (default path; the normal MCU + one slave case is reported as a conflict)
-**File:** `schematic/net_analysis.py:1090-1093` (net selection: substring `SS` / `CS`), `:1100-1105` (`_analyze_bus_protocols`: every `type=="ic"` pin counted, no direction / role test, repeated pins of one IC counted)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R3-F5)
-
-**Symptom:** corpus: 1,321 `cs_conflicts`, 1,225 with exactly two devices (typically MCU + one slave, the normal SPI wiring); 134 sit on non-CS nets (SCK / MOSI / MISO / VSS, `DAC_VSS`, `SSP1_MOSI`); 51 list the same ref twice.
-
-**Fix direction / budget:** match CS net names on token boundaries, exclude the driving controller, dedupe by ref. Budget: large; most of the 1,321 `cs_conflicts` disappear.
-
-### KH-521: regulator detector takes the inductor's far side as `output_rail` on a boost (output = input rail, 5 V rail given 7.2 V), and the Vref lookup ignores the MPN [group 6]
-
-**Severity:** HIGH (default path, boost converters without a VOUT pin; Vref half MEDIUM)
-**File:** `signal_detectors.py:1804-1808` (+ retry `:1869-1876`) in `_build_regulator_record` (no boost qualification; `:2211-2232` only labels `sw_type`); `schematic/pipeline.py:326-330` writes `rail_voltages[out_rail] = v_out` unconditionally; `signal_detectors.py:1893-1894`, `:1910-1911` + `kicad_core/parts.py:146-200` (Vref lookup by value and lib_id only; `mpn` from `schematic/reader.py:379/409` never consulted); provenance `signal_detectors.py:1925/1943` reads `vref_source` before setting it
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R5-F1, kc/R5-F7)
-
-**Symptom:** an MT3608-style boost (+5V → L1 → SW, divider from +12V to FB) gives `input_rail=+5V, output_rail=+5V, estimated_vout=7.2`, so the 5 V rail carries 7.2 V into every rail consumer. A part identified only by MPN falls to the heuristic Vref (`vref_source: heuristic`, visible), which `rail_voltages` then consumes without regard to confidence; the provenance always says `divider_plus_lookup` / `heuristic`.
-
-**Fix direction / budget:** for a boost, take the output from the diode / synchronous FET's far side (or the divider's top net), never the input-side inductor terminal; consult `mpn` in the Vref lookup; set `vref_source` before reading it. Budget: `power_regulators[].output_rail` / `estimated_vout` / `vref_source` and `rail_voltages` on boost and MPN-only regulator units, then the AM / OV / FT / VM inputs; size first; land after KH-520.
-
-### KH-520: `rail_voltages` is keyed by the path-stripped net name — distinct `/<uuid>/VOUT` rails collapse, the safety detectors miss them, and sheet-stem voltages land on ground and switch nodes [group 6]
-
-**Severity:** HIGH (default path, hierarchical designs; feeds AM-001 / OV-001 / FT-001)
-**File:** `schematic/pipeline.py:330`, `:333` (`detect_topologies` stores `_clean_hierarchical_name()` keys; `kicad_core/netnames.py:189-190` strips to the last `/`); `:332-337` (power-net inference runs `_estimate_rail_voltage` on sheet-stem keys); consumers `lookup_detectors.py:126`, `:221`, `:424` (look up the raw pin net)
-**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R3-F1)
-
-**Symptom:** `schematic/hierarchy.py:131` prefixes child hierarchical labels with the UUID instance path, so lookups by raw net miss. Corpus: 507 regulator outputs on UUID-qualified rails, 242 with a voltage but no matching key. bluerobotics/ping-dev-kit sonar_power has three distinct `/<uuid>/VOUT` nets collapsed into one `VOUT: 3.318`. The inference loop emits `'/3v3_buck/PGND': 3.3`, `'/3v3_buck/SW': 3.3`, `'/5v_buck/PGND': 5.0`, attaching the sheet name's voltage to ground and switch nodes; AM / OV / FT can then compare pins against a false rail voltage.
-
-**Fix direction / budget:** key `rail_voltages` by the full net name, look up by the same, and do not infer a voltage from a sheet stem. Waits on ruling: whether `voltage_overrides` feeds detection or only summaries. Budget: AM-001 / OV-001 / FT-001 appearances and disappearances plus the `rail_voltages` key set; land after KH-518/11.
 
 ### KH-508: `action/examples/fork-safe-comment.yml` takes the PR number from the untrusted artifact and passes it unvalidated to the write-token comment step
 
@@ -3844,17 +3574,6 @@ Checklist 11b; the three current constants retire.
 
 **Fix direction:** exclude footprints that are graphics (reference matching `^G\*+$|^G\d*$` with no schematic counterpart, `attr` board-only / `exclude_from_bom`, or a `footprint_count_placeable` stat the PCB analyzer emits) before comparing; report the excluded count in `details`. Gate budget: `fab_release_gate` is not in the corpus profile — no gate movement.
 
-### KH-449: `analyze_pcb.py --full` exceeds the 600 s full-chain cap on `azonenberg/starshipraider` MAXWELL `maxwell-main.kicad_pcb` (both sides)
-
-**Severity:** LOW (correct output in the standard profile, which completes without `--full`; the `--full` run is a performance cliff of the KH-422 kind, not a defect — but it is the only full-chain-profile timeout in 3,015 pcb units and sizes the profile's cap)
-**File:** `skills/kicad/scripts/pcb/` (`--full` trace-segment analyses: `routing.py` / `geometry.py` hot paths — not profiled; KH-422's `_point_in_polygon` cost is the first suspect)
-**Discovered:** 2026-10-16, v3 round-5 full-chain gate (`results/v3_round5_gate_fc/`, run `f6784ec3`): `timeout after 600s` on BOTH `6a91aaa` and `d55c851` (600.181 s / 600.187 s), so a baseline debt, not a round delta; ledgered in `reference/baseline_debts/6a91aaa.json` `timeout_units` with `profile: full-chain` and `accepted_by: null` (maintainer to accept per ruling Q3). The board was not in the H0 seed-23 full-chain sample, so the profile's first corpus-scale run surfaced it. A standalone `--full --only-deterministic` run of the `6a91aaa` product on an otherwise idle box completes in **619.9 s** with 1.8 GB peak RSS and a 235 MB output (`results/v3_round5_gate_aux/debt_measure/maxwell_memrun.json`), so the unit sits just past the 600 s cap: a marginal cliff, not a hang.
-
-**Fix direction:** profile a `--full` run of the board; if it is `_point_in_polygon`
-again, KH-422's spatial-index fix covers it. Until then the unit stays a
-both-sided debt under the full-chain profile; a fix turns it into a compared
-pair, i.e. a round delta the fixing round must budget.
-
 ### KH-448: `analyze_schematic.py` in hierarchy mode peaks at ~3 GB RSS on `BerkeleyLab/Marble` (25 sheets, 1,041 components) — a 32-way corpus run exceeds 62 GB
 
 **Severity:** LOW (correct output, byte-identical across 6a91aaa and 9465206; a resource footprint, not a defect — but it sizes every hierarchy-profile corpus run)
@@ -3933,23 +3652,6 @@ relock. `AlexColello/discrete-nes` `ram` / `row_group` are acyclic deep fan-out
 (16 × 8 × 16 sheet instances) and still exit 124 at 120 s on both sides (the maintainer's
 `round9b-units/` measurement + the 9b gate) — the remaining item; severity stays as filed.
 
-
-### KH-445: `EQ-042` tags two different equations (duplicate equation id)
-
-**Severity:** LOW (documentation/traceability; no analyzer behaviour change)
-**File:** `skills/emc/scripts/emc_rules.py` (~l.3060: `# EQ-042: DC bias derating lookup + ferrite µ thermal degradation`), `skills/emc/scripts/emc_formulas.py` (~l.936: `# EQ-042: R_trace = rho * L / (W * T) — DC trace resistance`)
-**Discovered:** 2026-10-15, H0 plan 4 (recursive equation scan + coverage baseline)
-
-**Symptom:** the `EQ-NNN` tag is the equation identity for the harness equation
-registry (`validate/audit_equations.py`) and the scan-coverage baseline
-(`reference/scan_coverage_baseline.json`, `eq_ids` keyed by id). Two unrelated
-formulas carry `EQ-042`, so the registry has carried a duplicate entry pair since
-2026-04 and the baseline's id→file map can hold only one of them — a lost or
-moved second site would be invisible to `source_scan.py check`.
-
-**Fix direction:** re-id one of the two (next free `EQ-` number) in a v3 round;
-the harness relocates its registry entry via `audit_equations.py scan`
-(relocation-vs-stale is now distinguished) and the baseline is re-accepted.
 
 ### KH-328: `wrap_result.py` helper missing from datasheets skill
 
@@ -4079,27 +3781,6 @@ pattern, or (b) document the omission in SKILL.md as intentional.
 
 ---
 
-### KH-334: v1.5 — empirical determinism check for datasheet extraction pipeline
-
-**Severity:** LOW
-**File:** `skills/datasheets/scripts/` (pipeline as a whole)
-**Discovered:** 2026-05-19 (SacMap rev2 flagged but did not exercise)
-
-**Symptom:** No automated check that re-running the same extraction
-pipeline on the same PDF twice produces identical outputs. Temperature
-defaults and tier selection could introduce silent drift. SacMap
-reviewer flagged this as a concern but did not run the comparison.
-
-**Likely fix (v1.5 carryover):** Add a smoke step that:
-1. Runs full extraction on a sanity-vector MPN (e.g. LM2596-ADJ).
-2. Re-runs the same pipeline.
-3. Diffs the two `<mpn>.json` outputs and reports the magnitude of any
-   drift (zero is target; non-zero is the calibration data point).
-
-**Not tag-blocking** — v1.5 carryover, future work.
-
----
-
 ### KH-355: regulator FB-pin selection is first-match over dict order — arbitrary channel on multi-channel regulators
 
 **Severity:** LOW
@@ -4175,71 +3856,6 @@ get_property path handles `private` fine; only the BOM regex path is affected.)
 **Fix direction:** migrate BOM/edit tools onto the shared sexp_parser loader
 (dedupe at discovery, real property parsing); interim: fix the visited-set
 order and widen the regex.
-
-### KH-422: `--full` pcb analysis spends ~85-90 s on NLoy Touch_Keyboard_10x12 in `_point_in_polygon` (124,904 calls) — pre-existing performance cost, not KH-413/KH-420
-
-**Severity:** LOW (performance only; 87 s at v2.3.0 on the main-repo box,
-unchanged by KH-420 which fixed the `--only-deterministic` 11× regression)
-**File:** `skills/kicad/scripts/analyze_pcb.py` (`zones_at_point` /
-`has_copper_at` / `fill_regions_at_point` called from
-`analyze_return_path_continuity`) and `pcb_connectivity.build_connectivity_graph`
-**Discovered:** 2026-10-05, main-repo agent, KH-420 profiling
-(`task-B-report.md`); filed by the harness 2026-10-06
-
-**Fix direction:** the KH-420 per-fill segment grid applied to point-in-polygon
-queries — the per-fill bbox prefilter already exists; add an edge-crossing
-index per fill so each query walks only the segments in its grid column.
-Target: the NLoy `--full` run under 30 s. Corpus relevance: the harness
-`run_pcb.py` runs `--full --proximity` under a 120 s cap, so touch-pad-dense
-boards sit in the TH-055 timeout class today.
-
-**Gate budget (when fixed):** none (exact algorithm, no output change —
-verify with the KH-420 equality-query method).
-
-### KH-423: legacy `.sch` parser skips truly-empty `""` custom fields entirely (`elif field_num >= 4 and field_val:`) — distinct from the KH-414 whitespace path
-
-**Severity:** LOW (pre-existing; an empty-string MPN/DigiKey/… field in a
-KiCad 5 schematic is dropped instead of recorded as present-but-blank, so
-"field exists but is empty" and "field absent" are indistinguishable on the
-legacy path; the KH-418 blank-value tiering could not be mirrored for `""`
-on that branch)
-**File:** `skills/kicad/scripts/analyze_schematic.py` (legacy `.sch` field
-loop, `elif field_num >= 4 and field_val:`)
-**Discovered:** 2026-10-05, main-repo agent, KH-418 final wave (rider note);
-filed by the harness 2026-10-06
-
-**Fix direction:** record custom fields with empty values (name present,
-value `""`) so the modern and legacy paths agree; `tests/fixtures/kh418/
-legacy_blank_primary.sch` is the natural fixture to extend with a `""`
-field.
-
-**Gate budget (when fixed):** nil (legacy boards whose `""` fields currently
-vanish gain blank entries; no MPN value changes).
-
-### KH-416: peer sheets' own inner `(sheet ...)` hierarchy never gets `_is_sheet_pin` / `_hier_ns` tagging — bus-pass role misclassification on hybrid Altium-flat projects
-
-**Severity:** LOW (latent; found while ruling out a KH-409 candidate, not
-investigated or fixed)
-**File:** `skills/kicad/scripts/analyze_schematic.py` (~l.9105-9121 main
-hierarchy "namespace hierarchical labels" post-process; bus-pass role
-classification `"pin"` vs `"hier"` ~l.1477)
-**Discovered:** 2026-10-04, main-repo agent, KH-409 round-1 investigation
-(`.superpowers/sdd/2026-10-04-v2.3.1-maintenance-batch/kh409-repro.md`,
-"Follow-up not pursued"); filed by the harness 2026-10-05
-
-**Symptom / root cause:** a peer sheet's own inner `(sheet ...)` hierarchy
-(the genuine "hybrid" shape the merge loop's comments describe) never runs
-the post-process the main hierarchy loop runs, so `_is_sheet_pin` /
-`_hier_ns` are never set on a peer's own sheet-pin pseudo-labels and the
-bus pass would classify them as `"hier"` instead of `"pin"`. Distinct from
-KH-409 (bus_wires / bus_entries `_sheet` tagging, fixed in v2.3.1).
-
-**Fix direction:** run the namespace post-process per peer sheet's inner
-hierarchy; fixture = Altium-flat project whose peer sheet contains a nested
-sheet with a bus crossing the sheet pin. Candidate for a
-hybrid-hierarchy-nesting task.
-
-**Gate budget:** none until fixed (bus_topology roles on hybrid projects).
 
 ### KH-441: via-analysis `via_in_pad` attributes a via to the FIRST pad whose outline contains it — ambiguous on footprints where a pin pad's rotated extent and the exposed pad both contain the via (attribution + `same_net` flip with pad order)
 

@@ -11,6 +11,279 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — KH-416: peer sheets' own inner `(sheet ...)` hierarchy never gets `_is_sheet_pin` / `_hier_ns` tagging — bus-pass role misclassification on hybrid Altium-flat projects
+
+**Severity:** LOW (latent; found while ruling out a KH-409 candidate, not
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** hierarchy.py:417 runs each peer through parse_all_sheets, which calls namespace_hierarchical_labels at :312 (tags _is_sheet_pin/_hier_ns at :167-174)
+
+## 2026-11-06 — KH-445: `EQ-042` tags two different equations (duplicate equation id)
+
+**Severity:** LOW (documentation/traceability; no analyzer behaviour change)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** emc_formulas.py:889 tags R_trace as EQ-108; EQ-042 appears only at emc_rules.py:3359
+
+## 2026-11-06 — KH-449: `analyze_pcb.py --full` exceeds the 600 s full-chain cap on `azonenberg/starshipraider` MAXWELL `maxwell-main.kicad_pcb` (both sides)
+
+**Severity:** LOW (correct output in the standard profile, which completes without `--full`; the `--full` run is a performance cliff of the KH-422 kind, not a defect — but it is the only full-chain-profile timeout in 3,015 pcb units and sizes the profile's cap)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** pcb/geometry.py:337-357 ZoneFills strip index (0e51f464, PR #65); MAXWELL not re-run here (excluded by brief), harness measured 600 s -> 23 s
+
+## 2026-11-06 — KH-520: `rail_voltages` is keyed by the path-stripped net name — distinct `/<uuid>/VOUT` rails collapse, the safety detectors miss them, and sheet-stem voltages land on ground and switch nodes [group 6]
+
+**Severity:** HIGH (default path, hierarchical designs; feeds AM-001 / OV-001 / FT-001)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** Detectors use full-name by_net (pipeline.py:332-361, sw/input excluded :340); public_rail_voltages docstring states the strip-key sharing by design (pipeline.py:366-370)
+
+## 2026-11-06 — KH-521: regulator detector takes the inductor's far side as `output_rail` on a boost (output = input rail, 5 V rail given 7.2 V), and the Vref lookup ignores the MPN [group 6]
+
+**Severity:** HIGH (default path, boost converters without a VOUT pin; Vref half MEDIUM)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** Boost output from divider top (signal_detectors.py:2088-2096); Vref candidates include MPN (kicad_core/parts.py:166-171); vref_source ordering at signal_detectors.py:2020-2078 (datasheet beats table a
+
+## 2026-11-06 — KH-523: SPI `cs_conflicts` counts the controller on every CS net, substring-matches `SS` / `CS` in `VSS` / `SSP1_SCK`, and counts one IC twice [group 7]
+
+**Severity:** HIGH (default path; the normal MCU + one slave case is reported as a conflict)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** net_analysis.py:1333 _is_chip_select_net; :1343-1347 slave set = IC input pins excluding mcu/fpga
+
+## 2026-11-06 — KH-524: CAN termination is computed once across all CANH×CANL nets and stamped on every bus [group 7]
+
+**Severity:** HIGH (multi-CAN designs; small reach, wrong every time)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** net_analysis.py:1169-1196 termination per (CANH,CANL) pair; system_analyses.py:1323 uses can_bus_pairs
+
+## 2026-11-06 — KH-525: I2C rise time over 1000 ns defaults the mode to "Standard" with no warning [group 7]
+
+**Severity:** MEDIUM (I2C buses with heavy RC; the over-limit case is silent)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** net_analysis.py:~880-895 max_mode None when rise > 1000 ns, message 'exceeds Standard-mode limit (1000ns)'
+
+## 2026-11-06 — KH-526: `unconnected_hierarchical` lists hierarchical labels that ARE connected — membership is tested against net keys, not net labels [group 8]
+
+**Severity:** HIGH (every hierarchical design; informational section, essentially always false)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** audits.py:1367 carried = label names from nets[*].labels; result at :1371
+
+## 2026-11-06 — KH-527: I2C `vol_compatibility` treats the VOL limit as an upper bound on the pull-up — warns on every realistic pull-up (4.7 k, 10 k, 2.2 k) [group 8]
+
+**Severity:** HIGH (every I2C bus with a pull-up)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** system_analyses.py:1129-1135 Rp(min) = (VDD-0.4)/3 mA per UM10204 over the combined fitted pull-ups
+
+## 2026-11-06 — KH-528: schematic `pdn_impedance` combines decoupling branches as Σ1/|Z| — antiresonance peaks understated (2.6× in the worked case) [group 8]
+
+**Severity:** HIGH (every schematic with decoupling caps; `pdn_impedance` section)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** system_analyses.py:174-182 complex cap_branch_z per cap + VRM branch, parallel_impedance
+
+## 2026-11-06 — KH-532: LR-001 skips every low-side LED resistor — `series_resistors[].rail` is the resistor's far net, which is GND [group 9]
+
+**Severity:** HIGH (default path; low-side current limiting is a common topology)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** validation_detectors.py:1202-1204 low side: rail = led_other when the resistor's far net is ground
+
+## 2026-11-06 — KH-534: VM-001 `skip_en` is one net-wide flag — a regulator EN pin on the net skips every other domain pair on it [group 9]
+
+**Severity:** MEDIUM (nets with three or more ICs, one of them a regulator EN)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** validation_detectors.py:636-642 drops only the tolerant EN endpoint and re-checks the rest; no skip_en in the file
+
+## 2026-11-06 — KH-535: PS-001 regulator-cycle key repeats the closing node, so one 2-regulator cycle is reported once per start node [group 9]
+
+**Severity:** LOW (designs with a PG/EN cycle)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** validation_detectors.py:1058 cycle_key = '->'.join(sorted(set(cycle)))
+
+## 2026-11-06 — KH-536: high-pass RC filters report the ground node as `output_net` and the R/C junction as `input_net` — every high-pass is skipped by the SPICE template [group 10]
+
+**Severity:** HIGH (every high-pass RC; dead SPICE coverage)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** signal_detectors.py:666-667 high-pass: in_net = c_other, out_net = shared_net
+
+## 2026-11-06 — KH-537: ESD design observation reads the singular `protected_net`; the producer emits `protected_nets` [group 10]
+
+**Severity:** MEDIUM (DO-DET ESD observation only)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** signal_detectors.py:3713-3714 reads p.get('protected_nets') or [p['protected_net']]
+
+## 2026-11-06 — KH-538: op-amp `non_inverting` configuration is unreachable — a ground-ended Rg is rejected and `neg_has_signal` is always true in the Rf+Ri branch [group 10]
+
+**Severity:** HIGH (every non-inverting amplifier; dead SPICE template)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** signal_detectors.py:2959-2972 ground-ended Rg collected and config non_inverting emitted with gain 1+Rf/Rg
+
+## 2026-11-06 — KH-542: two consumer-producer key mismatches leave features dead corpus-wide — ADC `anti_aliasing` reads RC `reference` (producer writes `ref`), CD-DET reads `frequency_hz` (producer writes `frequency`) [group 11]
+
+**Severity:** HIGH (the `anti_aliasing` feature never emits; 0 of 692 ADC-bearing outputs)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** domain_detectors.py:3082-3089 rc_by_net from ctx.ref_pins junctions; :3720 frequency_hz = xc.get('frequency')
+
+## 2026-11-06 — KH-543: USB-PD controller exemption never fires (`pd_controller` key never set) and the source-Rp statuses can only be assigned to pull-downs [group 11]
+
+**Severity:** HIGH (every listed PD controller with CC pins gets false `missing` pull-down messages)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** domain_detectors.py:2929-2931 every listed controller is exempt (no 'missing' message emitted); pull-up Rp classified via _cc_rp_table at :2967-2978
+
+## 2026-11-06 — KH-544: LED audit picks the first resistor on any non-ground LED net, including the supply rail — any pull-up on +3V3 becomes the "series resistor" [group 11]
+
+**Severity:** HIGH (default path, every LED; current estimate from the wrong R)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** domain_detectors.py:4879 check_nets exclude ground and LED rails; :5030 Vf summed over string_leds
+
+## 2026-11-06 — KH-546: I2C address conflicts are grouped by `device_type:config`, so different models at the same address never collide, and two unresolved address pins collide as a deterministic error [group 11]
+
+**Severity:** HIGH (IA-001 misses real conflicts and raises false `error`s)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** domain_detectors.py:5935+ groups by resolved addr per bus (by_addr, types listed); unresolved -> IA-001 severity info heuristic
+
+## 2026-11-06 — KH-549: `opamp_circuits` detection identity is `["reference"]` only — the units of a dual / quad op-amp share one `detection_id` and the diff drops per-unit changes [group 12]
+
+**Severity:** HIGH (dual and quad op-amps are common; diff silently loses changes)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** detection_schema.py:364 opamp_circuits identity_fields=['reference','unit']
+
+## 2026-11-06 — KH-550: BOM groups by (value, footprint, MPN) without `dnp` — a fitted and a DNP part merge into one row and the first member decides the row's DNP flag [group 13]
+
+**Severity:** HIGH (fitted quantity wrong in the order sheet; 651 corpus files)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** schematic/bom_stats.py:66 group_key includes comp['dnp']
+
+## 2026-11-06 — KH-553: the pre-finalize severity histograms count only `critical` / `high` as errors — direct Python callers of `assemble_result` see zero errors [group 13]
+
+**Severity:** LOW (CLI recomputes in `finalize_for_cli`; direct-API callers only)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** schematic/presentation.py:258 and :454 count via normalize_severity
+
+## 2026-11-06 — KH-581: a config section set to `null` crashes thermal, and `_deep_merge` makes `project_config` key order depend on the hash seed
+
+**Severity:** MEDIUM (needs a user-written `.kicad-happy.json`; the corpus has none, so the gate cannot see it)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** project_config.py:265-268 a non-dict project section goes to _wrong_type, which deletes it (:215-220) so the default is used; key-order half fixed c40e135
+
+## 2026-11-06 — KH-586: `connectivity.routing_complete` is True whenever every multi-pad net has any copper, although the envelope promises "no pads remain unrouted"
+
+**Severity:** HIGH (default path; feeds `statistics.routing_complete`, the diff engine and the fab gate)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** --full derives routing from graph islands (pcb/presentation.py:99 _routing_from_graph); envelopes/pcb.py:84 description narrowed to the weak non---full semantics
+
+## 2026-11-06 — KH-608: EMC DP-001 applies the USB High-Speed 25 ps skew limit to every USB-named pair, so routine Full-Speed boards get an error
+
+**Severity:** HIGH (default EMC path, every board with a USB pair)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** emc_rules.py:2316-2317 USB pairs resolve protocol via _usb_pair_protocol (:366)
+
+## 2026-11-06 — KH-610: SPICE op-amp `phase_at_bw` measure has no `at=`, so the phase-at-bandwidth metric is never populated
+
+**Severity:** LOW (spice default path; a missing value, no false verdict)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** spice_templates.py:596 and :630 phase_at_bw ... 'at=bw_3db'; spice_results.py:16 lists phase_at_bw as radians
+
+## 2026-11-06 — KH-660: dead `has_esd` conditional in the EMC test plan
+
+**Severity:** LOW (cleanup)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** grep has_esd over skills/emc/scripts returns nothing at 7d9d4d9f
+
+## 2026-11-06 — KH-673: same-net pad-pad overlap (stacked footprints) is not joined in the `--full` connectivity graph
+
+**Severity:** LOW (opt-in `--full`)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** pcb/connectivity.py:542-544 same-layer pad copper overlap pass unions stacked pads
+
+## 2026-11-06 — KH-679: equal-depth sibling-sheet driver ties resolve by sheet order; KiCad uses the sheet-name path
+
+**Severity:** LOW (names only; membership unchanged)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** schematic/connectivity.py:1177-1179 sheet-scoped tie = (depth, sheet path + name)
+
+## 2026-11-06 — KH-691: the tokenizer's brace-decode table differs from KiCad's `UnescapeString`
+
+**Severity:** LOW (reach ≈ 0)
+**Closed:** Fixed by a later wave (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** kicad_core/sexp.py:87-91 table has comma/dollar and no amp/newline; :78 applies the $ ~ ^ _ prefix rule
+
+## 2026-11-06 — KH-422: `--full` pcb analysis spends ~85-90 s on NLoy Touch_Keyboard_10x12 in `_point_in_polygon` (124,904 calls) — pre-existing performance cost, not KH-413/KH-420
+
+**Severity:** LOW (performance only; 87 s at v2.3.0 on the main-repo box,
+**Closed:** Already fixed (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** NLoy `--full` runs in 9.4 s at 7d9d4d9f; the KH-364 connectivity-graph cost stays open there.
+
+## 2026-11-06 — KH-574: the `--full` connectivity graph unions a pad with only the nearest track endpoint, uses a max(w,h)/2 circle for pad copper, and leaves `F&B.Cu` pads on a fictitious layer
+
+**Severity:** HIGH (opt-in `--full`; changes `connectivity_graph` islands on 98 of 250 sampled boards / 259 nets)
+**Closed:** Already fixed (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** the open half is unreachable at 7d9d4d9f and ruling 14 removed the pads it concerned.
+
+## 2026-11-06 — KH-922: RT-001 misses partly routed nets (keypad_w_leds: kicad-cli 42 unconnected, RT-001 0)
+
+**Severity:** MEDIUM (false negative on an error-level routing check)
+**Closed:** Already fixed (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** ruling 12 is in the code; RT-001 on that project is hidden by its `unconnected_items: ignore`.
+
+## 2026-11-06 — KH-423: legacy `.sch` parser skips truly-empty `""` custom fields entirely (`elif field_num >= 4 and field_val:`) — distinct from the KH-414 whitespace path
+
+**Severity:** LOW (pre-existing; an empty-string MPN/DigiKey/… field in a
+**Closed:** Not a bug (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** blank legacy fields are already carried in `_fields`; dropping the guard would overwrite real values.
+
+## 2026-11-06 — KH-686: `{A{space}B C}` splits a bus group on the decoded space
+
+**Severity:** LOW (pre-existing, not yet checked against kicad-cli)
+**Closed:** Not a bug (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** KiCad also unescapes before `ParseBusGroup` (`sch_connection.cpp:151/175`), so the analyzer matches KiCad.
+
+## 2026-11-06 — KH-700: a KiCad `~` empty-field placeholder becomes a BOM footprint / datasheet value on legacy schematics
+
+**Severity:** MEDIUM (false negatives: `statistics.missing_footprint` drops parts that have no footprint; BOM shows `~`)
+**Closed:** Ruled (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** KH-709 (closed 2026-10-28) is ruled: keep `~` literally, as KiCad 10 does, so this record of the (a) class closes with it.
+
+## 2026-11-06 — KH-334: v1.5 — empirical determinism check for datasheet extraction pipeline
+
+**Severity:** LOW
+**Closed:** Moved to the roadmap (product v3.0.2 survey at `7d9d4d9f`; record `.superpowers/sdd/2026-11-06-v3.0.2-planning/stale-close-list.tsv` in the product repo).
+
+- **Evidence:** a datasheets-infrastructure enhancement, not a defect (product v3.0.2 plan); tracked on the product roadmap.
+
 ## 2026-11-06 — TH-047: BUGFIX-KH-198-01 corpus anchor lost — the lock now lives on a fixture
 
 **Severity:** LOW
