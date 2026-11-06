@@ -359,6 +359,10 @@ def _print_summary(report):
                 print(f"       unledgered: {u}")
             for u in (gp.get("ledgered_unaccepted") or {}).get("identities", []):
                 print(f"       ledgered but accepted_by null: {u}")
+            for u in gp.get("resolved_debts", []):
+                print(f"       resolved debt (ledgered failure the candidate fixed): {u}")
+            for u in gp.get("shape_changed_debts", []):
+                print(f"       shape-changed debt: {u}")
     m = report.get("modes", {})
     if "raw" in m:
         print(f"modes: raw={m['raw']['verdict']} strict={m['strict']['verdict']} "
@@ -800,6 +804,10 @@ def _recheck_main(argv):
         print(f"  unledgered: {u}")
     for u in gp["ledgered_unaccepted"]["identities"]:
         print(f"  ledgered but accepted_by null: {u}")
+    for u in gp.get("resolved_debts", []):
+        print(f"  resolved debt (ledgered failure the candidate fixed): {u}")
+    for u in gp.get("shape_changed_debts", []):
+        print(f"  shape-changed debt: {u}")
     sys.exit(0 if gp["pass"] else 1)
 
 
@@ -976,7 +984,7 @@ def main(argv=None):
     from regression.field_compare import BudgetError, run_modes  # local import keeps the gate importable standalone
     try:
         modes = run_modes(layout.root, budget_path=Path(args.budget) if args.budget else None,
-                          jobs=args.jobs)
+                          jobs=args.jobs, resolved_units=report["gate_pass"]["resolved_debts"])
     except (FileNotFoundError, BudgetError) as e:
         print(f"Error: comparator modes could not run: {e}", file=sys.stderr)
         sys.exit(2)

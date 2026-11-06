@@ -65,36 +65,72 @@ def ledger_identity(path):
     return {"ledger": str(path), "ledger_sha256": hashlib.sha256(Path(path).read_bytes()).hexdigest()}
 
 
+def _unit_ident(r):
+    return f"{r['analyzer']}/{r['unit_id']}"
+
+
+def _is_resolved_debt(r, known, crashes):
+    """A ledgered timeout / crash unit that failed that way on the baseline and succeeded on
+    the candidate (the candidate fixed the debt)."""
+    base, cand = r.get("baseline") or {}, r.get("candidate") or {}
+    ident = _unit_ident(r)
+    return (cand.get("status") in OK_STATUSES
+            and ((base.get("status") == "timeout" and ident in known)
+                 or (base.get("status") == "crash" and ident in crashes)))
+
+
 def split_bad_skips(records, ledger):
-    """(ledgered count, sorted "reason analyzer identity" list of bad SKIPs the ledger does not
-    cover, sorted ledger identities that cover a skip but carry accepted_by null)."""
+    """Skip judgement against the ledger: a dict with `ledgered` (count), `unledgered`
+    (sorted "reason analyzer identity" of bad SKIPs nothing covers), `unaccepted` (ledger
+    identities covering a skip with accepted_by null), `resolved` (ledgered debts the
+    candidate fixed, plus the dependency_missing units downstream of a resolved schematic)
+    and `shape_changed` (ledgered both-sided crashes whose exit code changed; still
+    unledgered under ruling Q3, listed so the adjudication can name them)."""
     bad = [r for r in records if r.get("verdict") == "SKIP" and r.get("reason") in BAD_SKIP_REASONS]
+    out = {"ledgered": 0, "unledgered": [], "unaccepted": [], "resolved": [], "shape_changed": []}
     if ledger is None:
-        return 0, sorted(f"{r['reason']} {r['analyzer']} {r['identity']}" for r in bad), []
+        out["unledgered"] = sorted(f"{r['reason']} {r['analyzer']} {r['identity']}" for r in bad)
+        return out
     blc = _ledger_check()
     known, crashes = blc.ledgered_timeouts(ledger), blc.ledgered_crashes(ledger)
     accepted = {e["identity"]: e.get("accepted_by") for g in ("timeout_units", "crash_units")
                 for e in ledger.get(g, [])}
     upstream = {r["unit_id"]: r for r in records if r.get("analyzer") == "schematic"}
-    ledgered, unledgered, unaccepted = 0, [], set()
+    resolved = {_unit_ident(r) for r in records if _is_resolved_debt(r, known, crashes)}
+    resolved_sch = {r["unit_id"] for r in upstream.values() if _unit_ident(r) in resolved}
+    unledgered, unaccepted, shape = [], set(), []
     for r in bad:
         cover = blc.skip_covering(r, known, upstream=upstream.get(r["unit_id"]), crashes=crashes)
         if cover is None:
+            if r["reason"] == "dependency_missing" and r["unit_id"] in resolved_sch:
+                resolved.add(_unit_ident(r))
+                continue
+            changed = blc.new_crash(r, crashes) if r["reason"] == "both_failed" else None
+            if changed and _unit_ident(r) in crashes and all(blc._crash_sides(r)):
+                shape.append(changed)   # listed, and still unledgered: ruling Q3, a round delta
             unledgered.append(f"{r['reason']} {r['analyzer']} {r['identity']}")
             continue
-        ledgered += 1
+        out["ledgered"] += 1
         if accepted.get(cover) is None:
             unaccepted.add(cover)
-    return ledgered, sorted(unledgered), sorted(unaccepted)
+    out.update(unledgered=sorted(unledgered), unaccepted=sorted(unaccepted),
+               resolved=sorted(resolved), shape_changed=sorted(shape))
+    return out
 
 
 def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census,
                       skip_records=None, ledger=None):
     if skip_records is None:  # counts only: no identities to match against a ledger
-        ledgered, unaccepted = 0, []
-        unledgered = [f"{r} (count {skip_breakdown[r]})" for r in BAD_SKIP_REASONS if skip_breakdown.get(r, 0)]
+        judged = {"ledgered": 0, "unaccepted": [], "resolved": [], "shape_changed": [],
+                  "unledgered": [f"{r} (count {skip_breakdown[r]})" for r in BAD_SKIP_REASONS
+                                 if skip_breakdown.get(r, 0)]}
     else:
-        ledgered, unledgered, unaccepted = split_bad_skips(skip_records, ledger)
+        judged = split_bad_skips(skip_records, ledger)
+    ledgered, unledgered, unaccepted = judged["ledgered"], judged["unledgered"], judged["unaccepted"]
+    resolved = set(judged["resolved"])
+    # a resolved debt's WARN ("baseline failed; not comparable") is declared movement, not a WARN
+    resolved_warns = sum(1 for r in skip_records or () if r.get("verdict") == "WARN"
+                         and _unit_ident(r) in resolved)
     cand_fail = sum(1 for r in skip_records or () if r.get("verdict") == "FAIL"
                     and r.get("reason") == CANDIDATE_FAILED_REASON)
     worker_exc = sum(1 for r in skip_records or () if r.get("verdict") == "FAIL"
@@ -104,7 +140,8 @@ def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census
                 sum(1 for r in skip_records if r.get("verdict") != "SKIP" and _both_ok(r)))
     skips_ok = not unledgered
     census_ok = all(executed_census.get(a, 0) == n for a, n in expected_census.items())
-    strict = bool(criteria["strict_clean"])
+    strict = bool(criteria["strict_clean"]) or (
+        bool(criteria["clean"]) and resolved_warns > 0 and criteria["warn_count"] == resolved_warns)
     evidence_ok = compared is None or compared > 0
     return {"pass": (strict and skips_ok and census_ok and cand_fail == 0 and worker_exc == 0
                      and evidence_ok),
@@ -112,6 +149,7 @@ def compute_gate_pass(criteria, skip_breakdown, expected_census, executed_census
             "census_ok": census_ok, "skips_ok": skips_ok, "candidate_failures": cand_fail,
             "worker_exceptions": worker_exc, "compared_units": compared,
             "ledgered_skips": ledgered, "unledgered_skips": unledgered,
+            "resolved_debts": judged["resolved"], "shape_changed_debts": judged["shape_changed"],
             "ledgered_unaccepted": {"count": len(unaccepted), "identities": unaccepted},
             "skip_breakdown": dict(skip_breakdown),
             "expected_census": dict(expected_census), "executed_census": dict(executed_census)}

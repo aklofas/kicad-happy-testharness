@@ -964,10 +964,30 @@ def _slots(gate_root: Path) -> tuple[Path, Path]:
     raise FileNotFoundError(f"gate {g}: no baseline/candidate (or v131/v14) slot pair")
 
 
+def _exempt_resolved(report: dict, resolved_units) -> dict:
+    """Take units the gate judged resolved debts (ledgered failures the candidate fixed, so
+    present on one side only) out of the missing count, listed as summary.resolved_missing,
+    and recompute the verdict with compare_trees' rule."""
+    names = sorted(u["unit"] for u in report["units"]
+                   if u["status"] in ("missing_a", "missing_b") and u["unit"] in resolved_units)
+    if not names:
+        return report
+    s = report["summary"]
+    s["missing"] -= len(names)
+    s["resolved_missing"] = names
+    if s["missing"] or s["parse_errors"] or report["policy_violations"] or not s["compared"]:
+        report["verdict"] = "error"
+    else:
+        report["verdict"] = "deltas" if report["deltas"] else "clean"
+    return report
+
+
 def run_modes(gate_root: Path, *, budget_path: Path | None = None, key_order: bool = False,
-              policy_name: str = "volatile-leaves-v1", write_reports: bool = True, jobs: int = 1) -> dict:
+              policy_name: str = "volatile-leaves-v1", write_reports: bool = True, jobs: int = 1,
+              resolved_units=()) -> dict:
     """Run raw + strict (+ budgeted) over a gate's two slots. Returns the dict the gate
     stores under rollup['modes']; writes field_report_<mode>.json beside the slots.
+    `resolved_units` (gate_pass.resolved_debts) are exempt from the strict missing count.
     A budget whose policy/SHAs contradict the gate manifest raises BudgetError."""
     g = Path(gate_root)
     a_root, b_root = _slots(g)
@@ -975,7 +995,8 @@ def run_modes(gate_root: Path, *, budget_path: Path | None = None, key_order: bo
     out: dict = {"policy": policy.name, "key_order": key_order}
 
     raw = compare_trees(a_root, b_root, mode="raw", policy=None, jobs=jobs)
-    strict = compare_trees(a_root, b_root, mode="strict", policy=policy, key_order=key_order, jobs=jobs)
+    strict = _exempt_resolved(compare_trees(a_root, b_root, mode="strict", policy=policy,
+                                            key_order=key_order, jobs=jobs), set(resolved_units))
     if write_reports:
         (g / "field_report_raw.json").write_text(json.dumps(raw, indent=1), encoding="utf-8")
         (g / "field_report_strict.json").write_text(json.dumps(strict, indent=1), encoding="utf-8")

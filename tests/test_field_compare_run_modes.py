@@ -67,3 +67,17 @@ def test_run_modes_exposes_over_budget_list(tmp_path):
     assert m["budgeted"]["verdict"] == "over_budget"
     assert m["budgeted"]["over_budget"] == ["rs001-severity-down"]
     assert m["strict_field_clean"] is False
+
+
+def test_resolved_debt_unit_missing_on_the_baseline_is_exempt(tmp_path):
+    """TH-078: a ledgered debt the candidate fixed has a candidate snap only (missing_a)."""
+    _gate(tmp_path)
+    p = tmp_path / "candidate" / "schematic" / "o" / "r" / "fixed" / "snap.json"
+    p.parent.mkdir(parents=True); p.write_text(json.dumps(_env(RUN_B)))
+    assert run_modes(tmp_path)["strict"]["verdict"] == "error"
+    m = run_modes(tmp_path, resolved_units={"schematic/o/r/fixed"})
+    assert m["strict"]["verdict"] == "clean" and m["strict_field_clean"] is True
+    assert m["strict"]["summary"]["resolved_missing"] == ["schematic/o/r/fixed"]
+    m = run_modes(tmp_path, budget_path=FIX / "rs001_only.json", resolved_units={"schematic/o/r/fixed"})
+    assert m["budgeted"]["verdict"] == "clean"
+    assert run_modes(tmp_path, resolved_units={"schematic/o/r/other"})["strict"]["verdict"] == "error"

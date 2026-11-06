@@ -11,6 +11,16 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — TH-078: the gate had no "debt resolved" disposition — a ledgered crash/timeout the candidate fixed could never gate_pass mechanically
+
+**Severity:** LOW (adjudication cost; no wrong verdict was issued)
+**File:** `regression/gate_policy.py` (`split_bad_skips`, `compute_gate_pass`), `regression/field_compare.py` (`run_modes`, `_exempt_resolved`), `regression/run_corpus_gate.py` (passes `resolved_debts` to `run_modes`, prints them)
+**Discovered:** 2026-10-24, v3 round-9b gate (LT3514 fixed, adjudicated by hand)
+
+- **Root cause:** a ledgered timeout/crash that succeeded on the candidate produced a `WARN baseline failed` (against findings `strict_clean`), `dependency_missing` downstream units that only a `both_failed` upstream could cover (unledgered), and a candidate-only snap (`missing_a`, strict verdict `error`).
+- **Fix:** `gate_pass.resolved_debts` lists such units (ledgered identity, baseline timeout/crash, candidate ok) and the `dependency_missing` units downstream of a resolved schematic; they leave `unledgered_skips`, their WARNs no longer fail findings `strict_clean`, and `run_modes(resolved_units=...)` takes their one-sided snaps out of the strict `missing` count (`summary.resolved_missing`). A ledgered both-sided crash with a changed exit code stays unledgered (ruling Q3) and is listed under `gate_pass.shape_changed_debts`. RUNBOOK 26i paragraph rewritten.
+- **Verification:** `tests/test_gate_status_matrix.py` (ledgered/unledgered baseline-failed WARN, downstream coverage, shape-changed listing), `tests/test_field_compare_run_modes.py::test_resolved_debt_unit_missing_on_the_baseline_is_exempt`; `--recheck results/v3_round9b_gate` now lists the LT3514 four units as resolved debts (findings `strict_clean` true) and the two KH-446 exit-code changes as shape-changed, which is the set round 9b adjudicated by hand. Unit + offline_contract tiers 3,653 / 0 / 8 / 4 vs product_4c2a0d6.
+
 ## 2026-11-06 — TH-108: the nine standing non-passing locks carried since round 2 were never reviewed — seven were stale
 
 **Severity:** MEDIUM (VALIDATION.md published "7 failed / 2 errors" as unexplained debt since v3.0.0; every ledger since `6a91aaa` carried them as `cause: unreviewed`)
