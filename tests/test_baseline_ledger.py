@@ -125,6 +125,16 @@ def test_carry_accepted_preserves_stamps_by_identity():
     assert all(e["accepted_by"] is None for e in out["crash_units"])
 
 
+def test_carry_accepted_keeps_a_reviewed_cause():
+    new = bl.build_ledger(product_sha=SHA, references_sha=REF, checks=CHECKS, junit_text=JUNIT,
+                          units_lines=UNITS, issues_text=ISSUES, context={})
+    prior = json.loads(json.dumps(new))
+    prior["checks"][0]["cause"] = "TH-900: stale lock"
+    out = bl.carry_accepted(new, prior)
+    assert out["checks"][0]["cause"] == "TH-900: stale lock"
+    assert all(e["cause"] == "unreviewed" for e in out["checks"][1:])
+
+
 def test_build_cli_carry_accepted_from(tmp_path):
     import subprocess
     units = tmp_path / "units.jsonl"

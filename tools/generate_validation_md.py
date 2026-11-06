@@ -7,14 +7,21 @@ markdown validation summary with current stats.
 Usage:
     python3 generate_validation_md.py                                          # stdout
     python3 generate_validation_md.py --output VALIDATION.md                   # local file
-    python3 generate_validation_md.py --output ~/Projects/kicad-happy/VALIDATION.md  # kicad-happy
+    python3 generate_validation_md.py @args.txt     # arguments from a file, one per line
+
+A release page passes the measured run_checks output, the baseline ledger (it classifies
+each non-passing assertion), the gate rollup with its units.jsonl and budgeted per-unit
+report (every nonzero gate counter is attributed to the budget classes that claimed its
+units) and the budget file. The generator refuses (exit 1) to write a page that
+contradicts itself: a CLEAN verdict with an unattributed FAIL / Disappeared / Downgrades /
+NewUnknown unit, or an assertion table that does not add up to the measured total.
 """
 
 import argparse
 import json
 import re
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -74,6 +81,180 @@ def _count_kh_issues():
 
 def _count_th_issues():
     return _count_issues("TH")
+
+
+_SEVERITY_ORDER = ("CRITICAL", "HIGH", "MEDIUM", "LOW", "unclassified")
+
+
+def _open_by_severity(prefix):
+    """Open <prefix>-* ids in ISSUES.md by the entry's `**Severity:**` line.
+    LOW-MEDIUM counts as MEDIUM; an entry without a recognised severity is unclassified."""
+    if not ISSUES_FILE.exists():
+        return {}
+    one = rf"{prefix}-\d{{3}}(?:\s*\([A-Z-]+\))?"
+    lead = re.compile(rf"#+\s+(?:\d{{4}}-\d\d-\d\d\s+—\s+)?({one}(?:\s*(?:/|,|and|\+)\s*{one})*)")
+    sev = {}
+    current = []
+    for line in ISSUES_FILE.read_text(encoding="utf-8").splitlines():
+        if line.startswith("#"):
+            m = lead.match(line)
+            current = [int(n) for n in re.findall(rf"{prefix}-(\d{{3}})", m.group(1))] if m else []
+            for i in current:
+                sev.setdefault(i, "unclassified")
+            continue
+        m = re.match(r"\*\*Severity:?\*\*:?\s*\**\s*([A-Z][A-Z-]*)", line)
+        if m and current:
+            word = m.group(1).rstrip("-")
+            word = "MEDIUM" if word == "LOW-MEDIUM" else word
+            for i in current:
+                if sev[i] == "unclassified" and word in _SEVERITY_ORDER:
+                    sev[i] = word
+            current = []
+    counts = Counter(sev.values())
+    return {k: counts[k] for k in _SEVERITY_ORDER if counts[k]}
+
+
+def _severity_list(prefix):
+    return ", ".join(f"{n} {k}" for k, n in _open_by_severity(prefix).items())
+
+
+def _severity_text(prefix):
+    if not _open_by_severity(prefix):
+        return ""
+    text = ": " + _severity_list(prefix)
+    if prefix == "KH" and _has_low_medium():
+        text += "; LOW-MEDIUM counts as MEDIUM"
+    return text
+
+
+def _has_low_medium():
+    return ISSUES_FILE.exists() and "**Severity:** LOW-MEDIUM" in ISSUES_FILE.read_text(encoding="utf-8")
+
+
+def _load_ledger(path):
+    """A baseline-debt ledger (reference/baseline_debts/<sha7>.json); None when no path."""
+    if not path:
+        return None
+    if not Path(path).exists():
+        raise FileNotFoundError(f"ledger not found: {path}")
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+# Gate counters and how a units.jsonl record contributes to each.
+_COUNTER_FIELDS = {"FAIL": None, "WARN": None, "Disappeared": "disappeared_count",
+                   "Downgrades": "severity_downgrades", "Upgrades": "severity_upgrades",
+                   "NewKnown": "new_known_count", "NewUpgraded": "new_upgraded_count",
+                   "NewUnknown": "new_unknown_count"}
+# The counters a CLEAN verdict needs fully attributed.
+_CLEAN_RULE = ("FAIL", "Disappeared", "Downgrades", "NewUnknown")
+
+
+def _unit_claims(path):
+    """{unit: (claimed classes, residual count)} from a budgeted comparison: a
+    compare_snap_trees budgeted report (field_report_budgeted.json) or a per-unit JSONL
+    with {"unit", "claimed": {class: n}, "residuals": n} rows."""
+    path = Path(path)
+    if not path.exists():
+        raise FileNotFoundError(f"budget report not found: {path}")
+    claims = defaultdict(lambda: [set(), 0])
+    if path.suffix == ".jsonl":
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if line.strip():
+                r = json.loads(line)
+                claims[r["unit"]][0].update(k for k, n in (r.get("claimed") or {}).items() if n)
+                claims[r["unit"]][1] += int(r.get("residuals") or 0)
+    else:
+        budget = json.loads(path.read_text(encoding="utf-8")).get("budget") or {}
+        for cls, deltas in (budget.get("claimed") or {}).items():
+            for d in deltas:
+                claims[d["unit"]][0].add(cls)
+        for d in budget.get("residuals") or []:
+            claims[d["unit"]][1] += 1
+    return {u: (frozenset(c), r) for u, (c, r) in claims.items()}
+
+
+def _attribute_gate(units_path, budget_report_path):
+    """Per gate counter: its total in units.jsonl, the units each budget class covers, and
+    the units nothing covers (a residual delta, or no field delta recorded for the unit)."""
+    if not Path(units_path).exists():
+        raise FileNotFoundError(f"gate units not found: {units_path}")
+    claims = _unit_claims(budget_report_path)
+    out = {k: {"total": 0, "units": 0, "classes": Counter(), "unattributed": 0} for k in _COUNTER_FIELDS}
+    for line in Path(units_path).read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        u = json.loads(line)
+        classes, residuals = claims.get(f"{u['analyzer']}/{u['unit_id']}", (frozenset(), 0))
+        for key, field in _COUNTER_FIELDS.items():
+            n = int(u.get("verdict") == key) if field is None else int(u.get(field) or 0)
+            if not n:
+                continue
+            out[key]["total"] += n
+            out[key]["units"] += 1
+            if classes and not residuals:
+                out[key]["classes"].update(classes)
+            else:
+                out[key]["unattributed"] += 1
+    return out
+
+
+def _attribution_text(key, attr, gate_pass):
+    """One-line attribution for a gate counter. SKIP reads the rollup's skip breakdown;
+    the others read `_attribute_gate` output."""
+    if key == "SKIP":
+        gp = gate_pass or {}
+        parts = [f"{n:,} {k.replace('_', ' ')}" for k, n in (gp.get("skip_breakdown") or {}).items() if n]
+        if gp.get("ledgered_skips"):
+            parts.append(f"{gp['ledgered_skips']:,} in the baseline ledger")
+        if gp.get("unledgered_skips"):
+            parts.append(f"{len(gp['unledgered_skips']):,} NOT in the ledger")
+        return ", ".join(parts)
+    if key not in _COUNTER_FIELDS or attr is None:
+        return ""
+    a = attr[key]
+    parts = []
+    if _COUNTER_FIELDS[key] is not None:      # a finding count: say how many units hold them
+        parts.append(f"{_plural(a['total'], 'finding')} in {_plural(a['units'], 'unit')}")
+    if a["classes"]:
+        if len(a["classes"]) == 1 and not a["unattributed"]:
+            parts.append(f"attributed to `{next(iter(a['classes']))}`")
+        else:
+            parts.append("attributed to " + ", ".join(
+                f"`{c}` ({_plural(n, 'unit')})" for c, n in sorted(a["classes"].items())))
+    if a["unattributed"]:
+        parts.append(f"{_plural(a['unattributed'], 'unit')} unattributed")
+    return ", ".join(parts)
+
+
+def _plural(n, word):
+    return f"{n:,} {word}{'' if n == 1 else 's'}"
+
+
+def _class_summary(evidence):
+    """The budget class's evidence up to the first absolute path (record pointers stay in the
+    budget file)."""
+    return re.split(r"\s+/\S", evidence or "", maxsplit=1)[0].rstrip(" .;")
+
+
+def _pct(passed, total):
+    """Pass rate at four decimals; a non-passing assertion never displays as 100."""
+    if not total:
+        return "not measured"
+    rate = round(passed / total * 100, 4)
+    if rate >= 100 and passed < total:
+        rate = 99.9999
+    return f"{rate:.4f} %"
+
+
+def _cell(text):
+    return f" {text} " if text else " "
+
+
+def _cause_columns(cause):
+    if not cause or cause == "unreviewed":
+        return "unclassified", ""
+    m = re.match(r"((?:KH|TH)-\d+(?:\s*/\s*(?:KH|TH)-\d+)*)\s*:?\s*(.*)", cause)
+    return (m.group(1), m.group(2)) if m else ("unclassified", cause)
 
 
 def _load_check_results(path):
@@ -171,7 +352,8 @@ def _measured_assertion_stats(check_results):
 
 
 def generate_markdown(check_results=None, gate_rollup=None,
-                      gate_label=None, gate_verdict=None):
+                      gate_label=None, gate_verdict=None, *, checks_label=None,
+                      ledger=None, gate_attribution=None, gate_budget=None):
     """Generate VALIDATION.md content.
 
     check_results: dict from regression/run_checks.py --json (or None).
@@ -180,6 +362,12 @@ def generate_markdown(check_results=None, gate_rollup=None,
                    (`788649f` → `b54b5c4`, harness `results/v23_gate/...`)").
     gate_verdict:  verdict text; required when the rollup is not strict-clean
                    (a budgeted gate's verdict lives in its adjudication record).
+    checks_label:  where the check results were measured (e.g. "at the v3.0.1 regen").
+    ledger:        baseline-debt ledger dict; its `checks[].cause` classifies failures.
+    gate_attribution: `_attribute_gate(units.jsonl, budget report)`.
+    gate_budget:   the budget file dict (class legend, acknowledged overruns).
+
+    Raises ValueError when the page would contradict itself (see the module docstring).
     """
     cat_stats = _load_catalog_stats()
     if check_results:
@@ -283,27 +471,50 @@ The counts are output files present in the corpus tree. A new unhandled exceptio
 Hard assertions on known-good output values. If a previously correct result changes, the assertion fails and the change must be investigated.
 
 """
+    rate_str = "not measured"
     if check_results:
         measured_total = check_results.get("total", 0)
         measured_passed = check_results.get("passed", 0)
         measured_failed = check_results.get("failed", 0)
         measured_errors = check_results.get("errors", 0)
-        measured_rate = check_results.get("pass_rate", "N/A")
-        md += f"*Measured via `regression/run_checks.py --json`: " \
+        rate_str = _pct(measured_passed, measured_total)
+        table_total = sum(assertion_stats["by_type"].values())
+        if table_total != measured_total:
+            raise ValueError(f"assertion table total {table_total:,} != measured total "
+                             f"{measured_total:,} (check results do not list every assertion)")
+        where = f" {checks_label}" if checks_label else ""
+        md += f"*Measured via `regression/run_checks.py --json`{where}: " \
               f"{measured_passed:,} passed / {measured_failed:,} failed / " \
-              f"{measured_errors:,} errors out of {measured_total:,} ({measured_rate}).*\n\n"
+              f"{measured_errors:,} errors out of {measured_total:,} ({rate_str}).*\n\n"
 
     md += "| Category | Assertion count | Pass rate |\n"
     md += "|----------|----------------|-----------|\n"
-    rate_str = check_results.get("pass_rate", "not measured") if check_results else "not measured"
     passed_by_type = assertion_stats.get("passed_by_type", {})
     for atype, count in sorted(assertion_stats.get("by_type", {}).items(),
                                 key=lambda x: -x[1]):
         if count > 0:
-            row_rate = (f"{passed_by_type[atype] / count * 100:.1f}%" if atype in passed_by_type
+            row_rate = (_pct(passed_by_type[atype], count) if atype in passed_by_type
                         else "not measured")
             md += f"| {atype} | {count:,} | {row_rate} |\n"
     md += f"| **Total** | **{assertion_stats.get('total', 0):,}** | **{rate_str}** |\n"
+
+    failing = [r for r in (check_results or {}).get("results", [])
+               if not r.get("passed") and not r.get("aspirational")]
+    if failing:
+        causes = {e.get("id"): e.get("cause") for e in (ledger or {}).get("checks", [])}
+        md += (f"\nThe {len(failing):,} non-passing assertions, classified in the harness "
+               "baseline ledger (`reference/baseline_debts/`):\n\n")
+        md += "| Assertion | Where | Outcome | Issue | Cause |\n"
+        md += "|-----------|-------|---------|-------|-------|\n"
+        for r in failing:
+            outcome = (f"error: {r['error']}" if r.get("error")
+                       else f"failed (actual {r.get('actual')})")
+            if r.get("id") in causes:
+                issue, phrase = _cause_columns(causes[r.get("id")])
+            else:
+                issue, phrase = "unclassified", "not in the baseline ledger"
+            md += (f"| `{r.get('id')}` | {r.get('repo', '')} `{r.get('file', '')}` | {outcome} "
+                   f"| {issue} |{_cell(phrase)}|\n")
 
     md += f"""
 Assertions are seeded from validated output and checked on every run. When analyzer logic changes intentionally (new fields, corrected calculations), affected assertions are re-seeded after manual verification.
@@ -320,25 +531,53 @@ Assertions are seeded from validated output and checked on every run. When analy
                 raise ValueError("gate rollup is not strict-clean; pass "
                                  "--gate-verdict with the adjudicated verdict")
             gate_verdict = "CLEAN"
+        if gate_attribution is not None:
+            for key in _COUNTER_FIELDS:
+                if gate_attribution[key]["total"] != totals.get(key, 0):
+                    raise ValueError(f"gate units file gives {key} "
+                                     f"{gate_attribution[key]['total']:,}, the rollup "
+                                     f"{totals.get(key, 0):,}: they are not the same run")
+        if gate_verdict.lstrip("*").upper().startswith("CLEAN"):
+            open_counters = [k for k in _CLEAN_RULE if totals.get(k, 0) and (
+                gate_attribution is None or gate_attribution[k]["unattributed"])]
+            if open_counters:
+                raise ValueError(f"verdict is CLEAN but {', '.join(open_counters)} has "
+                                 "unattributed units (pass --gate-units and "
+                                 "--gate-budget-report, or correct the verdict)")
         run_ref = f"The run below is {gate_label}." if gate_label else ""
         md += "### Layer 1 regression gate (pre-tag requirement)\n\n"
         md += ("Before any release is tagged, the harness runs the candidate over the full "
                "corpus and diffs every analyzer envelope unit by unit against a baseline: the "
                "previous release, or, for a release built in gated waves, the previous accepted "
-               "candidate of each wave. Every unit that moves (FAIL, Disappeared, NewUnknown) must be "
-               "attributed to a budget class pre-registered in the change's review record, "
-               "and no finding may be silently downgraded; unexplained movement fails the "
-               f"gate. {run_ref}\n\n")
+               "candidate of each wave. Every unit that moves (FAIL, Disappeared, Downgrades, "
+               "NewUnknown) must be attributed to a budget class pre-registered in the "
+               "change's review record; unexplained movement, including a severity "
+               f"downgrade no class covers, fails the gate. {run_ref}\n\n")
         md += f"Latest run: section `{section}`, {total_units:,} analyzer-runs. Verdict: **{gate_verdict}**.\n\n"
-        md += "| Outcome | Count |\n|---------|------:|\n"
+        md += "| Outcome | Count | Attribution |\n|---------|------:|-------------|\n"
         for key in ("PASS", "FAIL", "Disappeared", "Downgrades", "Upgrades",
                     "NewKnown", "NewUpgraded", "NewUnknown", "WARN", "SKIP"):
-            md += f"| {key} | {totals.get(key, 0):,} |\n"
-        md += ("\n*A gate is CLEAN when `Downgrades == 0` and every `FAIL`, `Disappeared` "
-               "and `NewUnknown` unit is attributed to a pre-registered budget class in the "
-               "adjudication record (a zero-delta gate has none to attribute). "
-               "`NewKnown`/`NewUpgraded` are intentional new findings; `SKIP` units have no "
-               "comparable baseline.*\n\n")
+            n = totals.get(key, 0)
+            note = (_attribution_text(key, gate_attribution, gate_rollup.get("gate_pass") or criteria)
+                    if n else "")
+            md += f"| {key} | {n:,} |{_cell(note)}|\n"
+        md += ("\n*A gate is CLEAN when every unit counted under `FAIL`, `Disappeared`, "
+               "`Downgrades` or `NewUnknown` is attributed to a budget class pre-registered in "
+               "the adjudication record (a zero-delta gate has none to attribute); the "
+               "Attribution column names the classes that claimed each counter's units. A "
+               "unit can be counted under several outcomes. `NewKnown`/`NewUpgraded` are "
+               "intentional new findings; `SKIP` units have no comparable baseline.*\n\n")
+        if gate_budget:
+            md += f"Budget classes (`{gate_budget.get('budget_id', '?')}`):\n\n"
+            for c in gate_budget.get("classes", []):
+                md += f"- `{c['id']}` ({c.get('analyzer', '?')}): {_class_summary(c.get('evidence'))}\n"
+            overruns = gate_budget.get("acknowledged_overruns") or []
+            if overruns:
+                md += "\nAcknowledged overruns (measured beyond the declared size, ruled by the product):\n\n"
+                for o in overruns:
+                    md += (f"- {o.get('class')}: declared {o.get('declared')}, measured "
+                           f"{o.get('measured')} — {o.get('ruling')}\n")
+            md += "\n"
 
     md += f"""## Signal detector coverage
 
@@ -378,8 +617,8 @@ The harness requires Python 3.10+ and a checkout of the corpus repos. ngspice is
 
 All analyzer bugs found during validation are tracked with sequential IDs:
 
-- `KH-001` through `KH-{max_kh}`: analyzer issues ({closed_kh + open_kh} filed, {closed_kh} closed, {open_kh} open)
-- `TH-001` through `TH-{max_th:03d}`: harness infrastructure issues ({closed_th + open_th} filed, {closed_th} closed, {open_th} open)
+- `KH-001` through `KH-{max_kh}`: analyzer issues ({closed_kh + open_kh} filed, {closed_kh} closed, {open_kh} open{_severity_text("KH")})
+- `TH-001` through `TH-{max_th:03d}`: harness infrastructure issues ({closed_th + open_th} filed, {closed_th} closed, {open_th} open{_severity_text("TH")})
 
 Each closed analyzer issue has a corresponding bugfix regression guard assertion that prevents the bug from returning.
 
@@ -398,7 +637,7 @@ Each closed analyzer issue has a corresponding bugfix regression guard assertion
 | Regression assertions | {assertion_stats.get('total', 0):,} at {rate_str} |
 | Bugfix guards | {bugfix_count} |
 | Closed issues | {closed_kh} analyzer + {closed_th} harness |
-| Open issues | {open_kh} analyzer + {open_th} harness |
+| Open issues | {open_kh} analyzer{f" ({_severity_list('KH')})" if open_kh else ""} + {open_th} harness{f" ({_severity_list('TH')})" if open_th else ""} |
 | Schematic detectors | {n_detectors} |
 """
     return md
@@ -406,7 +645,8 @@ Each closed analyzer issue has a corresponding bugfix regression guard assertion
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Auto-generate VALIDATION.md from harness data")
+        description="Auto-generate VALIDATION.md from harness data",
+        fromfile_prefix_chars="@")
     parser.add_argument("--output", "-o", type=Path,
                         help="Output file (default: stdout)")
     parser.add_argument("--check-results", type=Path,
@@ -422,14 +662,36 @@ def main():
     parser.add_argument("--gate-verdict",
                         help="Verdict text for the gate section; REQUIRED when the "
                              "rollup is not strict-clean (budgeted gate)")
+    parser.add_argument("--checks-label",
+                        help="Where the check results were measured, e.g. "
+                             "'at the v3.0.1 corpus regen (`4c2a0d6`)'")
+    parser.add_argument("--ledger", type=Path,
+                        help="Baseline-debt ledger whose checks[].cause classifies each "
+                             "non-passing assertion")
+    parser.add_argument("--gate-units", type=Path,
+                        help="The gate's units.jsonl (same run as --gate-rollup)")
+    parser.add_argument("--gate-budget-report", type=Path,
+                        help="Budgeted comparison of the same run: field_report_budgeted.json "
+                             "or a per-unit JSONL ({unit, claimed, residuals})")
+    parser.add_argument("--gate-budget", type=Path,
+                        help="The budget file (class legend and acknowledged overruns)")
     args = parser.parse_args()
+    if bool(args.gate_units) != bool(args.gate_budget_report):
+        parser.error("--gate-units and --gate-budget-report go together")
 
-    check_results = _load_check_results(args.check_results)
-    gate_rollup = _load_gate_rollup(args.gate_rollup)
     try:
+        check_results = _load_check_results(args.check_results)
+        gate_rollup = _load_gate_rollup(args.gate_rollup)
+        ledger = _load_ledger(args.ledger)
+        attribution = (_attribute_gate(args.gate_units, args.gate_budget_report)
+                       if args.gate_units else None)
+        budget = (json.loads(args.gate_budget.read_text(encoding="utf-8"))
+                  if args.gate_budget else None)
         md = generate_markdown(check_results=check_results, gate_rollup=gate_rollup,
-                               gate_label=args.gate_label, gate_verdict=args.gate_verdict)
-    except ValueError as e:
+                               gate_label=args.gate_label, gate_verdict=args.gate_verdict,
+                               checks_label=args.checks_label, ledger=ledger,
+                               gate_attribution=attribution, gate_budget=budget)
+    except (ValueError, FileNotFoundError) as e:
         sys.exit(f"error: {e}")
 
     if args.output:

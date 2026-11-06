@@ -9,7 +9,8 @@
 
 Groups: checks, contract, timeout_units, crash_units (both-sided crashes; additive in
 ledger_version 1 — a ledger without it reads as empty), nondeterminism.
---carry-accepted-from copies `accepted_by` by identity from an existing ledger for every group.
+--carry-accepted-from copies `accepted_by` (and a reviewed check `cause`) by identity from an
+existing ledger for every group.
 
 `checks.json` must carry a top-level "product_sha" (emitted by run_checks.py --json).
 """
@@ -101,12 +102,15 @@ LEDGER_GROUPS = ("checks", "contract", "timeout_units", "crash_units", "nondeter
 
 
 def carry_accepted(ledger: dict, prior: dict) -> dict:
-    """Copy `accepted_by` by identity from `prior` into `ledger` for every group; new identities keep null."""
+    """Copy `accepted_by` (and a reviewed check `cause`) by identity from `prior` into `ledger`
+    for every group; new identities keep null / "unreviewed"."""
     for g in LEDGER_GROUPS:
-        stamps = {e["identity"]: e.get("accepted_by") for e in prior.get(g, [])}
+        old = {e["identity"]: e for e in prior.get(g, [])}
         for e in ledger.get(g, []):
-            if e["identity"] in stamps:
-                e["accepted_by"] = stamps[e["identity"]]
+            if e["identity"] in old:
+                e["accepted_by"] = old[e["identity"]].get("accepted_by")
+                if old[e["identity"]].get("cause", "unreviewed") != "unreviewed":
+                    e["cause"] = old[e["identity"]]["cause"]
     return ledger
 
 

@@ -23,22 +23,22 @@ def _check_results():
         {"id": "BUGFIX-KH-001-01", "passed": True},
         {"id": "FND-00000001-AST-01", "passed": False, "aspirational": True},
     ]
-    return {"total": 1234567, "passed": 1234560, "failed": 7, "errors": 0,
+    return {"total": 4, "passed": 4, "failed": 0, "errors": 0,
             "pass_rate": "100.0%", "results": results}
 
 
 def _rollup(clean):
     return {"section": "vX_full", "total_units": 170014,
-            "totals": {"PASS": 1, "FAIL": 0 if clean else 5, "Disappeared": 0,
-                       "Downgrades": 0, "Upgrades": 0, "NewKnown": 0,
+            "totals": {"PASS": 1, "FAIL": 0, "Disappeared": 0,
+                       "Downgrades": 0, "Upgrades": 0, "NewKnown": 0 if clean else 5,
                        "NewUpgraded": 0, "NewUnknown": 0, "WARN": 0, "SKIP": 0},
             "pass_criteria": {"clean": clean}}
 
 
 def test_measured_total_is_authoritative_over_catalog():
     md = gvm.generate_markdown(check_results=_check_results())
-    assert "| **Total** | **1,234,567** |" in md
-    assert "| Regression assertions | 1,234,567 at 100.0% |" in md
+    assert "| **Total** | **4** | **100.0000 %** |" in md
+    assert "| Regression assertions | 4 at 100.0000 % |" in md
 
 
 def test_assertion_breakdown_comes_from_measured_results():
@@ -127,7 +127,7 @@ def test_category_rows_share_the_total_denominator():
     stats = gvm._measured_assertion_stats(results)
     assert sum(stats["by_type"].values()) == stats["total"] == 3
     md = gvm.generate_markdown(check_results=results)
-    assert "| SEED | 2 | 50.0% |" in md and "| FND | 1 | 100.0% |" in md
+    assert "| SEED | 2 | 50.0000 % |" in md and "| FND | 1 | 100.0000 % |" in md
     assert "100%" not in md.split("### Crash testing")[1].split("### Regression")[0]
 
 
@@ -192,3 +192,185 @@ def test_version_table_note_counts_multi_version_and_uncounted_repos(tmp_path, m
             "row (KiCad 8.0 and 8.99 both count under KiCad 8); the 3 repos whose version "
             "the harness catalog records as unknown, empty or older than KiCad 5 are not "
             "counted.") in table_end
+
+
+# --- v3.0.2: the page must not contradict itself (attributed counters, visible failures) ---
+
+import json  # noqa: E402
+
+import pytest  # noqa: E402
+
+
+def _results(n_pass, fails=(), errors=()):
+    res = [{"id": f"SEED-{i}", "passed": True} for i in range(n_pass)]
+    res += [{"id": i, "passed": False, "repo": "o/r", "file": "f.kicad_sch", "actual": 3}
+            for i in fails]
+    res += [{"id": i, "passed": False, "repo": "o/r", "file": "f.sch",
+             "error": "output file not found"} for i in errors]
+    total = len(res)
+    return {"total": total, "passed": n_pass, "failed": len(fails), "errors": len(errors),
+            "pass_rate": "100.0%", "results": res}
+
+
+def test_pass_rate_shows_failures():
+    assert gvm._pct(2717827, 2717836) == "99.9997 %"
+    assert gvm._pct(9_999_999, 10_000_000) == "99.9999 %"   # never rounds up to 100 with a failure
+    assert gvm._pct(5, 5) == "100.0000 %"
+    md = gvm.generate_markdown(check_results=_results(3, fails=["FND-1-AST-01"]))
+    assert "| **Total** | **4** | **75.0000 %** |" in md
+
+
+def test_failures_are_classified_from_the_ledger(tmp_path):
+    ledger = tmp_path / "led.json"
+    ledger.write_text(json.dumps({"checks": [
+        {"id": "FND-1-AST-01", "cause": "TH-900: stale lock, analyzer matches KiCad"},
+        {"id": "FND-2-AST-01", "cause": "unreviewed"}]}))
+    md = gvm.generate_markdown(
+        check_results=_results(3, fails=["FND-1-AST-01", "FND-3-AST-01"], errors=["FND-2-AST-01"]),
+        ledger=gvm._load_ledger(ledger))
+    table = md.split("| Assertion |")[1].split("\n\n")[0]
+    assert "| `FND-1-AST-01` | o/r `f.kicad_sch` | failed (actual 3) | TH-900 | stale lock, analyzer matches KiCad |" in table
+    assert "| `FND-2-AST-01` | o/r `f.sch` | error: output file not found | unclassified | |" in table
+    assert "| `FND-3-AST-01` | o/r `f.kicad_sch` | failed (actual 3) | unclassified | not in the baseline ledger |" in table
+
+
+def test_table_total_must_equal_measured_total():
+    bad = _results(3)
+    bad["total"] = 5
+    with pytest.raises(ValueError, match="measured total"):
+        gvm.generate_markdown(check_results=bad)
+
+
+def test_open_issue_lines_break_down_by_severity(tmp_path, monkeypatch):
+    issues = tmp_path / "ISSUES.md"
+    fixed = tmp_path / "FIXED.md"
+    issues.write_text(
+        "### KH-010: a\n\n**Severity:** HIGH (why)\n\n"
+        "### KH-011: b\n\n**Severity:** LOW-MEDIUM\n\n"
+        "### KH-012: c\n\nno severity line\n\n"
+        "### KH-013 (LOW) / KH-014 (LOW): d\n\n**Severity:** LOW\n\n"
+        "### TH-020: e\n\n**Severity:** MEDIUM\n", encoding="utf-8")
+    fixed.write_text("## 2026-11-03 — KH-009: dated\n", encoding="utf-8")
+    monkeypatch.setattr(gvm, "ISSUES_FILE", issues)
+    monkeypatch.setattr(gvm, "FIXED_FILE", fixed)
+    assert gvm._open_by_severity("KH") == {"HIGH": 1, "MEDIUM": 1, "LOW": 2, "unclassified": 1}
+    md = gvm.generate_markdown(check_results=_results(1))
+    assert ("analyzer issues (6 filed, 1 closed, 5 open: 1 HIGH, 1 MEDIUM, 2 LOW, "
+            "1 unclassified; LOW-MEDIUM counts as MEDIUM)") in md
+    assert "harness infrastructure issues (1 filed, 0 closed, 1 open: 1 MEDIUM)" in md
+    assert "| Open issues | 5 analyzer (1 HIGH, 1 MEDIUM, 2 LOW, 1 unclassified) + 1 harness (1 MEDIUM) |" in md
+
+
+def _gate_files(tmp_path, *, residual_unit=False, budget_format="stream"):
+    units = [
+        {"analyzer": "pcb", "unit_id": "o/r/a.kicad_pcb", "verdict": "FAIL",
+         "severity_downgrades": 2, "disappeared_count": 0, "new_unknown_count": 0},
+        {"analyzer": "emc", "unit_id": "o/r/a.kicad_sch", "verdict": "FAIL",
+         "severity_downgrades": 0, "disappeared_count": 3, "new_unknown_count": 0},
+        {"analyzer": "emc", "unit_id": "o/r/b.kicad_sch", "verdict": "WARN",
+         "severity_downgrades": 0, "disappeared_count": 0, "new_unknown_count": 1},
+        {"analyzer": "schematic", "unit_id": "o/r/a.kicad_sch", "verdict": "PASS"},
+        {"analyzer": "gerber", "unit_id": "o/r/g", "verdict": "SKIP", "reason": "not_applicable"},
+    ]
+    up = tmp_path / "units.jsonl"
+    up.write_text("".join(json.dumps(u) + "\n" for u in units))
+    claims = {"pcb/o/r/a.kicad_pcb": {"PCB-x": 4}, "emc/o/r/a.kicad_sch": {"EMC-x": 3},
+              "emc/o/r/b.kicad_sch": {"EMC-x": 1}}
+    if budget_format == "stream":
+        bp = tmp_path / "b.units.jsonl"
+        bp.write_text("".join(json.dumps({"unit": k, "claimed": v,
+                                          "residuals": 1 if residual_unit and k.startswith("pcb") else 0}) + "\n"
+                              for k, v in claims.items()))
+    else:
+        bp = tmp_path / "field_report_budgeted.json"
+        bp.write_text(json.dumps({"mode": "budgeted", "budget": {
+            "claimed": {c: [{"unit": k} for k, v in claims.items() if c in v for _ in range(v[c])]
+                        for c in ("PCB-x", "EMC-x")},
+            "residuals": [{"unit": "pcb/o/r/a.kicad_pcb"}] if residual_unit else []}}))
+    budget = tmp_path / "budget.json"
+    budget.write_text(json.dumps({"budget_id": "b-x", "classes": [
+        {"id": "PCB-x", "analyzer": "pcb", "evidence": "PM-001 per courtyard layer. /abs/path/x.json"},
+        {"id": "EMC-x", "analyzer": "emc", "evidence": "stages -> layout"}],
+        "acknowledged_overruns": [{"class": "c1", "declared": "0", "measured": "2",
+                                   "ruling": "acknowledged"}]}))
+    return up, bp, budget
+
+
+def _budgeted_rollup():
+    return {"section": "vX_range", "total_units": 5,
+            "totals": {"PASS": 1, "FAIL": 2, "Disappeared": 3, "Downgrades": 2, "Upgrades": 0,
+                       "NewKnown": 0, "NewUpgraded": 0, "NewUnknown": 1, "WARN": 1, "SKIP": 1},
+            "pass_criteria": {"clean": False},
+            "gate_pass": {"skip_breakdown": {"not_applicable": 1, "both_failed": 0},
+                          "ledgered_skips": 0, "unledgered_skips": []}}
+
+
+@pytest.mark.parametrize("fmt", ["stream", "report"])
+def test_every_nonzero_counter_is_attributed(tmp_path, fmt):
+    up, bp, budget = _gate_files(tmp_path, budget_format=fmt)
+    md = gvm.generate_markdown(
+        check_results=_results(1), gate_rollup=_budgeted_rollup(), gate_verdict="CLEAN UNDER BUDGET",
+        gate_attribution=gvm._attribute_gate(up, bp), gate_budget=json.loads(budget.read_text()))
+    assert "| Outcome | Count | Attribution |" in md
+    assert "| Downgrades | 2 | 2 findings in 1 unit, attributed to `PCB-x` |" in md
+    assert "| FAIL | 2 | attributed to `EMC-x` (1 unit), `PCB-x` (1 unit) |" in md
+    assert "| Disappeared | 3 | 3 findings in 1 unit, attributed to `EMC-x` |" in md
+    assert "| NewUnknown | 1 | 1 finding in 1 unit, attributed to `EMC-x` |" in md
+    assert "| SKIP | 1 | 1 not applicable |" in md
+    assert "| PASS | 1 | |" in md
+    assert "- `PCB-x` (pcb): PM-001 per courtyard layer" in md and "/abs/path" not in md
+    assert "Acknowledged overruns" in md and "c1" in md
+    rule = md.split("| SKIP |")[1]
+    assert "Downgrades" in rule.split("\n\n")[1] and "Downgrades == 0" not in md
+
+
+def test_clean_verdict_with_an_unattributed_counter_is_refused(tmp_path):
+    up, bp, budget = _gate_files(tmp_path, residual_unit=True)
+    with pytest.raises(ValueError, match="Downgrades"):
+        gvm.generate_markdown(
+            check_results=_results(1), gate_rollup=_budgeted_rollup(),
+            gate_verdict="CLEAN UNDER BUDGET", gate_attribution=gvm._attribute_gate(up, bp))
+
+
+def test_clean_verdict_without_attribution_data_is_refused():
+    with pytest.raises(ValueError, match="unattributed"):
+        gvm.generate_markdown(check_results=_results(1), gate_rollup=_budgeted_rollup(),
+                              gate_verdict="CLEAN UNDER BUDGET")
+
+
+def test_non_clean_verdict_may_show_unattributed_counters(tmp_path):
+    up, bp, _ = _gate_files(tmp_path, residual_unit=True)
+    md = gvm.generate_markdown(
+        check_results=_results(1), gate_rollup=_budgeted_rollup(), gate_verdict="NOT CLEAN",
+        gate_attribution=gvm._attribute_gate(up, bp))
+    assert "| Downgrades | 2 | 2 findings in 1 unit, 1 unit unattributed |" in md
+
+
+def test_units_file_must_match_the_rollup(tmp_path):
+    up, bp, _ = _gate_files(tmp_path)
+    roll = _budgeted_rollup()
+    roll["totals"]["Downgrades"] = 5
+    with pytest.raises(ValueError, match="units file"):
+        gvm.generate_markdown(check_results=_results(1), gate_rollup=roll,
+                              gate_verdict="CLEAN UNDER BUDGET",
+                              gate_attribution=gvm._attribute_gate(up, bp))
+
+
+def test_main_reads_arguments_from_a_file_and_exits_nonzero_on_a_contradiction(tmp_path, monkeypatch):
+    cr = tmp_path / "checks.json"
+    cr.write_text(json.dumps(_results(1)))
+    roll = tmp_path / "rollup.json"
+    roll.write_text(json.dumps(_budgeted_rollup()))
+    args = tmp_path / "args.txt"
+    out = tmp_path / "out.md"
+    common = f"--check-results\n{cr}\n--gate-rollup\n{roll}\n--output\n{out}\n"
+    args.write_text(common + "--gate-verdict\nNOT CLEAN — `x` → `y`\n", encoding="utf-8")
+    monkeypatch.setattr(sys, "argv", ["generate_validation_md.py", f"@{args}"])
+    gvm.main()
+    assert "Verdict: **NOT CLEAN — `x` → `y`**" in out.read_text(encoding="utf-8")
+    out.unlink()
+    args.write_text(common + "--gate-verdict\nCLEAN UNDER BUDGET\n", encoding="utf-8")
+    with pytest.raises(SystemExit) as e:
+        gvm.main()
+    assert e.value.code not in (0, None)
+    assert not out.exists()
