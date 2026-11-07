@@ -11,6 +11,1324 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-06 — KH-991: on Windows, CLI stdout lines ended with CRLF
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/kicad_core/cli.py` (`utf8_stdio`, `utf8_text_stdout`) and 16 inline stdout setups
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff; filed FIXED-direct.
+
+- **Root cause:** the UTF-8 stdout setup reconfigured only the encoding, so a Windows text stream kept its `\r\n` newline translation.
+- **Fixed:** product v3.0.x-dev 6ee95fe1 fix: stdout lines end with LF on Windows in the core CLIs; bc5395f3 fix: scripts with their own stdout setup also end lines with LF on Windows (v3.0.2 Wave 11a Task 27, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `kicad_core/cli.py:53-79` always reconfigures `newline="\n"` (UTF-8 only when the stream is not UTF-8); 28 scripts call `utf8_stdio()`, the 15 remaining inline copies pass `{"newline": "\n"}` (e.g. `export_issues.py:809-815`). Probe: a cp1252 `TextIOWrapper(newline='\r\n')` writes `b'a \xce\xa9\n'` after `utf8_stdio()`. Only `kicad_core/sexp.py` (debug `__main__`) and `action/format-report.py` (writes files) call neither helper.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-992: the JLCPCB BOM translator dropped the source BOM's LCSC part number
+
+**Severity:** LOW
+**File:** `skills/bom/scripts/translate_bom_pnp.py`
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff; filed FIXED-direct.
+
+- **Fixed:** product v3.0.x-dev 38ec7f16 fix(bom): translate_bom_pnp carries the source BOM's LCSC part number (v3.0.2 Wave 11a Task 28, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the LCSC column is found through `bom_fields._canonical_for(...) == "lcsc"` (`LCSC`, `LCSC Part #`, `LCSC_PN`, `JLCPCB`) and written as `LCSC Part #` (:507), `~` read as empty. Probe: `LCSC` column `C25804` → `C25804`; `~` → empty. Minor: header aliases `JLCPCB Part #` and `lcsc#` are not recognised.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-329: `plan_extraction.py --use-cached-scout` with no saved scout exits 1 with a `FileNotFoundError` traceback (narrowed; was: "not implemented" error lacks next-command pointer)
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/plan_extraction.py` (live-scout-dispatch path)
+**Discovered:** 2026-05-19
+
+**Symptom:** First invocation prints "live scout dispatch not implemented"
+and points at a ~180-line markdown doc. The error message does not
+include the exact next command to run, so users hit the wall and have
+to read upstream docs to recover.
+
+**Likely fix:** Either (a) include the exact next command in the error
+message, or (b) ship the actual live-scout dispatch.
+
+**Not tag-blocking** — error-message UX.
+
+---
+
+#### Addendum to KH-329 (`plan_extraction.py` "not implemented" error lacks next-command pointer)
+**Added:** 2026-10-25, external audit round 1 (`docs/audit/05-v3-docs/findings/VERIFICATION.md` do/R3-F4)
+The code side looks resolved at `07b7fb1`: `plan_extraction.py:167-174` returns 2 without `--use-cached-scout`, and the message at `:168-171` names the recovery (run scout, write `<mpn>.scout.json`, re-invoke with the flag). The docs still lead users into that exit:
+- `skills/datasheets/SKILL.md:74` and `references/extraction-pipeline.md:10-12` order plan → scout;
+- `dispatch-claude-code.md:21` substitutes `<plan.mpn>` before any plan exists.
+
+Fix: the report's three doc replacements (scout first, then plan with `--use-cached-scout`). Output-neutral. Close KH-329 with this doc fix if the harness confirms the message.
+
+**Addendum 2026-11-01 (3.0.x Wave 6, candidate `c0a8a62`):** narrowed to the code residue. The doc halves are fixed: `skills/datasheets/SKILL.md:74` and `references/extraction-pipeline.md:9-10` now run the scout first and then `plan_extraction.py … --use-cached-scout`, and `dispatch-claude-code.md` Step 1 substitutes the requested part (no plan exists yet) (`821d85c`, tagged KH-636 / KH-329; `b746033` states both exits; `061b7f4`, `112c17f` residue). The message without the flag (`plan_extraction.py:194-201`, exit 2) names the recovery, as the 2026-10-25 addendum said. Still open (code): with `--use-cached-scout` and no `<mpn>.scout.json`, `_load_scout` (`:99-105`, called at `:203`) raises `FileNotFoundError`, so the CLI exits 1 with a traceback; its message also suggests "invoke without --use-cached-scout", which is the exit-2 path. Verified harness-side at `c0a8a62`: `plan_extraction.py TESTMPN tests/fixtures/datasheets-pdfs/1N4148.pdf --cache-dir <empty> --use-cached-scout` → rc 1, traceback ending in `FileNotFoundError: Cached scout not found at …`. The SKILL now says it "stops with a FileNotFoundError"; change that line with the fix. Fix direction: catch it in `main`, print one line naming the scout path and the dispatch step, exit 2 (usage) like the other input errors.
+
+---
+
+- **Fixed:** product v3.0.x-dev 019a3437 fix(datasheets): a missing or unreadable scout, plan or result file stops the extraction pipeline with a message instead of a traceback (v3.0.2 Wave 11a Task 8, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `_load_scout` now returns None (`skills/datasheets/scripts/plan_extraction.py:91-93`), and `main` prints one line naming the scout path and dispatch Step 1, then returns 2 (`:190-198`). Probe: `--use-cached-scout` with an empty cache dir gives rc 2 and one `error:` line, no traceback. SKILL.md:76 now says "exits 2 and names the scout file to write"; the old "invoke without --use-cached-scout" hint is gone.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-331: `jsonschema` + `referencing` deps undeclared in datasheets skill
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/merge_results.py`, `skills/datasheets/scripts/validate_extraction_result.py`
+**Discovered:** 2026-05-19
+
+**Symptom:** Both scripts `import jsonschema` and use `referencing` but
+the skill ships no `requirements.txt`, no SKILL.md mention, no install
+instructions. On Debian this requires `pip install
+--break-system-packages` for a global install. The codebase already
+ships a stdlib equivalent at
+`skills/datasheets/scripts/_mini_jsonschema.py` per harness memory
+`feedback_stdlib_first`.
+
+**Likely fix:** Three options:
+1. Declare the dep in `requirements.txt` + SKILL.md (allows pip-install workflow).
+2. Vendor / switch to the existing `_mini_jsonschema.py`.
+3. Remove the dep where stdlib coverage suffices.
+
+Preference per `feedback_stdlib_first`: option 2.
+
+**Not tag-blocking** — works on systems where `jsonschema` is installed.
+
+---
+
+#### Addendum to KH-331 (`jsonschema` + `referencing` deps undeclared in datasheets skill)
+**Added:** 2026-10-25, external audit round 1 (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R3-F11; also `docs/audit/04-v3-security/findings/VERIFICATION.md` se/R1-F9)
+A third undeclared dependency: `skills/datasheets/scripts/validate_sanity_vector.py:17` imports `yaml` unconditionally at module level (used at `:149`), against datasheets SKILL.md:74's stdlib-only promise, so even `--help` fails without PyYAML. QA helper only (referenced by `dispatcher-contract.md:76-78`), not on an analyzer path. Fix: lazy import, or JSON vectors. Output-neutral.
+
+- **Fixed:** product v3.0.x-dev 4fecce75 docs(datasheets): name PyYAML as the sanity-vector helper's dependency; extraction files carry no capability mode (v3.0.2 Wave 11a Task 8, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: SKILL.md:76 already named `jsonschema` (with `referencing`, per `merge_results.py:14-15`) at the baseline. It now also names PyYAML for `validate_sanity_vector.py`. The yaml import was already inside `main` (`validate_sanity_vector.py:147`), so `--help` works without PyYAML. This closes the issue by option 1 (declare the dependency); the scripts still need jsonschema.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-333: `capability_mode` not surfaced in datasheet `<mpn>.json` extraction output
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/merge_results.py` (output envelope)
+**Discovered:** 2026-05-19
+
+**Symptom:** EMC analyzer surfaces `capability_mode` via a separate
+`capability_mode.json` artifact + `capability_mode_ref` field on the
+analyzer envelope. The datasheets extraction layer surfaces it nowhere
+— neither in `<mpn>.json` nor in a sidecar. Consumers cannot tell
+which capability mode produced an extraction.
+
+**Likely fix:** Either (a) add `capability_mode` (or
+`capability_mode_ref`) to the extraction envelope, mirroring the EMC
+pattern, or (b) document the omission in SKILL.md as intentional.
+
+**Not tag-blocking** — provenance gap, not a correctness issue.
+
+---
+
+- **Fixed:** product v3.0.x-dev 4fecce75 (same as above) (v3.0.2 Wave 11a Task 8, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: option (b), docs. `skills/datasheets/SKILL.md:52` says an extraction file records its source PDF and extractor, not a `capability_mode`, which is a per-run `analysis/capability_mode.json` record.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-365: BOM manager double-counts twice-instantiated sheets and misses `private` properties (audit KHPA-012 subset, direction corrected)
+
+**Severity:** MEDIUM
+**File:** `skills/bom/scripts/bom_manager.py:532-544` (visited-at-dequeue),
+`:167-168` (property regex); `kicad_sexp.py:58-62` (no unescaping)
+**Discovered:** 2026-07-24 (audit KHPA-012; code-verified same day — the audit
+had the count direction BACKWARDS)
+
+**Symptom:** (1) `analyze()` marks files visited at dequeue but appends at
+discovery under a stale check — a child sheet referenced twice by one parent
+enters `files_to_parse` twice and is counted TWICE (the audit claimed
+once/undercount; actual behavior is overcount — either way wrong quantities).
+(2) The property regex requires `(property "` immediately, so
+`(property private "Name" "Value")` is invisible — edits can create a duplicate
+property instead of updating the private one. (The main sexp_parser
+get_property path handles `private` fine; only the BOM regex path is affected.)
+(3) Sheetfile paths are used without KiCad string unescaping.
+
+**Fix direction:** migrate BOM/edit tools onto the shared sexp_parser loader
+(dedupe at discovery, real property parsing); interim: fix the visited-set
+order and widen the regex.
+
+- **Fixed:** product v3.0.x-dev b3bbcfbe fix(bom): BOM tools read private fields and escaped text like KiCad; 72227f9a fix(bom): write-back tools find parts by the reference KiCad shows and write a repeated sheet once (v3.0.2 Wave 11a Task 16, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - (1) Twice-instantiated sheets were already counted per instance at the baseline: `bom_manager.analyze` dedupes files by resolved path (`bom_manager.py:634-638`).
+  - (2) Every property regex now accepts `private` (`bom_manager.py:115`, `edit_properties.py:92,111,123,170,237`, `sync_datasheet_urls.py:83`).
+  - (3) Sheetfile paths are unescaped (`kicad_sexp.py:162`, `unescape_quoted`).
+  - Probe: `extract_properties('(property private "MPN" "A\"B")')` gives `{'MPN': 'A"B'}`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-429: `deep_review_gate.find_pdf` matches only `<MPN>.pdf` — sync-style `<MPN>_<desc>.pdf` names silently degrade datasheet quotes to "partial"
+
+**Severity:** LOW (Layer 2 evidence quality; the datasheet sync scripts write `<MPN>_<desc>.pdf`, so the common case misses)
+**File:** `skills/kicad/scripts/deep_review_gate.py` (`find_pdf`)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** quotes against a PDF saved by `sync_datasheets_*` as `TPS61023DRLR_datasheet.pdf` are graded `partial` because `find_pdf` looks for `TPS61023DRLR.pdf` only.
+
+**Fix direction:** match `<MPN>*.pdf` (case-insensitive, sanitised MPN per `datasheet_lookup.sanitize_mpn`) and prefer the exact name when several exist.
+
+**Gate budget (when fixed):** none (Layer 2 only; `deep_review.json` is excluded from the diff scope).
+
+- **Fixed:** product v3.0.x-dev 496376d6 fix: Deep Review finds a datasheet saved by the sync as <MPN>_<description>.pdf or listed in the manifest (v3.0.2 Wave 11a Task 24, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `find_pdf` (`skills/kicad/review/scripts/deep_review_gate.py:291-315`) tries these in order: the manifest's file, then exact `<MPN>.pdf`, then a case-insensitive stem match, then a single `<MPN>_*.pdf` prefix match (sanitized MPN or `sanitize_filename`). An ambiguous prefix match returns None.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-433: datasheet staleness: `datasheet_lookup._resolve_pdf_path` uses `source.local_path`, stored by the extraction as an ABSOLUTE original-project path — any copied project reads its extractions as stale (irreproducible trust toggles between runs)
+
+**Severity:** MEDIUM (this is why the VM-001 repro differed between the reviewer's and the controller's run: trusted vs stale depended on whose copy of the project ran)
+**File:** `skills/datasheets/scripts/datasheet_lookup.py` (`_resolve_pdf_path`), extraction writers (`source.local_path`)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** copy a project with `datasheets/extracted/` elsewhere → every extraction resolves its PDF through the old absolute path, fails the staleness check, and the analyzers drop to heuristic trust.
+
+**Fix direction:** store `local_path` relative to the project root (or to the extraction file) and resolve relative to the current project; keep a fallback to the absolute path for old extractions; a determinism-style test that copies a fixture project and asserts identical trust.
+
+**Gate budget (when fixed):** none in the corpus (no extractions); on extraction-bearing projects, trust flips heuristic → datasheet after copy.
+
+#### Addendum to KH-433 (absolute `source.local_path` staleness)
+**Added:** 2026-10-25, external audit round 1 (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F1, kc/R7-F8)
+This now blocks KH-554, the lookup-detector trust policy. Gating AM / OV / TJ / EX / FT / PM on `is_stale` before this item is fixed would switch trust on and off between copies of the same project. Fix this first.
+
+#### Addendum to KH-433 (soak run 11: reproduced on a copied project)
+**Added:** 2026-11-06, SacMap rev2 soak run 11 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/11/`, v3.0.1 release `7d9d4d9f`, post-release; design files byte-identical to run 10); verified by code read at `7d9d4d9f`
+- `plan_extraction.py:148` stores `pdf_path` as given (`str(pdf_path)`), and `merge_results.py:157` writes it unchanged to `source.local_path`. The SacMap extraction for U3 TPS61023DRLR holds `/home/…/sacmap/hardware/sacmap-rev2/datasheets/TPS61023DRLR.pdf`, a folder that no longer exists; the copy in the project's `datasheets/` has the same SHA-256.
+- At `7d9d4d9f`, `cache_reader._resolve_pdf_path` (:193) joins `cache_dir.parent / local_path`. An absolute path stays absolute, fails the containment test and returns None, so `lookup` marks the extraction `pdf_missing` even when the file exists (the Wave 9a containment, `b0d9ab6f`, KH-870 / KH-782). There is no `datasheets/<basename>` fallback.
+- Effect: PS-001 reports "no datasheet extraction" for U3, two SPICE regulator-feedback benches drop from pass to info, and no diagnostic says why (that half is KH-905).
+- Fix direction (product): the writer stores the path relative to `datasheets/`; the reader falls back to `datasheets/<basename>` when the sha256 matches; a distrusted extraction is named in `diagnostics[]` (KH-972). The soak's top-ranked fix.
+
+- **Fixed:** product v3.0.x-dev 6820545e fix(datasheets): a copied project finds its extraction PDF by name; new extractions store local_path relative to datasheets/ (v3.0.2 Wave 11a Task 5, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - Reader: `cache_reader._resolve_pdf_path` (`skills/datasheets/datasheet_types/cache_reader.py:198-236`) falls back to `datasheets/<basename>`, splitting on `/` and `\`, with containment checked. The sha256 check still decides staleness. New tests cover a copied project, a Windows absolute path, and a name match with different bytes (stays `pdf_hash_mismatch`).
+  - Writer: `merge_results._local_path` (`merge_results.py:148-155`) stores the path relative to `datasheets/` when the PDF is inside it.
+  - `tools/tests/test_cache_reader.py` and `test_extraction_binding.py` pass: 41 passed, 17 skipped.
+  - The diagnostics half (KH-905/972) is a separate entry.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-440: docs: native DRC/ERC on a project copy without lib tables emits `lib_footprint` / `lib_symbol` warnings — skill should say so
+
+**Severity:** LOW (documentation; the kicad skill's DRC/ERC step surprises users on copied projects)
+**File:** `skills/kicad/SKILL.md` (DRC/ERC section)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** running `kicad-cli pcb drc` / `sch erc` on a copied project without `fp-lib-table` / `sym-lib-table` yields library-resolution warnings unrelated to the design.
+
+**Fix direction:** one doc note: copy the lib tables (or run from the original location) and how to recognise/ignore the lib_* class.
+
+**Gate budget (when fixed):** none.
+
+- **Fixed:** product v3.0.x-dev ac3df796 docs: file-format guide covers kicad-cli library warnings on copied projects and the retired 2.x parser modules (v3.0.2 Wave 11a Task 30, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/kicad/references/file-formats.md:386-388` says how to avoid the library warnings and names the `lib_footprint_issues` / `lib_symbol_issues` / `footprint_link_issues` classes. Note: the note sits in the reference guide (plan: "the guide the survey names"). SKILL.md's DRC/ERC section, which the filing named, does not point to it.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-456: `fab_release_gate` component-count check counts every PCB footprint, including `G***` logo/graphic footprints — false FAIL "schematic 52 vs PCB 56"
+
+**Severity:** LOW (a FAIL verdict on a release gate for a correct board; any board with logo footprints or other non-BOM graphics trips it)
+**File:** `skills/kicad/scripts/fab_release_gate.py:173-205` — `pcb_fp = pcb_stats.get("footprint_count", len(pcb.get("footprints", [])))` vs `sch_placeable = total_components - dnp_parts`; no exclusion of graphic footprints
+**Discovered:** 2026-10-22, SacMap rev2 soak run 9 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/9/`, product `main` @ `4701c26` = v2.3.2 pre-tag; report `REVIEW-2026-10-22.md`, meta `REVIEW-2026-10-22-meta.md`), report §18.5 / meta §2 #3
+
+**Repro:** SacMap `pcb.json` has 56 footprints, four of which are `reference "G***"`, `footprint "LOGO"`; the schematic has 52 placeable parts. `check_pin_nets`-style comparisons (and the PCB analyzer's own footprint summaries) treat `G***` as graphics. Gate: `[FAIL] Component count mismatch: schematic 52 vs PCB 56 (diff 4, 8%)`.
+
+**Fix direction:** exclude footprints that are graphics (reference matching `^G\*+$|^G\d*$` with no schematic counterpart, `attr` board-only / `exclude_from_bom`, or a `footprint_count_placeable` stat the PCB analyzer emits) before comparing; report the excluded count in `details`. Gate budget: `fab_release_gate` is not in the corpus profile — no gate movement.
+
+- **Fixed:** product v3.0.x-dev 3ac68060 fix: fab gate leaves board-only graphics out of the component count and warns when DRC ignores unconnected items (v3.0.2 Wave 11a Task 20, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `check_consistency` (`skills/kicad/scripts/fab_release_gate.py:212-220`) subtracts `board_only` and non-board-only DNP footprints from the PCB count and names them in the message only, with no new keys (ruling 13). `board_only` is emitted from the footprint `attr` (`pcb/reader.py:401,744-745`). Note: a logo footprint that lacks the `board_only` attribute is still counted. bitmap2component logos carry it. I could not re-check SacMap, because its soak directory is gone.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-458: `capability_mode.json` `datasheet_coverage_pct` is a hard-coded 0 — `_compute_coverage_pct` is still the Phase-4a stub
+
+**Severity:** LOW (misleading sidecar field; `datasheet_extraction: "partial"` + 0 % on a project with 24 PDFs and extractions for every IC)
+**File:** `skills/kicad/scripts/capability_mode.py:87-89` — `def _compute_coverage_pct(cache_dir=None) -> int: """Stub: 0 in 4a; refined in 4d-skeleton.""" return 0`; written at `:119`
+**Discovered:** 2026-10-22, SacMap rev2 soak run 9 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/9/`, product `main` @ `4701c26` = v2.3.2 pre-tag; report `REVIEW-2026-10-22.md`, meta `REVIEW-2026-10-22-meta.md`), meta §2 #23 (present since v1.4; never refined)
+
+**Repro:** any run — the field is 0 regardless of `datasheets/extracted/` contents.
+
+**Fix direction:** compute `extracted MPNs / BOM MPNs` from `datasheets/extracted/*.json` (and `datasheets/index.json` when present) against the schematic's MPN set, or drop the field with a `compat.deprecated_fields` entry. Sidecar-only change (`capability_mode.json` is outside the strict gate scope); `datasheet_extraction` should then be derived from the same count.
+
+- **Fixed:** product v3.0.x-dev aa8b4b8a fix(kicad): capability_mode.json reports datasheet_coverage_pct instead of always 0 (v3.0.2 Wave 11a Task 8, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `_compute_coverage_pct` (`skills/kicad/scripts/capability_mode.py:91-110`) is the share of `datasheets/manifest.json` parts that have an extraction (`find_extraction`), per ruling 26. `datasheet_extraction` is unchanged. Probe: 2 manifest parts with 1 extraction gives 50. Note: it is cwd-relative (`datasheets/extracted`) when no `cache_dir` is passed, as `_detect_datasheet_status` already was.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-462: `datasheet_verify.py` exits 1 for warnings-only results — scripted gates cannot tell "warnings" from "errors"
+
+**Severity:** LOW (exit-code convention; two rc 1 exits per review on extractions whose only issues are naming warnings)
+**File:** `skills/datasheets/scripts/datasheet_verify.py:1066` — `return 0 if not issues else 1` in `_cli_v14` (issues includes `warning`-level violations)
+**Discovered:** 2026-10-22, SacMap rev2 soak run 9 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/9/`, product `main` @ `4701c26` = v2.3.2 pre-tag; report `REVIEW-2026-10-22.md`, meta `REVIEW-2026-10-22-meta.md`), meta §1 #34/#35
+
+**Repro:** `datasheet_verify.py --mpn ESP32-S3-WROOM-1-N4 --extract-dir datasheets/extracted --self-consistency --json` → 4 `warning` violations (`power_domain '3V3' does not resolve to a key in base.recommended_operating`), 0 errors, rc 1. Same for `USBLC6-2SC6` (6 warnings).
+
+**Fix direction:** 0 = clean or warnings-only, 1 = at least one `error`, 2 = usage/missing extraction; keep the JSON unchanged. No analyzer output moves (CLI only).
+
+#### Addendum to KH-462 (soak run 11: still present)
+**Added:** 2026-11-06, SacMap rev2 soak run 11 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/11/`, v3.0.1 release `7d9d4d9f`, post-release; design files byte-identical to run 10); verified by code read at `7d9d4d9f`
+`--self-consistency` still exits 1 on warnings only: ESP32-S3-WROOM-1-N4 38 warnings, USBLC6-2SC6 7 (the per-pin `power_domain` repeats are KH-902).
+
+- **Fixed:** product v3.0.x-dev 6e669956 fix(datasheets): datasheet_verify exits 0 on warnings only, groups power_domain warnings, survives malformed pins (v3.0.2 Wave 11a Task 6, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/datasheets/scripts/datasheet_verify.py:1178` returns `1 if any(severity == "error") else 0`. Usage errors stay 2 (`:1126-1154`), and the JSON output is unchanged.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-471: `export_issues.py` keeps its own severity label vocabulary (`critical`/`high`/`medium` ranks, `_norm_severity` → `high`/`warning`/`info`) outside the round-8 `error`/`warning`/`info` unification
+
+**Severity:** LOW (the exporter still accepts the new names on input, but its own labels differ from every analyzer's — `high` where the analyzers now say `error`)
+**File:** `skills/kicad/scripts/export_issues.py:26-47` (`_SEVERITY_RANK` with `critical`/`high`/`medium`, `_norm_severity` returning `high`)
+**Discovered:** 2026-10-24, v3 round-8 handoff §11 (B4 scope was datasheet_verify / cross_verify / summarize_findings)
+
+**Fix direction:** rank and emit `error`/`warning`/`info`, accept the legacy names on input only (the B4 pattern). Corpus-neutral (the harness does not run the exporter); a product text-oracle artefact if one exists.
+
+- **Fixed:** product v3.0.x-dev 980554ab fix(export_issues): severity labels and output say error, not high (v3.0.2 Wave 11a Task 29, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `_norm_severity` (`skills/kicad/scripts/export_issues.py:52-59`) returns error/warning/info. Legacy names are accepted on input only (`_SEV_RANK` `:37-45`, accepted list `:661-665`). The labels use the normalized value (`:379-383`).
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-489: SPICE model cache / workdir hygiene after KH-477 — unlocked manifest read-modify-write, non-atomic `.sub` model write, 0600 manifest, per-process cache dir and `spice_sim_*` workdir never removed (`cleanup_workdir` dead)
+
+**Severity:** LOW (local temp hygiene; measurements unaffected)
+**File:** `skills/spice/scripts/spice_model_cache.py:182-188` (manifest read-modify-write with no lock: two concurrent writers each `os.replace` their own copy and the loser's entry is dropped), `:178` (`.sub` model written with a plain `write_text`), `:201-207` (`NamedTemporaryFile` creates 0600 and `os.replace` keeps it, so `manifest.json` is 0600 rather than umask mode), `:91-92` (the per-process `mkdtemp("kicad-happy-spice-")` fallback is never removed); `simulate_subcircuits.py:165-168` (`cleanup_workdir` assigned twice, read nowhere; no `rmtree` / `atexit` / `TemporaryDirectory` anywhere in `skills/spice/scripts/`)
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 items 10 (task-10 notes) and 12 (M5); verified at `07b7fb1`. The atomic manifest swap itself (KH-477) is in place.
+
+**Fix direction:** write the `.sub` through the same temp-file + replace path, `os.chmod` the manifest to umask mode (or create it with `mkstemp` + explicit mode), a lock file (or per-writer merge on replace) for the manifest, `atexit`/`TemporaryDirectory` for the per-process cache dir, and either honour `cleanup_workdir` or delete it. Budget: neutral — the harness pins `--workdir` and `--model-cache-dir` per unit (TH-077) and never reaches the fallback dir.
+
+- **Fixed:** product v3.0.x-dev 9d409402 fix(spice): the temp workdir and per-process model cache a run creates are removed at exit (+ earlier-wave atomic writes) (v3.0.2 Wave 11a Task 11, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - The `.sub` model and `manifest.json` are written through a temp file, `os.chmod(DEFAULT_FILE_MODE)` and `os.replace` (`skills/spice/scripts/spice_model_cache.py:267-273,294-300`).
+  - The per-process `mkdtemp` cache is removed at exit via `atexit` (`:89-90`).
+  - The `spice_sim_` workdir is registered with `atexit` and `cleanup_workdir` is now read (`simulate_subcircuits.py:169-181`).
+- Remains (by ruling 7): no lock on the manifest read-modify-write. Task-11 report: "lock dropped per ruling 7".
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-490: `analyze_emc.py --severity` rejects `error` / `warning` / `info` although the filter already understands them
+
+**Severity:** LOW (CLI usability)
+**File:** `skills/emc/scripts/analyze_emc.py:319-321` (`choices=['all','low','medium','high','critical']`); the consumer `emc_rules.py:4583-4587` maps the threshold through `kicad_core/render.normalize_severity`, which accepts the error/warning/info vocabulary, so only argparse refuses it
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 item 11 (review B minor, after `5e35592` made the filter case-insensitive); verified at `07b7fb1`
+
+**Fix direction:** add the three names to `choices`. Budget: `--help` text change → the EMC `help__…` text-oracle artefact and the `--help` md5 set re-freeze (allow entry); corpus-neutral.
+
+- **Fixed:** product v3.0.x-dev d9a92fe3 fix(emc): --severity accepts error, warning and info as well as the older five-level names (v3.0.2 Wave 11a Task 12, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/emc/scripts/analyze_emc.py:321-324` choices now include `info`, `warning`, `error`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-491: `analysis_cache.prune_runs` raises on a symlinked sibling run dir and tracebacks on non-dict manifest values (review M3 / M4)
+
+**Severity:** LOW (local analysis-dir hygiene; the containment fix KH-479 is not affected)
+**File:** `skills/kicad/scripts/analysis_cache.py:77-81` (`_run_id_problem` accepts a symlink whose realpath is a sibling directory directly under the root), `:526-527` (`os.path.isdir` is true for a directory symlink and `shutil.rmtree` raises `OSError: Cannot call rmtree on a symbolic link`), `:503-505` / `:516` (`meta.get(...)` on a run value that is a string or null → `AttributeError`; `load_manifest` guards JSON-level corruption only — identical at `2498831`)
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 item 12 (whole-range review minors M3 / M4); verified at `07b7fb1`
+
+**Fix direction:** reject a symlinked run id outright (or `os.unlink` the link instead of `rmtree`), and skip non-dict run values with a diagnostic. Budget: neutral (no gate profile uses `--analysis-dir`).
+
+- **Fixed:** product v3.0.x-dev 5c8c73ef fix: analysis cache ignores link, FIFO, malformed and too-deep manifests and run entries (with the KH-906 cache sites) (v3.0.2 Wave 11a Task 17, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `prune_runs` unlinks a symlinked run dir instead of calling `rmtree` (`skills/kicad/scripts/analysis_cache.py:903-906`). `load_manifest` drops non-dict run entries with a diagnostic (`:242-247`), so the `meta.get` in `prune_runs` (`:881-883`) never sees a string or null.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-492: DigiKey provider retries HTTP 429 recursively without a bound; outage attribution and 401 wording riders (review M6)
+
+**Severity:** LOW (online paths only)
+**File:** `skills/digikey/scripts/provider_digikey.py:209-212` (on 429: `sleep(10)` then `return search_digikey_with_token(…)` with no attempt counter — pre-existing); riders from the whole-range review M6: DigiKey outage attribution, the 401 "credentials" wording for an expired token, the no-op refresh branch in `distributor_core/sync.py`
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 items 12 (M6) / 13; the 429 branch verified at `07b7fb1`
+
+**Fix direction:** bounded retries with backoff (the sibling providers' pattern), token-expiry wording distinct from bad credentials, remove or wire the refresh branch. Budget: neutral — the distributor-offline oracle never sees a 429 (recorded responses).
+
+**Addendum 2026-10-31 (3.0.x Wave 5, candidate `698116c`):** fixed in 3.0.x Wave 5 (`ea5f639`, with KH-615): DigiKey HTTP 429 stops after three retries, 10 s apart, and leaves the part `error` for the next run; a DigiKey transport failure (401 included) is recorded `error` and retried next run instead of a permanent failure; the no-op refresh branch is gone from `distributor_core/sync.py` (the outcome-helper refactor `5061fe5`). Still open (handoff): mid-run token refresh — `provider_digikey.search_digikey_with_token` still returns None on 401 with the comment "caller should refresh" and no caller refreshes, so an expired token fails the rest of the run; the 401 "credentials" wording rider is not addressed by the handoff.
+
+- **Fixed:** product v3.0.x-dev f6d31f81 fix(digikey): an expired token is refreshed mid-sync (v3.0.2 Wave 11a Task 25, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the residue from the Wave 5 addendum is closed.
+  - On a 401, `search_digikey_with_token` refreshes the token once through a locked per-client `_refresh_token`, then retries (`skills/digikey/scripts/provider_digikey.py:181-227`). Later parts start from the fresh token (`:200`).
+  - A 401 that persists after the refresh is recorded as "check the API credentials" (`distributor_core/download.py:83-85`). That wording is now accurate.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-493: Action `diff_base.sh` extracts only the schematic's own directory, so a base re-run drops sub-sheets referenced from outside it
+
+**Severity:** LOW (GitHub Action diff mode only)
+**File:** `action/diff_base.sh:31-37` (`git ls-tree -r <ref> -- <schematic dir>` filtered to `.kicad_sch` / `.sch` / `.kicad_pro` / `.kicad_dru`)
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 item 14 (review minor); verified at `07b7fb1`
+
+**Symptom:** a sub-sheet referenced via `../` or an absolute path is not extracted into the base tree, and (KH-481) `parse_all_sheets` then drops it silently, so the Action's diff compares a complete head against an incomplete base and reports spurious removals. Neutral for the harness (no corpus profile runs the Action).
+
+**Fix direction:** extract every `(sheet … (property "Sheetfile" …))` target reachable from the root (walk the base tree), or at least the repository root for the file types above.
+
+- **Fixed:** product v3.0.x-dev 5bf0a8e3 fix: the Action's diff-base run takes sub-sheets outside the root schematic's folder from the base branch (v3.0.2 Wave 11a Task 23, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `kh_extract_base` (`action/diff_base.sh:27-44`) now extracts every `.kicad_sch/.sch/.kicad_pro/.kicad_dru` in the repository at REF (`git ls-tree -r` over the whole tree), plus the PCB and config. This is the fallback the filing names ("at least the repository root").
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-506: the Action report puts raw schematic strings (component values etc.) into Markdown unescaped
+
+**Severity:** MEDIUM (report integrity in PR comments; GitHub sanitises HTML, so no script execution)
+**File:** `action/format-report.py:1066` (raw `oa.get('value')`), also `:452-457,629,642-643,1013-1015,1081`; `skills/kicad/scripts/export_issues.py:168-209`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/04-v3-security/findings/VERIFICATION.md` se/R2-F6)
+
+**Symptom:** a component value or other schematic string containing `|`, newlines, backticks, `[text](url)` or heading markers is placed into a table cell or list line as is, so a PR author can break the report's tables, add links, or forge report sections under the bot's identity. There is no escape helper in the file. `export_issues.py` builds GitHub issue bodies the same way. Should: one Markdown-escape helper for every interpolated analyzer string.
+
+**Fix direction / budget:** one escape helper (table-cell and inline variants) applied at every listed site. Budget: output-changing in rendered report text only for strings containing Markdown-significant characters; needs a text-oracle budget for the `format-report` / `export_issues` artefacts (corpus-neutral).
+
+- **Fixed:** product v3.0.x-dev 0f0bfb33 fix: analyzer text cannot add links, headings or table cells to the Action report or exported issue bodies; 2bd83be3 fix(action): report list items led by schematic text cannot open a heading; a24fc158 fix: export_issues escapes raw HTML in issue bodies (v3.0.2 Wave 11a Task 21, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - New helpers in `action/format-report.py:491-514`: `_md`, `_cell`, `_code` and `_lead`. Every `add()` diff row goes through `_cell` (`:537-538`).
+  - The opamp value site now uses `_md` (`:1193`).
+  - `export_issues.py:76-100` has `_md_inline`, `_md_cell` and `_code`.
+  - A grep of the f-string interpolations that skip the helpers finds only numeric fields.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-508: `action/examples/fork-safe-comment.yml` takes the PR number from the untrusted artifact and passes it unvalidated to the write-token comment step
+
+**Severity:** MEDIUM (example workflow only, but users copy it; a fork PR chooses which PR or issue the privileged job comments on)
+**File:** `action/examples/fork-safe-comment.yml:33-35` (PR number read from the lower-privilege run's artifact and written to `$GITHUB_OUTPUT`), `:42` (used by the comment step)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/04-v3-security/findings/VERIFICATION.md` se/R2-reg-fork, register item promoted)
+
+**Symptom:** the fork's run writes the PR number into its artifact, and the `workflow_run` job copies it into `$GITHUB_OUTPUT` without validation, so a fork can make the write-token job comment on any PR or issue. Should: take the PR number from `github.event.workflow_run` metadata, or require a bare integer.
+
+**Fix direction / budget:** take the number from `github.event.workflow_run.pull_requests[0].number` (or match `^[0-9]+$` and fail otherwise). Budget: neutral (example file; no gate profile runs it).
+
+- **Fixed:** product v3.0.x-dev adf01576 fix: the fork-safe comment example validates the PR number and checks the PR head is the analysed commit (v3.0.2 Wave 11a Task 23, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `action/examples/fork-safe-comment.yml:33-50` reads at most 32 bytes. An empty number is a notice, and anything other than `^[0-9]+$` fails the job. If the PR head SHA differs from `workflow_run.head_sha`, the comment is skipped with a warning (ruling 21).
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-555: `detect_missing_required_components` accepts any capacitor on the regulator rail as Cout / Cin — a second, unfixed site of the KH-377 ground-return distinction [group 14]
+
+**Severity:** MEDIUM (cache-backed regulators with `cout_min`; rare topology)
+**File:** `lookup_detectors.py:576-588` (`_net_has_component_type`), `:621-623` (Cin), `:632-636` (Cout) in `detect_missing_required_components`; the regulator detector already requires a ground return at `signal_detectors.py:2073-2078`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F5)
+
+**Symptom:** a regulator whose output carries only a feedforward cap (FB-to-VOUT) is credited with an output cap; the "missing Cout" finding does not fire.
+
+**Fix direction / budget:** reuse the KH-377 ground-return helper. Budget: corpus-invisible (no caches); one fixture with a feedforward-only output. Groups with KH-554's ruling wave but does not need its ruling.
+
+- **Fixed:** product v3.0.x-dev 4c1be0d6 fix(schematic): EX-001 credits only a grounded capacitor as a regulator's output or input cap (v3.0.2 Wave 11a Task 31, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `_net_has_grounded_capacitor` (`skills/kicad/scripts/lookup_detectors.py:586-602`) needs the capacitor's other pin on a ground net. It is used for Cin and Cout (`:637`, `:648`), so a feedforward-only output cap no longer counts.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-556: PU-001 `_net_has_driver` suppresses the warning for any other IC on the net, whatever its pin type [group 14]
+
+**Severity:** MEDIUM (deliberate FP policy whose docstring claims more than the code does)
+**File:** `validation_detectors.py:163-174` (`_net_has_driver`; docstring "non-OD/OC IC output"), consumer `:346-349` (`validate_pullups`); net pins carry `pin_type` (`schematic/connectivity.py:360`, `:805`, `:885`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F3)
+
+**Symptom:** an open-drain INT line from a sensor to an MCU input (no external pull-up) gets no PU-001, because the MCU counts as a "driver". The MCU's internal pull-up may be configured in firmware and is invisible statically, so the suppression may be right.
+
+**Fix direction / budget:** waits on ruling: does an MCU input on the net suppress PU-001? Fix the docstring now (neutral). If tightened to push-pull outputs only, PU-001 appears on most INT→MCU nets (unmeasured; PU-001 was v2.3.2 gate class B, 4,894); size first.
+
+- **Fixed:** product v3.0.x-dev 07c981fd docs: PU-001 net-driver helper says any other IC suppresses the check (v3.0.2 Wave 11a Task 33, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the `_net_has_driver` docstring (`skills/kicad/scripts/validation_detectors.py:144`) now describes today's behaviour, per ruling 1: any other IC suppresses PU-001 because of a possible firmware pull-up. The code is unchanged.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-562: `analyze_voltage_derating` IC abs-max read swallows JSON / OS errors with no `diagnostics` record [group 15]
+
+**Severity:** LOW (observability)
+**File:** `schematic/system_analyses.py:781-789` (`_read_ic_abs_max` inside `analyze_voltage_derating`: `except (json.JSONDecodeError, OSError): pass` / `return None`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R4-R1)
+
+**Symptom:** a corrupt or unreadable extraction JSON silently disables the IC abs-max derating check.
+
+**Fix direction / budget:** record one diagnostic through `kicad_core/diagnostics.record`. Budget: additive `diagnostics` entries on units with unreadable extractions (same additive class as KH-480; ≈0 in the corpus, which carries no extractions). Separately, the legacy VD-002 reader expects `absolute_maximum_ratings` while extractions carry `base.absolute_max`; that waits on the ruling to migrate VD-002 to the typed datasheet API or retire it in favour of AM-001.
+
+- **Fixed:** product v3.0.x-dev e6714290 fix(schematic): record an unreadable datasheet extraction in the diagnostics; 029d7087 fix(schematic): report an unreadable extraction once per part, not once per IC (v3.0.2 Wave 11a Task 31, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `_read_ic_abs_max` (`skills/kicad/scripts/schematic/system_analyses.py:798-804`) records a diagnostic through `record(ctx.diagnostics, …)` when `read_json_object` returns None. The silent `except: pass` is gone. The VD-002 key mismatch (`absolute_maximum_ratings`, `:805`) is the rider that waits on a ruling.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-585: input-boundary crashes and silent drops — PCB `--schematic` with a non-dict JSON, a directory named `*.drl`, a truncated report input, and platform-encoding I/O in review/lifecycle/what_if
+
+**Severity:** MEDIUM (malformed or non-UTF-8 input; output-neutral on valid input)
+**File:**
+- `skills/kicad/scripts/analyze_pcb.py:106-117` (+ `pcb/pipeline.py:85`): `open()` without encoding, and `[{}]` passes the `'signal_analysis' in` test and then raises AttributeError.
+- `skills/kicad/scripts/analyze_gerbers.py:1211` → `:777`: a drill stub without `coordinate_range` raises KeyError.
+- `skills/kicad/scripts/check_report_sections.py:105-111`: a corrupt `emc.json` is dropped without a warning.
+- `skills/kicad/review/scripts/deep_review_gate.py:66,73,83,227,303,304,338`, `merge_annotations.py:48,63,95,125,130,131,150`, `validate_review.py:29,51`, `build_review_plan.py:58`, `skills/kicad/scripts/lifecycle_audit.py:188,209,420,432,1107,1117`, `what_if.py:1200,1206`: no `encoding="utf-8"`.
+
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R9-F10, kc/R10-F11, kc/R12-F10, kc/R14-F11)
+
+**Symptom:**
+- **`*.drl` directory:** a directory named `g.drl` beside an edge gerber makes `analyze_gerbers()` raise `KeyError 'coordinate_range'`.
+- **PCB `--schematic` input:** JSON `[{}]` passed to the PCB `--schematic` option raises AttributeError, and load failures go to stderr only.
+- **Corrupt report input:** `check_report_sections --run-dir` with a truncated `emc.json` reports "Analyzers present: schematic", stops requiring the EMC section, and prints no warning.
+- **Platform encoding on Windows:** an LLM-authored `deep_review.json` with non-ASCII decodes as cp1252 and is written back mangled, which leads to false quarantine. pdftotext output read in the locale (`:227`) breaks µ/≤ quotes. At lifecycle `:432` a UnicodeDecodeError escapes the `(JSONDecodeError, OSError)` catch.
+
+**Fix direction / budget:** turn each crash into a result plus one diagnostic. Warn on a corrupt sibling input. Run the standing UTF-8 sweep over review/, lifecycle, what_if and diff_analysis. Budget: output-neutral on valid input and on Linux.
+
+**Addendum 2026-10-31 (3.0.x Wave 5, candidate `698116c`):** narrowed. Fixed in 3.0.x Wave 5: the diff half (`diff_analysis --output` UTF-8, `ca4d97f`); the what_if half (`bacf5bc` / `a7ec28f`); the lifecycle lines (`9b1e23e`..`96c5935`); the Deep Review gate UTF-8 I/O (KH-580); `check_report_sections.py` keeps the required sections of an unreadable sibling with one stderr `Warning:` (kc/R12-F10, `ca4d97f`); a directory or dangling link named `*.drl` is skipped with a diagnostic (gerber half, `59f9184`). None of these commits names KH-585 except via the CHANGELOG. Still open (any remaining I/O sites, checked at `698116c`): `analyze_pcb.py:106-117` `--schematic` (`open()` without encoding; `[{}]` still passes the `'signal_analysis' in` test); `review/scripts/merge_annotations.py:48,63,95,125,130,131,150` and `validate_review.py:29,51` (`read_text` / `write_text` without encoding).
+
+- **Fixed:** product v3.0.x-dev 355d92d6 fix(pcb): --schematic JSON that is not an object or not UTF-8 warns instead of crashing (v3.0.2 Wave 11a Task 10, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - `analyze_pcb.py:104-120` opens the file with `encoding="utf-8"` and catches ValueError/OSError. A non-object value gets a warning and is dropped. Probe: `--schematic` holding `[{}]` gives one warning and rc 0.
+  - The two sites still open at Wave 5 now pass `encoding="utf-8"`: `merge_annotations.py:50,65,97,127,132,133,152` and `validate_review.py:29,51`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-589: DFM netclass track-width and via-diameter checks are dead: they read `net_name`, which no segment, arc or via carries
+
+**Severity:** MEDIUM (dead checks; resolving the IDs naively would create false violations)
+**File:** `skills/kicad/scripts/pcb/dfm.py:878,901` (also `:177,188`); producer `pcb/reader.py:528,616` (numeric `net`, plus `_net_name` on KiCad 10 only, `:530,620`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R9-F7, kc/R9-F11)
+
+**Symptom:** the per-netclass loops never match a net, so no netclass width or diameter violation is ever emitted. The unit test `tools/tests/test_pcb_dfm.py:58` feeds a synthetic `net_name`, which hides this. KiCad netclass track width and via diameter are router defaults, not DRC minima; only netclass clearance is enforced.
+
+**Fix direction / budget:** delete the width/diameter class checks, or re-scope them as info. Give the test an independent oracle. Budget: neutral if deleted; a new info class if re-scoped. Waits on ruling: R9-F7 (delete vs info).
+
+**Addendum 2026-10-29 (3.0.x Wave 4 Part B, close-triage rider):** net-class compliance holds micro vias to the class `via_diameter`, and reports net-class track-width / via-diameter violations that KiCad never reports (class values are preferred values, `SetOpt`, `drc_engine.cpp:308-309, 378-379`); MEDIUM. Plan addendum (A6-F6): completing KiCad 6 `classes[].nets` membership would revive these dead loops; decide delete vs info first (ruling 57, `drc_engine.cpp:330-385`).
+
+- **Fixed:** product v3.0.x-dev 9e5eedae fix(pcb): drop the dead net-class width and via-diameter checks (v3.0.2 Wave 11a Task 10, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the net-class track-width and via-diameter loops are deleted (`skills/kicad/scripts/pcb/dfm.py`, −140 lines). `net_classes` is documented as unused (`:804`). The only per-class check left is the micro-via class minimum (`microvia_class_minima`, `:119-165`), which follows KiCad's drc_engine.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-597: `analysis_cache` run creation is an unlocked manifest read-modify-write with minute-resolution run ids, so parallel analyzers into one `--analysis-dir` can lose updates
+
+**Severity:** MEDIUM (SKILL.md:409/415 tells the agent to run the analyzers in parallel into one analysis dir; the window is milliseconds)
+**File:** `skills/kicad/scripts/analysis_cache.py:330-407` (`create_run`: `load_manifest` … `save_manifest`; `makedirs(exist_ok=True)` at `:335` accepts a folder another process took); `output_io.py:47-52,69`; `generate_run_id` (minute resolution)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R13-F2)
+
+**Symptom:** two analyzers that start within the same minute pick the same run folder, and the second `save_manifest` overwrites the first's `outputs` / `scripts` entry. Established by reading only; it needs a barrier-controlled two-process test.
+
+**Fix direction / budget:** create run folders exclusively (`mkdir` without `exist_ok`, then retry with a `-N` suffix), and merge manifest entries under a lock file or through a per-writer merge on replace. Budget: neutral for the harness. This is the same unlocked read-modify-write class as KH-489 (SPICE model cache) but a different file, so one helper could serve both.
+
+- **Fixed:** product v3.0.x-dev 57a1b457 fix: analyzers run in parallel into one --analysis-dir share one run folder; b054f0ce fix: the analysis run-folder lock is broken only when the same lock file stays unchanged (v3.0.2 Wave 11a Task 19, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `output_io` takes `manifest_lock` around decide + write (`skills/kicad/scripts/output_io.py:57-59,99`). The lock is an O_EXCL token file with stale-lock takeover (`analysis_cache.py:377-417`). `_new_run_dir` creates folders exclusively with a `-N` suffix (`:603-615`).
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-623: EMC EF-001/EF-002 judge a regulator's input filter from the first LC record anywhere on the board, and claim SPICE verification that never runs
+
+**Severity:** HIGH (default EMC path, every switching regulator on a board with any LC network)
+**File:** `skills/emc/scripts/emc_rules.py:2834` (`input_rail` read, unused), `:2841-2851` (first record with `resonant_hz < f_sw`), `:2884-2889` ("verified … ≥{40·log10(ratio)} dB"); `run_filter_spice` has no production caller, `spice_backend` never read; producer `skills/kicad/scripts/signal_detectors.py:728-730` (`detect_lc_filters` skips L-C pairs whose shared net is power/ground); `skills/emc/references/emc-methodology.md:132`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R1-F4)
+
+**Symptom:** the loop never checks `input_rail` or `shared_net`. Because the producer drops any L-C pair joined on a power net, a real input pi/LC filter (junction on VIN) is never in `lc_filters`; every EF-001/EF-002 verdict comes from an unrelated signal-net or RF LC network, one record serves every regulator, and EF-002 says "verified" though no SPICE runs. methodology.md:132 repeats the SPICE claim.
+
+**Fix direction / budget:** require the LC to feed `input_rail`, via a producer-side record (kicad bundle) or an EMC topology walk; drop the SPICE claim from methodology.md:132 or wire it in. Budget: EF-001/EF-002 mostly disappear or are re-attributed (size first); cross-bundle with `detect_lc_filters`.
+
+- **Fixed:** product v3.0.x-dev 8ca8e43e fix(emc): retire the unused EMI-filter SPICE sweep and the SW-003 radiation note, and stop the docs claiming EF checks use SPICE; 59a8dab2 docs(emc): the remaining docs and the --spice-enhanced help no longer say EMI-filter checks use SPICE (v3.0.2 Wave 11a Task 13, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - EF-001/EF-002 use `_input_lc_filter` (`skills/emc/scripts/emc_rules.py:3021-3060`, already at the baseline). It requires an L with one pin on `input_rail` and a capacitor from `input_rail` to ground.
+  - `run_filter_spice` and the `spice_backend` parameter are removed. EF-002's text no longer claims SPICE, and `emc-methodology.md:132-142` lists only PDN and FFT under SPICE mode.
+  - Note: EF-002's title still reads "EMI filter verified for …" (`:3136`). That is a heuristic calculation, not a SPICE claim.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-628: EMC switching-harmonic FFT runs Goertzel on ngspice's adaptive time points, and the steady-state fallback keeps a `dt` from the wrong start index
+
+**Severity:** LOW (opt-in `--spice-enhanced` + ngspice; ≤0.4 dB effect)
+**File:** `skills/emc/scripts/emc_spice.py:466-467` (fallback `steady_values = values`), `:471` (`dt` from `times[start_idx]`)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R1-F9)
+
+**Symptom:** 12 V / 40 % / 10 ns / 1 MHz: `wrdata` after `run` writes 20,245 points with dt 1e-11…1e-9 s; Goertzel assumes uniform spacing. Against the analytic trapezoid: h1 7.273/7.264, h2 2.221/2.244, h3 1.517/1.495, h7 0.614/0.636 (≤0.4 dB). On the fallback branch the sample rate is wrong outright.
+
+**Fix direction / budget:** `linearize v(sw)` before `wrdata` (20,001 uniform points at 1e-9 s); compute `dt` from the samples actually used. Budget: tiny EE-002 amplitude changes under `--spice-enhanced` only.
+
+- **Fixed:** product v3.0.x-dev 61c64cd0 fix(emc): resample the simulated switching waveform evenly before the harmonic analysis (v3.0.2 Wave 11a Task 13, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the control block now runs `linearize v(sw)` before `wrdata` (`skills/emc/scripts/emc_spice.py:306`). `dt` is computed from the samples actually used, `steady_times` (`:355-364`), on both the steady-state branch and the fallback branch. The FFT path is ngspice-only (`:276-278`).
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-635: `escape_kicad_string` does not escape newlines, and property names are written unescaped, so BOM tools can write a broken KiCad string
+
+**Severity:** LOW (only for values/names containing newlines or quotes; record rates it Low/Medium)
+**File:** `skills/bom/scripts/kicad_sexp.py:75` (`escape_kicad_string` escapes only `\` and `"`); `skills/bom/scripts/edit_properties.py:132` (new property name interpolated unescaped), `:221-228` (escaped `old_value` compared with decoded `new_value`); `bom_manager.extract_properties` `:162-170` (returns escaped values)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R5-N2; R5 spot check #2) — remainder of review-period periphery I11; no open KH covers it (KH-495 does not list it)
+
+**Symptom:** a value with a raw newline is written inside a quoted KiCad string unescaped (KiCad writes `\n`); a property name with `"` breaks the s-expression. Separately, a value holding `"` or `\` never compares equal to its update, so an identical update is logged "updated" and re-written, and `extract_properties` hands escaped text into MPN/Value.
+
+**Fix direction / budget:** escape `\n` (and `\r`, `\t` as KiCad does) and escape property names; compare decoded to decoded. Align with the `kicad_core/sexp.py` writer. Budget: output changes only for such inputs (schematic write-back). Overlaps KH-365 item (3) (no unescaping) — close together if the BOM tools move to the shared parser.
+
+- **Fixed:** product v3.0.x-dev b3bbcfbe fix(bom): BOM tools read private fields and escaped text like KiCad (v3.0.2 Wave 11a Task 16, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - `\n`/`\r` escaping and property-name escaping were already in place at the baseline (`kicad_sexp.py:93-96`, `edit_properties.py:143`).
+  - This commit adds a decoded-to-decoded comparison (`edit_properties.py:240`, `unescape_quoted(old)` vs new).
+  - `extract_properties` now returns decoded names and values (`bom_manager.py:118-119`).
+  - Probe: `build_new_property('a"b', 'c\nd')` writes `"a\"b" "c\nd"`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-648: download policy: NAT64 / 6to4 / IPv4-compatible IPv6 addresses pass `is_global`
+
+**Severity:** MEDIUM
+**File:** `skills/datasheets/distributor_core/download.py:112` (`_address_problem`; only IPv4-mapped addresses are unwrapped at `:109-110`)
+**Discovered:** 2026-10-25, recorded as residue by the product 3.0.x Wave 1 security round (`63f6a20`)
+
+**Symptom:** `ipaddress.is_global` is true for `64:ff9b::/96` (NAT64), `2002::/16` (6to4) and IPv4-compatible `::a.b.c.d` forms that embed a private or loopback IPv4 address, so a host resolving to one reaches the internal address through a translator.
+
+**Fix direction / budget:** unwrap the embedded IPv4 address of those prefixes and apply the IPv4 check to it (or refuse the prefixes). Budget: output-neutral except rejected URLs (diagnostics).
+
+- **Fixed:** product v3.0.x-dev 68e63cc1 fix(datasheets): refuse IPv6 addresses that embed a private IPv4 address (v3.0.2 Wave 11a Task 7, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/datasheets/distributor_core/download.py:132-158` has `_embedded_ipv4`, which unwraps NAT64 (64:ff9b::/96), 6to4 (`ip.sixtofour`) and IPv4-compatible `::a.b.c.d`. `_address_problem` checks the embedded IPv4 address too. Probe: `64:ff9b::7f00:1`, `64:ff9b::a00:1`, `2002:c0a8:101::1`, `::127.0.0.1` and `::10.0.0.1` are all refused, while `64:ff9b::808:808` and `2606:4700::1` pass.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-649: download policy: browser fallback ignores the call deadline until the end, buffers before the size check, and leaves WebSocket / service-worker requests unrouted
+
+**Severity:** LOW
+**File:** `skills/datasheets/distributor_core/download.py:521` (`_policy_route`), `:552` (`_download_playwright`), `:565` (`page.route("**/*", ...)`)
+**Discovered:** 2026-10-25, recorded as residue by the product 3.0.x Wave 1 security round (`63f6a20`)
+
+**Symptom:** the Playwright fallback applies the policy through `page.route`, but the per-call deadline is only passed as timeouts to individual steps, the response body is buffered before the byte cap is checked, and `page.route` does not see WebSocket connections or service-worker-initiated requests.
+
+**Fix direction / budget:** enforce the total deadline around the whole fallback, stream or check `Content-Length` before buffering, and block service workers and WebSockets (`service_workers="block"`, `route_web_socket`). Needs a machine with Playwright (the fallback is tested only against a fake module). Budget: output-neutral.
+
+- **Fixed:** product v3.0.x-dev 6f9c2860 fix(datasheets): browser fallback blocks service workers and WebSockets, checks size before reading, keeps the deadline; 98f35457 close the browser when its context fails (v3.0.2 Wave 11a Task 7, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `download.py:862-867` creates the context with `new_context(service_workers="block")`, closes WebSockets with `route_web_socket`, and passes one call deadline into `_policy_route`. Every step's timeout comes from `_ms_left(deadline, …)` (`:870-884`), with `_check_deadline` called between steps. Content-Length is checked before `route.fulfill` (`:828`) and before `resp.body()` (`:888-891`).
+- Caveats (within the fix direction's "or check Content-Length"): a response with no Content-Length is still buffered whole by `route.fetch`/`resp.body()`. `download.save_as` (`:874`) has no deadline and its size is checked only after the save. WebSocket blocking happens only on Playwright 1.48+ (`hasattr` guard).
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-650: `provider_mouser` fetches the API-provided `ProductDetailUrl` without the download policy or a size bound
+
+**Severity:** LOW
+**File:** `skills/mouser/scripts/provider_mouser.py:104-145` (`scrape_product_page`: `requests.get` at `:129`, `urlopen` at `:140`, both `timeout=20`), called with the API value at `:267-268`
+**Discovered:** 2026-10-25, recorded as residue by the product 3.0.x Wave 1 security round (`63f6a20`)
+
+**Symptom:** the product page URL comes from the Mouser API response and is fetched with no `url_problem` check, no redirect re-check and no byte or total-time cap, unlike datasheet downloads since the Wave 1 round.
+
+**Fix direction / budget:** route the fetch through the same URL policy and bounded read as `download_pdf`. Budget: output-neutral; distributor-offline transcripts include this fetch, re-check both ways.
+
+- **Fixed:** product v3.0.x-dev 2f6ad090 fix(mouser): product page fetch follows the download policy (v3.0.2 Wave 11a Task 25, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/mouser/scripts/provider_mouser.py:127` `scrape_product_page` now calls `distributor_core.download.fetch_page_text`. That function (`download.py:774-803`) runs `_checked` (the URL policy), pins the checked addresses, checks redirects through the download functions, and applies `max_bytes` 4 MiB plus a 30 s deadline. The `urlopen` left at `:78` is the fixed-host Mouser API search, not the product URL.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-651: SPICE project-model check is a denylist: XSPICE file-reading models and Xyce / LTspice file-writing cards are not recognised
+
+**Severity:** LOW
+**File:** `skills/spice/scripts/spice_model_cache.py:162-195` (`_CONTROL_CARD_PREFIXES`, `_INCLUDE_CARD_PREFIXES`, `model_text_problem`)
+**Discovered:** 2026-10-25, recorded as residue by the product 3.0.x Wave 1 security round (`63f6a20`)
+
+**Symptom:** `model_text_problem` refuses control cards, `shell` / `source` and includes, but XSPICE code models that read files and Xyce / LTspice cards that write files (for example `.print` / `.measure` file outputs, `.wrdata`-style output cards) pass, so an untrusted project `.sub` can still touch files with a simulator other than ngspice.
+
+**Fix direction / budget:** accept only an allowlist of dot-cards in a cached model (`.subckt`, `.ends`, `.model`, `.param`, `.func`, `.global` and the like) and refuse the rest. Budget: output-neutral for corpus units (no corpus unit should ship such a model); run spice-offline both ways.
+
+- **Fixed:** product v3.0.x-dev cd95259f a cached project model is used only when it holds model-library cards alone; c5ba83a2 …; 192f9baf the file-parameter check reads the whole model line again (v3.0.2 Wave 11a Task 11, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/spice/scripts/spice_model_cache.py:186` has the allowlist `_MODEL_LIBRARY_CARDS = {.subckt,.ends,.model,.param,.func,.global}`, and `:222` refuses any other dot-card. `:188`/`:224` refuse XSPICE `file=`/`input_file=`/`state_file=` parameters. Probe: `.print`, `.wrdata` and `.measure` are refused as command cards, `filesource(file=…)` is refused as reading a file, and a plain subckt passes.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-688: quoted bus names are not parsed
+
+**Severity:** LOW (0 known corpus uses)
+**File:** `schematic/connectivity.py` (`expand_bus_name`)
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part A (handoff 3b-A §Asks 4)
+
+- **Fixed:** product v3.0.x-dev 1679c6ff fix(schematic): expand quoted bus member and prefix names as KiCad does (v3.0.2 Wave 11a Task 31, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/kicad/scripts/schematic/connectivity.py:20-36` adds `_quote_step`, which is used in `_parse_bus_vector` and `_parse_bus_group` (both prefix and members). Members containing a space are escaped (`:227-228`). The new cases in `tools/tests/test_bus_conformance.py` (`{"A B" C}`, `"D Q"[0..1]`, quoted vector member, sheet-pin mapping) pass. I could not re-check the plan's kicad-cli probe here.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-703: property writers cannot target an instance reference on a repeated sheet
+
+**Severity:** LOW (writer correctness; `sync_datasheet_urls --recursive` reach widened in Part B)
+**File:** `skills/bom/scripts/edit_properties.py` (`apply_updates`), `sync_datasheet_urls`
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part B (entry 46); filed by the harness
+
+**Symptom:** `bom_manager` now reports instance references (C7 on a repeated sheet whose file property says C4), but `edit_properties.apply_updates` and `sync_datasheet_urls` find a symbol by the file's `Reference` property, so they cannot target such a ref. `sync_datasheet_urls --recursive` now reaches KiCad 6 sub-sheets (before Part B it skipped them); on a repeated sheet a stale file reference could receive another part's URL (it fills only empty Datasheet fields). No dry-run test covers it.
+
+**Fix direction:** resolve the target by instance path; add a repeated-sheet dry-run test.
+
+- **Fixed:** product v3.0.x-dev 72227f9a write-back tools find parts by the reference KiCad shows and write a repeated sheet once; f14feead instance references come from the current project; 82f3fdd5 recursive datasheet sync reads every sheet of the root's project as that project (v3.0.2 Wave 11a Task 16, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/bom/scripts/edit_properties.py:205-214` resolves each key against `block_references(..., project_name)` (the instance refs) before the file `Reference`. A symbol on a repeated sheet gets one write plus a warning that names every instance (`:233-240`), and conflicting values are refused (`:243-255`). `sync_datasheet_urls.py:105,223-237,291` keys by instance ref within the root's project. The repeated-sheet dry-run test is in `tools/tests/test_edit_properties_instances.py` and passes.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-725: PCB-only runs on pre-KiCad 7 boards keep the VPP/VM name rule; EG-001 `pin_signals` does not skip power-symbol rails
+
+**Severity:** LOW
+**File:** `pcb/*` (power-net rule without pad pin types), `cross_analysis.py:316` (EG-001 `pin_signals`)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** boards before KiCad 7 have no pad pin type, so PCB-only runs keep the VPP/VM name rule; EG-001 `pin_signals` does not skip power-symbol rails (0 chain deltas).
+
+**Fix direction / budget:** small; 0 chain deltas measured.
+
+- **Fixed:** product v3.0.x-dev a2b06f6c fix(cross): EG-001 skips nets a power symbol marks as rails (v3.0.2 Wave 11a Task 10, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/kicad/scripts/cross_analysis.py:320-326` builds `rails` from nets that have a `#PWR`/`#FLG` pin and excludes them from `pin_signals`. A corpus schematic output confirms power symbols appear as `#PWR…` pins in `nets` (e.g. GND and +3V3).
+- **Left open:** the pre-KiCad 7 PCB-only VPP/VM name rule is kept by design.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-727: `ctx.rail_by_net` is a phase-1 side effect read unchecked in phase 3
+
+**Severity:** LOW
+**File:** `schematic/pipeline.py` (~:370, 473-475)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** a caller that skips phase 1 silently loses AM/OV/FT.
+
+**Fix direction:** check or build the map where phase 3 reads it; no output change expected.
+
+- **Fixed:** product v3.0.x-dev 0a3df01b fix: domain detectors rebuild the rail map when it is missing (v3.0.2 Wave 11a Task 33, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/kicad/scripts/schematic/pipeline.py:468-469` rebuilds `ctx.rail_by_net` with `build_rail_map` inside `run_domain_detectors`, before the AM/OV/FT reads at `:517-519`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-728: config-override consistency — `voltage_overrides` leaf match, LDO dissipation, inrush `abs()`, VM-001 skip, name-only readers
+
+**Severity:** LOW (corpus 0, no configs)
+**File:** `voltage_overrides` consumers (rail map, LDO dissipation, inrush, VM-001, `_rails_voltage_compatible`, `bom_stats`, what_if)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff (R9); filed by the harness
+
+**Symptom:** a `voltage_overrides` leaf match reaches non-power nets (`/S/VOUT`); LDO dissipation uses `estimated_vout` with an overridden VIN; inrush takes `abs()` of a negative override; an override on a net that is not power by name skips VM-001; cross-domain `_rails_voltage_compatible`, `bom_stats` and what_if read voltages by name only.
+
+**Fix direction / budget:** one override-aware voltage reader; corpus 0.
+
+- **Fixed:** product v3.0.x-dev bca0f103 fix: LDO dissipation and level-shifter checks read the voltage override (v3.0.2 Wave 11a Task 32, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: LDO dissipation now reads the output-rail override in both places: `schematic/system_analyses.py:1586-1591` (`ctx.config_rail_voltage(rail)`) and `signal_detectors.py:2328-2330` (`config_rail_voltage(reg["output_rail"])`). As a bonus, `_rails_voltage_compatible` (`schematic/net_analysis.py:551-559, :647-649`) now takes `ctx.rail_voltage_or`. The leaf-name override reaching every sheet is kept by ruling.
+- **Left open:** the inrush `abs()` and VM-001 parts were dropped by ruling. The `bom_stats` and what_if name-only voltage readers from the filed list are untouched, and the ruling does not mention them explicitly. Treat them as dropped or re-file them.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-749: Wave 4 Part A follow-up notes (umbrella)
+
+**Severity:** LOW
+**File:** `signal_detectors.py`, regulator Vref, `detect_lvds_interfaces`
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+- (a) `_infer_rail_voltage` keeps an unreachable `(\d+\.?\d*)V` pattern (`signal_detectors.py` ~:1524);
+- (b) `_datasheet_vref` copies the trust rule (score ≥ 60, current PDF) from `datasheet_features` instead of sharing it;
+- (c) `_far_side_is_input` is popped in `_cross_reference_feedback_dividers`, not in presentation;
+- (d) `detect_lvds_interfaces` tests value+lib_id while the role reads MPN first (0 corpus).
+
+**Fix direction / budget:** per item.
+
+- **Fixed:** product v3.0.x-dev 1505f168 fix: LVDS detection reads the MPN; one shared datasheet trust rule; aaf37d7e keep the datasheet_types public name list unchanged (v3.0.2 Wave 11a Task 33, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - (b) `skills/datasheets/datasheet_types/trust_gating.py` gains `FACTS_MIN_SCORE`/`facts_trusted`. `_datasheet_vref` uses it (`signal_detectors.py:1867`), and `datasheet_features._quality_v14` uses the shared constant.
+  - (d) `domain_detectors.py:876` matches LVDS keywords against value + lib_id + MPN.
+- **Left open:** (a) and (c), by ruling.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-764: `.kicad_dru` constraint values that are arithmetic expressions are not evaluated
+
+**Severity:** LOW (plan A6-F8 expression half; removes only)
+**File:** `pcb/dfm.py` (custom rules)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff; filed by the harness
+
+**Symptom:** values such as `2*0.1mm` stay strings and are not evaluated; an unconditional expression bound makes "cannot judge" replace the board minimum. Reach unknown; 0 unconditional corpus rules in the plan census.
+
+**Fix direction / budget:** report them as "not evaluated" (or evaluate); budget `design_rule_compliance` on boards with expression rules.
+
+- **Fixed:** product v3.0.x-dev e942be58 fix(pcb): evaluate .kicad_dru bounds written as expressions or in parentheses (with 724f368d and cdb1d299 in the same parser) (v3.0.2 Wave 11a Task 9, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/kicad/scripts/kicad_core/project.py:706-790` `_dru_eval` evaluates libeval arithmetic. Probe: `"2*0.1mm"`, bare `2*0.1mm` and `(0.2mm)` all load as `min 0.2`. `"2*x"` gives "Syntax error". `"1mm/0"` stays a string ('other'), which the reader does not judge.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-767: footprint parse edge cases — first `property` node's last token; footprint-level `(version)` ignored
+
+**Severity:** LOW (reach ~0)
+**File:** `pcb/reader.py` (~:466; `_file_version`)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff; filed by the harness
+
+**Symptom:** `reader.py` ~:466 reads only the first `property` node's last token (KiCad keeps the last known token across nodes); `_file_version` ignores a footprint-level `(version)` (KiCad takes the max, parser :5163).
+
+**Fix direction / budget:** follow KiCad's token and version rules; reach ~0.
+
+- **Fixed:** product v3.0.x-dev 9ae57943 fix(pcb): read every pad property token and a footprint-level version as KiCad does; 253ee292 a pad property node holding a nested list is skipped, not a crash (v3.0.2 Wave 11a Task 10, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/kicad/scripts/pcb/reader.py:357-361` takes the running max of the footprint-level `(version)` and the file version. `:503-514` scans every token of every `property` node: the last known token wins and `none` clears it.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-792: the SPICE model cache reads and writes `./spice/models` in the cwd when the recorded source path is relative
+
+**Severity:** LOW
+**File:** `skills/spice/scripts/spice_model_cache.py` (project dir from a relative `inputs.source_files`)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 2; not verified harness-side
+
+**Symptom:** an analysis run as `analyze_schematic.py board.kicad_sch` records a relative path; the model cache then resolves under whatever cwd the SPICE run uses, which can be shared between projects. Reads are guarded.
+
+**Fix direction / budget:** resolve the cache from the analysis location or require an existing project dir (as KH-782 did for extractions). Changing it touches the spice-offline profile (model_note cache vs lookup); budget it there.
+
+- **Fixed:** product v3.0.x-dev 2aaf5f84 a relative source not found from the cwd does not place the model cache there (v3.0.2 Wave 11a Task 11, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `spice_model_cache.resolve_cache_dir` (`:77-80`) and `simulate_subcircuits.py:182-185` now use `kicad_core.project.extraction_project_dir`. It requires a relative source to exist from the cwd and returns an absolute directory; otherwise the cache goes to the run's workdir or a per-process temp directory. The orphan `project_dir_from_analysis` is deleted, as ruling 7 asked.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-798: extraction lookups disagree on order — lifecycle and `datasheet_features` read the manifest first, `datasheet_verify` the direct file first
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/lifecycle_audit.py`, `skills/datasheets/scripts/datasheet_features.py` (manifest first); `skills/datasheets/scripts/datasheet_verify.py` (direct file first)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 9; not verified harness-side
+
+**Symptom:** when a cache holds both a direct `<mpn>.json` and a manifest entry naming a different file, consumers can read different extractions for the same part.
+
+**Fix direction / budget:** one lookup order, owned by the extraction contract (one shared reader); output-neutral on caches with one file per part.
+
+- **Fixed:** product v3.0.x-dev 8931b1f2 the verifier, feature helpers and lifecycle audit find a part's extraction in one order; e3ae87f4 an unreadable or empty manifest file no longer hides a readable extraction; cab54d31 a v1.4 extraction named after the part wins over an older v1.3 manifest entry (v3.0.2 Wave 11a Task 8, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: there is now one reader, `skills/datasheets/scripts/datasheet_extract_cache.py` `find_extraction`, used by `datasheet_verify.py:46`, `lifecycle_engine.py:684` and `datasheet_features.py:78`. Its order is v1.4 `<stem>.json`, then manifest, then other `<stem>.json`. `datasheet_features` passes `v14_first=False` for its v1.3 fallback, after `cache_reader.lookup` has already read the v1.4 file, so every consumer sees the same order. The commit subject's "manifest first" is out of date since cab54d31.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-809: a `Supplier N Part Number` with no `Supplier N` name no longer inherits the project's slot mapping
+
+**Severity:** LOW
+**File:** `skills/bom/scripts/bom_manager.py` (per-symbol supplier slots, `dc7d201`; KH-624)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 20; not verified harness-side
+
+**Symptom:** after KH-624 the slot name is read per symbol, so a symbol that carries only the part number (no `Supplier N` distributor name) is no longer filed under the distributor other symbols name in that slot.
+
+**Fix direction / budget:** fall back to the project's mapping when the symbol names no distributor for the slot; BOM distributor-PN columns only (not a gated analyzer).
+
+- **Fixed:** product v3.0.x-dev 9c74ce0e a part number in a supplier slot with no name takes the project's distributor for that slot (v3.0.2 Wave 11a Task 16, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/bom/scripts/bom_fields.py` `_symbol_slots(props, project_slots)` fills slots the symbol leaves unnamed with `names.setdefault`. `bom_manager.detect_convention` builds `slot_distributors` only for slots every naming symbol gives the same known distributor.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-810: DNP readers miss `DNF` / `NoPop` / `nostuff` / `Do Not Place` value markers and custom DNP values `Y` / `x` / `*`
+
+**Severity:** LOW
+**File:** BOM DNP reading (`skills/bom/scripts/bom_manager.py` `is_dnp`, translator population vocabulary from `698116c`; the handoff names no line)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 21; not verified harness-side
+
+**Symptom:** Value markers `DNF`, `NoPop`, `nostuff`, `Do Not Place` are not read as DNP; custom DNP fields with values `Y`, `x`, `*` are not either (76 such properties).
+
+**Fix direction / budget:** extend the shared population vocabulary to the value markers and the custom DNP values (whole value, any case). BOM rows / orders only; check whether the schematic analyzer's DNP reading shares the list before sizing a corpus class.
+
+- **Fixed:** product v3.0.x-dev d987eec2 BOM tools and the translator share one DNP marker list (v3.0.2 Wave 11a Task 16, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `bom_fields.py` adds `DNP_VALUE_MARKERS` (dnp/dnf/nopop/nostuff/do not place/…, whole value, any case) and `DNP_FIELD_SET` (yes/true/1/dnp/y/x/*). `bom_manager.is_dnp` uses both (Value fallback), and `translate_bom_pnp.DNP_MARKERS` is built from the same set.
+- Not checked: whether the schematic analyzer shares the list. That was a sizing question, not part of the fix.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-812: `export_issues` refuses to export when 1000+ kicad-happy issues are open (no paging)
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/export_issues.py` (open-issue listing, `cca2a4c` cap)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 23 (KH-595 remainder); not verified harness-side
+
+**Symptom:** a full-page `gh issue list` now exits 1 and exports nothing (KH-595 made the old silent truncation an error); a repo with 1000+ open kicad-happy issues can never export.
+
+**Fix direction / budget:** page the listing; exporter CLI only.
+
+- **Fixed:** product v3.0.x-dev 91739142 fix(export_issues): list a full page again with a larger limit instead of refusing (v3.0.2 Wave 11a Task 29, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: in `skills/kicad/scripts/export_issues.py`, a full page now retries `gh issue list` with a ten times larger `--limit`, up to `LIST_CAP = 100_000`. It refuses only past that cap.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-815: `--output` / `--analysis-dir` precedence differs per CLI — schematic and PCB let `--analysis-dir` win, gerber / thermal / cross_analysis let `--output` win, EMC writes both
+
+**Severity:** LOW (CLI file placement when both flags are given; documented per CLI since Wave 6)
+**File:** `skills/kicad/scripts/analyze_schematic.py:136-145`, `analyze_pcb.py:152-160` (`if args.analysis_dir: … elif args.output:`); `analyze_gerbers.py:2069-2075`, `analyze_thermal.py:1159-1170`, `cross_analysis.py:1393-1400` (`--output` first); `skills/emc/scripts/analyze_emc.py:618-630` (two independent `if`s)
+**Discovered:** 2026-11-01, product 3.0.x Wave 6 docs surveys (ruling W6-1); filed by the harness at the Wave 6 gate
+
+**Symptom:** a user who passes both flags to the schematic or PCB analyzer gets no `--output` file; the same pair on gerber / thermal / cross_analysis writes only `--output`; EMC writes both. The docs now describe each CLI's rule (`skills/kicad/SKILL.md`, product `821d85c`; KH-636 R2-F8). Verified harness-side at `c0a8a62` by reading the six write paths (lines above).
+
+**Fix direction / budget:** pick one rule for all six analyzers (workflows survey P1: `--output` wins everywhere, or write both everywhere) next to the Wave 7 `output_io` work. Budget: CLI file placement only, corpus-neutral (harness runners never pass both); `tools/tests/test_pcb_gp001_debug_path.py:48` passes both to `analyze_pcb` and must be re-read; the docs sentence changes with it.
+
+- **Fixed:** product v3.0.x-dev fa6d6301 fix: given both --output and --analysis-dir, schematic, PCB, EMC and SPICE write only --output (v3.0.2 Wave 11a Task 18, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `--output` now wins in all six CLIs:
+  - `analyze_schematic.py:136-140`
+  - `analyze_pcb.py:157-160`
+  - `analyze_gerbers.py:2184-2190`
+  - `analyze_thermal.py:1159-1167`
+  - `cross_analysis.py:1395-1398`
+  - `analyze_emc.py:618` (`if args.analysis_dir and not args.output`) and `:630-640`
+  - `simulate_subcircuits.py:696-720` (SPICE) follows the same rule.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-817: the SPICE datasheet-extraction tier never returns data — it looks up a bare sanitised MPN against cache-manager keys that carry a hash suffix, and gates on `meta` instead of `extraction_metadata`
+
+**Severity:** LOW (dead fallback tier; corpus reach near zero, few corpus projects have `datasheets/extracted/`)
+**File:** `skills/spice/scripts/spice_spec_fetcher.py:587` (key `re.sub(r'[^A-Za-z0-9_]', '_', mpn)`), `:588-593` (exact and case-folded lookups), `:604-606` (`extraction.get("meta", {})` / `extraction_score < 6.0`); key writer `skills/datasheets/scripts/datasheet_extract_cache.py:159-168` (`_sanitize_mpn` appends `_<md5[:6]>`), score writer `:320-323` (`extraction_metadata`)
+**Discovered:** 2026-11-01, product 3.0.x Wave 6 docs surveys (ruling W6-15; the `meta` half from the Tasks 21-24 review); filed by the harness at the Wave 6 gate
+
+**Symptom:** `fetch_specs_from_extraction` builds `LM358` where the manifest holds `LM358_4e2d72`, so neither lookup matches (vocab-spice survey round trip, `oracle/spice_extraction_tier.py`: `None` for both keys, specs returned once the key is hand-renamed). With the key fixed it would still return `None`: the cache manager writes the score under `extraction_metadata`, the fetcher reads `extraction.get("meta", {})`, so the score is 0 < 6.0. Same bug class as KH-606 (verifier, fixed in `740d2b6`); the SPICE reader was not covered. The docs now say only legacy `spice_specs` is read and do not claim the path works (product `1cc79d8`, `ac63e36`; KH-640). Verified harness-side at `c0a8a62` by reading both files (lines above; the handoff's `:605` is the `meta` read at `:604-605`).
+
+**Fix direction / budget:** resolve through `datasheet_extract_cache.get_cached_extraction` and read `extraction_metadata`; or remove the tier in favour of the typed `datasheet_types` tier (KH-640's open question, skills-code A2-F13). Budget: spice-offline profile only where a project carries an extraction with `spice_specs`; measure before budgeting. Remove the doc sentence when it lands.
+
+- Task: 15 (8)   Commits: 44c5424a fix(spice): read spice_specs from extractions the datasheets skill caches
+- **Verification:** harness re-read at `5510006a`: `skills/spice/scripts/spice_spec_fetcher.py:610-643` resolves through `datasheet_extract_cache.get_cached_extraction`, which handles the hash-suffixed key. It reads the score from `extraction_metadata`, falling back to `meta`. Round-trip probe: `cache_extraction(...,'LM358',{extraction_metadata:{extraction_score:8},spice_specs:{gbw_hz:1e6}})` writes `LM358_4e2d72.json`, and the fetcher then returns `{'gbw_hz': 1e6, '_source': 'extraction:LM358'}`. `skills/spice/SKILL.md:317` now describes the tier as working.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-862: the Phase 4 exercise script's step 5 reads the JSON directly and calls no consumer
+
+**Severity:** LOW (architecture, deferred by ruling)
+**File:** `skills/kicad/review/scripts/run_phase4_exercise.py:201-245` (audit ar/R3-F6)
+**Discovered:** 2026-11-01, product 3.0.x Wave 7 survey (slug KH-new-exercise-script-rewrite)
+
+**Symptom:** the "dual-mode" step exercises no real consumer, so the script proves less than its name says; only README:26 and the harness path list `regression/v30_changed_detectors.json:43` refer to it.
+
+**Fix direction / budget:** rewrite the step against the review consumers (or retire the script); `--help` text allow only.
+
+- **Fixed:** product v3.0.x-dev 12d0c9c9 chore: retire run_phase4_exercise.py (v3.0.2 Wave 11a Task 29, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the script is gone from `skills/kicad/review/scripts/`, and the README line is removed.
+- Harness follow-up: `regression/v30_changed_detectors.json:43` in this repo still lists the retired path.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-865: the Action input `derating-profile` changes nothing — `format-report.py` accepts it but never uses it, and the analyzer is never given it
+
+**Severity:** LOW (a documented input with no effect)
+**File:** `action.yml:19-20`, `:77`; `action/entrypoint.sh:361` (`--derating-profile` passed to `format-report.py` only); `action/format-report.py:548`, `:956` (parameter never read), `:1396`, `:1405`, `:1416`
+**Discovered:** 2026-11-02, product 3.0.x Wave 8a (slug KH-new-action-derating-profile-noop); verified harness-side at `647bc85`
+
+**Symptom:** `commercial`, `military` and `automotive` give the same report: the schematic analyzer runs with its default derating profile and the report no longer prints the profile.
+
+**Fix direction / budget:** pass the profile to the analyzer, or deprecate the input. Action only. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev 78933a5d fix: the Action's derating-profile input is deprecated (v3.0.2 Wave 11a Task 23, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `action.yml:19-21` has a `deprecationMessage` saying the input has no effect. This is the "deprecate" option of the fix direction. The input is still accepted and passed to `format-report.py`, where it remains unused.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-866: `what_if --output` with no affected subcircuit writes the file and also prints the result JSON to stdout
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/what_if.py:1617-1639` (no-affected branch: writes `--output`, then `json.dump(result, sys.stdout)`); compare `:1714-1726` (the affected path prints nothing to stdout when `--output` is given)
+**Discovered:** 2026-11-02, product 3.0.x Wave 8a (slug KH-new-what-if-noaffected-output-stdout, left by the KH-828 fix); verified harness-side at `647bc85`
+
+**Symptom:** a caller that redirects stdout gets the summary JSON there as well as the analysis in the file, unlike the affected path.
+
+**Fix direction / budget:** skip the stdout dump when `--output` is given. what_if output only.
+
+- **Fixed:** product v3.0.x-dev 57af9469 fix(what_if): no-affected path with --output does not also print the result JSON (v3.0.2 Wave 11a Task 29, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: in `skills/kicad/scripts/what_if.py:1645-1650`, the no-affected branch prints the JSON only under `elif not args.output`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-867: other CLIs still write `--output` with a plain open that follows a symlink at the target
+
+**Severity:** LOW (Security; local symlink at an output path the user chose)
+**File:** `skills/emc/scripts/analyze_emc.py:630`, `skills/kicad/scripts/cross_verify.py:661`, `skills/kicad/scripts/fab_release_gate.py:637`, `skills/kicad/scripts/cross_analysis.py:1391`, `skills/kicad/scripts/lifecycle_audit.py:141`, `skills/kicad/scripts/analyze_thermal.py:1171`, `skills/kicad/scripts/analyze_schematic.py:144` (`Path.write_text`), `skills/kicad/scripts/analyze_gerbers.py:2079` (`Path.write_text`), `skills/spice/scripts/simulate_subcircuits.py:696,699`, `skills/spice/scripts/extract_parasitics.py:312`, `skills/bom/scripts/translate_bom_pnp.py:480,690`
+**Discovered:** 2026-11-03, product 3.0.x Wave 8c (slug KH-new-output-other-clis); verified harness-side at `0efc012` (grep of `--output` writers; only `analyze_pcb.py:161`, `diff_analysis.py:529,535,561,567`, `pcb/pipeline.py:610` and `analysis_cache.py:189` go through `atomic_write_text`)
+
+**Symptom:** KH-806 moved only the named writers to `atomic_write_text(follow_symlinks=False)`. Every other CLI still opens `--output` by name, so a symlink at the target is written through. The handoff says four CLIs; the survey lists five, and the tree has at least eleven.
+
+**Fix direction / budget:** the same one-line change at each site (`atomic_write_text(path, text, follow_symlinks=False)`). Corpus-neutral; text oracle only if a message changes. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev 4a7b946e fix: every --output replaces a symlink at the path instead of writing through it (v3.0.2 Wave 11a Task 18, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: every listed writer now calls `atomic_write_text(..., follow_symlinks=False)`:
+  - `analyze_emc.py:631`
+  - `cross_verify.py:662`
+  - `fab_release_gate.py:719`
+  - `cross_analysis.py:1396`
+  - `lifecycle_audit.py:142`
+  - `analyze_thermal.py:1173`
+  - `analyze_schematic.py:138`
+  - `analyze_gerbers.py:2194`
+  - `simulate_subcircuits.py:718,720`
+  - `extract_parasitics.py:313`
+  - `translate_bom_pnp.py:515,699`
+  - `what_if.py:1634,1729`
+- A grep finds no remaining plain `open(args.output…)` in skills/action. The PDF writers in `download.py` write datasheet files, not a CLI `--output`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-868: `atomic_write_text(follow_symlinks=False)` writes through any symlink under `/dev/` or `/proc/`
+
+**Severity:** LOW (Security; `fs.protected_symlinks=1` blocks the cross-user case on Linux)
+**File:** `skills/kicad/scripts/kicad_core/fileio.py:37-42` (`system = os.path.abspath(path).startswith(("/dev/", "/proc/"))`; `if system or not link:` plain `open(target, "w")`)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8c (slug KH-new-dev-link-writethrough); verified harness-side at `0efc012` (a link `/dev/shm/kh_w8c_link.json -> victim.txt`: victim rewritten, link kept; the same link outside `/dev` was replaced by a regular file and the victim kept)
+
+**Symptom:** the stream-node rule is a path prefix. A planted link anywhere under `/dev/` (for example the world-writable `/dev/shm`) is treated as a stream and its target is overwritten. The write-in-place branch also opens without `O_NOFOLLOW`.
+
+**Fix direction / budget:** match only `/dev/stdout`, `/dev/stderr`, `/dev/fd/*` and `/proc/*` (not the readlink target, which can be spoofed through `/proc/1/root/…`); open the in-place branch with `O_NOFOLLOW` where the path itself is not one of those. Corpus-neutral. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev 18d99e93 fix: atomic writes replace a symlink under /dev and stop on a Windows file held open (v3.0.2 Wave 11a Task 18, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: in `skills/kicad/scripts/kicad_core/fileio.py:40-52`, the stream rule is now an exact set (`/dev/stdout`, `/dev/stderr`, `/dev/null`) plus `/dev/fd/N` and `/proc/self/fd/N` by regex. It is no longer a `/dev/` prefix. The in-place FIFO/device branch opens with `O_NOFOLLOW` (`:93-94`). Probe: a link `/dev/shm/…json -> victim.txt` written with `follow_symlinks=False` became a regular file and the victim was unchanged.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-869: `plan_extraction.py` and `merge_results.py` read cache JSON with plain `read_text`
+
+**Severity:** LOW (no size cap, symlinks followed, a FIFO blocks)
+**File:** `skills/datasheets/scripts/plan_extraction.py:68` (`_load_existing_extraction`), `:105` (`_load_scout`); `skills/datasheets/scripts/merge_results.py:87` (`_read_result`), `:180` (`_enrich_source_from_scout`), and `:226` (the plan read in `merge`)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8c (slug KH-new-pipeline-raw-cache-reads); verified harness-side at `0efc012` (`_load_scout` followed a symlinked `DEF.scout.json` to a file outside the cache; `_load_existing_extraction` on a FIFO `ABC.json` hung until the 5 s timeout)
+
+**Symptom:** KH-811 hardened `read_json_object`, which `plan_extraction._drop_stale_results` already uses (`:82`), but these readers bypass it.
+
+**Fix direction / budget:** route them through `cache_reader.read_json_object` and keep each caller's missing/invalid handling. Corpus-neutral. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev 019a3437 a missing or unreadable scout, plan or result file stops the extraction pipeline with a message instead of a traceback (v3.0.2 Wave 11a Task 8, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: every listed reader now uses `cache_reader.read_json_object`: `plan_extraction.py:63,75,93` and `merge_results.py:86,186,232`. The one remaining `read_text` (`merge_results.py:249`) reads the product's own schema file.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-873: on Windows, `os.replace` onto an `--output` file held open by another process raises PermissionError
+
+**Severity:** LOW (Windows only)
+**File:** `skills/kicad/scripts/kicad_core/fileio.py:63` (`os.replace(tmp, target)`), reached from `analyze_pcb.py:161` and `diff_analysis.py:529,535,561,567`
+**Discovered:** 2026-11-03, product 3.0.x Wave 8c (slug KH-new-windows-replace-open-file); verified harness-side at `0efc012` by reading only
+
+**Symptom:** the old plain write could succeed while a viewer or editor held the file open with write sharing; the rename-over fails on Windows unless the holder opened it with delete sharing. The error now propagates and the temp file is removed.
+
+**Fix direction / budget:** on `PermissionError` from `os.replace` under Windows, fall back to writing in place (or report a clear message). Corpus-neutral. Post-3.0; include in the Windows smoke run of KH-871.
+
+- **Fixed:** product v3.0.x-dev 18d99e93 (above); 3b02ceb7 the Windows replace error also names a read-only file; e45b0e5a a held-open GP-001 debug file on Windows warns and continues (v3.0.2 Wave 11a Task 18, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: in `fileio.py` (around `:121-127`), a Windows `PermissionError` from `os.replace` now exits with a one-line message naming an open or read-only file, and the temp file is removed. This is the "clear message" option. Not tested on Windows.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-882: the GitHub Action and `fab_release_gate.py` present plain-mode `routing_complete` as verified routing
+
+**Severity:** LOW (report wording; plain mode checks only that each multi-pad net has copper)
+**File:** `action/format-report.py:633-634` ("PCB routing 100% complete"), `:833`, `:1350-1351`; `skills/kicad/scripts/fab_release_gate.py:57-61` (`routing_completeness` pass "All nets routed"); `action/entrypoint.sh:184` (and `:318` for the base PCB) run `analyze_pcb.py` without `--full`
+**Discovered:** 2026-11-03, product 3.0.x Wave 8b (from KH-825); verified harness-side at `0efc012` (the `routing_complete` descriptions at `envelopes/pcb.py:84,198` now say completeness is proven only with `--full`)
+
+**Symptom:** KH-825 moved the caveat into the schema descriptions, but these consumers still print a plain-mode `true` as verified and the Action never runs `--full`.
+
+**Fix direction / budget:** run `--full` in the Action, or word the plain-mode result as "every net has copper" (and mark the fab gate check as unproven without `--full`). Text oracle / Action fixtures only. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev b49c7017 fix: the Action says every multi-pad net has copper, not 100% routed, when the PCB run was not --full; c0bc4e2e/3ac68060 (fab gate) (v3.0.2 Wave 11a Task 20/21, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `action/format-report.py:42-50` `_routing_wording` claims "100% complete" only when `connectivity_graph` is present (`--full`). Otherwise it says "every multi-pad net has copper (`--full` proves routing)", and this is used at `:713`, `:932`, `:1447`. `fab_release_gate.py:61-65` uses the same split.
+- Caveats: the fab-gate check status stays `pass` in plain mode; only the message marks it unproven. The Action still runs `analyze_pcb.py` without `--full` (`action/entrypoint.sh:200`), which the wording option allows.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-892: the SW-003 SPICE radiation note can never print, because no emission limit exists below 30 MHz
+
+**Severity:** LOW (informational text in SW-003 with a SPICE backend)
+**File:** `skills/emc/scripts/emc_rules.py:1990` and `:2077` (`limit = get_emission_limit(sw_freq, 'fcc-class-b')` at the switching fundamental); `skills/emc/scripts/emc_formulas.py:79`
+**Discovered:** 2026-11-03, product 3.0.x Wave 8b (from KH-864); verified harness-side at `0efc012` (`get_emission_limit` returns None at 100 kHz, 500 kHz, 2 MHz, 10 MHz and 29.9 MHz; first value `(40.0, 3)` at 30 MHz)
+
+**Symptom:** switching regulators run well below 30 MHz, so `limit` is always None and `spice_note` stays empty; the code path is dead.
+
+**Fix direction / budget:** evaluate the estimate at the first harmonic at or above 30 MHz (a design decision), or remove the note. Output-changing in SW-003 description text only with a SPICE backend. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev 8ca8e43e fix(emc): retire the unused EMI-filter SPICE sweep and the SW-003 radiation note (v3.0.2 Wave 11a Task 13, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `spice_note` and `get_emission_limit(sw_freq, …)` no longer appear in `skills/emc/scripts/emc_rules.py`. This is the "remove the note" option.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-893: the product text oracle's `neg__search_lcsc__missing` artefact calls the live jlcsearch API
+
+**Severity:** LOW (oracle noise: a network timeout reads as a text delta)
+**File:** `tools/check_refactor.py` snapshot negative case for `skills/lcsc/scripts/search_lcsc.py` (the `neg__search_lcsc__missing` artefact)
+**Discovered:** 2026-11-03, harness Wave 8c + 8b gate text oracle; the first 647bc85 snapshot recorded exit 2 and "Error connecting to jlcsearch API: The read operation timed out", the re-snapshot and both candidate snapshots exit 1 with "No parts found matching './does-not-exist.kicad_sch'." (`skills/lcsc` unchanged in the range)
+
+**Symptom:** the artefact depends on network reachability, so a slow or offline box produces a spurious `.exit` / `.txt` delta in an otherwise offline oracle.
+
+**Fix direction / budget:** stub the jlcsearch client in the snapshot (as `sync-offline` stubs the providers), or drop the network-reaching negative case. Oracle only. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev ee1303f7 test: the text oracle skips the search_lcsc negative case that calls the network (v3.0.2 Wave 11a Task 29, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `tools/check_refactor.py:932-933` adds `_NETWORK_NEG = {("search_lcsc","missing")}` and drops it from both artefact names (`:964-966`) and the snapshot loop (`:1107-1108`). The other LCSC `missing` cases stay: `fetch_datasheet_lcsc` takes the path as a URL that the policy refuses, so it never reaches the network.
+- Harness follow-up: the `neg__search_lcsc__missing` artefact disappears from the oracle name list.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-897: the schematic analyzer emits LC-007 "Lifecycle audit not run" even when `lifecycle_audit.py` ran standalone into the same run folder
+
+**Severity:** LOW (report contradiction: LC-007 next to a populated lifecycle section)
+**File:** `skills/kicad/scripts/schematic/pipeline.py:1524` (`5687ee1`; :1441 at `07b7fb1`) — LC-007 fires whenever this analyzer invocation did not run `--lifecycle`; it does not look for a lifecycle envelope in the run folder (and the schematic usually runs first).
+**Discovered:** 2026-11-03, SacMap rev2 soak run 10 (as KH-895); verified at `07b7fb1` and `5687ee1`
+
+**Fix direction / budget:** word LC-007 as "not run by this analyzer invocation", or have the report step drop / supersede LC-007 when `lifecycle.json` exists in the run. Schematic LC-007 text, or report-side only. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev fe2a5a0d docs: lifecycle section in reports counts a standalone lifecycle audit run (v3.0.2 Wave 11a Task 33, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the fix is the filed report-side option. `skills/kicad/references/report-generation.md:419` now tells the report step to count a standalone `lifecycle_audit.py` envelope (`analyzer_type: "lifecycle"`) and to leave out the schematic's LC-007 when either is present. The analyzer still emits LC-007 (`schematic/pipeline.py:1531`), as the doc option allows.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-898: LC-004 on a multi-MPN field ("1012, 1012C") recommends "Replace … — part is unknown": the field is queried as one string and an unknown status reads as a replacement order
+
+**Severity:** LOW (misleading recommendation on a lookup miss)
+**File:** `skills/kicad/scripts/lifecycle_engine.py` (`5687ee1`) — `_is_real_mpn` (:224) accepts `1012, 1012C` (letter + digit), the whole field is looked up as one MPN, and :902 `f"Replace {mpn} — part is {status}."` is used for every `_LIFECYCLE_STATUS_RULES` status including `unknown` (LC-004, info). Same at `07b7fb1` `lifecycle_audit.py:750`.
+**Discovered:** 2026-11-03, SacMap rev2 soak run 10 (BT1, as KH-895); reviewer-agent claim, verified by code read at `07b7fb1` and `5687ee1`
+
+**Fix direction / budget:** split MPN fields on `,` / `;` / `/`-with-spaces and audit each alternative (worst status, or LC-004 only when all miss); for `unknown`, recommend "verify the MPN / no distributor matched it" instead of "Replace". LC-004 text and per-part rows on multi-MPN fields. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev 3b491fcb fix(lifecycle): a part no distributor returned is not a replace order; 7cca11ea fix(lifecycle): an MPN field that lists alternatives is looked up per part; 9fa813d3 fix(lifecycle): a field of values such as 1206, 50V is not read as alternative part numbers (v3.0.2 Wave 11a Task 26, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `lifecycle_engine.py:243-261` `_mpn_alternatives` splits on `,`/`;`/` / `. Probe: `1012, 1012C` → [1012, 1012C]; `BAV99/215` and `1206, 50V` stay whole. `_audit_mpn_field` (:264-283) takes the worst resolved status and reports unknown only when none resolved. For `unknown`, :1030-1038 replaces "Replace …" with "No distributor returned …; check the part number".
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-899: `check_report_sections.py` passes on header substrings with loose aliases and checks no section content
+
+**Severity:** LOW (completeness gate reports OK on reports that lack required material)
+**File:** `skills/kicad/scripts/check_report_sections.py` — `BASE_SECTIONS` / `ANALYZER_SECTIONS` / `SCHEMATIC_KEY_SECTIONS` aliases include bare `verification`, `components`, `usb`, `assembly`, `thermal`, `pdn`; `check_report` (:143 at `07b7fb1`) passes a section when any `#` header contains any alias as a substring (e.g. "Gerber Verification" satisfies "Analyzer Verification"); nothing checks the blockers table, verification basis, false-positive section or appendices. Unchanged in substance `07b7fb1`..`5687ee1` (+11/−4).
+**Discovered:** 2026-11-03, SacMap rev2 soak run 10 ("OK: all 23 sections present" before the appendices were written); reviewer-agent claim, verified by code read at `07b7fb1` and `5687ee1`
+
+**Fix direction / budget:** match each required header once (a header cannot satisfy two sections), drop the single-word aliases, and add the report-generation.md structural items (blockers table, verification basis, false-positive review, appendix) as required elements. Tool output only. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev ea9754b7 fix(report): each report header satisfies one required section only (v3.0.2 Wave 11a Task 29, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `check_report_sections.py:163-192` uses a maximum matching, so one header satisfies at most one section. :152-160 makes bare "verification" a whole-header alias, so "Gerber Verification" no longer satisfies "Analyzer Verification".
+- Remains (by ruling 18): the other single-word substring aliases (`components`, `usb`, `assembly`, `thermal`, `pdn`, :38-69) are kept. There are still no content checks (blockers table, verification basis, FP review, appendix); these move to v3.0.3.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-902: `datasheet_verify` emits one `power_domain … does not resolve` warning per pin — no dedup (38 on ESP32-S3-WROOM-1-N4)
+
+**Severity:** LOW (warning volume; the 38 rows carry one fact: `3V3` vs the `VDD33` key)
+**File:** `skills/datasheets/scripts/datasheet_verify.py:928` (`verify_v14_extraction`, `5687ee1`; :810 at `07b7fb1`) — appends an issue for every `base.pinout[i]` whose `power_domain` is not a `recommended_operating` key.
+**Discovered:** 2026-11-03, SacMap rev2 soak run 10 (as KH-895); reviewer-agent claim, verified by code read at `07b7fb1` and `5687ee1`. Not covered by KH-462 (that entry is the warnings-only exit code; its run-9 repro shows the same message ×4).
+
+**Fix direction / budget:** group by unresolved domain: one warning per value, with the pin paths (or count) listed. `datasheet_verify` JSON shape (issue count) only. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev 6e669956 fix(datasheets): datasheet_verify exits 0 on warnings only, groups power_domain warnings, survives malformed pins (v3.0.2 Wave 11a Task 6, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `datasheet_verify.py:904-930` groups unresolved domains: one warning per value, carrying a pin count and the other paths. Probe: 3 pins with `3V3` gave 1 warning ("3 pins affected, also base.pinout[2], base.pinout[3]").
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-903: no SKILL.md migration note for the retired 2.x modules (`sexp_parser`, `kicad_utils`, analyzer helpers)
+
+**Severity:** LOW (docs: helper scripts written against 2.x fail on import with no pointer from the skill)
+**File:** `skills/kicad/SKILL.md` — :810 names `kicad_core/sexp.py` for raw probing but says nothing about the retired names; the migration table is only in `CHANGELOG.md` (:324 at `5687ee1`), `README.md:442` and `release-notes.md`. Same at `07b7fb1`.
+**Discovered:** 2026-11-03, SacMap rev2 soak run 10 (as KH-895); verified at `07b7fb1` and `5687ee1`
+
+**Fix direction / budget:** one SKILL.md line: "`sexp_parser` / `kicad_utils` / analyzer-module helpers were retired in 3.0 — see the CHANGELOG migration table". Docs only. Post-3.0.
+
+- **Fixed:** product v3.0.x-dev ac3df796 docs: file-format guide covers kicad-cli library warnings on copied projects and the retired 2.x parser modules (v3.0.2 Wave 11a Task 30, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/kicad/references/file-formats.md` now says `sexp_parser`, `kicad_utils` and the analyzer-module helpers were retired in 3.0, and points to the CHANGELOG migration table. SKILL.md:767 points to file-formats.md.
+- Note: the filed fix asked for the line in SKILL.md itself. SKILL.md:810, the raw-probing paragraph that names `kicad_core/sexp.py`, still says nothing about the retired names. The plan routed the note to the reference guide on purpose.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-904: `spice_model_cache.cache_model` replaces a refused model manifest with a one-entry manifest
+
+**Severity:** LOW
+**File:** `skills/spice/scripts/spice_model_cache.py:240` (`index = read_json_object(read_path) or {}`) at `6009004`
+**Discovered:** 2026-11-03, product 3.0.x Waves 9a + 9e handoff (filed on the product's request, re-read in the candidate)
+
+**Symptom:** a manifest that `read_json_object` refuses (symlink, > 10 MB, non-UTF-8, non-object) reads as `{}`, and the write that follows keeps only the new entry; every other entry is dropped (the `.sub` files stay). The datasheet syncs stop on an unreadable manifest instead.
+
+**Fix direction / budget:** skip caching with one diagnostic when the manifest exists but is refused. Corpus-neutral.
+
+- **Fixed:** product v3.0.x-dev 2aaf5f84 fix(spice): a relative source not found from the cwd does not place the model cache there, and an unreadable model manifest is kept; c5ba83a2 fix(spice): an empty-list model manifest is rewritten, … (v3.0.2 Wave 11a Task 11, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `spice/scripts/spice_model_cache.py:254-260` raises `OSError("… is unreadable; model not cached")` when the manifest exists but is refused. The exceptions are an empty regular file and `[]` (`_holds_no_entries`). Both callers record the error as a diagnostic (:457-462, :477-480), so the cache is not overwritten.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-905: an extraction whose PDF sits outside `datasheets/` reads stale and drops regulator datasheet facts silently
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/signal_detectors.py:1865` (`_datasheet_vref`: `facts.stale` → None) at `6009004`; cause = the Wave 9a containment (KH-870/782) reading such a `source.local_path` as `pdf_missing`
+**Discovered:** 2026-11-03, product 3.0.x Waves 9a + 9e handoff
+
+**Symptom:** an older cache whose `source.local_path` points outside `datasheets/` is now stale, so its Vref and other trusted facts are dropped with no message.
+
+**Fix direction / budget:** warn in `plan_extraction` / `merge_results`, or emit one diagnostic per extraction. Corpus-neutral (the corpus carries no extraction caches).
+
+- **Fixed:** product v3.0.x-dev 6820545e fix(datasheets): a copied project finds its extraction PDF by name; new extractions store local_path relative to datasheets/; 1a4702a4 fix(kicad): a stale datasheet extraction is named once in diagnostics; get_facts docstring matches its behaviour (v3.0.2 Wave 11a Task 5, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `lookup_helpers.py` `get_facts` records a `StaleExtraction` diagnostic once per MPN when `_cache_context.is_stale`; the message names `stale_reason` and `source.local_path`. `_datasheet_vref` (`signal_detectors.py:1864-1865`) passes `ctx.diagnostics`, so the dropped Vref now has a message. Same-bytes PDFs inside `datasheets/` resolve by name (6820545e).
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-907: a header-trickling server leaves the abandoned `requests` worker thread and socket alive until process exit
+
+**Severity:** LOW
+**File:** `skills/datasheets/distributor_core/download.py` (KH-498 deadline, requests transport) at `6009004`
+**Discovered:** 2026-11-03, product 3.0.x Waves 9a + 9e handoff
+
+**Symptom:** the deadline now returns on time, but the worker thread keeps its socket open (no idle timeout fires while bytes trickle); one leaked thread per stalled part in a long sync.
+
+**Fix direction / budget:** close the response / session from the deadline path, or run the transport in a killable subprocess. Corpus-neutral.
+
+- **Fixed:** product v3.0.x-dev 20496c47 fix(datasheets): an abandoned download releases its connection (v3.0.2 Wave 11a Task 25, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `distributor_core/download.py` `_watched_session` hooks each pool connection's `connect()` so the socket is handed to `on_connect`. At the deadline, `_get_before_deadline` marks the call abandoned and shuts down every recorded socket, and one that connects later is shut on connect. The blocked worker read fails, and the thread exits.
+- Note (Task 25 report): a session going through a proxy uses requests' proxy manager, not the hooked pool manager, so that path still leaks as before.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-909: Action Top Risks lists EMC / thermal findings of every severity under `severity: critical`
+
+**Severity:** LOW
+**File:** `action/format-report.py:211` (`_render_top_risks(emc, thermal)` takes no severity) at `6009004`
+**Discovered:** 2026-11-03, product 3.0.x Waves 9a + 9e handoff (ruling 10 covered the Findings table only; Top Risks deferred)
+
+**Fix direction / budget:** pass the severity filter into `_render_top_risks`. Action text only.
+
+- **Fixed:** product v3.0.x-dev f08297bb fix: the Action's Top Risks follow the severity filter and suppressed findings stay out of the EMC counts (v3.0.2 Wave 11a Task 21, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `action/format-report.py:256-277` `_render_top_risks(emc, thermal, severity)` keeps only errors for `critical` and errors plus warnings for `warning`. It is called with the filter at :672.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-910: `tools.tests.test_cache_reader` run alone errors (ModuleNotFoundError `datasheet_extract_cache`)
+
+**Severity:** LOW (test)
+**File:** product `tools/tests/test_cache_reader.py` — `test_explicit_extract_dir_that_is_a_symlink_is_followed`
+**Discovered:** 2026-11-03, product 3.0.x Waves 9a + 9e handoff; reproduced by the harness: `python3 -m unittest tools.tests.test_cache_reader` = 1 error at `6009004` (30 tests) and at `9885287` (20 tests); passes under discover
+
+**Fix direction / budget:** put the scripts dir on `sys.path` in the test (or its setUp), not via another module's import side effect.
+
+**Addendum 2026-11-05 (3.0.x Wave 10a handoff):** still present at `e60d03b5` (the handoff reports it also at `ab3494a0`); Wave 10a added tests to the file but not the path setup.
+
+- **Fixed:** product v3.0.x-dev 76374e33 test: test_cache_reader's symlinked extract-dir test imports the cache module itself so the file runs alone (v3.0.2 Wave 11a Task 29, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `python3 -m unittest tools.tests.test_cache_reader` run alone in the candidate: Ran 38, OK (skipped=16), with no ModuleNotFoundError.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-911: the deep-review gate treats a ref as named if any pin is named; exact name match needs active-low markup verbatim
+
+**Severity:** LOW
+**File:** `skills/kicad/review/scripts/deep_review_gate.py:75-81, :221` (`has_names` set by the first named pin) at `6009004`
+**Discovered:** 2026-11-03, product 3.0.x Waves 9a + 9e handoff (gate-pin-exists)
+
+**Symptom:** a PCB footprint with some named and some unnamed pads quarantines a name citation of an unnamed pad; a citation of `RESET` for `~{RESET}` quarantines.
+
+**Fix direction / budget:** per-pin name presence, and compare names with the `~{}` markup normalised. Deep-review output only.
+
+- **Fixed:** product v3.0.x-dev c8bc78b7 fix: Deep Review grades a pin cited by name on a partly unnamed part as partial, and reads a split exponent in a quote (v3.0.2 Wave 11a Task 24, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `deep_review_gate.py:80-108` `_PinIds` tracks named and unnamed pins per pin, and `names_complete` is true only when every numbered pin has a name. :244-251 fails a name citation only when names are complete, otherwise grades it partial. `add_name` also stores the `~{}`-stripped form (:75-78, :90-95). Probe: `~{RESET}` registers both `RESET` and `~{RESET}`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-912: `analyze_gerbers.py` docstring says X2 TO attributes are "KiCad 6+"
+
+**Severity:** LOW (code docstring)
+**File:** `skills/kicad/scripts/analyze_gerbers.py:1172` ("Only produces output when X2 TO attributes are present (KiCad 6+).") at `389fbd5`
+**Discovered:** 2026-11-03, product 3.0.x Wave 9d handoff (re-read in the candidate)
+
+**Symptom:** the Wave 9d gerber guides say X2 attributes come from KiCad 5.1+ (native or `G04 #@!` comment form); the docstring still says 6+.
+
+**Fix direction / budget:** one docstring line. Corpus-neutral.
+
+- **Fixed:** product v3.0.x-dev f1ed8eb6 docs: Gerber guides no longer treat silkscreen names and mask regions as KiCad 5 markers (v3.0.2 Wave 11a Task 30, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `analyze_gerbers.py:1264` now reads "(KiCad 5.1+, native `%TO` or the `G04 #@!` comment form)". The baseline 4c2a0d6:1263 read "KiCad 6+".
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-913: gerber-parsing.md version-table rows "Silkscreen suffix" and "Mask/paste pad openings" are unverified
+
+**Severity:** LOW (docs)
+**File:** `skills/kicad/references/gerber-parsing.md:626` (`_SilkS` / `_Silkscreen`), `:628` (regions vs flashes); same claims at `manual-gerber-parsing.md:508, :633`, at `389fbd5`
+**Discovered:** 2026-11-03, product 3.0.x Wave 9d handoff
+
+**Symptom:** the analyzer does not check either row and neither was measured; KiCad 5 → 6 is stated as a hard split.
+
+**Fix direction / budget:** measure on a KiCad 5 and a KiCad 6+ corpus sample (gerber layer names + D03 vs G36/G37 counts on mask/paste), then correct or qualify the rows. Docs only.
+
+- **Fixed:** product v3.0.x-dev f1ed8eb6 (as above); c4f6ea31 docs: Gerber guide gives KiCad 5 region shares per layer (v3.0.2 Wave 11a Task 30, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `gerber-parsing.md:201` and :626 say `_SilkS`/`_Silkscreen` are export defaults, not a version marker. :544 and :628 give the measured KiCad 5 shares (mask about half regions, paste about a quarter; rare in 6+). `manual-gerber-parsing.md:517` and :642 are qualified the same way.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-923: `fab_release_gate` FAILs routing from `unrouted_count` when RT-001 is suppressed, with an empty net list
+
+**Severity:** LOW (fab gate verdict text)
+**File:** `skills/kicad/scripts/fab_release_gate.py:52-70` (`check_routing`: fails on `unrouted_count`; the net list is built from RT-001 findings plus `connectivity.unrouted`), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-11-report.md` :9, :37; `D/surveys/survey-pcb.md` P3)
+
+**Symptom:** with `unconnected_items: ignore` the analyzer suppresses RT-001 (9b T11), but `unrouted_count` / `routing_complete` stay as they were, so the gate still reports "N unrouted net(s)" with `unrouted_nets` empty. 7 corpus projects (survey-pcb P3).
+
+**Fix direction / budget:** have the gate honour the same suppression (pass, or warn "ignored by the board's DRC severity"), or keep the facts and name the nets. Not in the corpus profile; no gate movement. Next release (P3). Related: KH-882.
+
+- **Fixed:** product v3.0.x-dev 3ac68060 fix: fab gate leaves board-only graphics out of the component count and warns when DRC ignores unconnected items; c0bc4e2e fix: fab gate names an ignored-DRC routing gap as a likely cause, not a fact (v3.0.2 Wave 11a Task 20, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `fab_release_gate.py:68-80` builds the list from RT-001 findings and `connectivity.unrouted`. When the list is empty, the result is `warn` ("… counted without an RT-001 finding; does the board's DRC ignore unconnected items?"), not `fail`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-931: harness lanes, the Action and SKILL.md's default PCB command do not pass `--schematic`, so the pad hot loop never runs there
+
+**Severity:** MEDIUM (every lane and the default user workflow get the centre-triangle fallback, which SW-003 now grades info only)
+**File:** product `action/entrypoint.sh:199` (`PCB_CMD=(analyze_pcb.py "$PCB" -o "$PCB_JSON")`, also the base-PCB run at `:334`); `skills/kicad/SKILL.md:188-190`, `:415` (default command `analyze_pcb.py --full`, `--schematic` only on the one-off line); harness `regression/run_corpus_gate.py:134-141` (`file_cmd`: no `--schematic` for pcb) and `run/run_pcb.py:37-45` (adds `--full --proximity` only), at product `8c42799` / harness `28fc2f944c0`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`D/surveys/survey-emc.md` d′ :318, :323; `L9C/task-9-brief.md`). The handoff slugs `KH-new-pcb-schematic-default` and `KH-new-schematic-by-default` are this one issue.
+
+**Symptom:** 9b T19 emits pad-measured loops (`method: "pad"`) only when `analyze_pcb` is given the schematic. 9c T9 makes SW-003 grade only pad records. Without `--schematic` a board gets the centre triangle, and SW-003 gives info with the estimate. On S3's set the triangle caught a real large loop on 28 of 326 graded loops (9 %); those read as info until `--schematic` is the default.
+
+**Fix direction / budget:** pass the schematic JSON to `analyze_pcb` in the Action, the SKILL.md default flow and the harness standard / full-chain lanes (harness needs a schematic-before-pcb ordering in the gate); or have `analyze_pcb` find the project's schematic output by default. Output-changing on every PCB lane (switching loop records, SW-003 severities, EMC score). v3.0.2.
+
+- **Fixed:** product v3.0.x-dev cc583229 fix: the Action's PCB run, and its base-branch re-run, read the schematic analysis; e2167c0a fix: the Action skips the PCB diff when only one side's PCB run could read a schematic (v3.0.2 Wave 11a Task 22, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `action/entrypoint.sh:200-205` adds `--schematic "$SCH_JSON"` to the head PCB run when the file exists. :336-347 gives the base PCB run the base schematic JSON, or skips the PCB diff with a `::notice::` (:355-357). SKILL.md:188-190 and :415 already pass `--schematic`. The harness-lane half is ours.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-945: an unbalanced `.kicad_dru` still loads with no error
+
+**Severity:** LOW (rules applied where KiCad refuses the file; CHANGELOG overclaims)
+**File:** `skills/kicad/scripts/kicad_core/project.py:725-729` (the file is wrapped as `(dru_root\n…\n)` before parsing); `skills/kicad/scripts/kicad_core/sexp.py:209-220` (`_parse_tokens`: a list ends at `)` *or at the end of the tokens*, so unclosed parens raise nothing), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9C/final-fix-report.md`; `L9C/progress.md` Task 10 parked item)
+
+**Symptom:** probe at `8c42799`: a file missing one or two closing parens parses to full `rule` / `constraint` lists and `custom_rules_error` stays unset. The wrapper's `)` closes the inner form and the parser accepts the open root at end of input. KiCad refuses the file. The Wave 9c CHANGELOG line (`:278` at the fix wave) claims refused files are detected. The product will add "(unbalanced parentheses are not detected yet)" at the release commit.
+
+**Fix direction / budget:** check paren balance of the raw content (outside strings and comments) before wrapping, and set `custom_rules_error` from it. Corpus census showed 0 refused files in 586 `.kicad_dru`, so expect ~0 corpus delta.
+
+- **Fixed:** product v3.0.x-dev 724f368d fix(pcb): refuse a .kicad_dru whose parentheses do not balance (v3.0.2 Wave 11a Task 9, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `kicad_core/project.py:906` `_dru_unbalanced`. Probe: files missing one or two closing parens give `custom_rules_error = "Missing ')'."`, while a `)` inside a quoted condition stays OK. `pcb/dfm.py:1043` does not apply rules when `custom_rules_error` is set.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-947: a `.kicad_dru` bound written as a nested list, `(min (0.5mm))`, is ignored; kicad-cli applies it
+
+**Severity:** LOW (missed custom-rule finding)
+**File:** `skills/kicad/scripts/kicad_core/project.py:754-760` (`load_kicad_dru_checked`: the bound text joins only the non-list tokens of `(min …)`, so a nested value gives `''`) at `e60d03b5`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff (`.kicad_dru` divergences vs kicad-cli 10.0.8); probe at `e60d03b5`: `(rule b (constraint clearance (min (0.5mm))))` loads as `{'type': 'clearance', 'min': ''}` with no error
+
+**Symptom:** KiCad applies the 0.5 mm bound; the analyzer keeps an empty string, which no check reads as a length, so the rule's finding is missed. The other half of the same survey item, `(condition (x))`, is on KH-924.
+
+**Fix direction / budget:** read the bound from a single nested list the way kicad-cli does (settle the exact accepted forms against kicad-cli DRC cases). Corpus: 0 of 588 `.kicad_dru` files have a nested token (product survey), so expect ~0 corpus delta.
+
+- **Fixed:** product v3.0.x-dev e942be58 fix(pcb): evaluate .kicad_dru bounds written as expressions or in parentheses (v3.0.2 Wave 11a Task 9, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `kicad_core/project.py:699-706` (`_dru_bound_text`, `_dru_eval`). Probe: `(min (0.5mm))` → `min: 0.5` with no error, and `(min "0.1mm + 0.2mm")` → 0.3.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-948: `analysis: null` or a non-string `analysis.power_rails` pattern drops the whole power_rails config through a recorded diagnostic
+
+**Severity:** LOW (config silently not applied)
+**File:** `skills/kicad/scripts/project_config.py:412` (`apply_power_rails_config`: `config.get('analysis', {}).get('power_rails', {})` raises on `"analysis": null`; the `ignore` / `flag` lists are checked to be lists but their items are not checked to be strings) and `:310-340` (validation skips a non-dict `analysis`); `skills/kicad/scripts/schematic/pipeline.py:1481-1483` (`except Exception` → `record(diagnostics, …, "power_rails config not applied")`) at `e60d03b5`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff
+
+**Symptom:** one bad value (`"analysis": null`, or `"ignore": ["VBAT", 5]`) makes the pipeline skip every ignore / flag / override. The user sees only a diagnostic entry, not a config warning.
+
+**Fix direction / budget:** in `load_config`, warn on a non-object `analysis` and use the default, and drop non-string pattern items with a warning, as Wave 10a does for suppression patterns. The corpus has no `.kicad-happy.json`, so there is no corpus delta.
+
+- **Fixed:** product v3.0.x-dev 09638ed5 fix(config): read a byte-order-marked config and ignore a null analysis or non-string rail patterns (v3.0.2 Wave 11a Task 32, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `project_config.py` warns on a non-object `analysis` and falls back to the default. It drops non-string `power_rails` list items with a warning. Probe: `"analysis": null` → warning plus defaults; `"ignore": ["VBAT", 5]` → warning, `ignore: ["VBAT"]` kept.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-949: a `.kicad-happy.json` with a UTF-8 BOM is warned and skipped
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/kicad_core/project.py:123` (`load_jsonc` opens with `encoding='utf-8'`, not `'utf-8-sig'`) at `e60d03b5`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff
+
+**Symptom:** editors on Windows often write a BOM. Such a config fails JSON parsing at the first byte and the whole project config is skipped with a warning.
+
+**Fix direction / budget:** open with `utf-8-sig`. No corpus delta (no config files in the corpus).
+
+- **Fixed:** product v3.0.x-dev 09638ed5 (as above) (v3.0.2 Wave 11a Task 32, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `kicad_core/project.py:121` `load_jsonc` opens with `utf-8-sig`. Probe: a config with a BOM loads its `power_rails` without a warning.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-950: about 45 JSON load sites catch `ValueError` but not `RecursionError`
+
+**Severity:** LOW (traceback on a deeply nested input file)
+**File:** e.g. `skills/datasheets/distributor_core/inputs.py:56` (`except (OSError, ValueError)`), `skills/datasheets/scripts/datasheet_verify.py:1160` (`except _json.JSONDecodeError`), `analysis_cache.py`, and the analyzer / tool input loads, at `e60d03b5`. Only 7 non-test product modules mention `RecursionError` there (`analyze_harmonic_limits`, `deep_review_gate`, `project_config`, `summarize_findings`, `export_issues`, `kicad_core/token_cache`, `datasheet_types/cache_reader`); there are 98 `json.load*` call sites in `skills/` + `action/`.
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff (the remainder after Wave 10a item 3)
+
+**Symptom:** a JSON file nested deeper than the interpreter recursion limit raises `RecursionError` out of `json.load`. The sites above catch only decode errors, so the tool prints a traceback instead of "unreadable".
+
+**Fix direction / budget:** a shared `read_json` helper that treats `RecursionError` as unreadable, used at every input load. No corpus delta.
+
+- **Fixed:** product v3.0.x-dev 432477b9 fix: a JSON input nested too deeply is reported as malformed, not a traceback; 1e5604da fix: the remaining JSON readers treat too-deep input as malformed (v3.0.2 Wave 11a Task 17, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `kicad_core/fileio.py:15-36` adds `json_loads`/`json_load`/`read_json`, which map RecursionError to JSONDecodeError (51 call sites). The bare `json.load*` input sites that are left catch RecursionError explicitly (e.g. `distributor_core/inputs.py:61`, `datasheet_verify.py:1153`, `validate_review.py:38`). Probe with a 200k-deep file: `simulate_subcircuits.py` and `analyze_emc.py --schematic` print a "nested too deeply" error with no traceback.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-951: `verify_v14_extraction` / `_all_pin_numbers` crash on a null pin element
+
+**Severity:** LOW (`datasheet_verify --v14` only)
+**File:** `skills/datasheets/scripts/datasheet_verify.py:900-905` (`pin.get("numbers", …)` on each `pinout` element, no type check), called from `verify_v14_extraction` `:986`, at `e60d03b5`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff
+
+**Symptom:** a `pinout` list with a `null` (or non-object) element gives `AttributeError: 'NoneType' object has no attribute 'get'`. Wave 10a made the typed cache reader treat the same shape as a cache miss; the `--v14` CLI path still crashes.
+
+**Fix direction / budget:** skip or report non-object pin elements. No corpus delta.
+
+- **Fixed:** product v3.0.x-dev 6e669956 (as KH-902) (v3.0.2 Wave 11a Task 6, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `datasheet_verify.py:863-870` `_all_pin_numbers` skips non-dict pins, and :905-911 reports "pin entry is not an object" at `base.pinout[i]`. Probe with a `null` pin: an error item, no AttributeError. The legacy synthesiser (:117-119) also skips non-dicts.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-952: Deep Review quote match: an exponent split by a space or a line wrap now quarantines
+
+**Severity:** LOW (false quarantine of a correct citation)
+**File:** `skills/kicad/review/scripts/deep_review_gate.py:258-263` (`_TOKEN_RE`: the exponent minus is kept only in `(?<=[0-9]e)-(?=[0-9])`, so `1 e-3`, `1e- 3` and `3e-\n2` tokenise differently from `1e-3`) at `e60d03b5`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff (side effect of Wave 10a item 8, "the exponent minus counts")
+
+**Symptom:** before Wave 10a these matched only because the sign was dropped (so `1e-3` also matched `1e3`). Now a datasheet quote whose exponent the PDF text splits with whitespace no longer matches the citation, and the finding is quarantined.
+
+**Fix direction / budget:** fold whitespace inside a digit–`e`–sign–digit run in `_norm_text` before tokenising (the handoff's candidate fix), with tests for the three spellings. Deep-review output only.
+
+- **Fixed:** product v3.0.x-dev c8bc78b7; efc1a509 fix: Deep Review no longer reads a split exponent as a negative value, …; 5f74280a fix: Deep Review reads a negative value after a part number ending in E as a value, not an exponent; 2085afb1 fix: Deep Review treats an exponent glued to a letter as an exponent unless two or more digits precede the e (v3.0.2 Wave 11a Task 24, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `deep_review_gate.py:341-357` `_EXP_GAP_RE` folds the gap inside the exponent in `_norm_text`. Probe: `1 e-3`, `1e- 3` → `1e-3`, `3e-\n2` → `3e-2`; `1e3` stays distinct, and `MAX3232E -40` stays a part number plus a value.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-953: SPICE LCSC spec tier reads only `extra.mpn`; jlcsearch now returns a top-level `mfr`
+
+**Severity:** LOW (the tier may find nothing)
+**File:** `skills/spice/scripts/spice_spec_fetcher.py:215-217` (`fetch_specs_lcsc`: `comp.get("extra", {}).get("mpn", "")`) at `e60d03b5`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff; same API shape change as KH-405 (jlcsearch `extra` block gone, LCSC datasheet fetch)
+
+**Symptom:** with Wave 10a's exact part-number rule, a component without `extra.mpn` never matches, so the LCSC tier can return no specs for any part.
+
+**Fix direction / budget:** read the top-level `mfr` field first and fall back to `extra.mpn`, and record a live-API fixture. Online path only; spice-offline is unaffected.
+
+- **Fixed:** product v3.0.x-dev bbd9d26a fix(spice): match LCSC parts by the top-level mfr field (v3.0.2 Wave 11a Task 15, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `spice/scripts/spice_spec_fetcher.py:216-221` reads the top-level `mfr` (falling back to `extra.mpn`), then `attributes` (falling back to `extra.attributes`). Ruling 9 adds a doc sentence (simulation-models.md). Minor: an empty-string top-level `mfr` does not fall back to `extra.mpn`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-954: Action report: "score None/100", stale `summary.suppressed`, and suppressed findings in the EMC one-liner and table
+
+**Severity:** LOW (Action text)
+**File:** `action/format-report.py` at `e60d03b5`: `:699` (thermal critical line formats `th_score_pre` with `/100` when a skipped thermal run has active errors, giving "score None/100"); `:81`, `:96`, `:123` (`summary.suppressed` taken from the analyzer summary, which can be stale against the post-filter findings); `:84-99` (`_emc_one_liner` gets its error count from `_summary_counts`, which counts suppressed findings); the full-report EMC table lists suppressed rows
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff (residue of Wave 10a item 11)
+
+**Symptom:** with a skipped thermal run the critical line reads "score None/100". The "N suppressed" count and the EMC one-liner error count can disagree with the bar, and the full EMC table shows rows the bar says are suppressed. Related: KH-909 (Top Risks severity).
+
+**Fix direction / budget:** use "not scored" on the critical line too, count suppression from the filtered findings, and filter suppressed rows from the one-liner and the table. Action text only; no corpus lane runs the Action.
+
+- **Fixed:** product v3.0.x-dev f08297bb (as KH-909) (v3.0.2 Wave 11a Task 21, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the thermal critical line uses `_score_text` (`format-report.py:55-56`, :749), so it reads "not scored", not "None/100". `_active_counts` (:78-104) counts suppressed findings from the findings list and subtracts them from the error and warning counts, and `_emc_one_liner` uses it (:116). The full EMC table filters `not f.get("suppressed")` (:1275-1277).
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-955: fab_release_gate text: "smallest drill None mm" and "critical/high" in the thermal check
+
+**Severity:** LOW (report text)
+**File:** `skills/kicad/scripts/fab_release_gate.py:264` (key presence test `"min_drill_mm" in metrics`), `:332-333` (formats the value even when it is `null`); `:387` ("no critical/high findings": the thermal vocabulary is error / warning / info) at `e60d03b5`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff
+
+**Symptom:** a PCB summary with `min_drill_mm: null` prints "drilled holes (smallest drill None mm)"; the thermal PASS line names severities thermal does not emit.
+
+**Fix direction / budget:** test for a number, not key presence; use the error / warning wording. Not in any corpus lane.
+
+- **Fixed:** product v3.0.x-dev 3ac68060 (as KH-923) (v3.0.2 Wave 11a Task 20, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `fab_release_gate.py:283-286` now tests `min_drill_mm` for a number (not a bool), not for key presence, so the "smallest drill" line (:354-355) is reached only with a number. The thermal PASS line reads "no error/warning findings" (:409).
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-956: `distributor_core/verify.py` imports `kicad_core.executables` lazily and needs the caller to have put `skills/kicad/scripts` on `sys.path`
+
+**Severity:** LOW (import robustness)
+**File:** `skills/datasheets/distributor_core/verify.py:133` (`from kicad_core.executables import find_executable` inside the function) at `e60d03b5`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10a handoff (new in Wave 10a item 1)
+
+**Symptom:** in a bare interpreter that imports `distributor_core` without the kicad scripts dir on the path, the first pdftotext lookup raises `ModuleNotFoundError`. Every real caller sets the path today.
+
+**Fix direction / budget:** resolve the path in the package (as other `distributor_core` cross-skill imports do) or fall back to `shutil.which` with the absolute-PATH filter. No corpus delta.
+
+- **Fixed:** product v3.0.x-dev 2c7191e9 fix(datasheets): PDF text extraction after a download finds kicad_core when the distributor scripts are imported on their own (v3.0.2 Wave 11a Task 8, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `distributor_core/verify.py:132-137` puts `skills/kicad/scripts` on `sys.path` before the lazy import. Probe: `python3 -I` with only `skills/datasheets` on the path, `_extract_pdf_text('/nonexistent.pdf')` returns '' with no ModuleNotFoundError.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
+## 2026-11-06 — KH-970: the lifecycle audit searches by MPN only and never uses the schematic's distributor part numbers
+
+**Severity:** LOW (a wrong "unknown — Replace" on a part the schematic's own DigiKey PN lists as Active)
+**File:** `skills/kicad/scripts/lifecycle_engine.py:608` (`audit_component(mpn, …)`: the component's distributor fields are not passed), `:276` (DigiKey keyword search `{"Keywords": mpn, "Limit": 3}`), `:197` (`_requested_results`: literal or `same_part(…, allow_family=False, ordering_suffixes=False)` matches only), at `7d9d4d9f`
+**Discovered:** 2026-11-06, SacMap rev2 soak run 11 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/11/`, v3.0.1 release `7d9d4d9f`, post-release; design files byte-identical to run 10); verified by code read at `7d9d4d9f`
+
+**Symptom:** BSS138 resolves to status unknown and a Replace recommendation: none of the first three keyword results is the literal part number (the soak names a Nexperia result first), so every result is dropped. The schematic's DigiKey PN for the same part resolves to Active. The 3-result limit makes this likely for any short, multi-vendor MPN.
+
+**Fix direction / budget:** look up the distributor PN first (DigiKey `productdetails` by DigiKey PN, Mouser / LCSC by theirs) and fall back to the MPN search; record which key matched in the source entry. Lifecycle output only (no corpus lane). v3.0.2 or later. See KH-898 (multi-MPN field) and KH-896 (source reporting).
+
+- **Fixed:** product v3.0.x-dev aabac98b fix(lifecycle): look a part up by its DigiKey or Mouser part number first (v3.0.2 Wave 11a Task 26, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `lifecycle_engine.py:920-935` builds `pn_map` from each BOM entry's `digikey`/`mouser` fields. `audit_component` (:705-760) asks `query_lifecycle_digikey_pn` / `query_lifecycle_mouser_pn` first. `_pn_hit` accepts a hit only when it carries that PN or the same MPN (`distributor_core/verify.py:82-100`), then falls back to the MPN search and prints "matched by DigiKey PN …" to stderr.
+- Note: there is no LCSC-PN lookup (LCSC gives no lifecycle status anyway, :937-941). The PN path is used only for single-MPN fields (`_audit_mpn_field` :270-274), and DigiKey is still asked through keyword search, not `productdetails`.
+- **Gate:** v3.0.2 Wave 11a gate 2026-11-06 (baseline `4c2a0d6`, candidate `5510006a`, results/v302_w11a_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 strict-field identical, spice-offline 8,830 identical, `--schema` ×6 identical, distributor-offline 0 / 310 differing, text oracle exactly the 9 declared artefacts, tiers 3,655 / 0 / 8 / 4.
+
 ## 2026-11-06 — KH-416: peer sheets' own inner `(sheet ...)` hierarchy never gets `_is_sheet_pin` / `_hier_ns` tagging — bus-pass role misclassification on hybrid Altium-flat projects
 
 **Severity:** LOW (latent; found while ruling out a KH-409 candidate, not

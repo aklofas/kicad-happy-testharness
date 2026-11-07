@@ -398,7 +398,8 @@ def check_self_consistency(*, mpn: str, extract_dir: Path,
 
     CLI shape:
         python3 datasheet_verify.py <extraction_path>
-    Exit 0 = no issues. Exit nonzero = issues found (text reported on stdout).
+    stdout is {"issues": [...], "count": N}. The exit code is 1 only for an
+    error-severity issue (KH-462), so the count decides: 0 = PASS.
     """
     name = "Check 2 — datasheet_verify.py self-consistency"
     tool = (kicad_happy_dir / "skills" / "datasheets" / "scripts"
@@ -425,7 +426,19 @@ def check_self_consistency(*, mpn: str, extract_dir: Path,
         capture_output=True, text=True,
     )
 
-    if proc.returncode == 0:
+    try:
+        count = json.loads(proc.stdout).get("count")
+    except (ValueError, AttributeError):
+        count = None
+    if not isinstance(count, int) or isinstance(count, bool):
+        return CheckResult(
+            name=name, status=Status.ERROR,
+            summary=f"datasheet_verify.py exit {proc.returncode}, no issue count",
+            details={"tool_path": str(tool),
+                     "stdout": proc.stdout.strip(),
+                     "stderr": proc.stderr.strip()},
+        )
+    if count == 0:
         return CheckResult(
             name=name, status=Status.PASS,
             summary="0 issues",
@@ -434,8 +447,9 @@ def check_self_consistency(*, mpn: str, extract_dir: Path,
         )
     return CheckResult(
         name=name, status=Status.FAIL,
-        summary=f"datasheet_verify.py exit {proc.returncode}",
+        summary=f"{count} issue(s)",
         details={"tool_path": str(tool),
+                 "exit_code": proc.returncode,
                  "stdout": proc.stdout.strip(),
                  "stderr": proc.stderr.strip()},
     )

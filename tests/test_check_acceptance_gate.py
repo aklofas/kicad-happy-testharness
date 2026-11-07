@@ -332,7 +332,7 @@ def test_check_self_consistency_passes_on_exit_zero():
     def fake_run(cmd, **kwargs):
         class R:
             returncode = 0
-            stdout = "OK: 0 issues"
+            stdout = json.dumps({"issues": [], "count": 0})
             stderr = ""
         return R()
 
@@ -362,7 +362,9 @@ def test_check_self_consistency_fails_on_exit_nonzero():
     def fake_run(cmd, **kwargs):
         class R:
             returncode = 1
-            stdout = "ISSUE: absolute_max VIN_max (45) < recommended_operating VIN max (40)"
+            stdout = json.dumps({"issues": [{"severity": "error", "description":
+                                 "ISSUE: absolute_max VIN_max (45) < recommended_operating VIN max (40)"}],
+                                 "count": 1})
             stderr = ""
         return R()
 
@@ -385,6 +387,58 @@ def test_check_self_consistency_fails_on_exit_nonzero():
     assert "ISSUE" in result.details["stdout"]
 
 
+def _run_self_consistency(fake_run):
+    from validate.check_acceptance_gate import check_self_consistency
+    import validate.check_acceptance_gate as mod
+
+    original = mod.subprocess.run
+    mod.subprocess.run = fake_run
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            extract = Path(tmp)
+            (extract / "LM2596-ADJ.json").write_text("{}")
+            kh = Path(tmp) / "kh"
+            scripts_dir = kh / "skills" / "datasheets" / "scripts"
+            scripts_dir.mkdir(parents=True)
+            (scripts_dir / "datasheet_verify.py").write_text("#")
+            return check_self_consistency(
+                mpn="LM2596-ADJ", extract_dir=extract, kicad_happy_dir=kh)
+    finally:
+        mod.subprocess.run = original
+
+
+def test_check_self_consistency_fails_on_warnings_with_exit_zero():
+    """datasheet_verify exits 0 on warnings only (KH-462): the issue count decides."""
+    from validate.check_acceptance_gate import Status
+
+    def fake_run(cmd, **kwargs):
+        class R:
+            returncode = 0
+            stdout = json.dumps({"issues": [{"severity": "warning", "path": "x",
+                                             "description": "w"}], "count": 1})
+            stderr = ""
+        return R()
+
+    result = _run_self_consistency(fake_run)
+    assert result.status is Status.FAIL
+    assert result.summary == "1 issue(s)"
+
+
+def test_check_self_consistency_errors_without_count():
+    """No parsable issue count (usage error, exit 2) is an ERROR, not a PASS."""
+    from validate.check_acceptance_gate import Status
+
+    def fake_run(cmd, **kwargs):
+        class R:
+            returncode = 2
+            stdout = ""
+            stderr = "error: extraction file is not valid JSON"
+        return R()
+
+    result = _run_self_consistency(fake_run)
+    assert result.status is Status.ERROR
+
+
 def test_run_gate_aggregates_4_checks_into_pass():
     from validate.check_acceptance_gate import run_gate, Status
     import validate.check_acceptance_gate as mod
@@ -393,7 +447,7 @@ def test_run_gate_aggregates_4_checks_into_pass():
         class R:
             returncode = 0
             stdout = (
-                json.dumps({"violations": []}) if "datasheet_verify" in str(cmd)
+                json.dumps({"issues": [], "count": 0}) if "datasheet_verify" in str(cmd)
                 else ""
             )
             stderr = ""

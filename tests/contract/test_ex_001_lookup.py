@@ -94,12 +94,16 @@ def test_ex_001_no_finding_when_cap_present(tmp_path):
             "input_rail": "VIN", "output_rail": "V5V"}
     cap_in = {"reference": "C1", "value": "10uF", "type": "capacitor",
                "lib_id": "Device:C", "footprint": "", "properties": {}}
+    # EX-001 credits only a cap whose other side is ground (KH-555)
     nets = {
         "VIN": {"pins": [{"component": "C1", "pin_number": "1",
                             "pin_name": "1", "x": 0, "y": 0}]},
+        "GND": {"pins": [{"component": "C1", "pin_number": "2",
+                            "pin_name": "2", "x": 0, "y": 0}]},
         "V5V": {"pins": []},
     }
-    ctx = _make_ctx([cap_in], nets, {("C1", "1"): ("VIN", None)},
+    ctx = _make_ctx([cap_in], nets, {("C1", "1"): ("VIN", None),
+                                     ("C1", "2"): ("GND", None)},
                     {"VIN", "V5V"}, tmp_path)
 
     with patch.object(lookup_detectors, "get_facts",

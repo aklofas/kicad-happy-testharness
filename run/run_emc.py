@@ -106,8 +106,8 @@ def build_parser():
                         help="Target EMC standard (default: fcc-class-b)")
     add_timeout_arg(parser, default=30, help="Timeout per file in seconds (default: 30)")
     parser.add_argument("--spice-enhanced", action="store_true",
-                        help="Enable SPICE-verified PDN impedance and EMI "
-                        "filter checks (requires ngspice)")
+                        help="Enable SPICE-verified PDN impedance and "
+                        "switching-harmonic checks (requires ngspice)")
     add_resume_arg(parser, help="Skip files that already have valid output JSON")
     parser.add_argument("--compact", action="store_true",
                         help="Pass --compact to analyze_emc.py (strips INFO "
