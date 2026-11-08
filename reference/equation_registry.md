@@ -2,16 +2,16 @@
 
 Auto-generated from `equation_registry.json` — do not edit manually.
 
-**Last scan:** 2026-11-08T03:52:35.419180+00:00
+**Last scan:** 2026-11-08T17:34:33.765724+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|------:|
 | Total equations | 104 |
-| Verified | 87 |
+| Verified | 89 |
 | Unverified | 0 |
-| Stale | 17 |
+| Stale | 15 |
 | Critical impact | 11 |
 | High impact | 34 |
 | Medium impact | 38 |
@@ -134,7 +134,7 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 
 | ID | Function | Formula | Category | Impact | Status |
 |---|---|---|---|---|---|
-| EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **stale** |
+| EQ-060 | `extract_footprints` | x'=x·cosθ-y·sinθ, y'=x·sinθ+y·cosθ (2D rotation) | geometry | low | **verified** |
 | EQ-100 | `extract_board_outline` | Arc bounding box — 3-point circumscribed circle via | geometry | low | **stale** |
 
 ## skills/kicad/scripts/pcb/routing.py
@@ -223,5 +223,5 @@ Auto-generated from `equation_registry.json` — do not edit manually.
 | EQ-081 | `generate_decoupling` | \|Z\| at target freq from ESR+ESL cap model | spice_model | medium | **stale** |
 | EQ-082 | `generate_inrush` | I_peak = V/R at t=0 (startup inrush current) | spice_model | medium | **stale** |
 | EQ-083 | `generate_lc_filter` | f₀ = 1/(2π√(LC)) testbench (validates EQ-021) | spice_model | medium | **stale** |
-| EQ-084 | `generate_opamp_circuit` | G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071) | spice_model | medium | **stale** |
+| EQ-084 | `generate_opamp_circuit` | G_expected = 1+Rf/Ri or -Rf/Ri (validates EQ-071) | spice_model | medium | **verified** |
 | EQ-085 | `generate_snubber` | f_damp = 1/(2πRC) (snubber damping frequency) | spice_model | medium | **stale** |

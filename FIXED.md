@@ -11,6 +11,701 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-08 — KH-436: `test_coverage` counts `Connector:TestPoint`-based touch pads as test points
+
+
+**Severity:** LOW (coverage metric inflated on capacitive-touch boards; same footprint family KH-373/413 already classify as touch pads)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (`test_coverage`)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** SacMap's two capacitive touch pads (TestPoint symbols) are reported as test points.
+
+**Fix direction:** exclude symbols the touch-pad classifier recognises (net name / value / footprint touch markers used by CP-003) from the test-point census; fixture with one real TP and one touch TP.
+
+**Gate budget (when fixed):** `test_coverage` counts shrink on touch-pad boards (CP-003 population).
+
+**Rider (2026-10-22, soak run 9):** `FD-001` has the same blind spot — "No fiducials on B.Cu (2 SMD components)" counts the two 15 mm touch pads as the B.Cu SMD components. Whatever CP-003 uses to classify a `TestPoint` symbol as a touch pad should feed `test_coverage` AND the fiducial check.
+
+**Rider (2026-11-03, soak run 10):** the PCB TE-001 census has the same blind spot (`pcb/assembly.py` `_is_test_point`, reference prefix) — filed separately as KH-895.
+
+**Addendum 2026-11-04 (3.0.x Waves 9b + 9c gate, candidate `8c42799`):** the touch-pad half is fixed by `efad984d` (TE-001 and schematic `test_coverage` drop capacitive touch pads with TP references; closed with KH-895 in FIXED.md). Open: the FD-001 rider only.
+
+---
+
+- **Root cause / fix:** test_coverage, TE-001 and FD-001 counted capacitive touch pads as test points or SMD parts. The test-point half was fixed in Waves 9b+9c; FD-001 now skips footprints the touch classifier names by footprint alone, so a connector valued `Touch` is still counted.
+- **Fixed:** product v3.0.x-dev 63675d53 (touch-pad half efad984d, Waves 9b+9c) (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/assembly.py:976-981`: FD-001 does not count a footprint as an SMD part when `is_touch_pad("", "", library)` holds. SacMap's pads use footprint `sacmap:Touch`, so the footprint leg covers the filed board; fixture kh419 `circle_touch_pad` loses its FD-001.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-441: via-analysis `via_in_pad` attributes a via to the FIRST pad whose outline contains it — ambiguous on footprints where a pin pad's rotated extent and the exposed pad both contain the via (attribution + `same_net` flip with pad order)
+
+
+**Severity:** LOW (fact-field attribution; surfaced by the KH-419 outline test
+at the soak-fix gate: 879 entries re-attributed and 678 `same_net` flips on
+the 2,057 moved units, e.g. Thinkpad U2 via (35.4, 31.7) is inside both the
+unnumbered exposed pad and pad 57 at 45° and now reports pad `""` /
+`same_net: false` instead of `57` / `true`)
+**File:** `skills/kicad/scripts/analyze_pcb.py` (`analyze_vias` via-in-pad
+loop, `break` on first containing pad)
+**Discovered:** 2026-10-06, harness soak-fix gate 9fbbb26 → ef6d55c
+(`results/v23x_soak_gate/adjudication_soak.md`)
+
+**Fix direction:** when several pads contain the via, prefer the pad on the
+via's net, then the smallest pad (the exposed pad's bounding rect swallows
+pin pads on rotated QFN/DFN footprints); report `pad: ""` only when no
+numbered pad contains the via. Fixture: a QFN at 45° with a via on a pin pad
+that also falls inside the exposed-pad rectangle.
+
+**Gate budget (when fixed):** `via_in_pad[].pad` / `same_net` on rotated
+QFN/DFN boards (subset of the KH-419 class); VP-001 unaffected.
+
+---
+
+- **Root cause / fix:** via_in_pad attributed a via to the first pad whose outline held it, so on a rotated QFN the exposed-pad rectangle or a pin pad won by pad order. The holder is now chosen by net, then numbered pad, then size.
+- **Fixed:** product v3.0.x-dev c0af4ac4 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/copper.py:461-477`: every pad holding the via is collected, then the pad on the via's net, then a numbered pad, then the smallest is taken; one entry per via.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-457: silkscreen revision check misses `rev2` / `v1.1`-style marks with no separator — `\b(?:REV|VER|VERSION)\b|(?<!\w)[RV]\d` needs a word boundary after REV or a lone R/V
+
+
+**Severity:** LOW (false `missing_revision` documentation warning → `fab_release_gate` `[WARN] No revision marking found on silkscreen` on a board whose silk reads `sacmap-rev2 (2026)`)
+**File:** `skills/kicad/scripts/analyze_pcb.py:3531-3541` (`rev_pattern`; consumed by `fab_release_gate.py:144-152` `revision_marking`)
+**Discovered:** 2026-10-22, SacMap rev2 soak run 9 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/9/`, product `main` @ `4701c26` = v2.3.2 pre-tag; report `REVIEW-2026-10-22.md`, meta `REVIEW-2026-10-22-meta.md`), report §18.6 / meta §2 #3
+
+**Repro:** silk text `sacmap-rev2 (2026)`, empty title-block `rev`: `REV\b` fails (V is followed by `2`), `(?<!\w)[RV]\d` fails (`V` is preceded by `E`) → `has_revision False`.
+
+**Fix direction:** `(?<![A-Z])(?:REV|VER|VERSION|R|V)\s*[-_.]?\s*\d` (case-insensitive) plus the existing word forms; keep the title-block `rev` precedence. Gate budget: `documentation_warnings` `missing_revision` disappearances corpus-wide (count at the filing round).
+
+---
+
+- **Root cause / fix:** The silkscreen revision regex needed a word boundary after REV or a lone R/V, so `rev2` and `v1.1` marks were missed. A digit-guarded form now reads them, and rail text stays unmatched.
+- **Fixed:** product v3.0.x-dev 675c492f (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/reader.py:1836-1839`: the revision regex adds `(?<![A-Z0-9])(?:REV|VER|VERSION)\s*[-_.]?\s*\d` and `(?<![A-Z0-9])V\d+\.\d`. Probe: `sacmap-rev2 (2026)`, `Rev1.0`, `Ver1.0`, `board_v1.1` match; `3V3`, `5V0`, `VCC_3V3`, `SERVER2`, `LEVEL2`, `DRIVER1` do not.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-480: a failed SPICE simulation leaves no `diagnostics` record (the `5e35592` record was reverted in `cf51839` as output-changing)
+
+
+**Severity:** LOW (observability; the result already says `status: skip`, `note: "Simulation failed"`)
+**File:** `skills/spice/scripts/simulate_subcircuits.py` (`run` path; the one-hunk implementation is `git show 5e35592 -- skills/spice/scripts/simulate_subcircuits.py`)
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 item 1 (implemented in `5e35592`, reverted in `cf51839` to keep the release range output-neutral)
+
+**Fix direction:** re-apply the hunk in a 3.0.x output-changing round. Budget (maintainer's measurement on the round-9 quick spice-offline set, harness to confirm at the gate): **93 units** whose result already carries `Simulation failed` gain 1–4 `simulate_subcircuits.run` diagnostics records — 65 gain 1, 21 gain 2, 3 gain 3, 4 gain 4 — a clean additive `diagnostics` class; `regression/compare_spice_offline.py` must be told to expect it (TH-077-style masking is NOT appropriate: the record is the deliverable).
+
+---
+
+- **Root cause / fix:** The failed-run diagnostic from 5e35592 was reverted in cf51839 to keep that range output-neutral; it is re-applied, so a failed simulation leaves a diagnostics record next to its skip result.
+- **Fixed:** product v3.0.x-dev d24ef412 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `simulate_subcircuits.py:264-269` a failed run records one `simulate_subcircuits.run` diagnostic: `<bench>.cir: ` + the first three stderr lines (effect 'simulation skipped'). A/B: 108 records / 82 units, byte-identical over two runs.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-573: thermal-pad via adequacy (TV-001) counts vias of any net and layer, and its exemption hides an untented via in a signal pad (VP-001)
+
+
+**Severity:** HIGH (TV-001 default path; feeds thermal's via correction factor)
+**File:** `skills/kicad/scripts/pcb/copper.py:648-668` (Tier-1 loop over `all_vias` with no net or layer test; only Tier 2 at `:697` checks net); `:1219-1220` (VP-001 exemption by component ref, called at `pipeline.py:484-486`); consumer `analyze_thermal.py:349-354`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R9-F2, kc/R9-F6)
+
+**Symptom:** a 2×2 mm GND exposed pad with 5 net-99 vias at x = 1.3 (outside the pad, inside the 1.5× box) gives `via_count 5`, `adequacy adequate`, `severity info`. Thermal then applies the via correction from those foreign vias. The VP-001 exemption set holds component refs from TV-001 entries, so every SMD pad of that footprint is skipped. A QFN with an untented via in signal pad 1 gives `[]` with the exemption and `Via in pad: U1:1 (untented)` without it (`--full`).
+
+**Fix direction / budget:** in Tier 1, count only vias on the pad's net that span the pad's layer. Exempt by `(ref, pad)` for the exposed pad only. Budget: corpus output, TV-001 `via_count` / `adequacy`, thermal via correction (Tj values), and VP-001 appearances (`--full`). Size first. This is distinct from KH-441 (via_in_pad first-pad attribution).
+
+**Addendum 2026-11-06 (v3.0.2 survey correction):** only partly stale: TV-001's first pass still ignores the via layer span (`pcb/copper.py:678-693`); a stacked microvia chain reaching the pad is the ruled case. Lands in Wave 11b.
+
+---
+
+- **Root cause / fix:** TV-001 counted vias of any net and layer under a thermal pad, and VP-001 exempted every pad of a TV-001 footprint. The net test and the per-pad exemption landed earlier; the residue, the via layer span, is now checked: a via counts when its own span or a same-point stacked chain reaches the pad copper.
+- **Fixed:** product v3.0.x-dev ab5a08c8 (earlier halves landed before this wave) (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/copper.py:48-77` `_vias_reaching`; Tier 1 skips a via whose copper does not reach the pad layer (`:733-742`). Already present: the same-net test (`:737-739`) and the VP-001 exemption by (ref, pad) (`:1311-1331`).
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-631: SPICE `--parasitics` applies the first copper layer's thickness to every trace segment
+
+
+**Severity:** MEDIUM (opt-in `--parasitics` / standalone CLI; wrong R on mixed-copper boards)
+**File:** `skills/spice/scripts/extract_parasitics.py:149`, `:155-158` (first `type=="copper"` thickness, then `break`), `:191` (`trace_resistance(len, width, copper_thickness)`), `:195` (`seg["layer"]` recorded); stackup `pcb/reader.py:59-70`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R2-F12)
+
+**Symptom:** on a board with 35 µm outer / 70 µm inner copper every segment uses the first layer's thickness; 1.68e-8·0.0254/(0.000254·0.000035) = 48 mΩ vs 24 mΩ at 70 µm. The per-layer `name` → `thickness` map is already in `setup.stackup`.
+
+**Fix direction / budget:** look up thickness by `seg["layer"]`. Budget: only under a SPICE profile that passes `--parasitics` (neutral for spice-offline). Sibling of KH-487 (same feature, different defect).
+
+---
+
+- **Root cause / fix:** SPICE `--parasitics` applied the first copper layer's thickness to every trace segment; each segment now takes its own layer's thickness from the stackup.
+- **Fixed:** product v3.0.x-dev 62ec5517 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `spice/scripts/extract_parasitics.py:160-164` per-layer copper map; `:197-198` `trace_resistance(..., copper_by_layer.get(seg['layer'], copper_thickness))`.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-658: CC-001 compares the net-wide narrowest trace, not the connector's; TW-001 applies a regulator's output current to its input rail
+
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/cross_analysis.py` (CC-001 / TW-001 after KH-566)
+**Discovered:** 2026-10-25, product 3.0.x Wave 2 review (handoff §Asks 4g)
+
+**Symptom:** CC-001 takes the narrowest trace anywhere on the net, so one unit got 6 findings from a single thin `+24V` segment far from the connector; TW-001 checks the input rail against the regulator's output current. Minor: CC-001 summaries state the estimated current as a fact (`~X A`; proxy capped at 1 A LDO / 2 A switcher).
+
+**Fix direction / budget:** measure the trace attached to the connector pad, use the input current (`Iout * Vout / (Vin * eff)`) for the input rail, mark the current "(est.)". Budget: CC-001 / TW-001 on full-chain cross units (Wave 2 product estimate CC-001 6 / 1 unit, TW-001 6 / 3 units).
+
+---
+
+- **Root cause / fix:** CC-001 compared the narrowest trace anywhere on the net, and TW-001 loaded a regulator's input rail with its output current. CC-001 now measures the connector's own path, input rails carry Iout*Vout/(Vin*eff), and the estimated current is marked (est.).
+- **Fixed:** product v3.0.x-dev 11272ef9 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `cross_analysis.py:132-142` `_reg_iin`; CC-001 takes the routed connector-to-regulator path (`_path_min_width` `:145`), else the track leaving the connector courtyard (`_attached_min_width` `:160`), else no finding; `:311` sums input current; TW-001 loads input rails with `_reg_iin` (`:1000`); both summaries end `(est.)` (`:329`, `:1023`). The net-wide minimum loop is gone.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-665: EMC BE-001 `_point_to_edges_min_distance` measures polygon and curve edges from (0,0)
+
+
+**Severity:** MEDIUM
+**File:** `skills/emc/scripts/` (`_point_to_edges_min_distance`)
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 (handoff §Asks 4)
+
+**Symptom:** for outline edges that are not line segments the distance is taken from the origin, not from the component, so BE-001 edge distances are wrong on curved / polygon outlines.
+
+**Fix direction / budget:** reuse the outline distance helpers added in Wave 3 (see KH-674 note l); budget: EMC BE-001 on boards with curved outlines.
+
+---
+
+- **Root cause / fix:** Polygon and curve outline edges carry points, not start/end, so BE-001 measured them from the (0, 0) default; they now go through the outline distance helper.
+- **Fixed:** product v3.0.x-dev bba114ca (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `emc_rules.py:2636-2640` `_point_to_edges_min_distance` measures polygon and curve edges with `pcb.geometry.outline_edge_distance` (polyline / Bezier points), skipping an unusable edge.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-713: the op-amp bench measures gain at 1 kHz even when a feedback capacitor puts the closed-loop pole below it
+
+
+**Severity:** MEDIUM
+**File:** `skills/spice/scripts/spice_templates.py` (op-amp bench)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** Colossus U3 250 MΩ ∥ 125 pF; ovobot U14/U15 51k ∥ 100 nF, f_pole ≈ 31 Hz. Measuring at 1 kHz gives false SP-FAIL and part of the remaining op-amp warns.
+
+**Fix direction / budget:** measure below 1/(2π·Rf·Cf). Gates KH-507. Budget: op-amp benches with a feedback capacitor under spice-offline.
+
+---
+
+- **Root cause / fix:** The op-amp bench measured gain at 1 kHz even when a feedback capacitor put the closed-loop pole below it; it now measures a decade below 1/(2 pi Rf Cf).
+- **Fixed:** product v3.0.x-dev 21f27d74 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `spice_templates.py:537-541` `f_meas = min(f_meas, 0.1 / (2*pi*Rf*Cf))` before the [1, 1000] Hz clamp. Colossus U3 (pole 5.1 Hz) measures at 1 Hz (-0.17 dB), ovobot U14/U15 (pole 31 Hz) at 3.1 Hz. A/B sp-opamp-cf-pole: 47 fail -> pass, 108 warn -> pass.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-714: the PNP transistor bench template never reaches an on-state (VBE(on) ≈ 2.647 V, `ic_on_mA` ≈ 2.5e16)
+
+
+**Severity:** MEDIUM
+**File:** `skills/spice/scripts/spice_templates.py` (transistor bench, PNP)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** the plan's "NPN VBE 2.647 V" item: all 17/17 PNP benches that ran in the product sample warned with it (dvhx Q11/Q14/Q17 …). Since `c9374d6` they warn "not measured" without values and are labelled PNP. Estimated 762 + 78 corpus.
+
+**Fix direction / budget:** fix the template, then take polarity-correct measurements; budget PNP `transistor_circuit` results under spice-offline.
+
+---
+
+- **Root cause / fix:** The PNP bench swept the base between VCC/2 and VCC from ground, so the part never reached an on-state; VBE is now swept from the emitter supply, 0 to -1 V, and the polarity-correct VBE(on) and collector current are reported.
+- **Fixed:** product v3.0.x-dev 47249a44 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `spice_templates.py:1206-1211` PNP bench: `VBE {base} vcc DC 0` swept 0 to -1 V, `ic = abs(i(VCC))`; `:1169-1172` diode-connected and collector-on-ground PNPs skip with a reason; `spice_results.py:583-598` reads `vbe_on_V` / `ic_on_mA` with `abs(vbe_on)` in the 0.4-0.9 V check. A/B: 189 warn -> info / 73 units.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-715: the P-channel MOSFET bench reports `vth_V` 0.0 (sweep direction)
+
+
+**Severity:** LOW
+**File:** `skills/spice/scripts/spice_templates.py` (transistor bench, P-channel)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** P-channel MOSFET benches report `vth_V` 0.0 because of the sweep direction, left after Task 24's `i_on` fix.
+
+**Fix direction / budget:** sweep in the P-channel direction; budget P-ch `transistor_circuit` values under spice-offline.
+
+---
+
+- **Root cause / fix:** The P-channel bench swept the gate from ground and measured on an `abs()` expression ngspice's `meas` does not take, so `vth_V` read 0.0; VGS is now swept from the source supply toward -VDD and the magnitude is a separate vector.
+- **Fixed:** product v3.0.x-dev 47249a44 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `spice_templates.py:1107-1118` P-channel bench: `VGS {gate} vdd DC 0` swept 0 to -VDD, `id = abs(i(VDD))` as its own vector, `vth` when `id` crosses 1 mA; `spice_results.py:561-562` drops `vth` with no current vector. A/B sp-pmos-vth 56 results / 38 units; product test PMOS vth about -1.56 V.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-722: a label-like regulator Value that parses as a part-number core makes the SPICE regulator bench `info` "the value names another part"
+
+
+**Severity:** LOW (R42 e)
+**File:** `skills/spice/scripts/spice_templates.py` (regulator Vref criterion, `d2e0b70`)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** a label-like Value (`LDO1`, `BUCK5V`, `U3V3`, `DCDC24V/5V NUM`) on a real-part symbol gives info with a misleading note, and a valid criterion is lost. 17 / 987 corpus lookup-Vref regulators, ≈ 4 bogus (3 label-like, 1 typo `TPMP2359DJ`).
+
+**Fix direction / budget:** do not treat label-like values as a part number; budget the regulator benches above.
+
+---
+
+- **Root cause / fix:** A label-like Value (`LDO1`, `BUCK5V`) parsed as a part-number core, so the regulator bench said the value names another part and lost a valid Vref criterion; label-like values are no longer treated as part numbers.
+- **Fixed:** product v3.0.x-dev d24ef412 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `kicad_core/parts.py:303-313` `is_label_like_value` (a space or '/', or a core of LDO/BUCK/BOOST/DCDC/PSU/SMPS/U + digit); `spice_results.py:834` excludes such values from the 'value names another part' test. Probe: LDO1, BUCK5V, U3V3, 'DCDC24V/5V NUM' -> True; TPS61023DRLR, LM338_TO220, REG1117, SPX1117-ADJ -> False.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-754: footprints inside ergogen nested modules are missed, and a `locked` reference is misread
+
+
+**Severity:** MEDIUM (pre-existing)
+**File:** `pcb/reader.py` (footprint parse)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff; filed by the harness
+
+**Symptom:** footprints inside ergogen nested modules are not read (boards 67 and 121 of the pcbchecks sample); a `locked` reference is misread (board 69).
+
+**Fix direction / budget:** read nested-module footprints and the locked reference form; budget footprint-derived output on ergogen boards.
+
+---
+
+- **Root cause / fix:** Both readers took `find_all(footprint) or find_all(module)`, so an ergogen board that mixes the two forms lost every `module` part. Both forms are now read in file order. The `locked` reference half was closed as not reproducible (5 constructed forms).
+- **Fixed:** product v3.0.x-dev cc12f1f3 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/reader.py:352-356` `_footprint_nodes` returns every top-level `footprint` and `module` node in file order; used at `:368` (extract_footprints), `:1503`, `:1728` (silkscreen). No other reader of the raw tokens is left. Real output: travis_num2024 reads 91 footprints (base 40).
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-755: EMC IO-001 and `test_plan.interface_risks` list DNP connectors
+
+
+**Severity:** LOW
+**File:** `emc/scripts/emc_rules.py` (IO-001, test plan)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff; filed by the harness
+
+**Symptom:** DNP connectors are listed by IO-001 and in `test_plan.interface_risks` (12 in the sample).
+
+**Fix direction / budget:** skip DNP connectors; budget IO-001 / `interface_risks` removals.
+
+---
+
+- **Root cause / fix:** The connector list behind IO-001 and the test plan's interface ranking included DNP connectors; it now skips them, and the ESD placement check keeps them only so a device placed for an unfitted connector is not paired with a farther one.
+- **Fixed:** product v3.0.x-dev 4eef6daf (+ 3ac0ec6e) (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `emc_rules.py:316` `_connector_refs` skips footprints with `dnp`; IO-001 (`:945`) and `test_plan.interface_risks` (`:4413`) both take their connectors from it. ES-001 keeps DNP connectors for the nearest-connector search (`:3224`, `include_dnp=True`) and does not report a device whose nearest connector is DNP.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-762: a custom rule's layer match uses the file's layer names for non-copper legacy layers
+
+
+**Severity:** LOW (removes only)
+**File:** `pcb/presentation.py` (~:279, `board_layers`)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff; filed by the harness
+
+**Symptom:** kicad-cli applies a `(layer F.Silkscreen)` hole rule on a board whose layer is `"F.SilkS" user "F.Silkscreen"` (`drill_out_of_range`); we skip it.
+
+**Fix direction / budget:** match rule layers against the canonical (user) layer name as well; budget `design_rule_compliance` additions on legacy-named boards.
+
+---
+
+- **Root cause / fix:** A hole rule's layer was matched against the file's layer names only, so `(layer F.Silkscreen)` missed a board whose layer is `F.SilkS`. Rule layers now match either KiCad name and the user name.
+- **Fixed:** product v3.0.x-dev d3383359 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/presentation.py:164-183` `_rule_layer_names` adds the user name and the other KiCad name of a renamed layer (SilkS/Silkscreen, Adhes/Adhesive, CrtYd/Courtyard, Dwgs/Cmts/Eco); passed as `board_layers` at `:369`, which the hole-rule layer test reads (`pcb/dfm.py:968-973`).
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-769: a stackup that lists a board layer twice — KiCad stops at the first repeat, we skip only the repeated layer
+
+
+**Severity:** LOW
+**File:** `pcb/routing.py` (~:564-567, :586-590), `pcb/reader.py`
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff; filed by the harness
+
+**Symptom:** KiCad stops adding stackup items at the first repeat (`pcb_io_kicad_sexpr_parser.cpp:1966-1968, :2062-2085`); `b1a34c2` skips only the repeated layer. One sample board (m271).
+
+**Fix direction / budget:** truncate once in the reader so impedance and the return path agree; budget m271-class boards.
+
+---
+
+- **Root cause / fix:** The reader kept every stackup item and a later fix skipped only the repeated layer, while KiCad stops reading at the first repeat. The reader now truncates there, so impedance, return path and stackup checks see the stack KiCad loads.
+- **Fixed:** product v3.0.x-dev 7c3dc7ff (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/reader.py:144-153`: `extract_setup` stops at the first board layer listed twice; dielectric layers (type core/prepreg, or a name starting `dielectric`) may repeat.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-777: TV-001 `drill_penalized` promotion — adequate → good when the effective count dips below the minimum
+
+
+**Severity:** LOW (plan; pre-existing)
+**File:** `pcb/copper.py` (~:803-808)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff (class P10); filed by the harness
+
+**Symptom:** m262 U2:15 goes adequate → good when the raw count meets "good" but the effective count dips below the minimum.
+
+**Fix direction / budget:** grade on the effective count; budget TV-001 adequacy on drill-penalized pads.
+
+---
+
+- **Root cause / fix:** When the physical via count met the threshold but the drill-weighted count did not, TV-001 took the raw grade, which could be `good` with an effective count below the minimum. The grade is now `adequate`.
+- **Fixed:** product v3.0.x-dev ab5a08c8 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/copper.py:896-900`: a drill-penalized pad is graded `adequate`, not the raw grade.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-779: RT-001 / `routing_complete` give no hint when a net's zones are unfilled in the saved file
+
+
+**Severity:** LOW
+**File:** `pcb/` routing completeness (RT-001, `statistics.routing_complete`)
+**Discovered:** 2026-10-29, product ruling on the 3.0.x relock FND locks (filed by the product, recorded by the harness)
+
+**Symptom:** sparkfun SparkFun_Serial_MP3_Player_Shield-MY1690X has 7 zones and no fills in the file; `routing_complete` is False and RT-001 reports GND unrouted. That matches kicad-cli DRC as loaded (41 unconnected GND; 0 only with `--refill-zones`), but nothing tells the user the count depends on unfilled zones.
+
+**Fix direction / budget:** when a reported net owns zones with no fill, say so in the RT-001 finding (refill zones before trusting the count); wording only, no count change.
+
+---
+
+- **Root cause / fix:** RT-001 reported an unrouted net on a board saved without zone fills and gave no hint that the count depends on them. With `--full`, the finding now says to refill zones; counts are unchanged.
+- **Fixed:** product v3.0.x-dev f07ecca6 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `pcb/presentation.py:111-149` `_routing_from_graph(..., unfilled_zone_nets=)`; `:437-442` builds the set from non-keepout zones without a fill. The RT-001 description gains "Its zones are not filled in the saved file: refill zones before trusting this count." Standard mode never reports a zone net (`pcb/routing.py:56-61`).
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-803: KiCad 8.99 / 9.99 nightlies carry the 9.0.0-9.0.4 job-file layer-id bug but are not remapped
+
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/analyze_gerbers.py` (`check_completeness` job-id remap, `e67a1c2`)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 14 (KH-784 remainder); not verified harness-side
+
+**Symptom:** nightlies built before 2025-08-27 write `In1.Cu` as `L5` like 9.0.0-9.0.4, but only the release versions are remapped, so complete sets can read as missing inner layers. Corpus: 3 × 9.99, 2 × 8.99.
+
+**Fix direction / budget:** remap by build date (or by the job's own layer list), not by version string; budget completeness / GR-001 on those 5 units.
+
+---
+
+- **Root cause / fix:** Only 9.0.0-9.0.4 job files were remapped, but nightlies built before the KiCad fix carry the same inner-layer numbering. A nightly is now remapped when its own layer list shows that numbering.
+- **Fixed:** product v3.0.x-dev 18211d8d, ff58e4dd (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `analyze_gerbers.py:1135-1148` `_job_inner_numbering_bug`: a 8.99/9.99 nightly job is remapped when an inner `Copper,L<n>` has n >= LayerNumber (and LayerNumber > 0); used at `check_completeness`.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-890: the bridging-capacitor distance is measured to the two bounding samples, not to the crossing point
+
+
+**Severity:** LOW
+**File:** `skills/emc/scripts/emc_rules.py:551-554` (`points = ch.get('sample_points') or [[ch.get('x', 0), ch.get('y', 0)]]`)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8b (from KH-795); verified harness-side at `0efc012` (code reading; `routing.py:534-538` always writes `sample_points`, so `(x, y)` is never used)
+
+**Symptom:** the samples can be up to 2 mm from the crossing (and further at a junction), so a capacitor next to the crossing can be judged out of range or one beyond 5 mm of it judged in range.
+
+**Fix direction / budget:** include `(x, y)` in the point list (`points + [[x, y]]`). Output-changing: GP-001 split suppressions; measure. Post-3.0.
+
+---
+
+- **Root cause / fix:** The bridging-capacitor distance was taken only to the two sample points bounding a split crossing, up to 2 mm from it; the crossing point itself is now in the list.
+- **Fixed:** product v3.0.x-dev 62ec5517 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `emc_rules.py:576-579` `_split_crossing_findings` appends the crossing's own `(x, y)` to its sample points before the bridging-capacitor distance test.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-891: a `J`-referenced part on a capacitor footprint counts as a bridging capacitor
+
+
+**Severity:** LOW
+**File:** `skills/emc/scripts/emc_rules.py:540-547` (`is_cap = kind == 'capacitor' or (kind in ('other', 'connector') and lib.lower().startswith('capacitor'))`)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8b (from KH-795); verified harness-side at `0efc012` (`classify_component('J1', 'Capacitor_SMD', '100n', …)` returns `connector`, the same class as the intended `X` fallback)
+
+**Symptom:** `connector` is accepted to cover `X` references, but a real connector reference (`J`, `P`) on a capacitor-library footprint also passes and suppresses a GP-001 split error.
+
+**Fix direction / budget:** accept the fallback only for references the classifier did not recognise (for example check the ref prefix, not the class). Output-changing only on such boards; measure. Post-3.0.
+
+---
+
+- **Root cause / fix:** The fallback accepted any part classified 'connector' on a capacitor footprint, so a real J/P connector suppressed a GP-001 split error; only X references (the classifier's connector fallback) are accepted now.
+- **Fixed:** product v3.0.x-dev 62ec5517 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `emc_rules.py:566-568` the capacitor-footprint fallback accepts kind 'other' or an X reference the classifier typed 'connector'; a J or P reference no longer counts.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-928: the Gerber `*.g*` glob still reads non-Gerber files as error records
+
+
+**Severity:** LOW (gerber `error` records, `layer_count` / completeness)
+**File:** `skills/kicad/scripts/analyze_gerbers.py:1652` (`glob("*.gbr") + glob("*.g*")`), `:1636-1640` (`_is_repo_or_fs_artifact`: `startswith((".git", "._"))` case-sensitive, `":Zone.Identifier" in name` a substring test), `:1689-1692` (extension filter), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-18-report.md` :47-50, :67; `task-18-review.md` :23-24)
+
+**Symptom:** the glob takes `.gvp` (gerbv project, x19), `.gpi` (EAGLE CAM log, x19), `.gtd` (GerbTool, x21), `.gbl` firmware (Miceuz EFR32, x12), `.gcode` / `.ngc` / `.g` G-code and `.g4` ANTLR grammars (atopile, x3). Each becomes an error record. Partly as filed: `.nc` is not matched by `*.g*`. It is a drill candidate (`:1683-1686`) and is taken only when its header reads as Excellon. `.GITIGNORE` on a case-insensitive checkout is read; `:Zone.Identifier` is matched anywhere in the name, not as a suffix.
+
+**Fix direction / budget:** list Gerber extensions explicitly (or require a Gerber marker before recording an error for a non-layer extension); case-fold the dot-name test; `endswith(":Zone.Identifier")`. Output-changing: gerber `error` records / `layer_count` on those dirs.
+
+---
+
+- **Root cause / fix:** The `*.g*` glob read gerbv projects, CAM logs and G-code as Gerber error records. Files without a layer extension now need a Gerber marker, dot-names are case-folded and Zone.Identifier is a suffix test. Files with a layer extension (`.gbl` firmware, `.g4` grammars) stay error records by ruling P5, as the issue's own fix direction allows.
+- **Fixed:** product v3.0.x-dev 18211d8d (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `analyze_gerbers.py:1711-1738`: dot-names case-folded, `endswith(":Zone.Identifier")`; a `*.g*` file without a layer extension is read only when its first 8 KB hold `%FS`, `%MO` or a `G04...*` comment (`:1796`). Real output: festlv/thc drops `drill_0.8.g` and `drill_1.g` (G-code), 5 -> 3 layers.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-929: KiCad 5 job files (`G04` `*.gbj`, 5.1 trailing-comma JSON) are reported unread
+
+
+**Severity:** LOW (gerber completeness falls back to defaults)
+**File:** `skills/kicad/scripts/analyze_gerbers.py:1654` (job files = `*.gbrjob` only; `.gbj` falls into the `*.g*` layer glob, `:1652`), `:902-915` (`parse_job_file`: `json.load`, any error → diagnostic "job file not read"), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-18-report.md` :43-44, :50, :68)
+
+**Symptom:** KiCad 5.0 writes the job as a `G04`-comment `*.gbj` file (`WhiteFox-job.gbj`, `antispark-job.gbj`). It is parsed as a layer and gives an error record. A KiCad 5.1 `.gbrjob` with a trailing comma fails `json.load` and is reported "job file not read; layers checked against the defaults".
+
+**Fix direction / budget:** read `.gbj` as a job file (the `G04 #@! TF` comment form); tolerate trailing commas before `json.load`. Output-changing on the few corpus dirs with such files.
+
+---
+
+- **Root cause / fix:** KiCad 5.0's G04-comment `-job.gbj` was parsed as a layer, and a 5.1 `.gbrjob` with a trailing comma failed `json.load`. Both job forms are now read.
+- **Fixed:** product v3.0.x-dev 18211d8d (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `analyze_gerbers.py:1753` reads `*.gbj` as a job; `:919-948` `_parse_gerber_job` reads `%TF`, `%TJ.B.*`, `%TJ.L.*`; `:960-967` retries JSON with a comma before `}`/`]` stripped; `.gbj` is left out of the layer list (`:1794`).
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-932: SPICE op-amp bench below the part's minimum supply still reports a gain; `(-)5V` on VEE reads as single supply
+
+
+**Severity:** LOW (SPICE note text / bench rails)
+**File:** `skills/spice/scripts/spice_results.py:261-269` (`below_min` only appends a note), `:291-294` (the simulated gain is still recorded); `skills/spice/scripts/spice_templates.py:747-830` (`_infer_opamp_rails`; `:818-821` falls back to single supply when VEE ≥ VCC), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9C/progress.md` Task 1; `L9C/task-1-review.md` :9, :16-17; `task-1-report.md` :24-34)
+
+**Symptom:**
+- an op-amp benched below its minimum supply (3.3 V on an 8 V-minimum part) gives status info, the note "supply 3.3 V below the part's minimum 8 V" and a -853 dB gain. That is a numeric artifact, not "did not simulate".
+- probe at `8c42799`: `+5V` on V+ with `(-)5V` on V- gives `(5.0, 0)`, a silent single-supply guess. With `/analog/VCC` on V+ it gives `(5, -5)`, the case the fix round pinned.
+- the third claim, literal `+-5V` on V+/V- going (5, -5) → (5, 0), is not reproduced at `8c42799`: the probe gives `(5, -5.0)`. The 9c fix wave (`8c42799`, "+-5V op-amp rails") fixed it.
+
+**Fix direction / budget:** below the minimum supply, report "did not simulate: supply below minimum" with no gain value; read `(-)<n>V` as -n. spice-offline lane only.
+
+---
+
+- **Root cause / fix:** A below-minimum bench's -853 dB artefact was reported as a gain, and `(-)5V` on V- read as a single supply; a dead output is now info with no gain, and a parenthesised sign makes the rail negative.
+- **Fixed:** product v3.0.x-dev 21f27d74 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: Dead-output half: `spice_results.py:304-306` (as KH-966). `(-)5V`: `spice_templates.py:882` strips the parenthesised sign in `_infer_negative_rail`; product test `test_parenthesised_sign_reads_a_negative_rail` gives `(5, -5)` with `rails_named` and no `vee_repaired`. The third claim (`+-5V`) was already fixed at 8c42799.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-940: a power-typed split plane whose island has an auto-generated net name fails both power predicates
+
+
+**Severity:** LOW (1 of 496 boards: +1 SU-001 error, score -12)
+**File:** `skills/emc/scripts/emc_rules.py:1591-1606` (`_reference_plane_layers`: only zones whose net passes `_is_power_or_ground` count as plane fill), `:94-108` (`_is_power_or_ground`), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9C/progress.md` Task 7 ruling)
+
+**Symptom:** T board 006 has a power-typed split plane whose 3V3 island is auto-named `Net-(3V3_2-Pad1)`. Probe: `_is_power_or_ground("Net-(3V3_2-Pad1)")` is False (the shared predicate is False too). The island's fill does not count, the layer falls short of the plane threshold, and the board gains an SU-001 error (score -12).
+
+**Fix direction / budget:** read the rail name inside `Net-(<name>-Pad<n>)` (the pad's own net label), or fall back to the KiCad layer type when a layer's fill is all on unnamed nets of power-typed pads. Declared band cost; small.
+
+---
+
+- **Root cause / fix:** A split-plane island auto-named `Net-(3V3_2-Pad1)` failed both power predicates, so its fill did not count and the layer fell below the plane threshold; island pours on a power- or mixed-typed layer now add to that layer's plane fill.
+- **Fixed:** product v3.0.x-dev 9ba0ba3a (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `emc_rules.py:1630-1656` `_reference_plane_layers`: on a layer typed power or mixed, pours on other named nets (an island KiCad named after a pad) add to the layer's rail fill; they stay out of the board area. A power-typed layer with no rail fill was already a plane by its type.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-941: IO-001's schematic-protection test uses only the shared name rules, so a TVS on a rail the shared rule misses suppresses IO-001
+
+
+**Severity:** LOW
+**File:** `skills/emc/scripts/emc_rules.py:979-981` (`conn_nets` drops `is_ground_name(n) or is_power_net_name(n)` only), against `:1020-1027` (the power-only test uses `_is_power_or_ground`), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9C/final-review-9c.md` M2)
+
+**Symptom:** a connector net named `PWR` or `5V PCIE` stays in `conn_nets` because the shared predicate misses it (KH-938). A TVS protecting that rail then counts as an I/O filter, and IO-001 is not reported for the connector's real signal lines. The same function's power-only test reads the composed EMC predicate, so the two halves disagree.
+
+**Fix direction / budget:** use `_is_power_or_ground` at `:980-981`. Small; measure IO-001 on the R / T samples.
+
+---
+
+- **Root cause / fix:** IO-001's schematic-protection test dropped only names the shared rail rule knew, so a TVS on a rail it missed (`PWR`, `5V PCIE`) counted as an I/O filter; it now uses the EMC's composed power/ground predicate.
+- **Fixed:** product v3.0.x-dev 4eef6daf (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `emc_rules.py:996-997` the schematic-protection connector nets drop `_is_power_or_ground(n)`, the same composed predicate the power-only test uses.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-961: RP-002 records `ran: true` when return-path coverage is absent and there are no plane gaps
+
+
+**Severity:** LOW (coverage metadata only; no finding changes)
+**File:** `skills/kicad/scripts/cross_analysis.py:821-841` (early `if not plane_gaps:` branch records ran True) vs `:842-845` (later `has_rpc_data` skip) at `2abc8496`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10b handoff (the early branch is pre-existing; Wave 10b added the `:842` skip, which leaves the two branches inconsistent)
+
+**Symptom:** When `return_path_continuity` is missing (zone fills unavailable) and the connectivity graph has no plane gaps, the early branch loops over an empty coverage list and records `RP-002 ran=True`. The same input with a plane gap records `ran=False` with reason "no return-path coverage in PCB analysis (zone fills unavailable)". Whether the check reports as run therefore depends on gap presence, not on whether there was data.
+
+**Fix direction / budget:** Test `has_rpc_data` before the `plane_gaps` branch. Lanes: standard and full-chain, in the cross-analysis coverage block only (`ran` true → false, plus `reason_skipped`), on PCBs with tracks but no zone fill data.
+
+---
+
+- **Root cause / fix:** RP-002 recorded `ran: true` when return-path coverage was absent and there were no plane gaps, because the no-gap branch ran before the coverage test. The test now comes first; CC-001 got the same no-data rule.
+- **Fixed:** product v3.0.x-dev 226ef718 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `cross_analysis.py:910-913`: the `has_rpc_data` skip now runs before the no-gap branch. Same commit: CC-001 records `ran: false` with "no PCB track segments present" when the PCB has no tracks (`:289`).
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-965: DFM ignores a market-inferred IPC Class 3 that `design_intent` reports; boolean `ipc_class` aliases Class 1
+
+
+**Severity:** LOW (no corpus board resolves to Class 1 or 3; it surfaces only with a config)
+**File:** `skills/kicad/scripts/pcb/pipeline.py:460-471` (`_dfm_design_intent` returns None when `source.ipc_class == 'auto'`), `skills/kicad/scripts/design_intent.py:93` and `:283-295` (`True in {1, 2, 3}`; market fallback to 3), `skills/kicad/scripts/pcb/dfm.py:859` at `2abc8496`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10b handoff (new in Wave 10b; before it, DFM always ran Class 2)
+
+**Symptom:** With config `{"design_intent": {"target_market": "medical"}}`, `resolve_design_intent` gives `ipc_class` 3 with source `auto`, but `_dfm_design_intent` returns None, so DFM judges against Class 2. Two blocks in one PCB output disagree. The boolean half is only partly confirmed. Through the CLI (`resolve_config`), `ipc_class: true` is caught by the `project_config` validator, which warns, deletes the key, and leaves Class 2. Only a caller that passes an unvalidated dict (`analyze_pcb(config=…)`, or `resolve_design_intent` directly) gets `ipc_class: True` with source `config`. DFM then accepts it as Class 1, because `True in (1, 2, 3)`.
+
+**Fix direction / budget:** Decide whether a market-inferred class drives DFM. If not, have `design_intent` mark it as advisory so the two blocks agree. Reject `bool` in `design_intent.py:93` and `dfm.py:859`. Standard lane: 0 on the corpus (no `.kicad-happy.json`). Covered by a fixture test.
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, claimed fixed by the handoff; partly fixed):**
+- **Fixed:** product v3.0.x-dev 16b1d73d fix(pcb): a boolean ipc_class is not IPC Class 1 (v3.0.2 Wave 11a Task 10, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the bool half landed: `design_intent.py:93` and `pcb/dfm.py:859` reject `bool`. The market half is only pinned by a test (`tools/tests/test_pcb_dfm.py:153` `test_market_class_does_not_drive_dfm`, which passes at the parent). There is no code change there.
+- **Left open:** the two blocks still disagree. Probe: `{"design_intent": {"target_market": "medical"}}` → `design_intent.ipc_class` 3 (source `auto`), while DFM reports class 2 / `default` (`pcb/pipeline.py:471` unchanged). The filed fallback, marking the inferred class as advisory, was not done. If the maintainer counts "source: auto" as that mark, this is FIXED by decision, but no change landed.
+
+---
+
+- **Root cause / fix:** An inferred medical or aerospace market set `design_intent.ipc_class` to 3 while DFM judged Class 2. The market now only suggests Class 3 in the signals, so the two blocks agree; the boolean half was fixed in Wave 11a.
+- **Fixed:** product v3.0.x-dev c23ee07e (bool half 16b1d73d, Wave 11a) (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `design_intent.py:284-297`: the market branch no longer sets `ipc_class`; it adds an "IPC Class 3 suggested by ... (not applied ...)" signal. DFM still uses only config / fab-note / title-block classes (`pcb/pipeline.py:494-504`), so both blocks report class 2. Bool rejection at `design_intent.py:93`, `pcb/dfm.py:814`.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-966: op-amp SPICE bench reads a dead output (vdb ≈ −853 dB) as a gain error on below-minimum-supply benches
+
+
+**Severity:** LOW (SP-WARN or info with a meaningless number and a misleading note)
+**File:** `skills/spice/scripts/spice_results.py:289-323` (`evaluate_opamp_circuit`: no check for `gain_linear` 0 before the gain compare) and `:349-358` (below-minimum demotion); `skills/spice/scripts/spice_templates.py:589-591` (`vdb` measures) at `2abc8496`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10b handoff (pre-existing; the evaluator is unchanged at `e60d03b5` apart from the `vee_repaired` note)
+
+**Symptom:** Partly confirmed. The stored corpus SPICE outputs, which predate Wave 10b, have 95 op-amp results in 28 units with `gain_error_dB` above 500: simulated `gain_dB` from −827 to −864, `gain_linear` 0.0, statuses 54 warn and 41 info. Example: amonbenson/expresso U7, NE5532 at 3.3 V supply, minimum 8 V. Every one of them is a below-minimum-supply bench with a behavioral model. The output node is dead, but the note says "may reflect testbench topology sensitivity or real GBW limitation". The 0.00 dB half does not hold. All 185 op-amp warn/fail results with `gain_error_dB` 0 carry a "supply N V below the part's minimum M V" note. The gain matches; the warn comes from the deliberate below-minimum demotion at `:349-358`.
+
+**Fix direction / budget:** When `gain_linear` is 0, or vdb is below about −300 dB, report "output not driven (bench supply below the part's minimum)" with status info and no `gain_error_dB`. Lane: spice-offline, op-amp SP-WARN/info text and `delta` on about 28 units.
+
+---
+
+- **Root cause / fix:** The op-amp evaluator compared a dead bench output (vdb near -853 dB) against the expected gain and called it a gain error; below -300 dB it now reports the output as not driven, with no gain comparison.
+- **Fixed:** product v3.0.x-dev 21f27d74 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `spice_results.py:236` `_DEAD_OUTPUT_DB = -300`; `:304-306` a gain below it gives status info, note 'Output not driven in the bench; no gain measured' and no `gain_error_dB` (the below-minimum supply note stays in `model_note`). A/B: 44 results / 14 units, 16 warn -> info.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-978: thermal package fallback misses `SOT23-5` / `SOT223` names without the hyphen
+
+
+**Severity:** LOW (those parts get the 150 °C/W default Rθ_JA; product survey ≈ 38 default assessments)
+**File:** `skills/kicad/scripts/analyze_thermal.py:77-79` (patterns `SOT-223`, `SOT-23`), `_classify_package` `:129`
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `Package_TO_SOT_SMD:SOT-23-5` → (`SOT-23`, 250); `SOT23-5` and `SOT223` → (`unknown`, 150).
+
+**Fix direction:** an optional hyphen in the package patterns (`SOT-?223`, `SOT-?23`), longest first as today.
+
+---
+
+- **Root cause / fix:** The thermal package patterns required the hyphen, so `SOT23-5` and `SOT223` got the 150 °C/W default; the hyphen is optional now, and a digit after the body size (IPC `SOT230P...`) does not match.
+- **Fixed:** product v3.0.x-dev 21817eb5 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `analyze_thermal.py:79` `SOT-?223(?!\d)` and `:81` `SOT-?23(?!\d)`. Probe: SOT23-5 -> 250, SOT223 -> 60, SOT23-3_Handsoldering -> 250, SOT-23-6 -> 250.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-979: EMC power-tree enrichment applies the first copper layer's thickness to every segment (the twin of KH-631)
+
+
+**Severity:** LOW (trace resistance / drop on inner or thicker-copper rails)
+**File:** `skills/emc/scripts/emc_formulas.py` `enrich_power_tree_with_pcb` `:1091-1101` (the stackup loop takes the first `copper` layer's `thickness` and `break`s)
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Fix direction:** look the thickness up per segment layer, as KH-631 asks for SPICE `--parasitics`; fix both together.
+
+---
+
+- **Root cause / fix:** The power-tree enrichment took the first copper layer's thickness for every segment; it now looks the thickness up by each segment's layer.
+- **Fixed:** product v3.0.x-dev 62ec5517 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `emc_formulas.py:1092-1106` builds a per-layer copper thickness map from the stackup; `:1124` per segment by `seg['layer']` (routing.py:852 writes it), `:1132-1136` the no-segment fallback sums per layer from `net_lengths[].layers`; unknown layers take the first copper layer's thickness.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-980: `analyze_thermal._get_datasheet_thermal` reads `<mpn>.json` without the cache's hash suffix and gates on `meta`, so it never finds an extraction the datasheets skill writes
+
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/analyze_thermal.py:154-179`
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff (new-KH candidates); verified by the harness at `5510006a` (code read + probe)
+
+**Symptom:** `_sanitize_mpn` has no `_<md5[:6]>` suffix (`:154-156`), the path is `<safe>.json` (`:170`) and the score gate reads `meta.extraction_score` (`:176-179`). The writer (`datasheet_extract_cache.py:153-162`) names files `<stem>_<md5[:6]>.json` and stores the score under `extraction_metadata`. Probe: `cache_extraction(d, 'LM1117-3.3', …)` writes `LM1117_3_3_0956f6.json`; `_get_datasheet_thermal` returns `{}` while `find_extraction` finds it. A v1.4 `<stem>.json` matches the name but carries its score in `extraction.quality_score`, so the gate rejects it too. Same class as KH-817 / KH-606, in a reader neither covered.
+
+**Fix direction:** use `find_extraction` and the shared v1.3/v1.4 score read. Output-changing only on projects with extraction caches.
+
+---
+
+- **Root cause / fix:** The thermal reader looked for `<mpn>.json` without the cache's hash suffix and read its score only from `meta`, so it never found what the datasheets skill writes; it now uses `find_extraction` and reads the score from either schema.
+- **Fixed:** product v3.0.x-dev 21817eb5 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `analyze_thermal.py:189` `find_extraction(extract_dir, mpn, v14_first=False)` (manifest + hashed file names); `:155-171` `_extraction_trusted` reads the v1.4 `extraction.quality_score` (>= 60) or the v1.3 `extraction_metadata` / `meta` `extraction_score` (>= 6) through `finite_score`. Product test `test_thermal_inputs.DatasheetThermalLookup` covers the hashed file.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-982: with `spice.trust_project_models`, a cached project model's trailing `.end` is pasted into the bench and ends the netlist early
+
+
+**Severity:** LOW (opt-in)
+**File:** `skills/spice/scripts/spice_model_cache.py:421-431` (`model_for_bench` `:229-236` runs only when not trusted); consumer `spice_templates.py:502-503`
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff (new-KH candidates); verified by the harness at `5510006a` (code read + probe)
+
+**Symptom:** Probe (cached `.subckt FOO … .ends FOO\n.end`, offline): trust off returns `…ends FOO\n`; trust on returns `…ends FOO\n.end\n`, which the template pastes into the bench as is.
+
+**Fix direction:** drop a trailing `.end` on both paths (the trust flag should skip the allowlist, not the `.end` strip).
+
+---
+
+- **Root cause / fix:** With trust_project_models on, the cached model skipped `model_for_bench`, so its trailing `.end` ended the bench netlist early; the trust flag now skips only the content check, and the `.end` is always dropped.
+- **Fixed:** product v3.0.x-dev d24ef412 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `spice_model_cache.py:429-431` the cached model always goes through `model_for_bench` (`:229-236`, trailing `.end` dropped); `trust_project_models` now skips only `model_text_problem` (`:422`). Product test `test_spice_model_trust` covers it.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-1015: MIC2305x bucks are dropped from regulator detection because their description "Load Switching" matches the load-switch exclusion
+
+
+**Severity:** LOW (4 corpus units; a lost regulator plus a false RS-001 warning)
+**File:** `skills/kicad/scripts/signal_detectors.py:1840` `_screen_regulator_candidate`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe + corpus read)
+
+**Symptom:**
+- **The match:** `Regulator_Switching:MIC23050-SYML` has the description "4MHz PWM Buck Regulator with HyperLight Load Switching Scheme, 3.3V Fixed Output Voltage". The exclusion `any(k in desc_lower for k in ("load switch", "power switch", ...))` matches "load switch" inside "load switching" and returns None.
+- **Result:** on `Apex-Ottawa-Team/hardware/Motherboard/Motherboard.kicad_sch`, U2 gives no PR-DET and RS-001 warns "+3V3 has no declared source". The SW pin goes to the inductor and SNS sits on +3V3.
+- **Probe:** with only that line patched (no match when "ing" follows), U2 becomes a `switching` regulator on +3V3 and the RS-001 goes.
+- **Corpus:** the same description sits on 3 embeddedalpha/IMU_V100 units (U1001), which carry the same RS-001s.
+
+**Fix direction:** match the exclusion phrases as whole words (not followed by "ing"), or test the switching-regulator evidence first. Output-changing: PR-DET added and RS-001 removed on those units.
+
+---
+
+- **Root cause / fix:** The load-switch exclusion matched 'load switch' inside a buck's 'HyperLight Load Switching' description and dropped the regulator; the phrases now match as whole words, so 'load switching' no longer excludes it.
+- **Fixed:** product v3.0.x-dev 0c385585 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `kicad_core/parts.py:20-25` `names_load_switch` matches 'load / power / power distribution switch(es)' as whole words; `signal_detectors.py:1841` uses it in `_screen_regulator_candidate`. Gate snap Apex-Ottawa-Team Motherboard: U2 gains PR-DET, the '+3V3 has no declared source' RS-001 is gone.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-1034: VM-001 flags a switching regulator's own switch network as a domain crossing when its open-collector switch pins are judged at the current-sense resistor's rail (MC34063)
+
+
+**Severity:** LOW (false error; one corpus unit seen, new with the open-collector-at-pull-up rule)
+**File:** `skills/kicad/scripts/validation_detectors.py:582-603` (open-collector pins judged at the pull-up rail), `:690-720` (pairing); `_is_regulator_like` `:528-539` does not know `MC34063`
+**Discovered:** 2026-11-07, harness, v3.0.2 Wave 11b-1 corpus gate (`results/v302_w11b1_gate`, standard lane)
+
+**Symptom:** ice458/VFD-Clock `PCB/controler/controler.kicad_sch`: U1 `MC34063AP` (rescue symbol `…-rescue:MC34063AP-Regulator_Switching`) has `SwC` and `DC` (open_collector) and `Ipk` (input) on `__unnamed_0` with the Ipk sense resistor R1 to +5V. The candidate adds VM-001 error "Net __unnamed_0: 5.0V / 1.0V domain crossing without level shifter" (only U1 on the net; the 1.0 V side is a domain guess for U1's own input). The baseline had no such finding. The same pins are a regulator's switch network, which the budget removes VM-001 from elsewhere.
+
+**Fix direction:** skip nets whose IC endpoints all belong to one part, and treat a part with a PR-DET regulator record (or `Regulator_Switching` symbol) as regulator-like.
+
+---
+
+- **Root cause / fix:** VM-001 counted IC pins on a net, so an MC34063's switch collectors tied to its own current-sense input read as two domains; the check now needs pins of at least two parts (ruling P5: no PR-DET regulator borrowing).
+- **Fixed:** product v3.0.x-dev d262d5a4 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `validation_detectors.py:694` and `:711` count distinct refs, not pins, so one part's own pins are never a crossing. Gate snap ice458/VFD-Clock controler: the '__unnamed_0: 5.0V / 1.0V' VM-001 is gone.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-1035: VM-001 does not exempt the EN of a load switch the keyword list does not name (Vishay SIP32510), so a power-good pull-up above the switch's VIN reads as a crossing
+
+
+**Severity:** LOW (false error; one corpus unit seen)
+**File:** `skills/kicad/scripts/validation_detectors.py:528-539` `_is_regulator_like` (`LOAD_SWITCH_KEYWORDS`), `:542-560` `_en_endpoint_compatible`
+**Discovered:** 2026-11-07, harness, v3.0.2 Wave 11b-1 corpus gate (`results/v302_w11b1_gate`, standard lane)
+
+**Symptom:** AbdulAjadi1/FPGA-Board `POWER_REGULATION2.kicad_sch`: TPS65400 U22 PGOOD on `PG_ALL`, pulled to +3V3, drives U9 `SIP32510DT-T1-GE3` EN (a load switch on +1V8). The candidate adds VM-001 error "Net PG_ALL: 3.3V / 1.8V domain crossing" because U9 is not regulator-like, so its EN is not exempt. It is exposed this wave because +3V3 now reads 3.278 V (it read a wrong 1.35 V before the multi-FB pick fix).
+
+**Fix direction:** recognise load switches by symbol / description words (load switch, power distribution switch) and the common families (SIP325, SIP32, AP2280, MIC20xx, TPS22), or exempt an EN-named input on any part that VM-001 cannot place in a domain.
+
+---
+
+- **Root cause / fix:** A load switch the keyword list did not name (SIP32510) was not regulator-like, so its EN read as a domain input; load switches are now known by family prefix and by 'load / power switch' text.
+- **Fixed:** product v3.0.x-dev d262d5a4 (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `validation_detectors.py:528` `_LOAD_SWITCH_FAMILIES` (sip32, tps205, ap2280, ap2261, ap2265, ap255, mic20, fpf) and `:543-544` `names_load_switch` on value/MPN/lib_id/description make the part regulator-like, so its EN is exempt. Gate snaps FPGA-BOARD and POWER_REGULATION2: the 'PG_ALL: 3.3V / 1.8V' VM-001 is gone.
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
+## 2026-11-08 — KH-1039: a symbol with a second `Value` property (a hidden empty copy from 2020–2021 Eagle imports) silently loses its value; no annotation says why
+
+
+**Severity:** MEDIUM (whole BOMs read empty on the affected boards; downstream AU-DET / CD-DET / XL-DET lose findings and cross XV-002 reports schematic/PCB value mismatches, with nothing telling the user the cause)
+**File:** `skills/kicad/scripts/schematic/reader.py:421-429` `mandatory_property` (last duplicate wins, KH-711), `:751-768` `_symbol_fields`; annotation checks `skills/kicad/scripts/schematic/audits.py` (`annotation_issues`)
+**Discovered:** 2026-11-07, harness, v3.0.2 Wave 11b-1 gate (G2 adjudication); ruled 2026-11-07 by the user: keep the KiCad 10 reading, add an annotation
+
+**Symptom:** Eagle-imported KiCad 6 files carry `(property "Value" "220" (id 1))` and a hidden `(property "Value" "" (id 4))` on the same symbol. Since KH-711 the last duplicate wins, as kicad-cli 10.0.8 reads it (`~`), so the part's value is empty. Gate census: 874 parts on 14 units went to an empty value (Arty100T sheets, BelaPlatform bela-hardware cape rev C1/C2/C3, CapableRobot capable_jetson_carrier `fpga.kicad_sch`). Corpus scan of the `.kicad_sch` sources: 65 files hold a symbol with two exact-name `Value` properties (299 symbols; on 146 the last copy is empty and the first is not), mostly format versions 20200506..20211123.
+
+**Fix direction:** when a symbol has more than one property matching a mandatory field name, keep the KiCad 10 value but record it: an `annotation_issues` entry (e.g. `duplicate_value_field`, ref + the discarded text) and, when the kept copy is empty and an earlier one is not, a note that KiCad 10 shows no value while KiCad 6 showed the earlier one.
+
+---
+
+- **Root cause / fix:** Since KH-711 the last duplicate Value wins, as KiCad 10 reads it, so Eagle-imported symbols with a hidden empty second Value read empty with no explanation; the property audit now reports each such symbol with the shown and the ignored texts.
+- **Fixed:** product v3.0.x-dev f16661fb (v3.0.2 Wave 11b-2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `6138b126`: `schematic/reader.py:1040-1044` keeps the earlier differing Value texts as `_dropped_values` when the shown value is the last copy's; `schematic/audits.py:1105-1120` adds one `duplicate_value_field` entry per reference to `property_issues` ('KiCad 10 reads the last and shows no value, ignoring ...'); popped at `presentation.py:57`. Gate candidate: 995 entries / 38 units (handoff ≈ 995 / 38).
+- **Gate:** v3.0.2 Wave 11b-2 whole-range gate `0f2deade..6138b126` vs `product_f53d107` (ledger `f53d107.json`), 2026-11-08: standard 149,633 units + full-chain 21,411, every moved unit claimed by the per-unit judge `regression/budgets/v302_wave11b2_judge.py` (0 residual); spice-offline, text oracle, `--schema`, distributor-offline and a gerber `--full` A/B as declared (records `results/v302_w11b2_gate{,_fc,_aux,_do}/`).
+
 ## 2026-11-07 — KH-435: DS-003 counts extraction JSON sidecars and symlinks as "datasheets"
 
 **Severity:** LOW (inflates datasheet coverage)
