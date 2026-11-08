@@ -246,17 +246,32 @@ def test_same_name_hierarchical_labels_always_union_never_qualify():
     # build_net_map trace and by two independent build_hierarchy_context
     # fixture attempts (real 2-and-3-file .kicad_sch hierarchies) that
     # both converged on the identical result -- see task-4-report.md.
+    wires = [{"x1": 0, "y1": 0, "x2": 10, "y2": 0, "_sheet": s} for s in (1, 2)]
+    labels = [_label("SHARED", 5, 0, sheet=s, ltype="hierarchical_label")
+              for s in (1, 2)]
+    comps = [_comp("U1", 0, 0, sheet=1), _comp("U2", 0, 0, sheet=2)]
+    nets = build_net_map(comps, wires, labels, [], [], [],
+                         sheet_names=["top", "sub", "sub2"])
+    assert set(nets) == {"SHARED"}, (
+        "two same-named hierarchical_labels on different sheets must "
+        "union into one net, not produce two qualified entries")
+    assert sorted(p["component"] for p in nets["SHARED"]["pins"]) == ["U1", "U2"]
+    assert not any("display_name" in v for v in nets.values())
+
+
+def test_root_sheet_hierarchical_label_stays_local():
+    # KH-671: a hierarchical label on the root sheet has no parent sheet pin, so it
+    # names a local net of the root (kicad-cli: /<root>/NAME) and does not join a
+    # same-name hierarchical label on another sheet.
     wires = [{"x1": 0, "y1": 0, "x2": 10, "y2": 0, "_sheet": s} for s in (0, 1)]
     labels = [_label("SHARED", 5, 0, sheet=s, ltype="hierarchical_label")
               for s in (0, 1)]
     comps = [_comp("U1", 0, 0, sheet=0), _comp("U2", 0, 0, sheet=1)]
     nets = build_net_map(comps, wires, labels, [], [], [],
                          sheet_names=["top", "sub"])
-    assert set(nets) == {"SHARED"}, (
-        "two same-named hierarchical_labels on different sheets must "
-        "union into one net, not produce two qualified entries")
-    assert sorted(p["component"] for p in nets["SHARED"]["pins"]) == ["U1", "U2"]
-    assert not any("display_name" in v for v in nets.values())
+    assert set(nets) == {"/top/SHARED", "SHARED"}, set(nets)
+    assert [p["component"] for p in nets["/top/SHARED"]["pins"]] == ["U1"]
+    assert [p["component"] for p in nets["SHARED"]["pins"]] == ["U2"]
 
 
 # ---------------------------------------------------------------------------

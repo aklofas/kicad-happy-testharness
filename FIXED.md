@@ -11,6 +11,888 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-07 — KH-435: DS-003 counts extraction JSON sidecars and symlinks as "datasheets"
+
+**Severity:** LOW (inflates datasheet coverage)
+**File:** `skills/kicad/scripts/analyze_schematic.py` (`audit_datasheet_coverage`, DS-003 file census)
+**Discovered:** 2026-10-05, SacMap rev2 run-8 fresh-agent soak on 9fbbb26 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/8/REVIEW-2026-10-05.md`, Appendix B); filed by the harness 2026-10-06
+
+**Symptom:** a `datasheets/` dir with `<MPN>.json` extraction sidecars and symlinked PDFs is counted as more datasheets than PDFs present.
+
+**Fix direction:** count regular `.pdf` files only (resolve symlinks, dedupe by target), exclude `extracted/` and `*.json`.
+
+**Gate budget (when fixed):** DS-003 counts shrink on repos that ship extraction sidecars/symlinks (corpus: ≈0).
+
+---
+
+- **Root cause / fix:** DS-003 counted `.json` files and symlinked copies as datasheets; it counts each regular PDF once and skips `extracted/`.
+- **Fixed:** product v3.0.x-dev 46ddda4f (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/audits.py:304-316`: counts regular PDFs, resolved-path dedupe, skips `extracted/`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-461: `design_analysis.cross_domain_signals[].needs_level_shifter` stays `true` for a regulator EN pin after KH-424 removed the VM-001 finding — the data block contradicts the findings list
+
+**Severity:** LOW (no finding emitted; a JSON consumer reading `design_analysis` reaches the opposite conclusion from `findings`)
+**File:** `skills/kicad/scripts/analyze_schematic.py:4101` (`"needs_level_shifter": needs_shifter` in the cross-domain pass) vs `validation_detectors.validate_voltage_levels` (VM-001, regulator-EN heuristic since KH-424 @ `fea561e`)
+**Discovered:** 2026-10-22, SacMap rev2 soak run 9 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/9/`, product `main` @ `4701c26` = v2.3.2 pre-tag; report `REVIEW-2026-10-22.md`, meta `REVIEW-2026-10-22-meta.md`), report §18.7 / meta §2 #8
+
+**Repro:** SacMap `EN_5V` (3.3 V GPIO → TPS61023 EN, rated 7 V): VM-001 no longer fires (correct), `cross_domain_signals` still lists `EN_5V` with `needs_level_shifter: true` and no reason.
+
+**Fix direction:** apply the same regulator-EN exemption in the cross-domain pass (or emit `needs_level_shifter: false` with `reason: "regulator_en_tolerant"`), so the data block and VM-001 agree. Gate budget: `design_analysis.cross_domain_signals` value flips on every board where VM-001 was suppressed by KH-424 (10,372 VM-001 provenance flips at the soak gate bound it).
+
+---
+
+- **Root cause / fix:** The cross-domain pass treated a regulator enable as a plain logic input while VM-001 exempted it; enables VM-001 accepts, load switches included, are dropped from the pairing. Residue: a regulator PG pulled up above its receiver is still exempt there (`net_analysis.py:578-581`) while VM-001 now fires on it, filed separately.
+- **Fixed:** product v3.0.x-dev bf3d449f, 3cf931c4, 6b647ca2 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/net_analysis.py:564-582`, `:665-666`; load switches via `_is_regulator_like` (`validation_detectors.py:528-539`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-467: three LED forward-voltage tables disagree per colour — `audit_led_circuits` and `validate_led_resistors` assume different Vf for the same LED
+
+**Severity:** LOW (both detectors are heuristic when no datasheet extraction is present; the disagreement means the two rules can reach different current estimates for one LED, and none of the three tables cites a source)
+**File:** `skills/kicad/scripts/domain_detectors.py:4815` (`_LED_VF`, nominal, read by `_estimate_led_vf` :4829 for `audit_led_circuits` :4848), `:4823` (`_LED_VF_FLOOR`, read at :5060); `skills/kicad/scripts/validation_detectors.py:1090` (`_LED_VF_BY_COLOR`, read by `_guess_led_color` :1099 and `validate_led_resistors` :1201)
+**Discovered:** 2026-10-23, Checklist 11 (constants registry CONST-604 / CONST-605 / CONST-800, all unverified, critical-risk) at product `0490c49`
+
+**Symptom:** the same colour maps to different forward voltages depending on which
+rule evaluates the LED — nominal `_LED_VF` vs `_LED_VF_BY_COLOR`: red 2.0 vs 1.8,
+yellow 2.0 vs 2.1, green 3.2 vs 2.2 (the floor table says 2.1), uv 3.5 vs 3.3;
+`_LED_VF_BY_COLOR` carries `ir` (1.2) and the other two do not. Green is the
+substantive one: 2.2 V is a GaP/AlGaInP green, 3.2 V an InGaN green, and the two
+rules silently pick opposite technologies. Orange/amber agree.
+
+**Measured 2026-10-23 (Checklist 11b, sources on CONST-604/605/800):** per-colour
+typicals from the local LED datasheets (Würth 150060/150080 series, Kingbright APT2012,
+Lite-On LTST-C170/C190/C191/C193, Vishay VLMO1300/VLMTG1500, Broadcom HSMW-C170, Cree
+CLV1A-FKB, SunLED XZM2, OSRAM LY P47F) plus the Wikipedia LED material table:
+red 1.95–2.1 (min 1.5–1.8), orange 2.0 (min 1.8), yellow 2.0–2.35 (min 1.95), amber 2.0,
+blue 3.2–3.3 (min 2.5–2.8), white ~3.2 (min 2.7–2.9), UV 3.5–3.7 (min 3.1), IR 1.2–1.35.
+**Green is genuinely bimodal:** GaP/AlInGaP green 2.0–2.2 V (LTST-C170GKT 2.1, VLMTG1500
+2.0) vs InGaN green 3.2–3.3 V (150060GS 3.2, APT2012ZGCK 3.3, XZM2DG53W 3.2); the colour
+word cannot pick one. So: `_LED_VF` 7/8 verified (green open); `_LED_VF_BY_COLOR` 6/9
+(red 1.8 is the datasheet minimum, not the typical; green 2.2 is the other technology; UV
+3.3 is below every sampled typical). **Floor rider:** `_LED_VF_FLOOR` red 1.85 / orange
+2.0 / amber 2.0 / blue 3.0 / white 3.0 all sit ABOVE the sampled datasheet minimums, so
+LA-004 can declare an LED dead on a rail it would light from (blue on 2.8 V); yellow /
+green / UV floors verified. Corpus: 11,472 LEDs carry a colour hint (red 3,940, green
+3,215, blue 1,311, ir 957, yellow 926, white 717, orange 223, amber 151, uv 32); 63,734
+carry none and take the 2.0 V default in both detectors; LA-004 fired 5 times, all green.
+For the unified table: nominal + minimum per colour as above, and for a bare "green" hint
+either a 2.1/3.2 pair with the lower bound for LA-004 and the current estimate reported
+as a range, or a technology keyword pass (`gap`, `ingan`, `pure green`, `true green`)
+before falling back.
+
+**Fix direction:** one shared table in `kicad_core` (the round-7 shared-tables
+pattern) with a cited source per colour (manufacturer typical-Vf ranges, e.g.
+Vishay / Kingbright / Würth colour tables), nominal + floor as two fields of one
+entry; both detectors read it. Harness: register the table once and verify it under
+Checklist 11b; the three current constants retire.
+
+---
+
+- **Root cause / fix:** Three LED forward-voltage tables disagreed by colour; one sourced table of nominal and floor voltages now serves LR-001, LA-AUD and LA-004.
+- **Fixed:** product v3.0.x-dev 913404fe (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/parts.py:522-543` one `LED_VF_BY_COLOR` (nominal, floor) table read by every LED check.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-468: `_ADC_RESOLUTION_MAP` — 15 of 29 part-number prefixes are wrong, span several resolutions, or name parts that do not exist
+
+**Severity:** LOW (`detect_adc_circuits` reports `resolution_bits` from this table when no datasheet extraction is present; a wrong value mis-states the ADC in the report and feeds any LSB / noise-floor arithmetic downstream; no other detector reads it)
+**File:** `skills/kicad/scripts/domain_detectors.py:3068` (`_ADC_RESOLUTION_MAP`, read by `_infer_adc_resolution` :3082 — first substring match of `value + lib_id`, so a prefix stands for the whole family it names)
+**Discovered:** 2026-10-23, Checklist 11b (constants registry CONST-553, critical-risk) at product `0490c49`; every entry checked against the manufacturer datasheet or product page (local `datasheets/` PDFs where held)
+
+**Symptom:** 14 prefixes hold for their whole family and are now verified in the registry
+(`ads111` 16, `ads101` 12, `ads131` 24, `ads868` 16, `mcp320` 12, `mcp346` 16, `mcp356` 24,
+`max1161` 12, `max1198` 8, `adc081` 8, `adc082` 8, `adc121` 12, `adc122` 12, `nau780` 24).
+The other 15 fall into three classes:
+
+- **Wrong value** — `mcp330` 10 (MCP3301/02/04 are 13-bit; the 10-bit parts are MCP300x,
+  which no prefix covers), `mcp355` 24 (MCP3550/51/53 are 22-bit), `max1192` 10 (MAX1192
+  is a dual 8-bit), `ad770` 14 (AD7705..AD7709 are 16-bit, ADI AN-607).
+- **One prefix, several resolutions** — `ads126` 24 (ADS1260/61 24-bit, ADS1262/63
+  32-bit), `mcp342` 18 (MCP3421..24 18-bit, MCP3425..28 16-bit), `ltc24` 24 (LTC2440/2485
+  24-bit, LTC2450..2483 16-bit), `ltc23` 16 (LTC2308/09 12, LTC2314/2320 14, LTC2310 16,
+  LTC2372 18, LTC2376/78 20), `ad760` 16 (AD7605/06 16, AD7607 14, AD7608/09 18), `ad799` 8
+  (AD7991 12, AD7995 10, AD7999 8), `max1163` 12 (MAX11632..37 12-bit, MAX11638/39 8-bit).
+- **No such part at the manufacturer** — `ads861` (no ADS861x on ti.com; the 16-bit
+  ADS8860/8861 do not contain this substring), `mcp340`, `max1194`, `max1141`.
+
+Corpus exposure (42,307 schematic outputs): `ltc23` matches 8 repos and is wrong for 6
+of them (LTC2372-18, LTC2376-20 ×2, LTC2378-20, LTC2310-16, LTC2309); `ads126` 3 repos,
+all ADS1262 (32-bit reported as 24); `mcp355` 2 repos (MCP3550, 22 reported as 24); `mcp342`
+13 repos, MCP3426/3428 (16-bit) in 4; `ltc24` 4 repos, LTC2451 (16-bit) in 1; `ad799` 1 repo
+(AD7991, 12 reported as 8). The four nonexistent prefixes match nothing. A rider: the
+substring match also fires on passives whose `lib_id` embeds the board name
+(`ADS1262…:C` capacitors) — harmless today because only ADC candidates reach the lookup.
+
+**Fix direction:** key the table on full part-number stems long enough to be
+resolution-unique (`ads1262`, `ads1261`, `mcp3421`..`mcp3428`, `ltc2440`, `ltc2309`,
+`ltc2372`, `ad7606`, `ad7607`, `ad7991`, …), correct the four wrong values, drop the four
+dead prefixes, and cite the datasheet per row (shared-table pattern, like KH-467). Where a
+family genuinely splits (LTC23xx), return `None` rather than a guess. Harness: re-register
+and verify under Checklist 11b after the fix; the corpus units above change
+`resolution_bits` and are the gate budget.
+
+---
+
+- **Root cause / fix:** The ADC resolution map used short prefixes that were wrong, ambiguous or named nonexistent parts; it is keyed on resolution-unique stems matched longest first. Two stems still overreach (`max1161` gives 12 bits to the 10-bit MAX11610/11, `ad7606` gives 16 to AD7606C-18), filed separately.
+- **Fixed:** product v3.0.x-dev cf604bfb (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `domain_detectors.py:3054-3076`: every correction and drop from the issue present; LTC23xx `-NN` suffix read as bits.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-473: RS-001 says "carries power_in pins" at deterministic confidence on a name-admitted rail whose only `power_in` pins are bootstrap pins
+
+**Severity:** LOW (wording / confidence only; KH-454 removed the finding on NON-name-admitted bootstrap nets, so what remains is a rail like `+5V_USB_BOOT` or `19V_BST` that is admitted by its name but whose `power_in` pins are all BST/BOOT)
+**File:** `skills/kicad/scripts/signal_detectors.py:4412` (`rs_load = "carries power_in pins"` chosen whenever the net has any `power_in` pin, bootstrap pins included; the name-only wording `is named like a power rail (no power_in pin on it)` + heuristic confidence is the honest one here)
+**Discovered:** 2026-10-24, v3 round-8 handoff §11; corpus: 4 such RS-001 findings on 4 units (`realizator/stereopi-kicad-schematic` `+5V_USB_BOOT` ×2, `Wet-Lettuce-Robocup/robot_pcb` `19V_BST` ×2 — the pre-scan's 33 all-bootstrap findings minus the 29 KH-454 removals)
+
+**Fix direction:** compute the load wording from the non-bootstrap `power_in` pins (the same filter `_power_rail` now applies), so a name-admitted rail with only bootstrap loads reads as name-only / heuristic. Gate budget: those 4 findings flip confidence + description (the v2.3.2 class-A shape).
+
+---
+
+- **Root cause / fix:** RS-001 said "carries power_in pins" even when the only power_in pins were bootstrap pins; bootstrap pins on real parts no longer count, so such rails get the name-based heuristic wording.
+- **Fixed:** product v3.0.x-dev 6e7f4ea8 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `signal_detectors.py:4781-4790`: bootstrap-only rails get the heuristic wording; a bootstrap pin must sit on a real part (not `#PWR`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-476: `_KNOWN_FREQS` keys name one member of a multi-part datasheet, so the siblings fall to the 500 kHz topology default
+
+**Severity:** LOW (`detect_power_regulators` reports `switching_frequency_hz` / `freq_source: topology_default` for the sibling parts; EMC rules and `cross_analysis` then size harmonic reach from 500 kHz instead of the datasheet 2.25 MHz / 1.5 MHz; no reference assertion involved)
+**File:** `skills/kicad/scripts/kicad_core/parts.py:208` (`_KNOWN_FREQS`, read by `lookup_switching_freq` :327 — longest `startswith` prefix, so a key only covers the part numbers that begin with it)
+**Discovered:** 2026-10-24, Checklist 11b (constants registry CONST-835, the three unverified entries) at product `a0df172`; the two TI entries were checked against the local datasheets
+
+**Symptom:** the values are right but the keys are too narrow for their own datasheets:
+
+- `'TPS62160': 2.25e6` — TI SLVSAM2E covers TPS62160/62161/62162/62163 at one nominal 2.25 MHz; corpus designs carry TPS62162 and TPS62163 (11 regulator findings) and every one is reported at 500 kHz `topology_default`.
+- `'TPS63000': 1.5e6` — TI SLVS520C covers TPS63000/63001/63002 with one oscillator row (1250 min / 1500 max kHz); TPS63001/63002 (20 regulator findings) default to 500 kHz. The product's own `_REGULATOR_VREF` (parts.py:31) keys the same family as `'TPS6300'`, so the two tables disagree on who is in the family.
+
+Together 31 findings whose part values appear on 37 units / 20 repos. A corpus scan of every `topology_default` switching regulator whose value begins with a table key minus its last one or two characters lists 259 findings on 222 units across 30 keys (TPS61023/TPS61235/TPS54202/TPS54331/TPS61391/TPS61170/TPS61090 lead); those are candidates only — most are different families with different frequencies (TPS6104x, TPS6120x, TPS54335) and need their own datasheet before any key is widened. The two above are the ones the datasheets settle.
+
+**Expected:** key the table by the datasheet family where the family shares one frequency (`'TPS6216'`, `'TPS6300'`), as KH-237 did for the sub-family splits, and keep `_REGULATOR_VREF` and `_KNOWN_FREQS` on the same family keys. The 4-digit-suffix siblings (`TPS62160-Q1`, `TPS63001DRCR`) then resolve by the same prefix.
+
+**Harness:** CONST-835 entries TPS62160 / TPS63000 verified with these notes; near-miss scan not kept (one-shot).
+
+---
+
+- **Root cause / fix:** The switching-frequency keys named single family members, so TPS62161-63 and TPS63001/02 fell to the 500 kHz default; the keys are now the family prefixes.
+- **Fixed:** product v3.0.x-dev cf604bfb (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/parts.py:347` `TPS6216` 2.25 MHz, `:404` `TPS6300` 1.5 MHz; longest-prefix lookup `:453-455`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-482: truncated or non-KiCad input parses as a partial tree or one bare atom — exit 0, `diagnostics: []`
+
+**Severity:** LOW (malformed input; the empty / whitespace-only case is now a usage error since `c6f4807`)
+**File:** `skills/kicad/scripts/kicad_core/sexp.py:91-96` (raises only when `pos >= len(tokens)` at entry; the list loop `while pos < len(tokens) and tokens[pos] != ")"` exits silently at EOF); `kicad_core/project.py:376-385` rejects whitespace-only files only
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 item 3 (review A-I4); reproduced at `07b7fb1` — a fixture cut at 3,000 of 4,220 bytes and a plain-text file both exit 0 with `diagnostics: []` (the text file gives `components: 0`, `kicad_version: "unknown"`); `analyze_pcb` likewise exits 0 with 0 footprints
+
+**Fix direction:** record one `diagnostics` entry when the parser reaches EOF inside an open list (truncation) or when the root atom is not `kicad_sch` / `kicad_pcb` (garbage). The maintainer removed a root-token REJECTION under ruling R14 because dozens of gate units with non-standard roots would have become rc 2 — so this must be a diagnostic, not an exit code. Budget: `envelope/diagnostics` on those non-standard-root units (size: count corpus units whose root atom is not the canonical one before choosing the wording).
+
+#### Addendum to KH-482 (truncated / non-KiCad input)
+**Added:** 2026-10-25, external audit round 1 (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` part a, Empirical: "R1: deep nesting refusal")
+`kicad_core/sexp.py` `parse` is recursive. Nesting depth 990 parses, and depth 1100 raises `RecursionError` with a traceback and no diagnostic. Only adversarial input reaches it. Fold it into the same diagnostic: an iterative parser, or catch and record.
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, partly fixed):**
+- **Fixed:** product v3.0.x-dev d0a5de36 test: S-expression parser properties over truncated and mutated KiCad files (v3.0.2 Wave 11a Task 2, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: tests only (`tools/tests/test_sexp_properties.py`). `kicad_core/sexp.py` is unchanged in this behaviour (its only touch is b3bbcfbe, `unescape_quoted`). Probe: `parse('(kicad_sch (a 1) (b')` still returns a partial tree silently, and depth 1100 still raises RecursionError.
+- **Left open:** the diagnostic for truncated or non-KiCad input and the deep-nesting case are planned for 11b (expected PARTIAL).
+
+---
+
+- **Root cause / fix:** The S-expression parser stopped silently at a truncated end of file and recursed without a limit; it is now iterative, reports truncation and nesting deeper than 200, and the pipelines record a diagnostic for a truncated file or a non-KiCad root (exit code unchanged).
+- **Fixed:** product v3.0.x-dev 3dc0c69f (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/sexp.py:104` `parse_checked`, truncation `:243`, `_MAX_NESTING = 200` `:223`; `project.py:571` root-type check; wired into the schematic root, sub-sheets and the board.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-529: `power_sequencing` PG→EN edges exist only when the consumer regulator precedes the producer in `power_regulators` [group 8]
+
+**Severity:** MEDIUM (multi-regulator designs with PG→EN chains; order-dependent)
+**File:** `schematic/system_analyses.py:1644-1647` (`analyze_power_sequencing`: the PG scan runs inside the per-regulator loop over the `dependencies` appended so far; no post-loop join)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R4-F7)
+
+**Symptom:** regulator A's PG drives regulator B's EN; when B is listed before A the edge is recorded, when after it is lost. No ordering contract exists.
+
+**Fix direction / budget:** two passes, build all dependencies, then join PG→EN. Budget: small; `power_sequencing` edges / `sequence_order` on multi-regulator units. The meaning of `sequence_order` (startup dependency vs PG→EN depth) is an open ruling but does not block this fix.
+
+**Note 2026-10-25 (product 3.0.x Wave 2):** not part of Wave 2; REPORT-4 A4-F7 (PG -> EN sequencing) stays with the system-analyses group.
+
+---
+
+- **Root cause / fix:** The PG -> EN link was searched inside the per-regulator loop over the dependencies built so far; it now runs after all are built, so the edge no longer depends on list order.
+- **Fixed:** product v3.0.x-dev b53ceffe (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/system_analyses.py:1772-1779`: the PG -> EN join runs after all regulator dependencies are built.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-530: capacitor voltage-derating stress uses pin 1's power net and skips negative rails — rail-to-rail and negative-rail caps are mis-assessed [group 8]
+
+**Severity:** MEDIUM (small population; VD-001 / VD-004)
+**File:** `schematic/system_analyses.py:749-755` (selection), `:807-818` in `analyze_voltage_derating` (`_find_power_net` takes the pin-1 power net, ignores the other terminal unless ground; `v_rail <= 0` skips negative outputs, which `signal_detectors.py:1961` produces by negating inverting Vout)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R4-F6)
+
+**Symptom:** a cap between +12V and +5V is derated against 12 V (stress is |V1 − V2| = 7 V); a cap on −12V is skipped. Negative rails named `-12V` also depend on the sign fix (KH-519).
+
+**Fix direction / budget:** stress = |V(pin1) − V(pin2)| with ground = 0 and signed rails. Budget: VD-001 / VD-004 movement on rail-to-rail and negative-rail caps; land after KH-519.
+
+---
+
+- **Root cause / fix:** Derating stress used pin 1's rail even when the other pin sat on another rail; a cap between two known rails is now stressed at |V1 - V2|.
+- **Fixed:** product v3.0.x-dev db97046c (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/system_analyses.py:835-844`: a cap between two rails is stressed at the magnitude of their difference.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-533: FS-001 "requires external compensation" lists internally compensated parts (LM2596/LM2576, LM317/337/350, TPS5430/5450, MC3406x) and prescribes a harmful 10 nF FB→GND cap [group 9]
+
+**Severity:** HIGH (every LM2596-ADJ / LM317 board with an empty FB net; the suggested fix can hurt the loop)
+**File:** `validation_detectors.py:1325-1332` (`_REQUIRES_COMPENSATION_KEYWORDS`), `:1406-1429` (`validate_feedback_stability`, warning + `fix_params`); `:1380` ("divider impedance too low" info)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F7)
+
+**Symptom:** LM2596/LM2576 (Simple Switcher) and TPS5430/5450 are internally compensated; LM317/337/350 and LT108x ADJ bypass caps are optional ripple-rejection parts; MC3406x has no compensation pin. Only UC384x/UC282x COMP and TPS40xxx controllers need an external network. The fix prescribes 10 nF FB→GND, which adds a pole on a FB node. The low-impedance info also fires on the LM317 datasheet-standard 240 Ω / 720 Ω divider (180 Ω parallel, needed for the minimum load current).
+
+**Fix direction / budget:** reduce the keyword list to parts that really need external compensation (UC384x / UC282x / TPS40xxx), drop the FB→GND prescription, exempt LM317-class dividers from the low-impedance info. Budget: FS-001 disappearances on LM2596 / LM317 / TPS54xx units (size first) plus the info disappearances.
+
+---
+
+- **Root cause / fix:** The external-compensation list named internally compensated parts and prescribed a 10 nF cap; only parts with a compensation pin remain, the prescription is gone, and an LM2596/LM2576 divider inside its data sheet's R1 range is not too low.
+- **Fixed:** product v3.0.x-dev 9012493b (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `validation_detectors.py:1440-1443` list reduced to 4; the 10 nF `fix_params` removed; R1-range exemption `:1465`, `:1504-1506` (LM2596 240 ohm-1.5 kohm, LM2576 1-5 kohm, checked against 4 local data sheets each).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-541: current-sense detection drops shunts whose two terminals are both power-classified; the second pass misses INA219-class pin names [group 10]
+
+**Severity:** MEDIUM (missed CS-DET detection; no false finding)
+**File:** `signal_detectors.py:1301-1304` (`detect_current_sense`, power guard); second pass `:1441-1473` (`_integrated_csa_pins` lacks IN+ / IN− / VIN+)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R5-F5)
+
+**Symptom:** a high-side shunt between `VBAT` and `VBAT_LOAD` (both power names) feeding an INA219 is not detected; one info CS-DET observation is lost.
+
+**Fix direction / budget:** allow a power-to-power shunt when a sense amplifier sits across it, and add the INA-family pin names. Budget: CS-DET appearances on such boards; size first.
+
+---
+
+- **Root cause / fix:** The current-sense detector dropped shunts between two named rails and did not know INA-style input pin names; a rail-to-rail shunt with a known sense IC across it is found, and IN+/IN-, VIN+/VIN-, RS+/RS- pins count.
+- **Fixed:** product v3.0.x-dev b03b6610 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `signal_detectors.py:1405-1409`, `:1309`, `:1332-1343`, `:1575-1581`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-551: legacy result path concatenates finding lists without the object-id dedupe — duplicate `finding_id`s on 59 legacy outputs [group 13]
+
+**Severity:** MEDIUM (legacy `.sch` only)
+**File:** `schematic/presentation.py:445` (`assemble_legacy_result`: plain `extend`); the modern path dedupes by object id at `:185-190`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R3-F8)
+
+**Symptom:** 59 of 10,843 legacy results serialise duplicate `finding_id`s, all `schematic:feedback_networks-*` (e.g. ubertooth-one). They pass through `finding_schema.assign_finding_ids` unchanged (kc-b R13).
+
+**Fix direction / budget:** apply the modern path's object-id dedupe. Budget: duplicate findings disappear on the 59 legacy units.
+
+**Addendum 2026-11-06 (v3.0.2 survey):** magnitude is 549 duplicate `finding_id`s on 376 units, not 59 outputs.
+
+---
+
+- **Root cause / fix:** The legacy assembler joined the signal lists without the modern path's dedupe, so a divider listed in both `voltage_dividers` and `feedback_networks` appeared twice; both assemblers now share one flatten helper.
+- **Fixed:** product v3.0.x-dev 8697038a (5e144720 reverted by b7da5c6f) (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/presentation.py:59` shared `_flatten_signal_findings`, called at `:226` and `:448`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-557: `classify_inductor_shielding` matches `SHIELDED` inside `SEMI_SHIELDED` / `NON_SHIELDED` / `NONSHIELDED` → `shielded` [group 15]
+
+**Severity:** MEDIUM (missed heuristic ML-001 EMC finding)
+**File:** `kicad_core/passives.py:255-256` (`classify_inductor_shielding`); consumer `skills/emc/scripts/emc_rules.py:4378-4379` (ML-001 skips shielded)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R1-F6)
+
+**Symptom:** a footprint / value / MPN containing `NON_SHIELDED` classifies as shielded, the opposite of its meaning; ML-001 skips it. Input is footprint lib + value + MPN, not description (where most corpus "Semi-Shielded" hits, about 50, sit), so reach is small.
+
+**Fix direction / budget:** check `NON` / `SEMI` / `UN` prefixes before `SHIELDED`. Budget: small; ML-001 appearances on those inductors.
+
+---
+
+- **Root cause / fix:** `classify_inductor_shielding` matched `SHIELDED` inside the semi/non-shielded words; those words are now tested first.
+- **Fixed:** product v3.0.x-dev 4306cecd (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/classify.py` shielding words; one edge remains: `NON SHIELDED` written with a space still reads shielded.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-558: `classify_connector` reports every generic single-row connector (`Conn_01x04`) as `dual` [group 15]
+
+**Severity:** MEDIUM (emitted metadata on nearly every board; no consumer)
+**File:** `kicad_core/classify.py:507-509` (`classify_connector`: `conn_\d+x\d+` matches before the single-row branch); written at `schematic/reader.py:447-449`, `kicad_core/model.py:91`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R1-F8)
+
+**Symptom:** `classify_connector('Connector_Generic:Conn_01x04','Conn_01x04',4)` → (False, 'dual').
+
+**Fix direction / budget:** test `conn_01x` before the generic pattern. Budget: large field-only class, `components[].connector_layout` on most boards, no finding movement.
+
+---
+
+- **Root cause / fix:** The dual-row pattern was tested first and also matched `Conn_01xNN`; single-row is now tested first, and the symbol name outranks the value.
+- **Fixed:** product v3.0.x-dev 4306cecd (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/classify.py:557` single-row tested first; `:593` symbol name before value.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-559: root-schematic discovery checks only the root file's raw text — grandchild sheets are not found and `adc.kicad_sch` matches inside `my_adc.kicad_sch` [group 15]
+
+**Severity:** MEDIUM (leaf invocations only; degraded and announced)
+**File:** `kicad_core/project.py:183-209` (`is_referenced_as_child` / `_root_references_target`: substring membership of rel path or basename, child Sheetfile references never followed), `:264-286` (`discover_root_schematic` tier 3)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R1-F7)
+
+**Symptom:** invoking the analyzer on a grandchild sheet in a nested directory finds no root, so the leaf is analysed alone (with a warning pointing to `--project-root`, `schematic/pipeline.py:1264-1270`). A sheet named `adc.kicad_sch` is wrongly found as referenced by a root that contains `my_adc.kicad_sch`.
+
+**Fix direction / budget:** parse `Sheetfile` properties and walk the hierarchy; compare whole path components. Budget: ≈0 (the corpus runs roots); leaf invocations only.
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, partly fixed):**
+- **Fixed:** product v3.0.x-dev 4a63e3e2 fix(schematic): root discovery follows whole sheet-file paths through intermediate sheets (v3.0.2 Wave 11a Task 31, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `_root_references_target` walks the hierarchy over whole-path `Sheetfile` refs (`skills/kicad/scripts/kicad_core/project.py:351-390`). Tier 2 of `discover_root_schematic` also compares whole paths (`:452`). Probes:
+  - a grandchild `a/b/leaf.kicad_sch` finds `root.kicad_sch`;
+  - `adc.kicad_sch` is no longer matched by a root naming `my_adc.kicad_sch` (returns None).
+- **Left open:** `is_referenced_as_child` (`project.py:314-342`, used by `detect_sub_sheet`) still tests `basename in content`. Probe: `is_referenced_as_child('x/adc.kicad_sch')` gives True when the sibling names only `my_adc.kicad_sch`. This is the sub-sheet half, planned for 11b (expected PARTIAL).
+
+---
+
+- **Root cause / fix:** Sub-sheet detection tested whether a sibling file's text contained the basename; it now compares whole resolved Sheetfile paths, so `adc` no longer matches `my_adc`.
+- **Fixed:** product v3.0.x-dev 07ce40df (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/project.py:300-336` `is_referenced_as_child` compares whole Sheetfile paths with text variables expanded; the `basename in content` test is gone (the root-discovery half shipped in Wave 11a, `4a63e3e2`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-561: LC-filter capacitor derating never runs — `apply_capacitor_derating` reads `filt["rail"]`, LC records carry `shared_net` [group 15]
+
+**Severity:** LOW (missing derating results on LC filters)
+**File:** `schematic/pipeline.py:647` (`apply_capacitor_derating` → `_derate_cap`, `filt.get("rail")`); producer `signal_detectors.py:692-830` (`detect_lc_filters`, no `rail` key)
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R3-LT1)
+
+**Symptom:** LC filter capacitors get no derating fields, whatever their voltage.
+
+**Fix direction / budget:** read the LC record's rail-side net. Budget: additive derating fields (and any derating warnings) on LC-filter units; size first.
+
+---
+
+- **Root cause / fix:** LC-filter derating read a `rail` key that LC records never carry; it reads the filter's shared node and derates each member cap when that node is a regulator output of known voltage.
+- **Fixed:** product v3.0.x-dev db97046c, b775aade (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/pipeline.py:728-742`: derates on `shared_net`, per member capacitor.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-647: DNS rebinding between the download URL check and the connect
+
+**Severity:** MEDIUM
+**File:** `skills/datasheets/distributor_core/download.py:100` (`_resolve`), `:112` (`_address_problem`), `:350` (`download_pdf`)
+**Discovered:** 2026-10-25, recorded as residue by the product 3.0.x Wave 1 security round (`63f6a20`)
+
+**Symptom:** `url_problem` resolves the host and requires every address to be public, then requests/urllib resolve the name again when they connect. A server that answers the check with a public address and the connect with a private one (short TTL) passes the policy.
+
+**Fix direction / budget:** connect to the address that was checked (pin the resolved IP, keep the Host header / SNI), on every redirect hop. Budget: output-neutral; the distributor-offline oracle replays recorded URLs, re-check both ways.
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, claimed fixed by the handoff; partly fixed):**
+- **Fixed:** product v3.0.x-dev 98d853ba fix(datasheets): connect each download to the address the URL check approved; b34bee4a fix(datasheets): keep requests first and pin it to the checked address; 98f35457 fix(datasheets): try each resolved address once…; 68e63cc1 fix(datasheets): refuse IPv6 addresses that embed a private IPv4 address (v3.0.2 Wave 11a Task 7, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`:
+  - urllib connects only to the checked addresses through `_pinned_create_connection`, keeping the host for SNI and the certificate (`skills/datasheets/distributor_core/download.py:285-299`). Every redirect is re-pinned (`:278-282`).
+  - requests ≥2.32.2 goes through `_PinnedAdapter` (`:651-695`).
+- **Left open:**
+  - (a) With requests older than 2.32.2, `_PinnedAdapter` is None, yet `download_pdf` still tries requests first, unpinned (`:463-465`, comment `:643`). Ruling 24 said to skip the requests transport under the default policy; the commit kept it first instead.
+  - (b) The Playwright fallback checks `url_problem` and then lets `route.fetch` resolve the name again (`:820-822`). A server that answers the first two methods with a non-PDF reaches the fallback, where the rebinding window is still open.
+  - Both are documented in `.github/SECURITY.md:32` ("the host is resolved again"). Proxies are unpinned by design.
+
+---
+
+- **Root cause / fix:** Requests older than 2.32.2 and the browser fallback resolved the host again after the address check; under the default policy neither is used, so every download connects to the checked address.
+- **Fixed:** product v3.0.x-dev 9eab79e5 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `distributor_core/download.py:466-470`, `_requests_usable` `:546`, `:823`; `.github/SECURITY.md`; product `test_download_policy` 52 run / 0 fail on requests 2.31.0 (`OldRequestsTest` runs), Playwright 1.48.0 + 1.64.1 `RealPlaywrightTest` + `PlaywrightRouteTest` 9/9 each.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-653: `PH0` / `PH1` GPIO pins read as a regulator SW pin, so STM32s become `ic_with_internal_regulator` / switching regulator records
+
+**Severity:** MEDIUM (false regulator records with inductor, rail, RS-001 / DO-DET / PS-001 and downstream EMC / thermal / cross consequences on common MCUs)
+**File:** `skills/kicad/scripts/signal_detectors.py:1618` (`pn_base = pname.rstrip("0123456789").rstrip("_")`), `:1627` (`pn_parts & {"SW", "PH", "LX"}`), `:1839` (same token list)
+**Discovered:** 2026-10-25, product 3.0.x Wave 2 (`004bba5`, handoff §Asks 4a); verified in source at `004bba5`
+
+**Symptom:** stripping trailing digits turns the GPIO pins `PH0` / `PH1` (STM32 port H, usually the HSE oscillator pins) into `PH`, a TI SW-pin alias, so the MCU is taken for a switching regulator and the inductor search runs over its oscillator nets. Examples at the Wave 2 gate: cansat / Cubesat-EPS U4 (STM32F405, rail `3.3V_STM`), BerkeleyLab/Marble U54 (STM32F207, KH-421), bluerobotics ping-dev-kit U301 (STM32H563), formulaslug U1 (STM32WB55). Wave 2 made the pick deterministic (KH-509); the misread itself stays: most of the 51 H1 schematic units / 39 repos at the gate are these records.
+
+**Fix direction / budget:** match `PH` only as the exact pin name (or `PH` + non-port suffix), never after digit stripping; or require the part to be a regulator family before the SW-pin aliases count. Budget: PR-DET / DO-DET / PS-001 / RS-001 records disappear on MCU refs plus downstream EMC / thermal / cross on those units; size with a corpus count of PR-DET records whose SW pin name matches `^PH\d`.
+
+---
+
+- **Root cause / fix:** Stripping trailing digits turned the MCU GPIOs PH0/PH1 into the switch-pin alias `PH`; a PHn pin now keeps its full name when the part also has GPIO pins on another port.
+- **Fixed:** product v3.0.x-dev a459f394 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `signal_detectors.py:1688` `_GPIO_PORT_PIN ^P[A-GI-K]\d{1,2}$`; `:1733-1738` keeps the full PHn name.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-671: a root-sheet hierarchical label is keyed by its bare name and fuses with a global label or global bus member of the same name
+
+**Severity:** MEDIUM
+**File:** `schematic/connectivity.py` (`build_net_map`, label keys)
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 (handoff §Asks 4)
+
+**Symptom:** a dangling root `hierarchical_label D0` joins a `global_label D0` or a member `D0` of a global bus, which KiCad keeps apart.
+
+**Fix direction / budget:** namespace root hierarchical labels like the child-sheet ones; budget: units with root hierarchical labels whose names collide with globals.
+
+**Addendum (2026-10-27, product 3.0.x Wave 3b Part A):** same-name hierarchical labels placed directly on two different top-level sheets join by bare name, where KiCad keeps them apart. Same fix: key root-level hierarchical labels per sheet.
+
+---
+
+- **Root cause / fix:** A hierarchical label on a root sheet was keyed by its bare name and merged with same-name globals, power nets and other root sheets' labels; it now joins only on its own sheet and names its net as a sheet-local label (`/<root>/NAME`, as kicad-cli).
+- **Fixed:** product v3.0.x-dev 75c8160c (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/connectivity.py:847`, `:1231-1235`, `is_root_sheet` `:620`; harness `tests/test_kh359_kh360_netmap.py::test_root_sheet_hierarchical_label_stays_local`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-683: PU-001 lists `MISO` among pull-up pin names
+
+**Severity:** LOW (Wave 4)
+**File:** `signal_detectors.py` (PU-001 pin-name list)
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part A (handoff 3b-A §Asks 4)
+
+**Symptom:** now that pins carry their alternate names (kf/A2-F3), 6 new PU-001 findings appear on `SPI1_MISO` ×4 / `SPI2_MISO` ×2 pins; MISO is a push-pull output and needs no pull-up.
+
+---
+
+- **Root cause / fix:** MISO was in the pull-up pin list although it is push-pull; it is removed.
+- **Fixed:** product v3.0.x-dev c03874ff (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `validation_detectors.py:164-175`: MISO removed from `_PULLUP_PIN_NAMES`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-684: the DO-DET single-pin observation exempts pins by port-like names only
+
+**Severity:** LOW (Wave 4)
+**File:** `signal_detectors.py` (~:3604, `^P[A-K]\d` / `^GPIO` exemption)
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part A (handoff 3b-A §Asks 4)
+
+**Symptom:** pins that now carry their alternate function name (`I2C3_SCL`, `TIM3_CH4`) lose the exemption: +4 observations in 4 units on the same single-pin nets.
+
+**Fix direction / budget:** exempt by pin type / MCU part, or test the base name as well as the alternate.
+
+---
+
+- **Root cause / fix:** The single-pin exemption tested only the displayed pin name, which a placed alternate replaces; pins now carry their library base name and the exemption checks both.
+- **Fixed:** product v3.0.x-dev d1bf292e (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `Pin.base_name`; the DO-DET single-pin exemption tests both names (`signal_detectors.py:3917`, `:3935`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-694: CG-AUD finds ground by net name, so a connector whose GND pins sit on an unnamed sub-sheet ground net reports "no ground pins"
+
+**Severity:** LOW (Wave 4)
+**File:** `domain_detectors.py` / audits (CG-AUD)
+**Discovered:** 2026-10-27, product 3.0.x Wave 3b Part A (handoff 3b-A §Asks 4) — Just4Stan `pi_header` J4, now that the RPi header has pins
+
+---
+
+- **Root cause / fix:** CG-AUD recognised ground only by net name; a ground-named pin on an unnamed net that reaches another part now counts.
+- **Fixed:** product v3.0.x-dev 616f9d6e (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `domain_detectors.py:5499-5510`, `:5539`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-711: placed-symbol mandatory fields are read by exact name; KiCad 10 matches them case-insensitively and lets a later duplicate replace the earlier
+
+**Severity:** MEDIUM
+**File:** `schematic/reader.py` (placed-symbol property read)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** KiCad 10 matches `Reference/Value/Footprint/Datasheet/Description` case-insensitively (`sch_io_kicad_sexpr_parser.cpp:2338-2346`), and a later duplicate of a mandatory field replaces the earlier (`:3526-3553`). We read the exact name. Corpus: 4,158 such fields in 350 `.kicad_sch` files (Description 2,535, Datasheet 1,173, Value 431, Footprint 11, Reference 8; measured, product `oracle-scripts/planA/reach.py`).
+
+**Fix direction / budget:** match the five mandatory names case-insensitively, last duplicate wins; budget component values/datasheets on those files (class AD-A1).
+
+---
+
+- **Root cause / fix:** Mandatory fields were read by exact name with the first entry winning; Value, Footprint, Datasheet and Description now match in any case with the last duplicate winning, as KiCad 10 does.
+- **Fixed:** product v3.0.x-dev 6d339931 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/reader.py:421` `mandatory_property`: any case, last duplicate wins, for Value / Footprint / Datasheet / Description; Reference keeps its exact name (`:841`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-721: the VM-001 PG endpoint exemption (C2) is unconditional
+
+**Severity:** LOW-MEDIUM (R42 b)
+**File:** `validation_detectors.py` (`validate_voltage_levels`, `_PG_PIN_PATTERNS`)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** a push-pull PG, or PG pulled up to the regulator's higher VIN and wired to a lower-voltage IC, now drops a real crossing (≈ 50 corpus PG-pin VM-001).
+
+**Fix direction / budget:** judge the PG net's pull-up rail against the input's limit instead; budget VM-001 on PG nets.
+
+---
+
+- **Root cause / fix:** VM-001 exempted any PG pin on a regulator-like part; a regulator PG is now treated as open-drain and judged at its pull-up rail.
+- **Fixed:** product v3.0.x-dev 3cf931c4 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `validation_detectors.py:560`, `:593-620`, `:677-684`, `:711-715`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-723: field-trim residue — KiCad 6 instance `(value " ")`, KiCad 10 variant override texts, stale `mandatory_field` docstring
+
+**Severity:** LOW
+**File:** `schematic/reader.py` (~:725 `mandatory_field` docstring, instance values, variant texts)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness (KH-708 residue)
+
+**Symptom:** a KiCad 6 instance `(value " ")` reads as unset where KiCad overwrites with `""` (`sch_sheet_path.cpp:1585`; 0 corpus); KiCad 10 variant override texts are not trimmed (≈ 0 reach); the `mandatory_field` docstring at `reader.py:725` still names the old character set.
+
+**Fix direction / budget:** as KiCad; ≈ 0 corpus reach.
+
+---
+
+- **Root cause / fix:** A KiCad 6 instance value or footprint was tested after trimming, so `(value " ")` left the field unset; it is now applied whenever the untrimmed text is non-empty.
+- **Fixed:** product v3.0.x-dev 6d339931 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/reader.py:398`, `:866`: the untrimmed-text test, so `(value " ")` gives `""`; variant text kept as written matches KiCad 10.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-734: `is_usb_data_net_name` still matches `USB_DTR`/`USB_DET` for the KH-343 VBUS fallback; GPIO-style `USB_DP_*` nets take the VM-001 exemption
+
+**Severity:** LOW
+**File:** `is_usb_data_net_name` and its callers (KH-343 VBUS fallback, VM-001)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** a VBUS-detect net named `USB_DET` does not inherit 5 V through the KH-343 fallback; `USB_DP_PU`/`USB_DP_EN`-style GPIO nets would take the VM-001 USB exemption (0 corpus).
+
+**Fix direction / budget:** one shared exclusion list; 0 corpus for the second half.
+
+---
+
+- **Root cause / fix:** A private regex let GPIO-style `USB_DP_*` nets take the USB D+/D- exemption; a shared predicate now covers the USB control-signal names.
+- **Fixed:** product v3.0.x-dev 3cf931c4 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/netnames.py:110-118` `is_usb_signal_net_name`, used at `validation_detectors.py:572`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-737: family matching on `lib_id` reads the library nickname
+
+**Severity:** LOW
+**File:** part-family matching (`detect_rf_chains` / wireless family lookup)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** 6 files: non-radio parts in `STM32WL-DevKit` libraries are typed LoRa (wrong before and after Part A).
+
+**Fix direction / budget:** match the symbol name after the nickname; 6 files.
+
+---
+
+- **Root cause / fix:** Family matching read the whole `lib_id`, so a radio-named library nickname made every part a radio; it reads only the symbol name.
+- **Fixed:** product v3.0.x-dev 79019919 + eb83a974, 2bd79468, 1843acb6 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `detector_helpers.py:118` `match_family` reads the symbol name only; `suggest_certifications` the same.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-741: a UC3845 COMP pin behind a solder jumper is not found
+
+**Severity:** LOW
+**File:** FS-001 COMP-pin lookup
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** kaminaris: a UC3845 COMP pin behind a solder jumper is not found.
+
+**Fix direction:** follow solder jumpers (net ties) in the COMP lookup.
+
+---
+
+- **Root cause / fix:** The FS-001 compensation check looked only on the COMP net; it now follows one bridged-by-default solder jumper.
+- **Fixed:** product v3.0.x-dev 79019919 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `validation_detectors.py:1538` one hop across a bridged solder jumper (`:71-74`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-758: the schematic PDN counts DNP capacitors
+
+**Severity:** LOW
+**File:** `schematic/system_analyses.py` (`analyze_pdn_impedance`)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff; filed by the harness
+
+**Symptom:** DNP capacitors take part in the schematic `pdn_impedance` (2/428 rails).
+
+**Fix direction / budget:** skip DNP capacitors; budget `pdn_impedance` on the affected rails.
+
+---
+
+- **Root cause / fix:** The PDN estimate counted DNP capacitors; unfitted and off-board capacitors are left out.
+- **Fixed:** product v3.0.x-dev 6477de28 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/system_analyses.py:99` skips DNP and off-board caps.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-760: schematic PDN observations on VRM rails below ~2 MHz recommend an SRF-matched cap where bulk capacitance or damping is the remedy
+
+**Severity:** LOW
+**File:** `schematic/system_analyses.py` (`analyze_pdn_impedance` observations)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B handoff; filed by the harness
+
+**Symptom:** below ~2 MHz on VRM rails the observation says "consider adding cap with SRF near this frequency" (m282 TPS63001 2×100 nF: 631 kHz, 6.23 Ω).
+
+**Fix direction / budget:** word it as regulator output impedance / bulk capacitance; text-only budget on `observations`.
+
+---
+
+- **Root cause / fix:** Low-frequency anti-resonance text always suggested a capacitor with matching SRF; below 2 MHz it points to bulk capacitance, damping or the regulator's output impedance.
+- **Fixed:** product v3.0.x-dev 6477de28 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/system_analyses.py:224-229` new wording below 2 MHz.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-875: VM-001 fires on a regulator cascade (L7809 OUT → L7805 IN) as a logic-level crossing
+
+**Severity:** LOW (false VM-001 error on chained regulators whose intermediate rail has no power name)
+**File:** `skills/kicad/scripts/validation_detectors.py:593-627` (`validate_voltage_levels`: every IC pin on a non-power net counts; pin type and regulator role are not read)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8b (from KH-800 follow-ups); verified harness-side at `0efc012` (product A/B output `scratch/8b-task-6/ab_so/tip2/209.json`, hansajayathilaka Camera Stand: net `__unnamed_33` holds U2 L7809 pin 3 OUT `power_out` and U3 L7805 pin 1 IN `power_in`, reported "12.0V / 5.0V domain crossing")
+
+**Symptom:** the intermediate rail is unnamed, so it is not a power net; each regulator gets a different IC voltage and the net is reported as needing a level shifter.
+
+**Fix direction / budget:** skip `power_out`/`power_in` pins (or a regulator's output/input pins) when collecting VM-001 endpoints. Output-changing: VM-001 removals; measure before budgeting. Post-3.0.
+
+---
+
+- **Root cause / fix:** VM-001 took supply pins on unnamed rails as logic endpoints; power pins are now skipped.
+- **Fixed:** product v3.0.x-dev 3cf931c4 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `validation_detectors.py:669-670` skips `power_in` / `power_out` endpoints.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-883: `600 Ohm @ 100MHz` (spaced `Ohm @`) still parses as 600
+
+**Severity:** LOW (`parsed_value` on ferrite beads written with spaces)
+**File:** `skills/kicad/scripts/kicad_core/values.py:163` (`\d+[Rr]\s*@\s*\d` runs on the first space-split token only); split at `:133`
+**Discovered:** 2026-11-03, product 3.0.x Wave 8b (from KH-850); verified harness-side at `0efc012` (`parse_value`: `600 Ohm @ 100MHz` 600.0, `600Ohm @100MHz` 600.0, `600R @ 100MHz` 600.0, for every component type; only `600Ohm@100MHz` is None)
+
+**Symptom:** the value is split on spaces before the `@` rule runs, so the frequency part is dropped and the impedance reads as 600 Ω. Also `600R @ 100MHz` (wider than the handoff states).
+
+**Fix direction / budget:** apply the `@` test to the whole value string (like `_IMPEDANCE_SLASH` at `:125`). Output-changing: `parsed_value` on such ferrites; measure the record count. Post-3.0.
+
+---
+
+- **Root cause / fix:** The ferrite `@` test ran only on the first space-separated token; it now runs on the whole value, so `600 Ohm @ 100MHz` gives no resistance.
+- **Fixed:** product v3.0.x-dev 285054a6 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/values.py:38`, `:132`: `_IMPEDANCE_AT` runs on the whole string.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-914: extraction schema and the DigiKey provider still describe cache files by raw `<MPN>`
+
+**Severity:** LOW
+**File:** `skills/datasheets/schemas/extraction.schema.json:6, :80` (`datasheets/extracted/<MPN>.json`, `<MPN>.plan.json`); `skills/digikey/scripts/provider_digikey.py:54` (prints `{out_dir}/extracted/<MPN>.json`), at `389fbd5`
+**Discovered:** 2026-11-03, product 3.0.x Wave 9d handoff
+
+**Symptom:** the Wave 9d docs name files `<sanitized_mpn>.json`; these two places still say `<MPN>`. The schema text is part of `--schema`-style output only if a consumer prints it; the provider line is user-facing.
+
+**Fix direction / budget:** `<sanitized_mpn>` in both. The provider line moves a text artefact only if the oracle snapshots it.
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, partly fixed):**
+- **Fixed:** product v3.0.x-dev 00863fe7 docs: extraction schema names cache files by the sanitized MPN (v3.0.2 Wave 11a Task 30, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/datasheets/schemas/extraction.schema.json` no longer contains `<MPN>`.
+- **Left open:** `skills/digikey/scripts/provider_digikey.py:55` still prints `{out_dir}/extracted/<MPN>.json` (the provider stderr half, deferred).
+
+---
+
+- **Root cause / fix:** The DigiKey sync hint named `<MPN>.json`; it says `<sanitized_mpn>.json`, matching the schema text.
+- **Fixed:** product v3.0.x-dev e985c3ee (Task 49 lane commit 15dec159) (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `digikey/scripts/provider_digikey.py:55` says `<sanitized_mpn>.json`; distributor-offline re-freeze of exactly the 7 declared `digikey/*/stderr.txt` files (one line each); the schema half was fixed in Wave 11a (`manifest.schema.json:51` still says "per-MPN <MPN>.json", outside this issue).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-916: simulation readiness lists net ties in `components_without_model`
+
+**Severity:** LOW (`simulation_readiness` counts)
+**File:** `skills/kicad/scripts/schematic/audits.py:1012-1052` (`check_simulation_readiness`: only resistor / capacitor / inductor / diode / led / transistor count as modelled; everything else not in `NON_COMPONENT_TYPES` goes to `no_model`); `skills/kicad/scripts/kicad_core/classify.py:6-7` (`NON_COMPONENT_TYPES` has no `net_tie`), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-6-report.md`; the KH-443 rider split out)
+
+**Symptom:** a net tie (type `net_tie`, `classify.py:328-329`) is counted in `needs_model` and named in `components_without_model`, though it is a short and needs no SPICE model. KH-443 is otherwise closed by 9b T6.
+
+**Fix direction / budget:** treat `net_tie` (and other zero-ohm bridges) as modelled, or leave it out of `real`. Output-changing: `simulation_readiness` counts on net-tie designs. v3.0.2.
+
+---
+
+- **Root cause / fix:** Simulation readiness listed net ties as needing a model; net ties and jumpers count as modelled.
+- **Fixed:** product v3.0.x-dev 7e0dc175 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `schematic/audits.py:1039` net_tie and jumper count as modelled.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-935: two-pin headers with a `V` reference are typed varistor
+
+**Severity:** LOW (component type; 22 of the 35 ES-002 varistor findings on the R sample)
+**File:** `skills/kicad/scripts/kicad_core/classify.py:78` (`"V": "varistor"` by reference prefix), `:166-172` (varistor overrides: pot / regulator only, no connector test), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9C/progress.md` Task 3 ruling; `L9C/task-3-5-report.md` :43)
+
+**Symptom:** R board 268 has `Header_1x2_male` parts typed varistor with clamp `+9V`; they carry 22 of the 35 ES-002 varistor findings. Applying 9c T3's clamp-net guard to varistors was held back because of this. Probe at `8c42799`: `classify_component("V1", "mylib:Header_1x2_male", "Header_1x2_male")` = `varistor`. With a `Connector_PinHeader` footprint it is `connector`, so the false type needs a lib id without a connector word.
+
+**Fix direction / budget:** a `header` / `conn` / `pinheader` value or lib name overrides the `V` prefix. Then apply the ES-002 clamp-net guard to varistors too (35 removals measured). Output-changing: `components[].type`, protection devices, ES-002.
+
+---
+
+- **Root cause / fix:** Every V-prefixed part was typed as a varistor, so headers and jumpers fed ES-002; header, connector and jumper words now set the type, a potentiometer stays a resistor, and ES-002 skips a varistor that does not clamp to ground.
+- **Fixed:** product v3.0.x-dev b5cefde5, 011409a5, f88f542d (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `kicad_core/classify.py:12` `_v_prefix_jumper_or_connector`, used at `:200`, `:434`; potentiometer check first `:432`; ES-002 guard `emc_rules.py:3253`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-944: IB-DET reports an isolation barrier from a rail name containing `_B`
+
+**Severity:** LOW (one info finding on 1 of 300 R boards)
+**File:** `skills/kicad/scripts/domain_detectors.py:311-315` (`detect_isolation_barriers`: `isolated_power_rails` = power nets whose name contains `ISO`, `ISOL`, `_B` or `_SEC`), `:318-322` (that list alone is isolation evidence), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`D/combined-ab/REPORT.md` :69; the handoff says "origin wave unidentified")
+
+**Symptom:** board 010 gains "Isolation barrier: 2 ground domains, 0 isolation component(s)" with `isolated_power_rails: [VCCA_BR]` (a chassis shield ground plus an analog rail named from a power_in pin). By code read, `VCCA_BR` contains `_B`, so once the net is a power net it counts as an isolated rail. The combined report puts the move on 9b T8's rail recognition (the net became a topology rail), which identifies the origin wave the handoff left open; not re-measured here.
+
+**Fix direction / budget:** match `_B` / `_SEC` only as a whole token at the end (`_B`, `_B<n>`), and do not report a barrier with zero isolation components unless a second, independent sign is present. Small.
+
+**Addendum 2026-11-04 (3.0.x Waves 9b + 9c gate):** IB-DET moves on 10 corpus units (+23 / −13 findings), not the one R-sample board (e.g. HalfSweet SFduino-UNO-S2, dennowiggle FLEADiP, dmanla ModularPSU "12 ground domains, 0 isolation component(s)"), all under 9b T8 rail recognition.
+
+**Addendum 2026-11-04 (3.0.x Wave 9f, `b56baffa`, gated at `246ee5a`):** the substring half is fixed — an isolated rail is `ISO` anywhere or a whole `_B` / `_SEC` token. Std gate: 105 schematic units, IB-DET removed on 91 and `isolated_power_rails` narrowed on 14, every dropped rail failing the new pattern (full-chain 21 units); nothing else moves. Still open (v3.0.2): a barrier reported with 0 isolation parts and no second sign of isolation.
+
+---
+
+- **Root cause / fix:** A lone `_B` rail reported an isolation barrier; an isolation part, ISO/_SEC rail or ISO ground domain is now required.
+- **Fixed:** product v3.0.x-dev 79019919 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `domain_detectors.py:271`, `:330`: a lone `_B` rail no longer counts as isolation.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-946: load-switch rail sourcing pairs every input net with every output net of a dual switch
+
+**Severity:** LOW (RS-001 false negative; rare)
+**File:** `skills/kicad/scripts/signal_detectors.py:4396-4397` (`_SWITCH_INPUT_PINS` / `_SWITCH_OUTPUT_PINS`), `:4477-4487` (`audit_rail_sources`: pin names stripped of trailing digits, then `switch_pins += [(i, o) for i in sides["in"] for o in sides["out"]]`), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-9-review.md` :20, :33); residual of KH-920 (fixed in 9b T9 `40c6d163`), still present at `8c42799`
+
+**Symptom:** a dual switch with separate channels (VIN1/VOUT1, VIN2/VOUT2, e.g. TPS22966, matched by `tps229`) pairs VIN1 with VOUT2. When VIN1 is sourced and VIN2 is not, VOUT2 counts as sourced and its RS-001 is missed. It hides a warning and adds none. Single-input dual-output parts (TPS2062) are fine. No test covers it. The old-gap A/B showed 0 added RS-001, so it is rare.
+
+**Fix direction / budget:** pair by the trailing channel digit when both sides carry one (IN1 → OUT1), and use the cross product only when one side is unnumbered. Small; add the dual-input test.
+
+---
+
+- **Root cause / fix:** Dual load switches paired every input with every output; pins are paired by channel number.
+- **Fixed:** product v3.0.x-dev 79019919 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `signal_detectors.py` load-switch channel pairing (~`:4621-4639`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-975: comma-decimal crystal values (`9,84375 MHz`) parse four orders off — the comma is dropped
+
+**Severity:** MEDIUM (wrong crystal frequency on every comma-decimal value; feeds XL-DET, the load-cap check and EMC clock harmonics)
+**File:** `skills/kicad/scripts/signal_detectors.py:86` `_parse_crystal_frequency`
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `"9,84375 MHz"` → 84,375,000,000 Hz (84 GHz), `"32,768kHz"` → 768,000 Hz; `"9.84375 MHz"` → 9,843,750 Hz. Corpus: jpconstantineau/NRF52-Board outputs carry such values (several files).
+
+**Fix direction:** read a single comma between digits as the decimal separator (as `parse_value` should for passives too — check it).
+
+---
+
+- **Root cause / fix:** The crystal regex dropped a decimal comma (`9,84375 MHz`); a comma decimal before MHz/kHz is now read as a decimal, and a package-code prefix keeps its reading.
+- **Fixed:** product v3.0.x-dev 285054a6, 0adb9a9c (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `signal_detectors.py:97-105` comma decimal; `HC49,16MHz` keeps its frequency.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-977: the isolated-rail keyword `ISO` matches SPI `MISO` nets (IB-DET)
+
+**Severity:** LOW (false isolation-barrier evidence; product survey: 36 units)
+**File:** `skills/kicad/scripts/domain_detectors.py:269` `_ISOLATED_RAIL = re.compile(r'ISO|_(?:B|SEC)\d*(?=[_/]|$)')`, used by `_is_isolated_rail_name` `:272`
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `_ISOLATED_RAIL.search("SPI_MISO")` matches.
+
+**Fix direction:** `ISO` as a delimited token (`(?:^|[_/])ISO`), not a substring.
+
+---
+
+- **Root cause / fix:** The isolated-rail pattern matched `ISO` inside `MISO`; it no longer does.
+- **Fixed:** product v3.0.x-dev 79019919 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `domain_detectors.py:269`, `:271` `(?<!M)ISO`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-983: `voltage_overrides` validation lets NaN and bool through: NaN reaches the rail-voltage consumers, a bool lands in the output `power_rails` / `rail_voltages`
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/project_config.py:343-350`, `:427-450`; `kicad_types.py:243-246`
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff (new-KH candidates); verified by the harness at `5510006a` (code read + probe)
+
+**Symptom:** validation checks only `isinstance(v, (int, float))`; JSON `NaN` parses and `True` is an int. Probe: `resolve_config` keeps `{'+5V': nan, '+3V3': True}` and warns only on a string. The detector context drops bools (`kicad_types.py:244-246`) but keeps NaN, so NaN reaches `rail_voltage_or` / `config_rail_voltage` (regulator/LDO `schematic/system_analyses.py:1589`, `:2814`; level/VM `validation_detectors.py:471-505`). `apply_power_rails_config` reads the raw config, so a bool appears as `voltage: true, source: "config"`. Correction to the handoff: a bool does not reach the regulator, LDO or level-shifter consumers.
+
+**Fix direction:** require a finite non-bool number; warn and drop otherwise. Related: KH-728.
+
+---
+
+- **Root cause / fix:** `voltage_overrides` accepted bools and NaN; only finite non-bool numbers are kept, others are warned and dropped.
+- **Fixed:** product v3.0.x-dev 037e41b6 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `project_config.py:346-353` rejects bool and non-finite values; `kicad_types.py:246` `isfinite`; every load path goes through `_load_and_validate`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-984: lifecycle splits a capacitor value field such as `X7R, 50V` into separate MPN lookups because `_is_real_mpn` accepts dielectric and voltage tokens
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/lifecycle_engine.py:182-189` (`_GENERIC_VALUE_RE`), `:233-260` (`_mpn_alternatives`); twin regex `skills/datasheets/distributor_core/inputs.py` (comment at `:179`)
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff (new-KH candidates); verified by the harness at `5510006a` (code read + probe)
+
+**Symptom:** Probe: `'X7R, 50V'` → `['X7R', '50V']`; `'C0G, 25V'` → `['C0G', '25V']`; `'LM358, X7R'` → `['LM358', 'X7R']`. `'100nF, 50V'` stays whole because one piece fails `_is_real_mpn`.
+
+**Fix direction:** widen `_GENERIC_VALUE_RE` for dielectric (`X5R`/`X7R`/`C0G`/`NP0`/`Y5V`) and bare voltage tokens, in both copies. Related: KH-495, KH-898.
+
+---
+
+- **Root cause / fix:** Dielectric and voltage tokens passed as part numbers, so `X7R, 50V` was split into two lookups; both regex copies treat them as generic values, so the field stays whole.
+- **Fixed:** product v3.0.x-dev 5c69a56b (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: dielectric and voltage alternatives in both regex copies (`lifecycle_engine.py:188-189`, `distributor_core/inputs.py:23-24`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-986: `find_extraction`'s underscore-only file-name fallback maps `BAV99-215`, `BAV99.215` and `BAV99/215` to one `BAV99_215.json` without checking the file's `mpn`
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/datasheet_extract_cache.py:310-313`, `:337-343`
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff (new-KH candidates); verified by the harness at `5510006a` (code read + probe)
+
+**Symptom:** the `underscored` key replaces `[^A-Za-z0-9_]` with `_`, and the direct-file fallback reads `<underscored>.json` without comparing its recorded `mpn` — the collision the md5 suffix was added to prevent. Probe: a v1.4 `BAV99_215.json` with `mpn: BAV99/215` is returned for `BAV99-215`, `BAV99.215` and `BAV99 215` (the space case collides at the `plain` step too).
+
+**Fix direction:** compare the file's recorded `mpn` (normalized) before returning it.
+
+---
+
+- **Root cause / fix:** The file-name fallback mapped `BAV99-215` / `.215` / ` 215` to `BAV99_215.json` without checking it; a file reached by another stem is used only if it records this MPN or none. Residue outside this issue: `cache_reader.lookup` reads `<sanitize_mpn>.json` with no MPN check (`cache_reader.py:280-284`).
+- **Fixed:** product v3.0.x-dev 89ca9308 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `datasheets/scripts/datasheet_extract_cache.py:321-322`, `:344-345`, `_records_mpn` `:352`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-987: `spice_spec_fetcher.fetch_specs_from_extraction` keeps its own extraction lookup instead of the shared `find_extraction`
+
+**Severity:** LOW
+**File:** `skills/spice/scripts/spice_spec_fetcher.py:582-623` (`_legacy_extraction`)
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff (new-KH candidates); verified by the harness at `5510006a` (code read + probe)
+
+**Symptom:** the fetcher uses `get_cached_extraction` plus `_legacy_extraction` (manifest key `[^A-Za-z0-9_]`→`_`, no `mpn`-value match, no direct-file fallback). Lifecycle, `datasheet_verify`, `datasheet_features` and `capability_mode` use `find_extraction`. KH-817's two defects are fixed in this code (`:620-635`); this is the remaining one-reader residue (KH-798, closed in Wave 11a for the other readers).
+
+**Fix direction:** route the fetcher through `find_extraction`.
+
+---
+
+- **Root cause / fix:** The SPICE fetcher had its own extraction lookup; it uses the shared `find_extraction`.
+- **Fixed:** product v3.0.x-dev ebd0b947 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `spice/scripts/spice_spec_fetcher.py:592-594` uses `find_extraction(..., v14_first=False)`; `_legacy_extraction` removed; `finite_score` `:606`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-988: `datasheet_features._quality_v14` reports a NaN quality score as trusted while `facts_trusted` rejects it
+
+**Severity:** LOW
+**File:** `skills/datasheets/scripts/datasheet_features.py:116-147`; `skills/datasheets/datasheet_types/trust_gating.py:110-116`; codec `codec.py:131-136`
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff (new-KH candidates); verified by the harness at `5510006a` (code read + probe)
+
+**Symptom:** `score < FACTS_MIN_SCORE` is False for NaN, so `_quality_v14` gives no reason and `trusted: True`; `facts_trusted` (`q >= 60`) gives False. A NaN `extraction.quality_score` survives `lookup` (the codec accepts any float). `_quality_v13` has the same hole. Correction to the handoff: a bool does not disagree (both untrusted; `lookup` refuses a bool score); the only bool symptom is `_quality_v14` reporting `score: True`.
+
+**Fix direction:** one shared finite-number check for both functions (and the codec).
+
+---
+
+- **Root cause / fix:** A NaN quality score was reported as trusted by the feature helpers; one shared finite-score check serves both helpers and `facts_trusted`.
+- **Fixed:** product v3.0.x-dev 89ca9308 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `datasheet_types/trust_gating.py:111` `finite_score`, used by `facts_trusted` `:127` and `_quality_v13` / `_quality_v14` (`datasheet_features.py:119`, `:136`).
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-990: `action/format-report.py` `_lead` does not escape an ordered-list lead (`1.` / `1)`), so analyzer text starting with a number renders as a list item
+
+**Severity:** LOW
+**File:** `action/format-report.py:512-516`; line-start callers `:697`, `:1120`
+**Discovered:** 2026-11-06, product v3.0.2 Wave 11a handoff (new-KH candidates); verified by the harness at `5510006a` (code read + probe)
+
+**Symptom:** `_lead` escapes only `# > - + =`. Probe: `_lead(_md('1. R1'))` → `'1. R1'`, `'1) R1'` unchanged. Callers after `- ` still open a nested ordered list. `_lead` itself is new in Wave 11a (`0f0bfb33`); before it no lead was escaped, so this case was never covered rather than lost.
+
+**Fix direction:** escape `^\d+[.)]` as `\d+\.` / `\d+\)`.
+
+---
+
+- **Root cause / fix:** `_lead` did not escape ordered-list leads, so text starting `1.` or `1)` rendered as a list; they are escaped.
+- **Fixed:** product v3.0.x-dev e985c3ee (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `action/format-report.py` `_lead` escapes `^\d{1,9}[.)]` before a space or end of line; every line-start and after-`- ` caller uses `_lead`.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
+## 2026-11-07 — KH-993: `_download_playwright` never saves a direct PDF: `page.goto` raises inside the `expect_download` block, so both browser attempts fail (`RealPlaywrightTest` FAILS)
+
+**Severity:** MEDIUM
+**File:** `skills/datasheets/distributor_core/download.py:868-884` (`_download_playwright`)
+**Discovered:** 2026-11-06, harness, running `tools/tests/test_download_policy.py::RealPlaywrightTest` at `a8207138` on the product's release-gate request (first run with a real browser)
+
+**Symptom:** a URL served as `application/pdf` becomes a download in headless Chromium, and `page.goto` then raises: Playwright 1.64.1 / chrome-headless-shell 1248 `Page.goto: Download is starting`; Playwright 1.48.0 / chromium 1140 `Page.goto: net::ERR_ABORTED`. In the first attempt the raise leaves the `with page.expect_download(...)` block before `dl_info.value` is read, and the bare `except Exception: pass` hides it. The second attempt calls `page.goto` again and gets the same error, which `download_pdf` swallows as a transport failure. The test's local server answers both GETs with 200 and the PDF; `download_pdf` still returns False. So the browser fallback cannot fetch any URL that is a PDF download, the case it exists for. The test skips wherever Chromium cannot launch (it skipped here until `libasound.so.2` was supplied), which is why CI never caught it.
+
+**Probe:** in a scratch copy, catching the `goto` error inside the `with` block (`try: page.goto(...) except Exception: pass`) makes `RealPlaywrightTest` pass on both 1.48.0 and 1.64.1. The other 46 tests in the module are unchanged.
+
+**Fix direction:** catch the navigation error inside the `expect_download` block and read `dl_info.value`, keeping the size cap and the route policy. Read the second attempt's raise as "this was a download", not a transport failure. Output-neutral on the corpus (no browser in the gate lanes).
+
+---
+
+- **Root cause / fix:** `page.goto` raised inside the `expect_download` block on a direct PDF, so both browser attempts failed; the navigation abort is caught and the download saved.
+- **Fixed:** product v3.0.x-dev 8be9f129 (v3.0.2 Wave 11b-1, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `f53d107e`: `distributor_core/download.py:868-875`: `page.goto` inside `expect_download` is wrapped so the aborted navigation does not leave the block; harness release-gate run 2026-11-07 from a `git archive` export of `f53d107e`: `RealPlaywrightTest` + `PlaywrightRouteTest` 9/9 OK on Playwright 1.48.0 (chromium-1140) and 1.64.1, 0 skips; `test_browser_fallback_downloads_a_pdf` and `test_direct_pdf_is_saved_when_the_navigation_aborts` pass.
+- **Gate:** v3.0.2 Wave 11b-1 gate 2026-11-07 (baseline `5510006` = `727d0ab3` analyzer, candidate `f53d107e`, results/v302_w11b1_gate{,_fc,_aux,_do}): standard 149,633 + full-chain 21,411 units, census exact, 0 candidate failures, 0 rc flips; every moved unit claimed by the merged budget under the per-unit judge (`regression/budgets/v302_wave11b1_judge.py`), 0 residual; spice-offline 160 / 8,830 reports differ, all on moved schematic units; `--schema` ×6 identical; text oracle exactly the 262 declared deltas; distributor-offline exactly the 7 declared files; tiers 3,656 / 0 / 8 / 4.
+
 ## 2026-11-06 — KH-991: on Windows, CLI stdout lines ended with CRLF
 
 **Severity:** LOW
