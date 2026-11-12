@@ -6,18 +6,20 @@
   "assertions": [
     {
       "id": "FND-00000395-AST-01",
-      "description": "The analyzer correctly detects R2 (330 ohm) and R3 (560 ohm) as the LM317 feedback divider, with R2 connecting the output rail (3.3V net) to the ADJ pin and R3 connecting ADJ to GND. The estimated Vout of 1.987V (Vref=1.25V, formula Vout = 1.25*(1+330/560)) is mathematically correct, and the vout_net_mismatch observation correctly flags the 39.8% discrepancy between the calculated voltage and the net name '3.3V'.",
+      "description": "The analyzer detects R2 (330 ohm, OUT to ADJ) and R3 (560 ohm, ADJ to GND) as the LM317 (U2) feedback divider. LM317 Vout = 1.25 x (1 + R_adj-gnd / R_out-adj) = 1.25 x (1 + 560/330) = 3.371 V, which matches the 3.3V net; estimated_vout must stay in 3.30-3.45 V.",
       "created_from": "FND-00000395",
       "check": {
-        "path": "findings[1].estimated_vout",
-        "op": "range",
-        "value": [
-          1.9,
-          2.1
-        ],
+        "path": "findings",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$",
+        "where": {
+          "estimated_vout": "^3\\.(3\\d*|4[0-4]?\\d*|450*)$"
+        },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators[1].estimated_vout"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[1].estimated_vout; TH-109 ruling 2026-11-11: re-anchored",
+      "aspirational": false
     },
     {
       "id": "FND-00000395-AST-02",
@@ -55,8 +57,9 @@
         "field": "category",
         "pattern": "^regulator_caps$"
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 R3: not_contains_match without pattern (one-key dict under value) -> {\"op\": \"not_contains_match\", \"field\": \"category\", \"pattern\": \"^regulator_caps$\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"regulator_caps\"}, \"detector_filter\": \"detect_design_observations\"})"
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 R3: not_contains_match without pattern (one-key dict under value) -> {\"op\": \"not_contains_match\", \"field\": \"category\", \"pattern\": \"^regulator_caps$\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"regulator_caps\"}, \"detector_filter\": \"detect_design_observations\"}); TH-109 ruling 2026-11-11: graduated",
+      "incorrect_review": "graduated (TH-109 ruling 2026-11-11): the check asserts no false regulator_caps observation; it passes."
     },
     {
       "id": "FND-00000395-AST-05",

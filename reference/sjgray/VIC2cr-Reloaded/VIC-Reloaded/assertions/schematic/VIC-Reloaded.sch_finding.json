@@ -36,7 +36,7 @@
     },
     {
       "id": "FND-00001748-AST-04",
-      "description": "This is a VIC-20cr Commodore computer clone running entirely on a single +5V supply. No negative or other rails are used. The analyzer correctly reports only +5V and GND. [re-anchored 2026-10-05 v2.3.0 regen: the text-label net `5V` is now classified as a rail by the PR #44 is_power_net_name widening, so power_rails reports +5V, 5V and GND — still a single 5 V supply]",
+      "description": "This is a VIC-20cr Commodore computer clone running entirely on a single +5V supply. No negative or other rails are used. The analyzer correctly reports only +5V and GND. [re-anchored 2026-10-05 v2.3.0 regen: the text-label net `5V` is now classified as a rail by the PR #44 is_power_net_name widening, so power_rails reports +5V, 5V and GND \u2014 still a single 5 V supply]",
       "created_from": "FND-00001748",
       "check": {
         "path": "statistics.power_rails",
@@ -139,17 +139,33 @@
       "created_from": "FND-00001748",
       "check": {
         "path": "findings",
-        "value": [
-          {
-            "reference": "Y1",
-            "load_caps": []
-          }
-        ],
         "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$",
+        "where": {
+          "load_caps": "\\bC48\\b"
+        },
         "detector_filter": "detect_crystal_circuits"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits; TH-109 ruling 2026-11-11: split applied"
+    },
+    {
+      "id": "FND-00001748-AST-14",
+      "description": "The crystal oscillator circuit uses UB9 (7402 NOR gate used as inverter) as the amplifier, with C48 (CTRIM trimmer capacitor) and C50 (standard capacitor) as the Pierce oscillator load caps. The UB9 subcircuit correctly shows C48 and C50 as neighbors of Y1. However, the crystal_circuits entry for Y1 reports load_caps=[] instead of identifying C48 and C50. The CTRIM symbol for C48 may be preventing detection since it is not a standard 'C' capacitor symbol.",
+      "created_from": "FND-00001748",
+      "aspirational": true,
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^Y1$",
+        "where": {
+          "load_caps": "\\bC50\\b"
+        },
+        "detector_filter": "detect_crystal_circuits"
+      },
+      "migration_note": "TH-109 ruling 2026-11-11: split from FND-00001748-AST-12"
     },
     {
       "id": "FND-00001748-AST-13",

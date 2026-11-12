@@ -64,15 +64,15 @@
       "created_from": "FND-00001516",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "reference": "BZ1",
-          "has_transistor_driver": true
-        },
-        "detector_filter": "detect_buzzer_speakers"
+        "op": "field_equals",
+        "detector_filter": "detect_buzzer_speakers",
+        "match_field": "reference",
+        "match_value": "BZ1",
+        "assert_field": "has_transistor_driver",
+        "assert_value": true
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.buzzer_speaker_circuits"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.buzzer_speaker_circuits; TH-109 ruling 2026-11-11: real check (R4_identity_plus_one_dict_to_field_equals); aspirational, describes a present defect"
     },
     {
       "id": "FND-00001516-AST-08",

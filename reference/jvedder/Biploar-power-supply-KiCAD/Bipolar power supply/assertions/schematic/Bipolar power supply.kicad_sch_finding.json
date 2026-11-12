@@ -60,12 +60,12 @@
         "value": 2,
         "detector_filter": "detect_voltage_dividers"
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.voltage_dividers; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 2} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 2, \"detector_filter\": \"detect_voltage_dividers\"})"
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 2} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 2, \"detector_filter\": \"detect_voltage_dividers\"}); TH-109 ruling 2026-11-11: graduated"
     },
     {
       "id": "FND-00000391-AST-06",
-      "description": "The schematic implements a dual half-wave rectifier: D11 (AC\u2192__unnamed_5) and D21 (AC\u2192__unnamed_1) feed the positive and negative rectified rails from the AC input (J1/J2). signal_analysis.bridge_circuits is empty and there is no detection of the rectifier or the C11/C21 bulk reservoir capacitors as a rectifier+filter topology.",
+      "description": "Negative lock: the dual half-wave rectifier (D11 / D21 from the AC input on J1/J2) must not be reported as a FET half-bridge. detect_bridge_circuits only sees FET half-bridges and never sees diode rectifiers, so it reports none here.",
       "created_from": "FND-00000391",
       "check": {
         "path": "findings",
@@ -74,7 +74,7 @@
         "detector_filter": "detect_bridge_circuits"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.bridge_circuits; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 0} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 0, \"detector_filter\": \"detect_bridge_circuits\"})"
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 0} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 0, \"detector_filter\": \"detect_bridge_circuits\"}); TH-109 ruling 2026-11-11: description rewritten"
     }
   ]
 }

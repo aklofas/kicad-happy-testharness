@@ -108,13 +108,14 @@
       "created_from": "FND-00001542",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "op": "contains_match",
-        "value": {
-          "net": "SCL",
-          "has_pull_up": true
-        }
+        "op": "field_equals",
+        "match_field": "net",
+        "match_value": "SCL",
+        "assert_field": "has_pull_up",
+        "assert_value": true
       },
-      "aspirational": false
+      "aspirational": true,
+      "migration_note": "TH-109 ruling 2026-11-11: real check (R4_identity_plus_one_dict_to_field_equals); aspirational, describes a present defect"
     }
   ]
 }

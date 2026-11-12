@@ -69,11 +69,16 @@
       "description": "The 7555 CMOS timer (U1) with R1 (1K), R2 (470K), and C1 (1u) forms a classic astable oscillator (LED blinker). The subcircuits entry for U1 has empty neighbor_components and no description, indicating the analyzer failed to identify U1's surrounding oscillator topology. A 555 in astable mode is a well-known, detectable circuit pattern (discharge resistor R1 from VDD to DISCHARGE, timing resistor R2 from DISCHARGE to THRESHOLD/TRIG, timing capacitor C1 from THRESHOLD to GND). This should appear in design_observations or a dedicated oscillator detector.",
       "created_from": "FND-00000420",
       "check": {
-        "path": "subcircuits[?center_ic=='U1'].description",
-        "op": "not_contains_match",
-        "value": "^$"
+        "path": "subcircuits",
+        "op": "contains_match",
+        "field": "description",
+        "pattern": "\\S",
+        "where": {
+          "center_ic": "^U1$"
+        }
       },
-      "aspirational": false
+      "aspirational": true,
+      "migration_note": "TH-109 ruling 2026-11-11: remap_fails applied"
     },
     {
       "id": "FND-00000420-AST-07",

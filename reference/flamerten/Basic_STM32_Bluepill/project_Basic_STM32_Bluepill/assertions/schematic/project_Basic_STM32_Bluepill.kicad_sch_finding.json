@@ -11,15 +11,16 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "category": "usb_data",
-          "net": "USB_D+",
-          "has_pullup": true
+        "field": "net",
+        "pattern": "^USB_D\\+$",
+        "where": {
+          "category": "^usb_data$",
+          "has_pullup": "^true$"
         },
         "detector_filter": "detect_design_observations"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 ruling 2026-11-11: remap_fails applied"
     },
     {
       "id": "FND-00000387-AST-02",

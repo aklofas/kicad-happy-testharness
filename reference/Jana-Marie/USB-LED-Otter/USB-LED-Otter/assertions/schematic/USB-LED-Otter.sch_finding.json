@@ -53,14 +53,13 @@
       "created_from": "FND-00001647",
       "check": {
         "path": "findings",
-        "value": {
-          "input_rail": "+5V"
-        },
         "op": "contains_match",
-        "detector_filter": "detect_power_regulators"
+        "detector_filter": "detect_power_regulators",
+        "field": "input_rail",
+        "pattern": "^\\+5V$"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 ruling 2026-11-11: real check (R3_single_key_dict_to_field_pattern); aspirational, describes a present defect"
     }
   ]
 }

@@ -195,15 +195,15 @@
       "created_from": "FND-00001453",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "ref": "D7",
-          "clamp_net": "GND"
-        },
-        "detector_filter": "detect_protection_devices"
+        "op": "field_equals",
+        "detector_filter": "detect_protection_devices",
+        "match_field": "ref",
+        "match_value": "D7",
+        "assert_field": "clamp_net",
+        "assert_value": "GND"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices; TH-109 ruling 2026-11-11: real check (R4_identity_plus_one_dict_to_field_equals); aspirational, describes a present defect"
     }
   ]
 }

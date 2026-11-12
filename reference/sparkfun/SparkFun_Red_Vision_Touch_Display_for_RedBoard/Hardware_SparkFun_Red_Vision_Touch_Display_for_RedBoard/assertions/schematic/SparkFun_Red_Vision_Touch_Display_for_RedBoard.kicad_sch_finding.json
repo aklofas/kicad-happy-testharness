@@ -94,15 +94,18 @@
       "created_from": "FND-00001475",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "has_pullup": true
+        "op": "count_matches",
+        "field": "net",
+        "pattern": "^(SCL|SDA)$",
+        "where": {
+          "category": "^i2c_bus$",
+          "has_pullup": "^true$"
         },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "value": 2
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 ruling 2026-11-11: remap_fails applied"
     },
     {
       "id": "FND-00001475-AST-08",

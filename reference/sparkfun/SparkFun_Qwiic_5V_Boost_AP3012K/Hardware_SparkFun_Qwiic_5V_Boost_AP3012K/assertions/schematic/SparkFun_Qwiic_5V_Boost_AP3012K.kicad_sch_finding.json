@@ -21,15 +21,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U1",
-          "topology": "switching",
-          "inductor": "L1",
-          "input_rail": "3.3V"
+        "field": "value",
+        "pattern": "^AP3012$",
+        "where": {
+          "topology": "^switching$",
+          "inductor": "^L1$",
+          "input_rail": "^3\\.3V$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 ruling 2026-11-11: remap applied",
+      "aspirational": false
     },
     {
       "id": "FND-00001498-AST-03",
@@ -60,14 +62,16 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U1",
-          "output_rail": "5V"
-        },
-        "detector_filter": "detect_power_regulators"
+        "detector_filter": "detect_power_regulators",
+        "field": "value",
+        "pattern": "^AP3012$",
+        "where": {
+          "output_rail": "^5V$"
+        }
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators",
-      "incorrect_review": "graduate (TH-105, 2026-11-06): fixed: AP3012 (now ref U5) output_rail=5V, est 5.038; lock vacuous (dict value) and ref is U5 not U1"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 ruling 2026-11-11: re-anchored",
+      "incorrect_review": "graduate (TH-105, 2026-11-06): fixed: AP3012 (now ref U5) output_rail=5V, est 5.038; lock vacuous (dict value) and ref is U5 not U1",
+      "aspirational": false
     },
     {
       "id": "FND-00001498-AST-06",

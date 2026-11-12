@@ -94,17 +94,6 @@
       "incorrect_review": "rewrite (TH-105, 2026-11-06): min_count 1 still satisfied by the defect: R6/R8 (gate R + pulldown) still a divider, ratio 0.99691; reviewer: not a divider"
     },
     {
-      "id": "FND-00001980-AST-08",
-      "description": "INCORRECT: The title_block.title says 'DRV8323 Development Board' but the lib_id for U1 is 'DRV_controllers:DRV8328B' (DRV8328B is a simplified gate driver vs DRV8323 which has SPI interface). The analyzer does not flag this component/title mismatch as a design observation. This is a real discrepancy in the source design worth noting.",
-      "created_from": "FND-00001980",
-      "check": {
-        "path": "title_block.title",
-        "op": "contains_match",
-        "value": "/DRV832/"
-      },
-      "aspirational": true
-    },
-    {
       "id": "FND-00001980-AST-09",
       "description": "The schematic has 16 test_points (component_types.test_point:16) but in the PCB output, component_groups shows only 1 test point (TP8). The remaining test points likely use net/power tie symbols with no PCB footprint, or TP pads that are tracked differently. The schematic-to-PCB component count mismatch for test points warrants a design observation.",
       "created_from": "FND-00001980",

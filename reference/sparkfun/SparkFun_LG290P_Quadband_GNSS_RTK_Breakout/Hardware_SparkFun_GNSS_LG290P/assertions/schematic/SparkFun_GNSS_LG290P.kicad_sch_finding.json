@@ -35,7 +35,7 @@
     },
     {
       "id": "FND-00001445-AST-03",
-      "description": "Two RC low-pass filters are correctly identified: R6(10Ω)+C4||C3(100pF) at 159kHz cutoff on the VCC_RF supply path, and R7(1kΩ)+C9(1µF) at 159Hz cutoff for the V_BCKP battery backup supply. Both are real filter circuits matching the schematic topology.",
+      "description": "Two RC low-pass filters are correctly identified: R6(10\u03a9)+C4||C3(100pF) at 159kHz cutoff on the VCC_RF supply path, and R7(1k\u03a9)+C9(1\u00b5F) at 159Hz cutoff for the V_BCKP battery backup supply. Both are real filter circuits matching the schematic topology.",
       "created_from": "FND-00001445",
       "check": {
         "path": "findings",
@@ -94,7 +94,7 @@
     },
     {
       "id": "FND-00001445-AST-07",
-      "description": "The 3.3V rail decoupling analysis correctly lists C5(100nF), C8(33pF), C2(10µF), C13(1µF) for a total of 11.1µF. The coverage is correctly marked as has_bulk=true (C2 10µF), has_bypass=true (C5 100nF), and has_high_freq=true (C8 33pF), reflecting good broadband decoupling practice.",
+      "description": "The 3.3V rail decoupling analysis correctly lists C5(100nF), C8(33pF), C2(10\u00b5F), C13(1\u00b5F) for a total of 11.1\u00b5F. The coverage is correctly marked as has_bulk=true (C2 10\u00b5F), has_bypass=true (C5 100nF), and has_high_freq=true (C8 33pF), reflecting good broadband decoupling practice.",
       "created_from": "FND-00001445",
       "check": {
         "path": "findings",
@@ -136,7 +136,7 @@
     },
     {
       "id": "FND-00001445-AST-10",
-      "description": "INCORRECT: The analyzer reports an LC filter pairing L1(68nH) with C4||C3(~100pF) at 1.93 MHz. However, L1 and C4/C3 are on the same net (__unnamed_10) for different purposes: L1 is in series in the RF antenna signal path (J5 SMA → L1 → C6+RF_IN) while C4 and C3 are power supply bypass capacitors on the VCC_RF output side. They share a node topologically but do not form a tuned LC resonator. The genuine LC filter is L1+C6 at 61 MHz (the RF choke with the antenna filter cap).",
+      "description": "INCORRECT: The analyzer reports an LC filter pairing L1(68nH) with C4||C3(~100pF) at 1.93 MHz. However, L1 and C4/C3 are on the same net (__unnamed_10) for different purposes: L1 is in series in the RF antenna signal path (J5 SMA \u2192 L1 \u2192 C6+RF_IN) while C4 and C3 are power supply bypass capacitors on the VCC_RF output side. They share a node topologically but do not form a tuned LC resonator. The genuine LC filter is L1+C6 at 61 MHz (the RF choke with the antenna filter cap).",
       "created_from": "FND-00001445",
       "check": {
         "path": "findings",
@@ -148,37 +148,18 @@
       "migration_note": "Path migrated from: signal_analysis.lc_filters"
     },
     {
-      "id": "FND-00001445-AST-11",
-      "description": "INCORRECT: The 5V decoupling analysis marks has_bulk=true with caps C7(1µF) and C1(100nF). Conventionally, 'bulk' decoupling refers to large electrolytics (10µF+) providing bulk charge reservoir. A 1µF ceramic cap is typically bypass/decoupling, not bulk. The has_bulk classification likely uses a threshold ≥1µF, which is more lenient than the standard definition. This may mislead users into thinking there is adequate bulk decoupling on the 5V rail.",
-      "created_from": "FND-00001445",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "rail": "5V",
-          "cap_count": 2,
-          "total_capacitance_uF": 1.1
-        },
-        "detector_filter": "detect_decoupling"
-      },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis",
-      "incorrect_review": "unrelated (TH-105, 2026-11-06): rail/cap_count/total 1.1 undisputed and present; disputed has_bulk still true for 1 uF"
-    },
-    {
       "id": "FND-00001445-AST-12",
       "description": "D5 (PMEG4005EJ Schottky diode, SOD-323) connects 3.3V (anode) to __unnamed_40 (cathode), which feeds R7 and ultimately the V_BCKP rail powering the GNSS RTC battery backup. It provides reverse blocking to prevent the backup battery (BT1) from backfeeding the 3.3V rail. The protection_devices list detects D6, D7, D3 (TVS diodes) and F1 (fuse) but misses D5.",
       "created_from": "FND-00001445",
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "D5"
-        },
-        "detector_filter": "detect_protection_devices"
+        "detector_filter": "detect_protection_devices",
+        "field": "ref",
+        "pattern": "^D5$"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices; TH-109 ruling 2026-11-11: real check (R3_single_key_dict_to_field_pattern); aspirational, describes a present defect"
     },
     {
       "id": "FND-00001445-AST-13",
@@ -196,7 +177,7 @@
     },
     {
       "id": "FND-00001445-AST-14",
-      "description": "The 3.3V rail decoupling analysis correctly lists C5(100nF), C8(33pF), C2(10µF), C13(1µF) for a total of 11.1µF. The coverage is correctly marked as has_bulk=true (C2 10µF), has_bypass=true (C5 100nF), and has_high_freq=true (C8 33pF), reflecting good broadband decoupling practice.",
+      "description": "The 3.3V rail decoupling analysis correctly lists C5(100nF), C8(33pF), C2(10\u00b5F), C13(1\u00b5F) for a total of 11.1\u00b5F. The coverage is correctly marked as has_bulk=true (C2 10\u00b5F), has_bypass=true (C5 100nF), and has_high_freq=true (C8 33pF), reflecting good broadband decoupling practice.",
       "created_from": "FND-00001445",
       "check": {
         "path": "findings",

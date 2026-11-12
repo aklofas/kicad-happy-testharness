@@ -22,11 +22,37 @@
       "created_from": "FND-00002192",
       "check": {
         "path": "findings",
-        "op": "min_count",
-        "value": 2
+        "op": "contains_match",
+        "field": "component_a",
+        "pattern": "^KEY1$",
+        "where": {
+          "component_b": "^LD2$",
+          "rule_id": "^PM-001$",
+          "layer": "^F\\.Cu$"
+        },
+        "detector_filter": "analyze_placement"
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: placement_analysis.courtyard_overlaps"
+      "aspirational": false,
+      "migration_note": "Path migrated from: placement_analysis.courtyard_overlaps; TH-109 ruling 2026-11-11: re-anchored"
+    },
+    {
+      "id": "FND-00002192-AST-03",
+      "description": "The analyzer correctly identifies a courtyard overlap between KEY1 (key switch) and LD2 (status LED) on F.Cu with 1.776mm2 overlap, and between J3 and D12 on B.Cu with 0.343mm2 overlap. The KEY1/LD2 overlap is noteworthy in a keyboard design\u2014it suggests the LED is intentionally placed within the key switch footprint area, which is a common technique for per-key RGB but requires careful 3D verification. The 22 tombstoning risk flags for 0402 capacitors with GND pour on one pad are also correctly identified.",
+      "created_from": "FND-00002192",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "component_a",
+        "pattern": "^J3$",
+        "where": {
+          "component_b": "^D12$",
+          "rule_id": "^PM-001$",
+          "layer": "^B\\.Cu$"
+        },
+        "detector_filter": "analyze_placement"
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 ruling 2026-11-11: split from FND-00002192-AST-02"
     }
   ]
 }

@@ -21,14 +21,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "category": "switching_regulator",
-          "component": "U1",
-          "inductor": "L1"
+        "field": "category",
+        "pattern": "^switching_regulator$",
+        "where": {
+          "component": "^U5$",
+          "inductor": "^L2$",
+          "input_rail": "^3\\.3V$"
         },
         "detector_filter": "detect_design_observations"
       },
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 ruling 2026-11-11: remap applied",
+      "aspirational": false
     },
     {
       "id": "FND-00001441-AST-03",

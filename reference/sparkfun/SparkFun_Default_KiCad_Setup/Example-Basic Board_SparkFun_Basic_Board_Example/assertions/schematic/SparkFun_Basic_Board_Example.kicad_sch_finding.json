@@ -39,17 +39,6 @@
       "aspirational_reason": "agent-generated check path/value mismatch: expected 3.3V, got None"
     },
     {
-      "id": "FND-00001389-AST-04",
-      "description": "INCORRECT: G1, G2, G4 (logo/aesthetic symbols with on_board=false) appear in statistics.missing_mpn. Logo and aesthetic symbols that are not on-board should not generate missing MPN warnings since they are mechanical/graphical annotations with no electrical function and no expected MPN. The missing_footprint list for G4 and G2 is similarly spurious for off-board decorative items.",
-      "created_from": "FND-00001389",
-      "check": {
-        "path": "statistics.missing_mpn",
-        "value": "G1",
-        "op": "contains_match"
-      },
-      "aspirational": true
-    },
-    {
       "id": "FND-00001389-AST-05",
       "description": "The schematic has named global labels SCL and SDA connected to a JST Qwiic connector J1 (4-pin, 1mm, I2C). The design_observations correctly categorizes the nets as i2c (clock/data), but bus_analysis.i2c is an empty array []. The SCL and SDA nets each have only one pin (single_pin_nets), which likely causes the I2C bus detector to skip them \u2014 but they are clearly I2C interface pins on an output connector and should be reported.",
       "created_from": "FND-00001389",

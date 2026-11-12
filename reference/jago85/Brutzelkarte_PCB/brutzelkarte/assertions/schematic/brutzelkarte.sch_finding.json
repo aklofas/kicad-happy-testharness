@@ -14,8 +14,9 @@
         "field": "net",
         "pattern": "^__unnamed_63$"
       },
-      "aspirational": true,
-      "migration_note": "TH-109 R3: not_contains_match without pattern (one-key dict under value) -> {\"op\": \"not_contains_match\", \"field\": \"net\", \"pattern\": \"^__unnamed_63$\"} (the old check passed vacuously: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"not_contains_match\", \"value\": {\"net\": \"__unnamed_63\"}})"
+      "aspirational": false,
+      "migration_note": "TH-109 R3: not_contains_match without pattern (one-key dict under value) -> {\"op\": \"not_contains_match\", \"field\": \"net\", \"pattern\": \"^__unnamed_63$\"} (the old check passed vacuously: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"not_contains_match\", \"value\": {\"net\": \"__unnamed_63\"}}); TH-109 ruling 2026-11-11: graduated",
+      "incorrect_review": "graduated (TH-109 ruling 2026-11-11): the check asserts the false I2C net __unnamed_63 is gone; it passes."
     },
     {
       "id": "FND-00000434-AST-02",

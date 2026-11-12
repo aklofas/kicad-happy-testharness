@@ -14,9 +14,9 @@
         "field": "reference",
         "pattern": "^C22$"
       },
-      "aspirational": true,
+      "aspirational": false,
       "aspirational_reason": "multi-project schematic uses wrong project instance references",
-      "migration_note": "TH-109 R3: not_contains_match without pattern (one-key dict under value) -> {\"op\": \"not_contains_match\", \"field\": \"reference\", \"pattern\": \"^C22$\"} (the old check passed vacuously: {\"path\": \"components\", \"op\": \"not_contains_match\", \"value\": {\"reference\": \"C22\"}})"
+      "migration_note": "TH-109 R3: not_contains_match without pattern (one-key dict under value) -> {\"op\": \"not_contains_match\", \"field\": \"reference\", \"pattern\": \"^C22$\"} (the old check passed vacuously: {\"path\": \"components\", \"op\": \"not_contains_match\", \"value\": {\"reference\": \"C22\"}}); TH-109 ruling 2026-11-11: graduated"
     },
     {
       "id": "FND-00000424-AST-02",
@@ -88,8 +88,8 @@
         "value": 2,
         "detector_filter": "detect_decoupling"
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 2} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 2, \"detector_filter\": \"detect_decoupling\"})"
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 2} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 2, \"detector_filter\": \"detect_decoupling\"}); TH-109 ruling 2026-11-11: graduated"
     }
   ]
 }

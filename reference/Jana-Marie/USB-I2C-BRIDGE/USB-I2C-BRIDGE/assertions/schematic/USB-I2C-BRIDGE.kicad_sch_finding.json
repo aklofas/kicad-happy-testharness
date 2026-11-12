@@ -74,18 +74,18 @@
     },
     {
       "id": "FND-00001642-AST-07",
-      "description": "R1 and R2 are 5.1k\u03a9 resistors connected between J1's CC1/CC2 pins and GND. These are the standard USB-C CC pull-down resistors for a USB device (5.1k\u03a9 to GND = UFP/sink). The analyzer does not flag them as USB-C CC termination resistors. This is a missed detection that would be valuable for USB-C design review.",
+      "description": "R1 and R2 are 5.1k resistors from J1's CC1/CC2 pins to GND, the USB-C sink (UFP) pull-downs; usb_compliance must report J1's CC role as sink. (The finding asked for a usb_cc design observation, a category the analyzer has never had.)",
       "created_from": "FND-00001642",
       "check": {
-        "path": "findings",
-        "value": {
-          "category": "usb_cc"
-        },
-        "op": "contains_match",
-        "detector_filter": "detect_design_observations"
+        "path": "usb_compliance.connectors",
+        "op": "field_equals",
+        "match_field": "connector",
+        "match_value": "J1",
+        "assert_field": "usb_c_cc_status.role",
+        "assert_value": "sink"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 ruling 2026-11-11: re-anchored"
     }
   ]
 }

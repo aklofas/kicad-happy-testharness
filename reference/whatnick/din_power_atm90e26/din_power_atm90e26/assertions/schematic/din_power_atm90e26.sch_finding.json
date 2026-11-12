@@ -23,9 +23,12 @@
       "check": {
         "path": "statistics.power_rails",
         "op": "contains_match",
-        "value": "/\\+5V_ISO/"
+        "field": "name",
+        "pattern": "^\\+5V_ISO$"
       },
-      "incorrect_review": "graduate (TH-105, 2026-11-06): power_rails now has +5V_ISO; check malformed (value not pattern) but intent holds"
+      "incorrect_review": "graduate (TH-105, 2026-11-06): power_rails now has +5V_ISO; check malformed (value not pattern) but intent holds",
+      "aspirational": false,
+      "migration_note": "TH-109 ruling 2026-11-11: remap applied"
     },
     {
       "id": "FND-00002025-AST-03",

@@ -11,11 +11,11 @@
       "check": {
         "path": "statistics.power_rails",
         "op": "not_contains_match",
-        "value": {
-          "name": "Vout"
-        }
+        "field": "name",
+        "pattern": "^Vout$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 ruling 2026-11-11: real check (R3_single_key_dict_to_field_pattern); aspirational, describes a present defect"
     }
   ]
 }

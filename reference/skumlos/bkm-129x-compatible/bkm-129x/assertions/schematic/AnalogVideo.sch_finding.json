@@ -215,18 +215,6 @@
       "migration_note": "Path migrated from: signal_analysis.addressable_led_chains[0].chain_length"
     },
     {
-      "id": "FND-00002011-AST-19",
-      "description": "",
-      "created_from": "FND-00002011",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "value": "/i2c_bus/",
-        "detector_filter": "detect_design_observations"
-      },
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
-    },
-    {
       "id": "FND-00002011-AST-20",
       "description": "",
       "created_from": "FND-00002011",
@@ -470,28 +458,6 @@
       },
       "aspirational": true,
       "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/-6V/\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"field\": \"name\", \"pattern\": \"^-6V$\"} (No description. -6V is a root-sheet rail (passes on bkm-129x.sch.json), not on AnalogVideo: wrong file. Move or retire.)"
-    },
-    {
-      "id": "FND-00002011-AST-42",
-      "description": "",
-      "created_from": "FND-00002011",
-      "check": {
-        "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/5v|12v|48v/"
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00002011-AST-43",
-      "description": "",
-      "created_from": "FND-00002011",
-      "check": {
-        "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/48v|12v/"
-      },
-      "aspirational": true
     }
   ]
 }

@@ -67,18 +67,19 @@
     },
     {
       "id": "FND-00000417-AST-06",
-      "description": "R8 (270\u03a9) is a current-limiting resistor in series with D2 (LED). This is a textbook LED driver. The design has no dedicated LED driver detector output and no mention of this subcircuit in signal_analysis. The net __unnamed_7 correctly connects R8 pin 1 to D2 cathode (K), but no LED driver detection fired.",
+      "description": "R8 (270 ohm) is the current-limiting resistor in series with D2 (LED); the LED audit must report D2 as resistor-limited by R8. (The finding asked for a led_driver design observation, a category the analyzer has never had; the LED audit carries this fact.)",
       "created_from": "FND-00000417",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "led_driver"
-        },
-        "detector_filter": "detect_design_observations"
+        "op": "field_equals",
+        "detector_filter": "audit_led_circuits",
+        "match_field": "ref",
+        "match_value": "D2",
+        "assert_field": "series_resistor.ref",
+        "assert_value": "R8"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 ruling 2026-11-11: re-anchored"
     }
   ]
 }

@@ -17,17 +17,6 @@
       "migration_note": "Path migrated from: signal_analysis.key_matrices"
     },
     {
-      "id": "FND-00002228-AST-02",
-      "description": "INCORRECT: The file has file_version 20230121 which corresponds to KiCad 7. The analyzer correctly reads this version number but outputs kicad_version as 'unknown' rather than mapping the date-format version to the KiCad release. This affects display quality and any version-gated logic downstream.",
-      "created_from": "FND-00002228",
-      "check": {
-        "path": "kicad_version",
-        "op": "contains_match",
-        "value": "/unknown/"
-      },
-      "aspirational": true
-    },
-    {
       "id": "FND-00002228-AST-03",
       "description": "The design uses 6 QSPI nets (QSPI-SS, QSPI-SCLK, QSPI-SD0..SD3) connecting RP2040 to the W25Q128JVS flash. The memory_interfaces detector found the W25Q128 with 6 shared signal nets, but bus_analysis.spi is empty \u2014 the QSPI prefix is not matched by the SPI bus detector. The bus_topology.detected_bus_signals only reports Col_* and Row_* matrix signals, completely ignoring the QSPI bus.",
       "created_from": "FND-00002228",

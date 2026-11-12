@@ -19,14 +19,15 @@
         },
         "detector_filter": "detect_key_matrices"
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix; TH-109 triage: {\"path\": \"findings[0].switches_on_matrix\", \"op\": \"less_than\", \"value\": 45, \"detector_filter\": \"detect_key_matrices\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"switches_on_matrix\", \"pattern\": \"^39$\", \"where\": {\"rows\": \"^4$\", \"diodes_on_matrix\": \"^39$\"}, \"detector_filter\": \"detect_key_matrices\"} (39 switches/diodes on 4 rows, and no row net in col_nets. Fixed today (4x7, 39): both pass (graduation candidate). File moved by 745481c0044; old indexed path read findings[0] of any detector.)"
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.key_matrices[0].switches_on_matrix; TH-109 triage: {\"path\": \"findings[0].switches_on_matrix\", \"op\": \"less_than\", \"value\": 45, \"detector_filter\": \"detect_key_matrices\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"switches_on_matrix\", \"pattern\": \"^39$\", \"where\": {\"rows\": \"^4$\", \"diodes_on_matrix\": \"^39$\"}, \"detector_filter\": \"detect_key_matrices\"} (39 switches/diodes on 4 rows, and no row net in col_nets. Fixed today (4x7, 39): both pass (graduation candidate). File moved by 745481c0044; old indexed path read findings[0] of any detector.); TH-109 ruling 2026-11-11: graduated",
+      "incorrect_review": "graduated (TH-109 ruling 2026-11-11): the check asserts the corrected 4-row / 39-switch matrix; it passes."
     },
     {
       "id": "FND-00002181-AST-02",
       "description": "INCORRECT: Fourier right has 39 actual key switches and 4 named row nets (rowA\u2013rowD). The topology detector reports 5 rows and 18 columns but places 'rowA' in both row_nets and col_nets \u2014 a net cannot be both a row and column driver. switches_on_matrix=56 and diodes_on_matrix=56 significantly exceed the 39 actual switches (44% overcount). This is the same topology detection failure as the left half.",
       "created_from": "FND-00002181",
-      "aspirational": true,
+      "aspirational": false,
       "check": {
         "path": "findings",
         "op": "not_contains_match",
@@ -34,7 +35,8 @@
         "pattern": "^row",
         "detector_filter": "detect_key_matrices"
       },
-      "migration_note": "TH-109 triage: split from FND-00002181-AST-01"
+      "migration_note": "TH-109 triage: split from FND-00002181-AST-01; TH-109 ruling 2026-11-11: graduated",
+      "incorrect_review": "graduated (TH-109 ruling 2026-11-11): the check asserts no row net among col_nets; it passes."
     }
   ]
 }

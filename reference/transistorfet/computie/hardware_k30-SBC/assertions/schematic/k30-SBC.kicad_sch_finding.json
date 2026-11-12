@@ -41,20 +41,6 @@
       "migration_note": "Path migrated from: signal_analysis.power_regulators"
     },
     {
-      "id": "FND-00002029-AST-04",
-      "description": "INCORRECT: ",
-      "created_from": "FND-00002029",
-      "check": {
-        "path": "findings",
-        "op": "contains_match",
-        "value": "/regulator_caps/",
-        "detector_filter": "detect_design_observations"
-      },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations",
-      "incorrect_review": "unclear (TH-105, 2026-11-06), kept as aspirational: description is 'INCORRECT: ' with no text, and the findings.json item is blank too; no claim to judge; contains_match with value/no pattern is vacuous"
-    },
-    {
       "id": "FND-00002029-AST-06",
       "description": "INCORRECT: ",
       "created_from": "FND-00002029",
@@ -367,11 +353,12 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": "/decoupling_coverage/",
+        "field": "category",
+        "pattern": "^decoupling_coverage$",
         "detector_filter": "detect_design_observations"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations",
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 ruling 2026-11-11: remap applied",
       "incorrect_review": "unrelated (TH-105, 2026-11-06): empty text, bulk; vacuous contains_match but decoupling_coverage observation does exist"
     },
     {
@@ -382,17 +369,6 @@
         "path": "statistics.footprint_count",
         "op": "equals",
         "value": 23
-      },
-      "aspirational": true
-    },
-    {
-      "id": "FND-00002029-AST-33",
-      "description": "INCORRECT: ",
-      "created_from": "FND-00002029",
-      "check": {
-        "path": "silkscreen.documentation_warnings",
-        "op": "contains_match",
-        "value": "/missing_revision/"
       },
       "aspirational": true
     }

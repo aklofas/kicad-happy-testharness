@@ -83,6 +83,12 @@ def assertion_errors(assertion):
         return errors
     if "op" in check and check["op"] not in KNOWN_OPS:
         errors.append(f"unknown operator '{check['op']}'")
+    # TH-109: these defaults make a check that cannot fail (pattern "" / ".*", range 0..inf)
+    if check.get("op") in ("contains_match", "not_contains_match", "count_matches") \
+            and "pattern" not in check and not check.get("where"):
+        errors.append(f"{check['op']} without 'pattern' or 'where'")
+    if check.get("op") == "range" and "min" not in check and "max" not in check:
+        errors.append("range without 'min' or 'max'")
     desc = str(assertion.get("description") or "").lstrip()
     if (desc.upper().startswith("INCORRECT") and not assertion.get("aspirational")
             and not assertion.get("incorrect_review")):
@@ -184,13 +190,23 @@ def evaluate_assertion(assertion, data):
     aid = assertion.get("id", "?")
 
     result = {"id": aid, "description": desc, "passed": False}
-    val = resolve_path(data, path)
 
-    # detector_filter: pre-filter findings[] by detector name before evaluation
+    # detector_filter: pre-filter findings[] by detector name before evaluation; an indexed
+    # head (findings[1].x) indexes the filtered list (TH-109)
     detector_filter = check.get("detector_filter")
-    if detector_filter and isinstance(val, list):
-        val = [item for item in val
-               if isinstance(item, dict) and item.get("detector") == detector_filter]
+    head = re.match(r'^(\w+)\[(\d+)\](?:\.(.+))?$', path) if detector_filter else None
+    if head:
+        items = [item for item in resolve_path(data, head.group(1)) or []
+                 if isinstance(item, dict) and item.get("detector") == detector_filter]
+        idx = int(head.group(2))
+        val = items[idx] if idx < len(items) else None
+        if val is not None and head.group(3):
+            val = resolve_path(val, head.group(3))
+    else:
+        val = resolve_path(data, path)
+        if detector_filter and isinstance(val, list):
+            val = [item for item in val
+                   if isinstance(item, dict) and item.get("detector") == detector_filter]
 
     if op == "range":
         count = _countable(val)

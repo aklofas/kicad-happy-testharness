@@ -172,13 +172,14 @@
       "created_from": "FND-00001481",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "op": "contains_match",
-        "value": {
-          "net": "SDA_1",
-          "has_pull_up": true
-        }
+        "op": "field_equals",
+        "match_field": "net",
+        "match_value": "SDA_1",
+        "assert_field": "has_pull_up",
+        "assert_value": true
       },
-      "aspirational": false
+      "aspirational": true,
+      "migration_note": "TH-109 ruling 2026-11-11: real check (R4_identity_plus_one_dict_to_field_equals); aspirational, describes a present defect"
     },
     {
       "id": "FND-00001481-AST-13",
@@ -213,13 +214,12 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "D5"
-        },
-        "detector_filter": "detect_protection_devices"
+        "detector_filter": "detect_protection_devices",
+        "field": "ref",
+        "pattern": "^D5$"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.protection_devices; TH-109 ruling 2026-11-11: real check (R3_single_key_dict_to_field_pattern); aspirational, describes a present defect"
     }
   ]
 }

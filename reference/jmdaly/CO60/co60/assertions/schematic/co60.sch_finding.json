@@ -79,13 +79,17 @@
       "description": "The LDO regulator detector reports input_rail=null for U2 because the pin inversion error (from the transform matrix bug) places the IN pin on the GND net rather than +5V. The detector correctly looks at the IN pin's net but finds 'GND' which is not a valid power supply rail, so it sets input_rail=null. The correct input_rail is '+5V'. The output_rail is also misidentified as '__unnamed_3' rather than '+3.3V', though '+3.3V' is reached via a short wire segment creating an internal net.",
       "created_from": "FND-00000442",
       "check": {
-        "path": "findings[0].input_rail",
-        "op": "equals",
-        "value": null,
+        "path": "findings",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U2$",
+        "where": {
+          "input_rail": "^\\+5V$"
+        },
         "detector_filter": "detect_power_regulators"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].input_rail"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators[0].input_rail; TH-109 ruling 2026-11-11: re-anchored"
     }
   ]
 }

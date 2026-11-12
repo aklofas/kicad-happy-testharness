@@ -11,11 +11,64 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": "/bandpass/",
+        "field": "type",
+        "pattern": "bandpass",
         "detector_filter": "detect_rc_filters"
       },
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 ruling 2026-11-11: split applied"
+    },
+    {
+      "id": "FND-00002208-AST-02",
+      "description": "The RC-Bandpass schematic connects a high-pass stage (R1=1k, C1=1\u03bcF, fc=159 Hz) in series with a low-pass stage (R2=10\u03a9, C2=1\u03bcF, fc=15.9 kHz). Together they form a bandpass filter with passband 159 Hz\u201315.9 kHz. The analyzer correctly identifies both individual stages as separate rc_filters entries, plus an additional spurious 'RC-network' entry. However, there is no 'bandpass' type entry that synthesizes the two cascaded stages into a single bandpass topology \u2014 the fact that a high-pass and low-pass with compatible cutoffs are chained is not flagged as a bandpass.",
+      "created_from": "FND-00002208",
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R1$",
+        "where": {
+          "capacitor.ref": "^C1$",
+          "type": "^high-pass$",
+          "cutoff_hz": "^159\\.15$"
+        },
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "TH-109 ruling 2026-11-11: split from FND-00002208-AST-01"
+    },
+    {
+      "id": "FND-00002208-AST-03",
+      "description": "The RC-Bandpass schematic connects a high-pass stage (R1=1k, C1=1\u03bcF, fc=159 Hz) in series with a low-pass stage (R2=10\u03a9, C2=1\u03bcF, fc=15.9 kHz). Together they form a bandpass filter with passband 159 Hz\u201315.9 kHz. The analyzer correctly identifies both individual stages as separate rc_filters entries, plus an additional spurious 'RC-network' entry. However, there is no 'bandpass' type entry that synthesizes the two cascaded stages into a single bandpass topology \u2014 the fact that a high-pass and low-pass with compatible cutoffs are chained is not flagged as a bandpass.",
+      "created_from": "FND-00002208",
+      "aspirational": false,
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R2$",
+        "where": {
+          "capacitor.ref": "^C2$",
+          "type": "^low-pass$",
+          "cutoff_hz": "^15915\\.49$"
+        },
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "TH-109 ruling 2026-11-11: split from FND-00002208-AST-01"
+    },
+    {
+      "id": "FND-00002208-AST-04",
+      "description": "The RC-Bandpass schematic connects a high-pass stage (R1=1k, C1=1\u03bcF, fc=159 Hz) in series with a low-pass stage (R2=10\u03a9, C2=1\u03bcF, fc=15.9 kHz). Together they form a bandpass filter with passband 159 Hz\u201315.9 kHz. The analyzer correctly identifies both individual stages as separate rc_filters entries, plus an additional spurious 'RC-network' entry. However, there is no 'bandpass' type entry that synthesizes the two cascaded stages into a single bandpass topology \u2014 the fact that a high-pass and low-pass with compatible cutoffs are chained is not flagged as a bandpass.",
+      "created_from": "FND-00002208",
+      "aspirational": true,
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "field": "type",
+        "pattern": "^RC-network$",
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "TH-109 ruling 2026-11-11: split from FND-00002208-AST-01"
     }
   ]
 }

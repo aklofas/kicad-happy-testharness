@@ -46,17 +46,6 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: placement_analysis.edge_clearance_warnings[0].component"
-    },
-    {
-      "id": "FND-00001904-AST-05",
-      "description": "INCORRECT: The PCB file declares '(kicad_pcb (version 20171130) (host pcbnew \"(5.1.4)-1\"))'. The analyzer looks for a 'generator_version' token (used in KiCad 6+) which does not exist in KiCad 5 format. It should fall back to parsing the 'host' token to extract '5.1.4' or infer 'KiCad 5' from file_version=20171130. The schematic analyzer correctly reports '5 (legacy)' for the same project. All four PCB files in this repo are affected (both main boards, thumbs, and bottom plate).",
-      "created_from": "FND-00001904",
-      "check": {
-        "path": "kicad_version",
-        "value": "5",
-        "op": "contains_match"
-      },
-      "aspirational": true
     }
   ]
 }

@@ -41,14 +41,37 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U7",
-          "topology": "switching",
-          "output_rail": "+3V3"
+        "field": "ref",
+        "pattern": "^U7$",
+        "where": {
+          "topology": "^switching$",
+          "input_rail": "^BAT\\+$",
+          "output_rail": "^\\+3V3$",
+          "inductor": "^L1$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 ruling 2026-11-11: split applied",
+      "aspirational": false
+    },
+    {
+      "id": "FND-00001776-AST-07",
+      "description": "U7 (LTC3536EMSE-PBF) correctly identified as a switching regulator with inductor L1, input_rail=BAT+, output_rail=+3V3, estimated_vout=3.315V from R17/R16 feedback divider (1000k/221k).",
+      "created_from": "FND-00001776",
+      "aspirational": true,
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "ref",
+        "pattern": "^U7$",
+        "where": {
+          "estimated_vout": "^3\\.3",
+          "feedback_divider.r_top.ref": "^R17$",
+          "feedback_divider.r_bottom.ref": "^R16$"
+        },
+        "detector_filter": "detect_power_regulators"
+      },
+      "migration_note": "TH-109 ruling 2026-11-11: split from FND-00001776-AST-03"
     },
     {
       "id": "FND-00001776-AST-04",
