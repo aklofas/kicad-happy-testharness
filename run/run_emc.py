@@ -30,7 +30,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))  # sibling _chained, whatever else is named `run`
 from harnesslib.batch import map_units
 from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
-from _chained import err_first_line, expand_selection
+from harnesslib.execution import build_env
+from _chained import ChainedRun, err_first_line, expand_selection, upstream_sha
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, DEFAULT_JOBS,
@@ -76,13 +77,15 @@ def run_one_emc(analyzer_script, schematic_json, pcb_json, output_json,
     return res.exit_code, None, res.elapsed_s
 
 
+def emc_output_path(emc_out_dir, input_json):
+    return emc_out_dir / input_json.parent.parent.name / input_json.parent.name / input_json.name
+
+
 def _process_one_emc(input_json, emc_out_dir, standard, timeout, spice_enhanced,
                      analyzer, compact):
     """Top-level function for ProcessPoolExecutor (must be picklable)."""
-    repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
-    out_dir = emc_out_dir / repo_name
-    out_dir.mkdir(parents=True, exist_ok=True)
-    output_json = out_dir / input_json.name
+    output_json = emc_output_path(emc_out_dir, input_json)
+    output_json.parent.mkdir(parents=True, exist_ok=True)
 
     pcb_json = find_pcb_output(input_json)
     returncode, summary, elapsed = run_one_emc(
@@ -116,12 +119,9 @@ def build_parser():
     return parser
 
 
-def main():
-    args = build_parser().parse_args()
-    if args.resume:
-        print("identity-based resume is not implemented for this runner yet (TH-064); "
-              "rerun without --resume", file=sys.stderr)
-        sys.exit(2)
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else list(argv)
+    args = build_parser().parse_args(argv)
 
     # Resolve paths
     kicad_happy = resolve_kicad_happy_dir()
@@ -132,7 +132,7 @@ def main():
         sys.exit(1)
 
     # Find schematic outputs
-    repo_list, inputs = expand_selection(args, find_schematic_outputs)
+    repo_list, inputs, selection_source = expand_selection(args, find_schematic_outputs)
 
     # Output directory; an EMC output whose schematic output is gone is retired
     emc_out_dir = OUTPUTS_DIR / "emc"
@@ -153,7 +153,15 @@ def main():
         sys.exit(1)
 
     # Count PCB matches
-    pcb_matches = sum(1 for inp in inputs if find_pcb_output(inp))
+    pcb_of = {inp: find_pcb_output(inp) for inp in inputs}
+    pcb_matches = sum(1 for p in pcb_of.values() if p)
+
+    run = ChainedRun(emc_out_dir,
+                     {emc_output_path(emc_out_dir, inp): upstream_sha(schematic=inp, pcb=pcb_of[inp])
+                      for inp in inputs},
+                     argv=argv, selection_source=selection_source, product_root=kicad_happy,
+                     env=build_env(offline=True), resume=args.resume)
+    todo = [inp for inp in inputs if not run.is_current(emc_output_path(emc_out_dir, inp))]
 
     print(f"=== Running EMC Analysis ===")
     print(f"Analyzer: {analyzer}")
@@ -181,7 +189,12 @@ def main():
                          analyzer=analyzer,
                          compact=args.compact)
 
-    results = map_units(process_fn, inputs, args.jobs)
+    def _log(res):
+        _, returncode, summary, output_json, _, elapsed = res
+        run.record(output_json, returncode, summary is not None, elapsed)
+
+    results = map_units(process_fn, todo, args.jobs, on_result=_log)
+    run.finish()
 
     for i, (input_json, returncode, summary, output_json, had_pcb, elapsed) in enumerate(results, 1):
         rel = f"{input_json.parent.name}/{input_json.name}"
@@ -243,6 +256,8 @@ def main():
     print(f"Files with findings:        {files_with_findings}")
     print(f"Script errors:              {errors}")
     print(f"Retired (upstream gone):    {len(retired)}")
+    if run.skipped:
+        print(f"Skip:  {run.skipped} (current output, --resume)")
     print(f"{'='*60}")
     print(f"Total findings:             {total_findings}")
     for sev in ("CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"):

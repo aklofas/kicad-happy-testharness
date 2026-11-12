@@ -183,6 +183,44 @@ def preflight(config, paths):
     return 0
 
 
+def start_run(out_root, spec, unit_inputs, *, expected_census, resume):
+    """Open a run in out_root: write its manifest, keep --resume only when the prior manifest
+    has the same identity, and otherwise archive the prior unit log. `unit_inputs` maps unit id
+    to input sha256. Returns (run_id, UnitLog, resume); a resumed run keeps the prior run_id."""
+    out_root = Path(out_root)
+    try:
+        prev = read_manifest(out_root)
+    except (OSError, ValueError):
+        prev = None
+    run_id = str(uuid.uuid4())
+
+    def _write(rid):
+        write_manifest(out_root, spec, run_id=rid, expected_census=expected_census,
+                       input_digest=input_digest(unit_inputs.items()),
+                       runtime={"python": platform.python_version(),
+                                "platform": platform.platform()})
+
+    _write(run_id)
+    if resume:
+        if prev is None:
+            print("resume disabled: no prior manifest")
+            resume = False
+        else:
+            same, reasons = manifests_match(prev, read_manifest(out_root))
+            if not same:
+                print("resume disabled: " + "; ".join(reasons))
+                resume = False
+    if resume:
+        # continue the matched run: its records stay current only under its run_id
+        run_id = prev.get("run_id") or run_id
+        _write(run_id)
+    elif prev is not None and (out_root / UNITS_NAME).exists():
+        # never let a later resume see records from an earlier, different run
+        old_id = prev.get("run_id") or "unknown"
+        os.replace(out_root / UNITS_NAME, out_root / f"units.{old_id}.jsonl")
+    return run_id, UnitLog(out_root), resume
+
+
 def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
     """Run one analyzer over the manifest units in the selection and return the process
     exit code: 0 all passed, 1 a failure (or missing inputs, or an empty selection),
@@ -237,39 +275,9 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
                    selection_source=selection_source, unit_ids=tuple(unit_ids),
                    normalization_policy="volatile-leaves-v1", env=recorded_env(env))
     input_hashes = {f: sha256_path(f) for f in files}
-    do_resume = settings.resume
-    try:
-        prev = read_manifest(out_root)
-    except (OSError, ValueError):
-        prev = None
-    run_id = str(uuid.uuid4())
-
-    def _write(rid):
-        write_manifest(out_root, spec, run_id=rid,
-                       expected_census={output_subdir: len(files)},
-                       input_digest=input_digest((_uid(f), h) for f, h in input_hashes.items()),
-                       runtime={"python": platform.python_version(),
-                                "platform": platform.platform()})
-
-    _write(run_id)
-    if do_resume:
-        if prev is None:
-            print("resume disabled: no prior manifest")
-            do_resume = False
-        else:
-            same, reasons = manifests_match(prev, read_manifest(out_root))
-            if not same:
-                print("resume disabled: " + "; ".join(reasons))
-                do_resume = False
-    if do_resume:
-        # continue the matched run: its records stay current only under its run_id
-        run_id = prev.get("run_id") or run_id
-        _write(run_id)
-    elif prev is not None and (out_root / UNITS_NAME).exists():
-        # never let a later resume see records from an earlier, different run
-        old_id = prev.get("run_id") or "unknown"
-        os.replace(out_root / UNITS_NAME, out_root / f"units.{old_id}.jsonl")
-    log = UnitLog(out_root)
+    run_id, log, do_resume = start_run(
+        out_root, spec, {_uid(f): h for f, h in input_hashes.items()},
+        expected_census={output_subdir: len(files)}, resume=settings.resume)
 
     print(f"=== Running {type_name} analysis ===")
     print(f"Analyzer: {analyzer}")
@@ -422,17 +430,25 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
     return 0
 
 
-def map_units(fn, units, jobs, *, unpack=False):
+def map_units(fn, units, jobs, *, unpack=False, on_result=None):
     """Apply fn to each unit; results come back in input order whatever the
     completion order. Sequential when jobs <= 1. With unpack, each unit is a sequence
-    spread as fn(*unit)."""
+    spread as fn(*unit). on_result, if given, is called in this process with each
+    result as its unit finishes, so a crashed batch keeps the work already done."""
     units = list(units)
     if jobs <= 1:
-        return [fn(*u) if unpack else fn(u) for u in units]
+        results = []
+        for u in units:
+            results.append(fn(*u) if unpack else fn(u))
+            if on_result:
+                on_result(results[-1])
+        return results
     results = [None] * len(units)
     with worker_pool(jobs) as pool:
         futures = {(pool.submit(fn, *u) if unpack else pool.submit(fn, u)): i
                    for i, u in enumerate(units)}
         for future in as_completed(futures):
             results[futures[future]] = future.result()
+            if on_result:
+                on_result(results[futures[future]])
     return results

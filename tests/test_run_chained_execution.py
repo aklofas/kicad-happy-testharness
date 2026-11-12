@@ -131,12 +131,14 @@ def test_unqualified_runs_exit_2_without_all(tmp_path):
 
 
 @pytest.mark.parametrize("name", ["run_emc.py", "run_thermal.py", "run_spice.py"])
-def test_chained_runners_refuse_resume(tmp_path, name):
+def test_chained_runners_accept_resume(tmp_path, name):
+    """--resume is identity-based (tests/test_chained_resume.py); with no upstream outputs
+    there is nothing to run and nothing is written."""
     env = {**os.environ, "KICAD_HAPPY_TESTHARNESS_DATA_DIR": str(tmp_path)}
     r = subprocess.run([sys.executable, str(ROOT / "run" / name), "--all", "--resume"],
                        capture_output=True, text=True, env=env, timeout=60)
-    assert r.returncode == 2, (name, r.returncode, r.stderr)
-    assert "identity-based resume is not implemented for this runner yet (TH-064)" in r.stderr
+    assert r.returncode == 1, (name, r.returncode, r.stderr)
+    assert "resume is not implemented" not in r.stderr
     assert list(tmp_path.rglob("*")) == []
 
 

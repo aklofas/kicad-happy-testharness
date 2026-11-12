@@ -43,7 +43,7 @@ from harnesslib.execution import build_env
 from harnesslib.profiles import PROFILES
 from harnesslib.batch import map_units
 from harnesslib.cli import add_jobs_arg, add_resume_arg, add_timeout_arg
-from _chained import err_first_line, expand_selection
+from _chained import ChainedRun, err_first_line, expand_selection, upstream_sha
 from utils import (OUTPUTS_DIR, resolve_kicad_happy_dir,
                    find_schematic_outputs, find_pcb_output,
                    add_repo_filter_args, DEFAULT_JOBS,
@@ -132,6 +132,10 @@ def unit_workdir(workdir_root, repo_name, stem):
     return Path(workdir_root).joinpath(*parts)
 
 
+def spice_output_path(spice_out_dir, input_json):
+    return spice_out_dir / input_json.parent.parent.name / input_json.parent.name / input_json.name
+
+
 def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
                        extra_args, with_parasitics, extractor,
                        workdir_root, env, outer_timeout):
@@ -144,9 +148,9 @@ def _process_one_spice(input_json, simulator, spice_out_dir, timeout,
          elapsed, parasitics_extracted_bool)
     """
     repo_name = f"{input_json.parent.parent.name}/{input_json.parent.name}"
-    out_dir = spice_out_dir / repo_name
+    output_json = spice_output_path(spice_out_dir, input_json)
+    out_dir = output_json.parent
     out_dir.mkdir(parents=True, exist_ok=True)
-    output_json = out_dir / input_json.name
 
     parasitics_json = None
     did_extract_parasitics = False
@@ -204,12 +208,9 @@ def build_parser():
     return parser
 
 
-def main():
-    args = build_parser().parse_args()
-    if args.resume:
-        print("identity-based resume is not implemented for this runner yet (TH-064); "
-              "rerun without --resume", file=sys.stderr)
-        sys.exit(2)
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else list(argv)
+    args = build_parser().parse_args(argv)
 
     env = build_env(offline=not args.online)
     workdir_root = Path(args.workdir) if args.workdir else \
@@ -234,7 +235,7 @@ def main():
             sys.exit(1)
 
     # Find schematic outputs (usage errors exit 2 here, whatever the environment)
-    repo_list, inputs = expand_selection(args, find_schematic_outputs)
+    repo_list, inputs, selection_source = expand_selection(args, find_schematic_outputs)
 
     # Check ngspice before any output is retired or written
     import shutil
@@ -263,6 +264,18 @@ def main():
         else:
             print("No schematic outputs found. Run run/run_schematic.py first.", file=sys.stderr)
         sys.exit(1)
+
+    def _unit_sha(inp):
+        # the parasitics extractor reads the paired PCB output too
+        if args.with_parasitics:
+            return upstream_sha(schematic=inp, pcb=find_pcb_output(inp))
+        return upstream_sha(schematic=inp)
+
+    run = ChainedRun(spice_out_dir,
+                     {spice_output_path(spice_out_dir, inp): _unit_sha(inp) for inp in inputs},
+                     argv=argv, selection_source=selection_source, product_root=kicad_happy,
+                     env=env, resume=args.resume)
+    todo = [inp for inp in inputs if not run.is_current(spice_output_path(spice_out_dir, inp))]
 
     mode_label = "SPICE + PCB Parasitics" if args.with_parasitics else "SPICE simulation"
     print(f"=== Running {mode_label} ===")
@@ -306,7 +319,12 @@ def main():
         outer_timeout=args.outer_timeout,
     )
 
-    results = map_units(worker, inputs, args.jobs)
+    def _log(res):
+        _, returncode, summary, output_json, elapsed, _ = res
+        run.record(output_json, returncode, returncode == 0 and summary is not None, elapsed)
+
+    results = map_units(worker, todo, args.jobs, on_result=_log)
+    run.finish()
 
     for i, (input_json, returncode, summary, output_json, elapsed, did_extract) in enumerate(results, 1):
         if did_extract:
@@ -369,6 +387,8 @@ def main():
     print(f"Files with simulations:     {files_with_sims}")
     print(f"Script errors:              {errors}")
     print(f"Retired (upstream gone):    {len(retired)}")
+    if run.skipped:
+        print(f"Skip:  {run.skipped} (current output, --resume)")
     print(f"{'='*60}")
     print(f"Total subcircuit sims:      {total_sims}")
     print(f"  Pass:                     {total_pass}")

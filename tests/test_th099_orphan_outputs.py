@@ -122,6 +122,10 @@ def test_run_emc_does_not_pass_an_orphan_pcb(tmp_path):
     prod = tmp_path / "product"
     (prod / "skills" / "emc" / "scripts").mkdir(parents=True)
     (prod / "skills" / "emc" / "scripts" / "analyze_emc.py").write_text(FAKE_EMC)
+    for git_args in (["init", "-q"], ["add", "-A"], ["commit", "-q", "-m", "x"]):
+        # the run manifest records the product SHA
+        subprocess.run(["git", "-C", str(prod), "-c", "user.email=t@t", "-c", "user.name=t",
+                        *git_args], check=True, capture_output=True)
     env = dict(os.environ, KICAD_HAPPY_TESTHARNESS_DATA_DIR=str(root), KICAD_HAPPY_DIR=str(prod))
     r = subprocess.run([sys.executable, str(HARNESS / "run" / "run_emc.py"), "--repo", REPO,
                         "--jobs", "1"], env=env, capture_output=True, text=True, timeout=60)

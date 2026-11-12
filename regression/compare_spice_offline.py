@@ -31,6 +31,8 @@ def _files(root: Path) -> dict[str, Path]:
     out = {}
     for dp, _, fs in os.walk(root):
         for f in fs:
+            if f == "manifest.json" and Path(dp) == Path(root):
+                continue                                           # the runner's run manifest
             if f.endswith(".json") and not f.startswith("_"):      # _aggregate / _timing are run-level
                 p = Path(dp) / f
                 out[str(p.relative_to(root))] = p

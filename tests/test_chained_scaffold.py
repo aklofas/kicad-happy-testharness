@@ -68,7 +68,8 @@ def test_expand_selection_calls_finder_per_repo_in_order(monkeypatch):
         calls.append(rn)
         return [f"{rn}1", f"{rn}2"]
 
-    assert expand_selection(SimpleNamespace(), finder) == (["a", "b"], ["a1", "a2", "b1", "b2"])
+    assert expand_selection(SimpleNamespace(), finder) == (["a", "b"], ["a1", "a2", "b1", "b2"],
+                                                           "repo-list")
     assert calls == ["a", "b"]
     assert seen["require_explicit_all"] is True
 
@@ -82,7 +83,7 @@ def test_expand_selection_all_calls_finder_with_none(monkeypatch):
         calls.append(rn)
         return ["x"]
 
-    assert expand_selection(SimpleNamespace(), finder) == (None, ["x"])
+    assert expand_selection(SimpleNamespace(), finder) == (None, ["x"], "all")
     assert calls == [None]
 
 
