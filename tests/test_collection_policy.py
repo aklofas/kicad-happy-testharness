@@ -184,6 +184,145 @@ def test_corpus_paths_require_marker():
     assert not offenders, f"corpus-reading tests without @pytest.mark.corpus or allowlist entry: {offenders}"
 
 
+# Entry points that write the corpus data tree when run without a redirected data dir.
+_RUNNER_TOKENS = ("run_schematic.py", "run_pcb.py", "run_gerbers.py", "run_spice.py", "run_emc.py",
+                  "run_thermal.py", "run_datasheets.py", "discover.py", "harness.py", "checkout.py",
+                  "retire_orphan_outputs.py")
+_DATA_DIR = "KICAD_HAPPY_TESTHARNESS_DATA_DIR"
+
+
+def _src(text, node):
+    """Source of a node, with a function's decorators (parametrize lists name the scripts)."""
+    parts = [ast.get_source_segment(text, d) or "" for d in getattr(node, "decorator_list", [])]
+    return "\n".join(parts + [ast.get_source_segment(text, node) or ""])
+
+
+def _names_runner(src):
+    return any(tok in src for tok in _RUNNER_TOKENS)
+
+
+def _spawns(fn):
+    for c in ast.walk(fn):
+        if (isinstance(c, ast.Call) and isinstance(c.func, ast.Attribute)
+                and isinstance(c.func.value, ast.Name) and c.func.value.id == "subprocess"
+                and c.func.attr in ("run", "Popen", "call", "check_call", "check_output")):
+            yield c
+
+
+def _runner_spawn_offenders(tree, text):
+    """Functions that spawn a corpus-writing entry point without pointing the data dir at a
+    temp dir: through `env=` (inline, a local built in the function, a module-level dict or a
+    module helper) or `monkeypatch.setenv`."""
+    funcs = [n for n in tree.body if isinstance(n, ast.FunctionDef)]
+    funcs += [m for c in tree.body if isinstance(c, ast.ClassDef)
+              for m in c.body if isinstance(m, ast.FunctionDef)]
+    by_name = {f.name: f for f in funcs}
+    module_vals = {t.id: ast.get_source_segment(text, n.value) or ""
+                   for n in tree.body if isinstance(n, ast.Assign)
+                   for t in n.targets if isinstance(t, ast.Name)}
+    callers = {}
+    for c in ast.walk(tree):
+        if isinstance(c, ast.Call) and isinstance(c.func, ast.Name):
+            callers.setdefault(c.func.id, []).append(ast.get_source_segment(text, c) or "")
+    bad = []
+    for fn in funcs:
+        fn_src = _src(text, fn)
+        for call in _spawns(fn):
+            argv = call.args[0] if call.args else next(
+                (k.value for k in call.keywords if k.arg == "args"), None)
+            argv_src = (ast.get_source_segment(text, argv) or "") if argv is not None else ""
+            used = ({n.id for n in ast.walk(argv) if isinstance(n, ast.Name)}
+                    if argv is not None else set())
+            if "sys.executable" not in argv_src:
+                continue     # git / ngspice / ...: only a Python spawn runs a harness entry point
+            runner = (_names_runner(argv_src) or _names_runner(fn_src)
+                      or any(_names_runner(module_vals.get(n, "")) for n in used)
+                      or any(_names_runner(s) for s in callers.get(fn.name, [])))
+            if not runner:
+                continue
+            env = next((k.value for k in call.keywords if k.arg == "env"), None)
+            if env is None:
+                ok = "setenv" in fn_src and _DATA_DIR in fn_src
+            else:
+                env_src = ast.get_source_segment(text, env) or ""
+                ok = _DATA_DIR in env_src
+                if not ok and isinstance(env, ast.Name):
+                    ok = _DATA_DIR in module_vals.get(env.id, "") or _DATA_DIR in fn_src
+                if not ok and isinstance(env, ast.Call) and isinstance(env.func, ast.Name):
+                    helper = by_name.get(env.func.id)
+                    ok = helper is not None and _DATA_DIR in _src(text, helper)
+            if not ok and fn.name not in bad:
+                bad.append(fn.name)
+    return bad
+
+
+_BAD_SPAWN = '''
+import subprocess, sys
+def test_x(tmp_path):
+    subprocess.run([sys.executable, str(ROOT / "run" / "run_emc.py"), "--repo", "o/r"])
+'''
+_BAD_SPAWN_ENV_WITHOUT_DATA_DIR = '''
+import os, subprocess, sys
+def test_x(tmp_path):
+    env = dict(os.environ, KICAD_HAPPY_DIR=str(tmp_path))
+    subprocess.run([sys.executable, str(ROOT / "run" / "run_thermal.py")], env=env)
+'''
+_BAD_SPAWN_VIA_PARAM = '''
+import subprocess, sys, pytest
+@pytest.mark.parametrize("name", ["run_emc.py", "run_spice.py"])
+def test_x(tmp_path, name):
+    subprocess.run([sys.executable, str(ROOT / "run" / name)])
+'''
+_GOOD_SPAWNS = '''
+import os, subprocess, sys
+ENV = {**os.environ, "KICAD_HAPPY_TESTHARNESS_DATA_DIR": "/tmp/x"}
+def _env(root):
+    return {**os.environ, "KICAD_HAPPY_TESTHARNESS_DATA_DIR": str(root)}
+def _run(runner_rel_path):
+    return subprocess.run([sys.executable, str(HARNESS / runner_rel_path)], env=_env("/tmp/y"))
+def test_inline(tmp_path):
+    env = dict(os.environ, KICAD_HAPPY_TESTHARNESS_DATA_DIR=str(tmp_path))
+    subprocess.run([sys.executable, str(ROOT / "run" / "run_emc.py")], env=env)
+def test_helper(tmp_path):
+    subprocess.run([sys.executable, str(HARNESS / "discover.py")], env=_env(tmp_path))
+def test_module_env():
+    subprocess.run([sys.executable, "harness.py", "run"], env=ENV)
+def test_via_helper():
+    _run("run/run_schematic.py")
+def test_monkeypatched(tmp_path, monkeypatch):
+    monkeypatch.setenv("KICAD_HAPPY_TESTHARNESS_DATA_DIR", str(tmp_path))
+    subprocess.run([sys.executable, str(ROOT / "run" / "run_gerbers.py"), "--all"])
+def test_git_call_beside_a_runner(tmp_path):
+    subprocess.run(["git", "init", str(tmp_path)], check=True)
+    env = dict(os.environ, KICAD_HAPPY_TESTHARNESS_DATA_DIR=str(tmp_path))
+    subprocess.run([sys.executable, str(ROOT / "run" / "run_emc.py")], env=env)
+def test_not_a_runner(tmp_path):
+    subprocess.run([sys.executable, str(ROOT / "run" / "run_review_metrics.py")])
+'''
+
+
+def test_runner_spawn_audit_flags_unredirected_runners():
+    for src in (_BAD_SPAWN, _BAD_SPAWN_ENV_WITHOUT_DATA_DIR, _BAD_SPAWN_VIA_PARAM):
+        assert _runner_spawn_offenders(ast.parse(src), src) == ["test_x"], src
+
+
+def test_runner_spawn_audit_accepts_redirected_runners():
+    assert _runner_spawn_offenders(ast.parse(_GOOD_SPAWNS), _GOOD_SPAWNS) == []
+
+
+def test_runner_subprocesses_redirect_the_data_dir():
+    """A test that spawns a corpus-writing entry point must point KICAD_HAPPY_TESTHARNESS_DATA_DIR
+    at a temp dir, or the runner writes the live tree (TH-063)."""
+    offenders = []
+    for f in sorted((HARNESS / "tests").rglob("test_*.py")):
+        rel = f.relative_to(HARNESS).as_posix()
+        if "/fixtures/" in rel:
+            continue
+        text = f.read_text(encoding="utf-8")
+        offenders += [f"{rel}::{name}" for name in _runner_spawn_offenders(ast.parse(text), text)]
+    assert not offenders, f"runner subprocesses without KICAD_HAPPY_TESTHARNESS_DATA_DIR: {offenders}"
+
+
 def test_pytest_floor_reads_strict_markers_from_ini(tmp_path):
     """requirements-dev pins pytest>=9.0: older pytest ignores `strict_markers` in pytest.ini,
     so a typo'd marker would silently select nothing."""
