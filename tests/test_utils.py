@@ -192,3 +192,25 @@ if __name__ == "__main__":
             print(f"  FAIL: {name}: {e}")
     print(f"\n{passed} passed, {failed} failed ({passed + failed} total)")
     sys.exit(1 if failed else 0)
+
+
+# === resolve_path quoted keys (dotted names such as net "+3.3V") ===
+
+def test_resolve_quoted_key_with_dots():
+    data = {"nets": {"+3.3V": {"pins": [1, 2]}, "+3": {"3V": {"pins": "wrong"}}}}
+    assert resolve_path(data, 'nets["+3.3V"].pins') == [1, 2]
+
+def test_resolve_quoted_key_then_index():
+    data = {"nets": {"A.B": {"pins": [{"ref": "R1"}, {"ref": "R2"}]}}}
+    assert resolve_path(data, 'nets["A.B"].pins[1].ref') == "R2"
+
+def test_resolve_quoted_key_at_start_and_missing():
+    assert resolve_path({"a.b": 5}, '["a.b"]') == 5
+    assert resolve_path({"nets": {}}, 'nets["+3.3V"].pins') is None
+
+def test_resolve_quoted_key_escaped_quote():
+    assert resolve_path({"k": {'say "hi"': 1}}, 'k["say \\"hi\\""]') == 1
+
+def test_resolve_unquoted_path_unchanged():
+    data = {"nets": {"+3": {"3V": {"pins": "old"}}}}
+    assert resolve_path(data, "nets.+3.3V.pins") == "old"

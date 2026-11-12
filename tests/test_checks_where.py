@@ -68,3 +68,12 @@ def test_where_empty_list_reads_as_empty_string():
     run = lambda c: evaluate_assertion({"id": "T", "check": c}, data)["passed"]
     assert run({"path": "items", "op": "contains_match", "where": {"ref": "^R1$", "pull_ups": "^$"}})
     assert not run({"path": "items", "op": "contains_match", "where": {"ref": "^R2$", "pull_ups": "^$"}})
+
+
+def test_quoted_field_names_reach_dotted_keys():
+    data = {"items": [{"ref": "U1", "pin_nets": {"+3.3V": "1", "GND": "2"}}]}
+    run = lambda c: evaluate_assertion({"id": "T", "check": c}, data)["passed"]
+    assert run({"path": "items", "op": "contains_match", "where": {'pin_nets["+3.3V"]': "^1$"}})
+    assert run({"path": "items", "op": "contains_match", "field": 'pin_nets["+3.3V"]', "pattern": "^1$"})
+    assert run({"path": "items", "op": "field_equals", "match_field": "ref", "match_value": "U1",
+                "assert_field": 'pin_nets["+3.3V"]', "assert_value": "1"})

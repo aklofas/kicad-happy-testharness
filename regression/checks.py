@@ -32,7 +32,7 @@ def _compile(pattern):
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from utils import resolve_path
+from utils import resolve_path, split_quoted_path
 from reference_io import resolve_project_path
 from regression.schema_era import normalize_schema_era
 
@@ -94,7 +94,7 @@ def _item_field(item, field):
     """Get a field value from a dict, supporting dotted paths (e.g., 'r_top.ref')."""
     if not isinstance(item, dict):
         return ""
-    parts = field.split(".")
+    parts = split_quoted_path(field) if '["' in field else field.split(".")
     val = item
     for part in parts:
         if isinstance(val, dict):
@@ -108,7 +108,7 @@ def _item_path(item, field):
     """A dotted-path field of a dict item, or None when any step is missing (plain keys read
     exactly like item.get)."""
     val = item
-    for part in field.split("."):
+    for part in (split_quoted_path(field) if '["' in field else field.split(".")):
         if not isinstance(val, dict):
             return None
         val = val.get(part)

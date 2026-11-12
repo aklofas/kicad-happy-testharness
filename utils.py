@@ -63,12 +63,42 @@ def safe_load_json(path, default=None):
         return default
 
 
+_QUOTED_PATH_TOKEN = re.compile(r'\["((?:[^"\\]|\\.)*)"\]|\[(\d+)\]|([^.\[\]]+)|\.')
+
+
+def split_quoted_path(path: str):
+    """Steps of a path that uses a quoted key segment: 'nets["+3.3V"].pins[0]' ->
+    ["nets", "+3.3V", "pins", 0]. Quoted keys may hold dots; \\" escapes a quote."""
+    steps = []
+    for quoted, index, name in _QUOTED_PATH_TOKEN.findall(path):
+        if index:
+            steps.append(int(index))
+        elif name:
+            steps.append(name)
+        elif quoted:
+            steps.append(re.sub(r'\\(.)', r'\1', quoted))
+    return steps
+
+
 def resolve_path(data: dict, path: str):
     """Navigate a dotted path through nested dicts/lists.
 
-    Supports bracket notation for array indexing: "items[0].name".
-    Returns None if any key is missing or index is out of range.
+    Supports bracket notation for array indexing: "items[0].name", and a quoted key for
+    names that contain dots: 'nets["+3.3V"].pins'. Returns None if any key is missing or
+    index is out of range.
     """
+    if '["' in path:
+        current = data
+        for step in split_quoted_path(path):
+            if isinstance(step, int):
+                if not isinstance(current, list) or step >= len(current):
+                    return None
+                current = current[step]
+            elif isinstance(current, dict) and step in current:
+                current = current[step]
+            else:
+                return None
+        return current
     parts = path.split(".")
     current = data
     for part in parts:

@@ -11,6 +11,19 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-11 — TH-111: a check path cannot reach a net whose name contains a dot (`nets.+3.3V.pins`)
+
+**Severity:** LOW (FND locks on dotted net names can never resolve; met in the TH-109 triage, worked around where the net was renamed, e.g. hawk `+3V3`)
+**File:** `utils.resolve_path` (splits the path on `.`), used by `regression/checks.py` `evaluate_assertion`; also `where` field names
+**Discovered:** 2026-11-11, TH-109 triage (batches 3 and 4: FND-00001479-AST-04 on `3.3V`)
+
+**Symptom:** `nets.+3.3V.pins` splits into `nets`, `+3`, `3V`, `pins`; the lock resolves to nothing and fails (or passes, under a `not_*` op) whatever the analyzer does.
+
+**Fix direction:** a quoted or bracketed segment (`nets["+3.3V"].pins`) in `resolve_path`, with a load error for a path whose first segment names a dict whose keys contain dots; or a `match` on `nets` items by name.
+
+- **Fix:** a quoted key segment: `nets["+3.3V"].pins`. `utils.split_quoted_path` tokenizes paths that contain `["` (quoted keys may hold dots, `\"` escapes a quote, `[n]` indexes lists); `resolve_path` uses it only for such paths, so every existing path resolves as before. `regression/checks.py` `_item_field` / `_item_path` accept the same syntax for `field`, `where` keys and `field_equals` match / assert fields. No load-time guard for unquoted dotted names (not needed: no corpus lock path or field uses `["` today, and the TH-109 locks that met this were written against renamed nets or `where`).
+- **Verification:** `tests/test_utils.py` (5 new: dotted key, quoted key then index, quoted first segment / missing, escaped quote, unquoted path unchanged) and `tests/test_checks_where.py::test_quoted_field_names_reach_dotted_keys` red before, green after; checks / run_checks / required-field tests 119 passed; corpus scan: 0 assertion paths or fields contain `["`.
+
 ## 2026-11-11 — TH-110: `audit_constants.py` gives a new constant the lowest free `CONST-NNN`, so a retired id is reused for an unrelated constant
 
 **Severity:** LOW (no tracked doc cites the reused ids today; registry history and any old `CONST-NNN` reference then point at two different constants)
