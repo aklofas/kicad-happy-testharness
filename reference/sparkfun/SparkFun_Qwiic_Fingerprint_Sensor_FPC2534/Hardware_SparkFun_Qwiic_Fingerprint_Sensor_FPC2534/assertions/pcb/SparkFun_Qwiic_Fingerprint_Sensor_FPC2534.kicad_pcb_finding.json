@@ -92,10 +92,10 @@
       "check": {
         "path": "layer_transitions",
         "op": "contains_match",
-        "value": {
-          "net": "DP"
-        }
-      }
+        "field": "net",
+        "pattern": "^DP$"
+      },
+      "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"net\", \"pattern\": \"^DP$\"} (the old check passed vacuously: {\"path\": \"layer_transitions\", \"op\": \"contains_match\", \"value\": {\"net\": \"DP\"}})"
     },
     {
       "id": "FND-00001450-AST-10",
@@ -104,10 +104,10 @@
       "check": {
         "path": "power_net_routing",
         "op": "contains_match",
-        "value": {
-          "net": "VBUS"
-        }
-      }
+        "field": "net",
+        "pattern": "^VBUS$"
+      },
+      "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"net\", \"pattern\": \"^VBUS$\"} (the old check passed vacuously: {\"path\": \"power_net_routing\", \"op\": \"contains_match\", \"value\": {\"net\": \"VBUS\"}})"
     },
     {
       "id": "FND-00001450-AST-11",

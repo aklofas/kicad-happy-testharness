@@ -37,16 +37,16 @@
       "created_from": "FND-00001988",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "decoupling",
-          "component": "U1"
-        },
-        "detector_filter": "detect_design_observations"
+        "op": "field_equals",
+        "detector_filter": "detect_design_observations",
+        "match_field": "component",
+        "match_value": "U1",
+        "assert_field": "category",
+        "assert_value": "decoupling"
       },
       "aspirational": false,
       "aspirational_reason": "contains_match does not support dict value matching",
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"component\", \"match_value\": \"U1\", \"assert_field\": \"category\", \"assert_value\": \"decoupling\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"decoupling\", \"component\": \"U1\"}, \"detector_filter\": \"detect_design_observations\"})"
     },
     {
       "id": "FND-00001988-AST-04",

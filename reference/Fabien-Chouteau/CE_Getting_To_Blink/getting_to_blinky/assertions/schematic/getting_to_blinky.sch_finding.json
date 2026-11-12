@@ -46,11 +46,10 @@
       "check": {
         "path": "statistics.total_nets",
         "op": "range",
-        "value": [
-          5,
-          8
-        ]
-      }
+        "min": 5,
+        "max": 8
+      },
+      "migration_note": "TH-109 R1: range without min/max (bounds under value) -> {\"op\": \"range\", \"min\": 5, \"max\": 8} (the old check passed vacuously: {\"path\": \"statistics.total_nets\", \"op\": \"range\", \"value\": [5, 8]})"
     },
     {
       "id": "FND-00000420-AST-05",

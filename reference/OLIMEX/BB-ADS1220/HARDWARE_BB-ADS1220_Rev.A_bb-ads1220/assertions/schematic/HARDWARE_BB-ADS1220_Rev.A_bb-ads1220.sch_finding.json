@@ -21,13 +21,14 @@
       "created_from": "FND-00000382",
       "check": {
         "path": "nets.REFP.pins",
-        "op": "contains_match",
-        "value": {
-          "component": "U1",
-          "pin_name": "REFP0"
-        }
+        "op": "field_equals",
+        "match_field": "component",
+        "match_value": "U1",
+        "assert_field": "pin_name",
+        "assert_value": "REFP0"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"component\", \"match_value\": \"U1\", \"assert_field\": \"pin_name\", \"assert_value\": \"REFP0\"} (the old check passed vacuously: {\"path\": \"nets.REFP.pins\", \"op\": \"contains_match\", \"value\": {\"component\": \"U1\", \"pin_name\": \"REFP0\"}})"
     },
     {
       "id": "FND-00000382-AST-03",
@@ -35,13 +36,14 @@
       "created_from": "FND-00000382",
       "check": {
         "path": "nets.REFN.pins",
-        "op": "contains_match",
-        "value": {
-          "component": "U1",
-          "pin_name": "REFN0"
-        }
+        "op": "field_equals",
+        "match_field": "component",
+        "match_value": "U1",
+        "assert_field": "pin_name",
+        "assert_value": "REFN0"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"component\", \"match_value\": \"U1\", \"assert_field\": \"pin_name\", \"assert_value\": \"REFN0\"} (the old check passed vacuously: {\"path\": \"nets.REFN.pins\", \"op\": \"contains_match\", \"value\": {\"component\": \"U1\", \"pin_name\": \"REFN0\"}})"
     },
     {
       "id": "FND-00000382-AST-04",
@@ -49,13 +51,14 @@
       "created_from": "FND-00000382",
       "check": {
         "path": "nets.AVSS.pins",
-        "op": "contains_match",
-        "value": {
-          "component": "U1",
-          "pin_name": "AVSS"
-        }
+        "op": "field_equals",
+        "match_field": "component",
+        "match_value": "U1",
+        "assert_field": "pin_name",
+        "assert_value": "AVSS"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"component\", \"match_value\": \"U1\", \"assert_field\": \"pin_name\", \"assert_value\": \"AVSS\"} (the old check passed vacuously: {\"path\": \"nets.AVSS.pins\", \"op\": \"contains_match\", \"value\": {\"component\": \"U1\", \"pin_name\": \"AVSS\"}})"
     },
     {
       "id": "FND-00000382-AST-05",

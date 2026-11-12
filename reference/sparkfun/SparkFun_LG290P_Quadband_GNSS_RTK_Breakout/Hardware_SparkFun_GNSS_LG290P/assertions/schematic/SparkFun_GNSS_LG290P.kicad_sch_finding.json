@@ -179,13 +179,12 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rail": "V_BCKP"
-        },
-        "detector_filter": "detect_decoupling"
+        "detector_filter": "detect_decoupling",
+        "field": "rail",
+        "pattern": "^V_BCKP$"
       },
       "aspirational": false,
-      "migration_note": "Added (v3.0.1 regen at 246ee5a, ruling 2026-11-05): positive lock for the V_BCKP decoupling that replaced the R7/C9 RC-DET"
+      "migration_note": "Added (v3.0.1 regen at 246ee5a, ruling 2026-11-05): positive lock for the V_BCKP decoupling that replaced the R7/C9 RC-DET; TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"rail\", \"pattern\": \"^V_BCKP$\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"V_BCKP\"}, \"detector_filter\": \"detect_decoupling\"})"
     }
   ]
 }

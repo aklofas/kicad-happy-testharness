@@ -20,12 +20,13 @@
       "created_from": "FND-00001470",
       "check": {
         "path": "test_coverage.uncovered_key_nets",
-        "op": "contains_match",
-        "value": {
-          "net": "IO4{slash}SDA",
-          "category": "i2c"
-        }
-      }
+        "op": "field_equals",
+        "match_field": "net",
+        "match_value": "IO4{slash}SDA",
+        "assert_field": "category",
+        "assert_value": "i2c"
+      },
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"net\", \"match_value\": \"IO4{slash}SDA\", \"assert_field\": \"category\", \"assert_value\": \"i2c\"} (the old check passed vacuously: {\"path\": \"test_coverage.uncovered_key_nets\", \"op\": \"contains_match\", \"value\": {\"net\": \"IO4{slash}SDA\", \"category\": \"i2c\"}})"
     },
     {
       "id": "FND-00001470-AST-03",

@@ -20,14 +20,15 @@
       "created_from": "FND-00001474",
       "check": {
         "path": "layers",
-        "op": "contains_match",
-        "value": {
-          "name": "B.Cu",
-          "type": "jumper"
-        }
+        "op": "field_equals",
+        "match_field": "name",
+        "match_value": "B.Cu",
+        "assert_field": "type",
+        "assert_value": "jumper"
       },
       "aspirational": false,
-      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): file declares (31 \"B.Cu\" jumper); 'jumper' is a valid KiCad layer type and the analyzer reports it verbatim; lock vacuous anyway"
+      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): file declares (31 \"B.Cu\" jumper); 'jumper' is a valid KiCad layer type and the analyzer reports it verbatim; lock vacuous anyway",
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"name\", \"match_value\": \"B.Cu\", \"assert_field\": \"type\", \"assert_value\": \"jumper\"} (the old check passed vacuously: {\"path\": \"layers\", \"op\": \"contains_match\", \"value\": {\"name\": \"B.Cu\", \"type\": \"jumper\"}})"
     }
   ]
 }

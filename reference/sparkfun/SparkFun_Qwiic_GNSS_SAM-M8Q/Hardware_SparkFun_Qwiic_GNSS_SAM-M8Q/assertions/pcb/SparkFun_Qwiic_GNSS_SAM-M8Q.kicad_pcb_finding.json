@@ -40,12 +40,13 @@
       "created_from": "FND-00001454",
       "check": {
         "path": "vias.via_analysis.fanout_patterns",
-        "op": "contains_match",
-        "value": {
-          "component": "U1",
-          "fanout_vias": 57
-        }
-      }
+        "op": "field_equals",
+        "match_field": "component",
+        "match_value": "U1",
+        "assert_field": "fanout_vias",
+        "assert_value": 57
+      },
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"component\", \"match_value\": \"U1\", \"assert_field\": \"fanout_vias\", \"assert_value\": 57} (the old check passed vacuously: {\"path\": \"vias.via_analysis.fanout_patterns\", \"op\": \"contains_match\", \"value\": {\"component\": \"U1\", \"fanout_vias\": 57}})"
     },
     {
       "id": "FND-00001454-AST-05",
@@ -83,12 +84,13 @@
       "created_from": "FND-00001454",
       "check": {
         "path": "footprints",
-        "op": "contains_match",
-        "value": {
-          "reference": "U1",
-          "layer": "B.Cu"
-        }
-      }
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "U1",
+        "assert_field": "layer",
+        "assert_value": "B.Cu"
+      },
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"U1\", \"assert_field\": \"layer\", \"assert_value\": \"B.Cu\"} (the old check passed vacuously: {\"path\": \"footprints\", \"op\": \"contains_match\", \"value\": {\"reference\": \"U1\", \"layer\": \"B.Cu\"}})"
     },
     {
       "id": "FND-00001454-AST-09",
@@ -96,12 +98,13 @@
       "created_from": "FND-00001454",
       "check": {
         "path": "zones",
-        "op": "contains_match",
-        "value": {
-          "net_name": "GND",
-          "is_filled": true
-        }
-      }
+        "op": "field_equals",
+        "match_field": "net_name",
+        "match_value": "GND",
+        "assert_field": "is_filled",
+        "assert_value": true
+      },
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"net_name\", \"match_value\": \"GND\", \"assert_field\": \"is_filled\", \"assert_value\": true} (the old check passed vacuously: {\"path\": \"zones\", \"op\": \"contains_match\", \"value\": {\"net_name\": \"GND\", \"is_filled\": true}})"
     },
     {
       "id": "FND-00001454-AST-10",

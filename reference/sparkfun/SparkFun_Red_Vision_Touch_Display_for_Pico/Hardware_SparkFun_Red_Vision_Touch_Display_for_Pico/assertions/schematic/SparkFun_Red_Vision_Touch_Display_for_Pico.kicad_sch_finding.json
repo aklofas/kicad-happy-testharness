@@ -30,14 +30,14 @@
       "created_from": "FND-00001520",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "reference": "Q1",
-          "type": "mosfet"
-        },
-        "detector_filter": "detect_transistor_circuits"
+        "op": "field_equals",
+        "detector_filter": "detect_transistor_circuits",
+        "match_field": "reference",
+        "match_value": "Q1",
+        "assert_field": "type",
+        "assert_value": "mosfet"
       },
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits; TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"Q1\", \"assert_field\": \"type\", \"assert_value\": \"mosfet\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"reference\": \"Q1\", \"type\": \"mosfet\"}, \"detector_filter\": \"detect_transistor_circuits\"})"
     },
     {
       "id": "FND-00001520-AST-04",

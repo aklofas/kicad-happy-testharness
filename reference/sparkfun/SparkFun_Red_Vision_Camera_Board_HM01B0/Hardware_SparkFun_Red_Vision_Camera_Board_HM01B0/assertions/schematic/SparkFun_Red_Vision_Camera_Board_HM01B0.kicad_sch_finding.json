@@ -20,14 +20,14 @@
       "created_from": "FND-00001518",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "ref": "U2",
-          "topology": "LDO"
-        },
-        "detector_filter": "detect_power_regulators"
+        "op": "field_equals",
+        "detector_filter": "detect_power_regulators",
+        "match_field": "ref",
+        "match_value": "U2",
+        "assert_field": "topology",
+        "assert_value": "LDO"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"ref\", \"match_value\": \"U2\", \"assert_field\": \"topology\", \"assert_value\": \"LDO\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U2\", \"topology\": \"LDO\"}, \"detector_filter\": \"detect_power_regulators\"})"
     },
     {
       "id": "FND-00001518-AST-03",
@@ -35,14 +35,14 @@
       "created_from": "FND-00001518",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "reference": "Y1",
-          "type": "active_oscillator"
-        },
-        "detector_filter": "detect_crystal_circuits"
+        "op": "field_equals",
+        "detector_filter": "detect_crystal_circuits",
+        "match_field": "reference",
+        "match_value": "Y1",
+        "assert_field": "type",
+        "assert_value": "active_oscillator"
       },
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits"
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits; TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"Y1\", \"assert_field\": \"type\", \"assert_value\": \"active_oscillator\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"reference\": \"Y1\", \"type\": \"active_oscillator\"}, \"detector_filter\": \"detect_crystal_circuits\"})"
     },
     {
       "id": "FND-00001518-AST-04",

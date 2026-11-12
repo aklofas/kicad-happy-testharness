@@ -61,14 +61,15 @@
       "created_from": "FND-00001486",
       "check": {
         "path": "footprints",
-        "op": "contains_match",
-        "value": {
-          "reference": "R5",
-          "value": "1k"
-        }
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "R5",
+        "assert_field": "value",
+        "assert_value": "1k"
       },
       "aspirational": false,
-      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): reviewer says analyzer correct: PCB file has R5=1k; sch/PCB divergence is the design's; R5 1k today"
+      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): reviewer says analyzer correct: PCB file has R5=1k; sch/PCB divergence is the design's; R5 1k today",
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"R5\", \"assert_field\": \"value\", \"assert_value\": \"1k\"} (the old check passed vacuously: {\"path\": \"footprints\", \"op\": \"contains_match\", \"value\": {\"reference\": \"R5\", \"value\": \"1k\"}})"
     }
   ]
 }

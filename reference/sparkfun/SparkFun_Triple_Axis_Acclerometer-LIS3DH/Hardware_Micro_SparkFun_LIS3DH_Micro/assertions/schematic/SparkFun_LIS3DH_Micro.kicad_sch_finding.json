@@ -46,12 +46,13 @@
       "created_from": "FND-00001542",
       "check": {
         "path": "ic_pin_analysis",
-        "op": "contains_match",
-        "value": {
-          "reference": "U1",
-          "function": "IMU/motion sensor"
-        }
-      }
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "U1",
+        "assert_field": "function",
+        "assert_value": "IMU/motion sensor"
+      },
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"U1\", \"assert_field\": \"function\", \"assert_value\": \"IMU/motion sensor\"} (the old check passed vacuously: {\"path\": \"ic_pin_analysis\", \"op\": \"contains_match\", \"value\": {\"reference\": \"U1\", \"function\": \"IMU/motion sensor\"}})"
     },
     {
       "id": "FND-00001542-AST-05",
@@ -60,10 +61,10 @@
       "check": {
         "path": "ic_pin_analysis",
         "op": "contains_match",
-        "value": {
-          "reference": "U1"
-        }
-      }
+        "field": "reference",
+        "pattern": "^U1$"
+      },
+      "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"reference\", \"pattern\": \"^U1$\"} (the old check passed vacuously: {\"path\": \"ic_pin_analysis\", \"op\": \"contains_match\", \"value\": {\"reference\": \"U1\"}})"
     },
     {
       "id": "FND-00001542-AST-06",

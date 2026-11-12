@@ -10,12 +10,13 @@
       "created_from": "FND-00001562",
       "check": {
         "path": "ic_pin_analysis",
-        "op": "contains_match",
-        "value": {
-          "reference": "U2",
-          "function": "linear regulator"
-        }
-      }
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "U2",
+        "assert_field": "function",
+        "assert_value": "linear regulator"
+      },
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"U2\", \"assert_field\": \"function\", \"assert_value\": \"linear regulator\"} (the old check passed vacuously: {\"path\": \"ic_pin_analysis\", \"op\": \"contains_match\", \"value\": {\"reference\": \"U2\", \"function\": \"linear regulator\"}})"
     },
     {
       "id": "FND-00001562-AST-02",

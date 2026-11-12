@@ -43,12 +43,12 @@
       "check": {
         "path": "statistics.power_rails",
         "op": "contains_match",
-        "value": {
-          "name": "GND"
-        }
+        "field": "name",
+        "pattern": "^GND$"
       },
       "aspirational": true,
-      "incorrect_review": "unrelated (TH-105, 2026-11-06): Locks GND presence (undisputed; malformed value-dict); the claim was 3.3V missing, and power_rails now has 3.3V too"
+      "incorrect_review": "unrelated (TH-105, 2026-11-06): Locks GND presence (undisputed; malformed value-dict); the claim was 3.3V missing, and power_rails now has 3.3V too",
+      "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"name\", \"pattern\": \"^GND$\"} (the old check passed vacuously: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": {\"name\": \"GND\"}})"
     },
     {
       "id": "FND-00001461-AST-05",

@@ -30,12 +30,13 @@
       "created_from": "FND-00001519",
       "check": {
         "path": "zones",
-        "op": "contains_match",
-        "value": {
-          "net_name": "GND",
-          "is_filled": true
-        }
-      }
+        "op": "field_equals",
+        "match_field": "net_name",
+        "match_value": "GND",
+        "assert_field": "is_filled",
+        "assert_value": true
+      },
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"net_name\", \"match_value\": \"GND\", \"assert_field\": \"is_filled\", \"assert_value\": true} (the old check passed vacuously: {\"path\": \"zones\", \"op\": \"contains_match\", \"value\": {\"net_name\": \"GND\", \"is_filled\": true}})"
     },
     {
       "id": "FND-00001519-AST-04",

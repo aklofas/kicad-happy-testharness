@@ -119,12 +119,13 @@
       "created_from": "FND-00001453",
       "check": {
         "path": "components",
-        "op": "contains_match",
-        "value": {
-          "reference": "J4",
-          "type": "connector"
-        }
-      }
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "J4",
+        "assert_field": "type",
+        "assert_value": "connector"
+      },
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"J4\", \"assert_field\": \"type\", \"assert_value\": \"connector\"} (the old check passed vacuously: {\"path\": \"components\", \"op\": \"contains_match\", \"value\": {\"reference\": \"J4\", \"type\": \"connector\"}})"
     },
     {
       "id": "FND-00001453-AST-10",

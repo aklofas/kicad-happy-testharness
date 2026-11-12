@@ -21,10 +21,10 @@
       "check": {
         "path": "zip_archives",
         "op": "contains_match",
-        "value": {
-          "vs_loose_files": "loose_files_newer"
-        }
-      }
+        "field": "vs_loose_files",
+        "pattern": "^loose_files_newer$"
+      },
+      "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"vs_loose_files\", \"pattern\": \"^loose_files_newer$\"} (the old check passed vacuously: {\"path\": \"zip_archives\", \"op\": \"contains_match\", \"value\": {\"vs_loose_files\": \"loose_files_newer\"}})"
     },
     {
       "id": "FND-00001469-AST-03",

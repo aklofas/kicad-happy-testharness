@@ -108,11 +108,11 @@
       "check": {
         "path": "subcircuits",
         "op": "contains_match",
-        "value": {
-          "center_ic": "U1"
-        }
+        "field": "center_ic",
+        "pattern": "^U1$"
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"center_ic\", \"pattern\": \"^U1$\"} (the old check passed vacuously: {\"path\": \"subcircuits\", \"op\": \"contains_match\", \"value\": {\"center_ic\": \"U1\"}})"
     },
     {
       "id": "FND-00001505-AST-10",

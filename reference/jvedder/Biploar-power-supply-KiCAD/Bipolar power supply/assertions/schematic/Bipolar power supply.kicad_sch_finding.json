@@ -56,12 +56,12 @@
       "created_from": "FND-00000391",
       "check": {
         "path": "findings",
-        "op": "count_matches",
+        "op": "equals",
         "value": 2,
         "detector_filter": "detect_voltage_dividers"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 2} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 2, \"detector_filter\": \"detect_voltage_dividers\"})"
     },
     {
       "id": "FND-00000391-AST-06",
@@ -69,12 +69,12 @@
       "created_from": "FND-00000391",
       "check": {
         "path": "findings",
-        "op": "count_matches",
+        "op": "equals",
         "value": 0,
         "detector_filter": "detect_bridge_circuits"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.bridge_circuits"
+      "migration_note": "Path migrated from: signal_analysis.bridge_circuits; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 0} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 0, \"detector_filter\": \"detect_bridge_circuits\"})"
     }
   ]
 }

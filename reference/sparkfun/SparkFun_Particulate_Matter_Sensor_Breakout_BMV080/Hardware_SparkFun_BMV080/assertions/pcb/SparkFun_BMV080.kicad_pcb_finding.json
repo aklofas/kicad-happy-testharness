@@ -41,10 +41,10 @@
       "check": {
         "path": "zones",
         "op": "contains_match",
-        "value": {
-          "net_name": "GND"
-        }
-      }
+        "field": "net_name",
+        "pattern": "^GND$"
+      },
+      "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"net_name\", \"pattern\": \"^GND$\"} (the old check passed vacuously: {\"path\": \"zones\", \"op\": \"contains_match\", \"value\": {\"net_name\": \"GND\"}})"
     },
     {
       "id": "FND-00001506-AST-05",
@@ -53,10 +53,10 @@
       "check": {
         "path": "decoupling_placement",
         "op": "contains_match",
-        "value": {
-          "ic": "U1"
-        }
-      }
+        "field": "ic",
+        "pattern": "^U1$"
+      },
+      "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"ic\", \"pattern\": \"^U1$\"} (the old check passed vacuously: {\"path\": \"decoupling_placement\", \"op\": \"contains_match\", \"value\": {\"ic\": \"U1\"}})"
     },
     {
       "id": "FND-00001506-AST-06",

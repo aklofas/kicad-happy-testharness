@@ -37,14 +37,14 @@
       "created_from": "FND-00001467",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "reference": "Q5",
-          "topology": "level_shifter"
-        },
-        "detector_filter": "detect_transistor_circuits"
+        "op": "field_equals",
+        "detector_filter": "detect_transistor_circuits",
+        "match_field": "reference",
+        "match_value": "Q5",
+        "assert_field": "topology",
+        "assert_value": "level_shifter"
       },
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits; TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"Q5\", \"assert_field\": \"topology\", \"assert_value\": \"level_shifter\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"reference\": \"Q5\", \"topology\": \"level_shifter\"}, \"detector_filter\": \"detect_transistor_circuits\"})"
     },
     {
       "id": "FND-00001467-AST-04",
@@ -52,14 +52,14 @@
       "created_from": "FND-00001467",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "ref": "F2",
-          "type": "fuse"
-        },
-        "detector_filter": "detect_protection_devices"
+        "op": "field_equals",
+        "detector_filter": "detect_protection_devices",
+        "match_field": "ref",
+        "match_value": "F2",
+        "assert_field": "type",
+        "assert_value": "fuse"
       },
-      "migration_note": "Path migrated from: signal_analysis.protection_devices"
+      "migration_note": "Path migrated from: signal_analysis.protection_devices; TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"ref\", \"match_value\": \"F2\", \"assert_field\": \"type\", \"assert_value\": \"fuse\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"F2\", \"type\": \"fuse\"}, \"detector_filter\": \"detect_protection_devices\"})"
     },
     {
       "id": "FND-00001467-AST-05",

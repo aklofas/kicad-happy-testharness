@@ -51,13 +51,12 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "category": "regulator_caps"
-        },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^regulator_caps$"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 R3: not_contains_match without pattern (one-key dict under value) -> {\"op\": \"not_contains_match\", \"field\": \"category\", \"pattern\": \"^regulator_caps$\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"regulator_caps\"}, \"detector_filter\": \"detect_design_observations\"})"
     },
     {
       "id": "FND-00000395-AST-05",

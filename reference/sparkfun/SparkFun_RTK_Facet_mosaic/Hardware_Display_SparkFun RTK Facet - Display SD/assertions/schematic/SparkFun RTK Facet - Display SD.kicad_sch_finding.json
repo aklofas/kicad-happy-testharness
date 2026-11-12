@@ -27,15 +27,15 @@
       "created_from": "FND-00001536",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "net": "SDA"
-        },
-        "detector_filter": "detect_design_observations"
+        "op": "field_equals",
+        "detector_filter": "detect_design_observations",
+        "match_field": "net",
+        "match_value": "SDA",
+        "assert_field": "category",
+        "assert_value": "i2c_bus"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations",
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"net\", \"match_value\": \"SDA\", \"assert_field\": \"category\", \"assert_value\": \"i2c_bus\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"i2c_bus\", \"net\": \"SDA\"}, \"detector_filter\": \"detect_design_observations\"})",
       "incorrect_review": "unrelated (TH-105, 2026-11-06): vacuous contains_match (dict value ignored); bug remains: SDA devices still ['U1','U1']"
     }
   ]
