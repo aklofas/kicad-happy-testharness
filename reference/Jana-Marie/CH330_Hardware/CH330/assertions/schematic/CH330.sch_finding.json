@@ -9,24 +9,36 @@
       "description": "The schematic has a label 'D+' connected to U1 pin 1 (UD+, bidirectional USB data+). The JSON places U1 pin 4 (RTS, output) into the 'D+' net instead. The analyzer has mis-mapped U1's pin positions, assigning the wrong schematic pins to the D+ net.",
       "created_from": "FND-00000421",
       "check": {
-        "path": "nets.D+.pins[?(@.component=='U1')].pin_name",
+        "path": "nets.D+.pins",
         "op": "contains_match",
-        "value": "UD+"
+        "field": "pin_name",
+        "pattern": "^UD\\+$",
+        "where": {
+          "component": "^U1$",
+          "pin_number": "^1$"
+        }
       },
       "aspirational": true,
-      "aspirational_reason": "KiCad 5 legacy pin-mapping error for mirrored components"
+      "aspirational_reason": "KiCad 5 legacy pin-mapping error for mirrored components",
+      "migration_note": "TH-109 triage: {\"path\": \"nets.D+.pins[?(@.component=='U1')].pin_name\", \"op\": \"contains_match\", \"value\": \"UD+\"} -> {\"path\": \"nets.D+.pins\", \"op\": \"contains_match\", \"field\": \"pin_name\", \"pattern\": \"^UD\\\\+$\", \"where\": {\"component\": \"^U1$\", \"pin_number\": \"^1$\"}} (The D+ net must hold U1 pin 1 (UD+); the JSONPath filter becomes a where on component. Passes today (pin mapping fixed).)"
     },
     {
       "id": "FND-00000421-AST-02",
       "description": "The schematic has a label 'D-' connected to U1 pin 2 (UD-, bidirectional USB data-). The JSON places U1 pin 3 (GND, power_in) into the 'D-' net instead. This is a pin-mapping error caused by incorrect position-to-pin resolution for mirrored components in KiCad 5 legacy format.",
       "created_from": "FND-00000421",
       "check": {
-        "path": "nets.D-.pins[?(@.component=='U1')].pin_name",
+        "path": "nets.D-.pins",
         "op": "contains_match",
-        "value": "UD-"
+        "field": "pin_name",
+        "pattern": "^UD-$",
+        "where": {
+          "component": "^U1$",
+          "pin_number": "^2$"
+        }
       },
       "aspirational": true,
-      "aspirational_reason": "KiCad 5 legacy pin-mapping error for mirrored components"
+      "aspirational_reason": "KiCad 5 legacy pin-mapping error for mirrored components",
+      "migration_note": "TH-109 triage: {\"path\": \"nets.D-.pins[?(@.component=='U1')].pin_name\", \"op\": \"contains_match\", \"value\": \"UD-\"} -> {\"path\": \"nets.D-.pins\", \"op\": \"contains_match\", \"field\": \"pin_name\", \"pattern\": \"^UD-$\", \"where\": {\"component\": \"^U1$\", \"pin_number\": \"^2$\"}} (The D- net must hold U1 pin 2 (UD-); passes today (pin mapping fixed).)"
     },
     {
       "id": "FND-00000421-AST-03",

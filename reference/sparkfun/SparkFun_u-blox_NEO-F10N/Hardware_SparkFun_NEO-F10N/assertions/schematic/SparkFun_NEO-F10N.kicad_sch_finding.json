@@ -25,14 +25,15 @@
       "check": {
         "path": "usb_compliance.connectors",
         "op": "contains_match",
-        "value": {
-          "connector": "J1",
-          "checks": {
-            "cc1_pulldown_5k1": "pass",
-            "cc2_pulldown_5k1": "pass"
-          }
+        "field": "connector",
+        "pattern": "^J1$",
+        "where": {
+          "checks.cc1_pulldown_5k1": "^pass$",
+          "checks.cc2_pulldown_5k1": "^pass$",
+          "checks.usb_esd_ic": "^pass$"
         }
-      }
+      },
+      "migration_note": "TH-109 triage: {\"path\": \"usb_compliance.connectors\", \"op\": \"contains_match\", \"value\": {\"connector\": \"J1\", \"checks\": {\"cc1_pulldown_5k1\": \"pass\", \"cc2_pulldown_5k1\": \"pass\"}}} -> {\"path\": \"usb_compliance.connectors\", \"op\": \"contains_match\", \"field\": \"connector\", \"pattern\": \"^J1$\", \"where\": {\"checks.cc1_pulldown_5k1\": \"^pass$\", \"checks.cc2_pulldown_5k1\": \"^pass$\", \"checks.usb_esd_ic\": \"^pass$\"}} (One item check: J1 with both CC 5.1k pulldown checks and the USB ESD IC check passing, as the description states.)"
     },
     {
       "id": "FND-00001562-AST-03",
@@ -41,12 +42,14 @@
       "check": {
         "path": "subcircuits",
         "op": "contains_match",
-        "value": {
-          "center_ic": "U3",
-          "ic_value": "NEO-F10N"
+        "field": "center_ic",
+        "pattern": "^U3$",
+        "where": {
+          "ic_value": "^NEO-F10N$"
         }
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "TH-109 triage: {\"path\": \"subcircuits\", \"op\": \"contains_match\", \"value\": {\"center_ic\": \"U3\", \"ic_value\": \"NEO-F10N\"}} -> {\"path\": \"subcircuits\", \"op\": \"contains_match\", \"field\": \"center_ic\", \"pattern\": \"^U3$\", \"where\": {\"ic_value\": \"^NEO-F10N$\"}} (Subcircuit centred on U3 with value NEO-F10N, the two keys of the old dict.)"
     },
     {
       "id": "FND-00001562-AST-04",
@@ -77,12 +80,15 @@
       "check": {
         "path": "ic_pin_analysis",
         "op": "contains_match",
-        "value": {
-          "reference": "U8",
-          "function": "USB-UART bridge",
-          "total_pins": 16
+        "field": "reference",
+        "pattern": "^U8$",
+        "where": {
+          "function": "^USB-UART bridge$",
+          "total_pins": "^16$",
+          "unconnected_pins": "^0$"
         }
-      }
+      },
+      "migration_note": "TH-109 triage: {\"path\": \"ic_pin_analysis\", \"op\": \"contains_match\", \"value\": {\"reference\": \"U8\", \"function\": \"USB-UART bridge\", \"total_pins\": 16}} -> {\"path\": \"ic_pin_analysis\", \"op\": \"contains_match\", \"field\": \"reference\", \"pattern\": \"^U8$\", \"where\": {\"function\": \"^USB-UART bridge$\", \"total_pins\": \"^16$\", \"unconnected_pins\": \"^0$\"}} (U8 classified USB-UART bridge with 16 pins and 0 unconnected, per the description.)"
     },
     {
       "id": "FND-00001562-AST-07",
@@ -124,18 +130,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "resistor": {
-            "ref": "R7"
-          },
-          "capacitor": {
-            "ref": "C3"
-          }
+        "field": "components",
+        "pattern": "^R7$",
+        "where": {
+          "components": "^C3$"
         },
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"resistor\": {\"ref\": \"R7\"}, \"capacitor\": {\"ref\": \"C3\"}}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"components\", \"pattern\": \"^R7$\", \"where\": {\"components\": \"^C3$\"}, \"detector_filter\": \"detect_rc_filters\"} (No RC filter may pair R7 with C3 (components list, so a parallel-cap group is covered). Passes today: the false R7/C3 filter is gone (graduation candidate).)"
     }
   ]
 }

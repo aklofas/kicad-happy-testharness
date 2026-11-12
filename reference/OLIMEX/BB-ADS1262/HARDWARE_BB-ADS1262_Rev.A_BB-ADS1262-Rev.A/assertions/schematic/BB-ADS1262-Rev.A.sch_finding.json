@@ -35,12 +35,13 @@
       "created_from": "FND-00000384",
       "check": {
         "path": "findings",
-        "op": "equals",
-        "value": 2,
-        "detector_filter": "detect_decoupling"
+        "op": "contains_match",
+        "detector_filter": "detect_decoupling",
+        "field": "components",
+        "pattern": "^(C18|C19|C21)$"
       },
-      "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 2} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 2, \"detector_filter\": \"detect_decoupling\"})"
+      "aspirational": true,
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 R2: count_matches without pattern (counted every filtered item) -> {\"op\": \"equals\", \"value\": 2} (same semantics, explicit op; old check: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": 2, \"detector_filter\": \"detect_decoupling\"}); TH-109 review: inverted (asserted the defect) -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_decoupling\", \"field\": \"components\", \"pattern\": \"^(C18|C19|C21)$\"}; made aspirational"
     }
   ]
 }

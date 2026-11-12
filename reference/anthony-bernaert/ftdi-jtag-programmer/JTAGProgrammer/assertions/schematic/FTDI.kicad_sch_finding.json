@@ -9,13 +9,30 @@
       "description": "The FTDI sub-sheet contains a FT2232HL (U1) with ADBUS0=JTAG_TCK, ADBUS1=JTAG_TDI, ADBUS2=JTAG_TDO, ADBUS3=JTAG_TMS, ADBUS7=JTAG_SRST on channel A, and BDBUS0=UART_TXD, BDBUS1=UART_RXD, BDBUS2=UART_RTS, BDBUS3=UART_CTS on channel B. None of these are detected as JTAG or UART interfaces. The named nets (JTAG_TCK, UART_TXD, etc.) are flagged only as 'single_pin_nets' in design_observations, but no JTAG bus detector or UART bus detector fires. The four 74LVC3G17 buffer/level-shifter ICs (U4-U7) between the FTDI and target connector are also not identified as level shifters.",
       "created_from": "FND-00002073",
       "check": {
-        "path": "findings",
+        "path": "design_analysis.bus_analysis.uart",
         "op": "contains_match",
-        "value": "/jtag/i",
-        "detector_filter": "detect_design_observations"
+        "field": "devices",
+        "pattern": "'ref': 'U1'",
+        "where": {
+          "net": "^UART_TXD$"
+        }
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": \"/jtag/i\", \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"design_analysis.bus_analysis.uart\", \"op\": \"contains_match\", \"field\": \"devices\", \"pattern\": \"'ref': 'U1'\", \"where\": {\"net\": \"^UART_TXD$\"}} (Description reports UART and JTAG not detected. UART is detected now (U1 on UART_TXD/RXD/RTS/CTS); JTAG is not (detect_debug_interfaces is connector-keyword based; this sub-sheet has the FT2232H host)"
+    },
+    {
+      "id": "FND-00002073-AST-02",
+      "description": "The FTDI sub-sheet contains a FT2232HL (U1) with ADBUS0=JTAG_TCK, ADBUS1=JTAG_TDI, ADBUS2=JTAG_TDO, ADBUS3=JTAG_TMS, ADBUS7=JTAG_SRST on channel A, and BDBUS0=UART_TXD, BDBUS1=UART_RXD, BDBUS2=UART_RTS, BDBUS3=UART_CTS on channel B. None of these are detected as JTAG or UART interfaces. The named nets (JTAG_TCK, UART_TXD, etc.) are flagged only as 'single_pin_nets' in design_observations, but no JTAG bus detector or UART bus detector fires. The four 74LVC3G17 buffer/level-shifter ICs (U4-U7) between the FTDI and target connector are also not identified as level shifters.",
+      "created_from": "FND-00002073",
+      "aspirational": true,
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "detector_filter": "detect_debug_interfaces",
+        "field": "interface_type",
+        "pattern": "^jtag$"
+      },
+      "migration_note": "TH-109 triage: split from FND-00002073-AST-01"
     }
   ]
 }

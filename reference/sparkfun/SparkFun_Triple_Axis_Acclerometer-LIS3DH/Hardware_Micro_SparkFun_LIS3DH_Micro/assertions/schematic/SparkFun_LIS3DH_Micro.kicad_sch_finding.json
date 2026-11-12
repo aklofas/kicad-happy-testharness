@@ -21,14 +21,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rail": "3.3V",
-          "cap_count": 2,
-          "total_capacitance_uF": 10.1
-        },
-        "detector_filter": "detect_decoupling"
+        "detector_filter": "detect_decoupling",
+        "field": "rail",
+        "pattern": "^3\\.3V$",
+        "where": {
+          "cap_count": "^2$",
+          "total_capacitance_uF": "^10\\.1$"
+        }
       },
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"3.3V\", \"cap_count\": 2, \"total_capacitance_uF\": 10.1}, \"detector_filter\": \"detect_decoupling\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_decoupling\", \"field\": \"rail\", \"pattern\": \"^3\\\\.3V$\", \"where\": {\"cap_count\": \"^2$\", \"total_capacitance_uF\": \"^10\\\\.1$\"}} (3.3V decoupling 2 caps / 10.1 uF.)"
     },
     {
       "id": "FND-00001542-AST-03",
@@ -73,15 +74,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "category": "decoupling_coverage",
-          "rail": "3.3V",
-          "has_bulk": true,
-          "has_bypass": true
-        },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^decoupling_coverage$",
+        "where": {
+          "rail": "^3\\.3V$",
+          "has_bulk": "^true$",
+          "has_bypass": "^true$",
+          "has_high_freq": "^false$"
+        }
       },
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"decoupling_coverage\", \"rail\": \"3.3V\", \"has_bulk\": true, \"has_bypass\": true}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_design_observations\", \"field\": \"category\", \"pattern\": \"^decoupling_coverage$\", \"where\": {\"rail\": \"^3\\\\.3V$\", \"has_bulk\": \"^true$\", \"has_bypass\": \"^true$\", \"has_high_freq\": \"^false$\"}} (decoupling_coverage on 3.3V with has_bulk/has_bypass true and has_high_freq false.)"
     },
     {
       "id": "FND-00001542-AST-07",

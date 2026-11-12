@@ -72,11 +72,25 @@
       "description": "trace_widths correctly identifies five distinct widths: 0.1778mm (7mil signal), 0.25mm, 0.349mm (13.74mil coplanar waveguide for GNSS RF per schematic annotation), 0.4064mm, 0.5588mm (22mil power). The schematic text annotation documents the RF trace as 13.74mil/0.349mm for 50-ohm coplanar waveguide.",
       "created_from": "FND-00001857",
       "check": {
-        "path": "trace_widths.unique_widths_mm",
-        "value": 0.349,
-        "op": "contains_match"
+        "path": "tracks.segments",
+        "op": "contains_match",
+        "field": "width",
+        "pattern": "^0\\.34(9|8996)$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"trace_widths.unique_widths_mm\", \"value\": 0.349, \"op\": \"contains_match\"} -> {\"path\": \"tracks.segments\", \"op\": \"contains_match\", \"field\": \"width\", \"pattern\": \"^0\\\\.34(9|8996)$\"} (trace_widths is gone in v3; widths live in tracks.width_distribution / tracks.segments. The 0.349 mm RF width (0.348996) exists and there are 5 distinct widths. Both pass (graduation candidate).)"
+    },
+    {
+      "id": "FND-00001857-AST-06",
+      "description": "trace_widths correctly identifies five distinct widths: 0.1778mm (7mil signal), 0.25mm, 0.349mm (13.74mil coplanar waveguide for GNSS RF per schematic annotation), 0.4064mm, 0.5588mm (22mil power). The schematic text annotation documents the RF trace as 13.74mil/0.349mm for 50-ohm coplanar waveguide.",
+      "created_from": "FND-00001857",
+      "aspirational": true,
+      "check": {
+        "path": "tracks.width_distribution",
+        "op": "equals",
+        "value": 5
+      },
+      "migration_note": "TH-109 triage: split from FND-00001857-AST-05"
     }
   ]
 }

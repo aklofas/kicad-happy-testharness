@@ -30,14 +30,17 @@
       "created_from": "FND-00001468",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "component": "U6",
-          "adequacy": "none"
+        "op": "count_matches",
+        "detector_filter": "analyze_thermal_pad_vias",
+        "field": "component",
+        "pattern": "^U6$",
+        "where": {
+          "via_count": "^0$",
+          "adequacy": "^(none|insufficient)$"
         },
-        "detector_filter": "analyze_thermal_pad_vias"
+        "value": 9
       },
-      "migration_note": "Path migrated from: thermal_pad_vias"
+      "migration_note": "Path migrated from: thermal_pad_vias; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"component\": \"U6\", \"adequacy\": \"none\"}, \"detector_filter\": \"analyze_thermal_pad_vias\"} -> {\"path\": \"findings\", \"op\": \"count_matches\", \"detector_filter\": \"analyze_thermal_pad_vias\", \"field\": \"component\", \"pattern\": \"^U6$\", \"where\": {\"via_count\": \"^0$\", \"adequacy\": \"^(none|insufficient)$\"}, \"value\": 9} (All nine U6 exposed pads 49.1-49.9 with 0 vias and a failing adequacy; v3 renamed 'none' to 'insufficient' for this case, so both are accepted.)"
     },
     {
       "id": "FND-00001468-AST-04",

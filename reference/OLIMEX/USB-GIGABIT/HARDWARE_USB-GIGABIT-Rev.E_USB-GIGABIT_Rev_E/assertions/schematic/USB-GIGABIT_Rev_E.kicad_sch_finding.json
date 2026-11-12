@@ -91,15 +91,15 @@
       "check": {
         "path": "usb_compliance.connectors",
         "op": "contains_match",
-        "value": {
-          "connector": "USB1",
-          "checks": {
-            "vbus_decoupling": "fail"
-          }
+        "field": "connector",
+        "pattern": "^USB1$",
+        "where": {
+          "checks.vbus_decoupling": "^fail$"
         }
       },
       "aspirational": false,
-      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): VBUS net = FB1.1 + USB1.1 only; C5 is on shield, C12 sits behind the ferrite. A fail for no cap on VBUS is a fair strict check. The lock is vacuous anyway (value, no pattern)"
+      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): VBUS net = FB1.1 + USB1.1 only; C5 is on shield, C12 sits behind the ferrite. A fail for no cap on VBUS is a fair strict check. The lock is vacuous anyway (value, no pattern)",
+      "migration_note": "TH-109 triage: {\"path\": \"usb_compliance.connectors\", \"op\": \"contains_match\", \"value\": {\"connector\": \"USB1\", \"checks\": {\"vbus_decoupling\": \"fail\"}}} -> {\"path\": \"usb_compliance.connectors\", \"op\": \"contains_match\", \"field\": \"connector\", \"pattern\": \"^USB1$\", \"where\": {\"checks.vbus_decoupling\": \"^fail$\"}} (incorrect_review ruled reviewer_wrong (no cap on VBUS proper); lock keeps vbus_decoupling=fail. where reads the nested checks dict.)"
     }
   ]
 }

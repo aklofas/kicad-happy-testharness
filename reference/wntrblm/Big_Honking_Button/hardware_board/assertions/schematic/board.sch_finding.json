@@ -35,42 +35,57 @@
       "description": "INCORRECT: The TL072 dual opamp (U5) has its power supply pins systematically swapped by the Y-mirror pin calculation bug. The library defines V- (negative supply, pin 4) at offset (-100, -300) and V+ (positive supply, pin 8) at (-100, +300). With the Y-mirror transform, both end up at swapped y-positions so the analyzer maps V- to the +12V net and V+ to the -12V net. In reality, V- connects to -12V and V+ connects to +12V, which is how the dual-supply opamp is correctly powered in this Eurorack module.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "nets.+12V.pins",
-        "op": "not_contains_match",
-        "value": {
-          "component": "U5",
-          "pin_name": "V-"
+        "path": "components",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U5$",
+        "where": {
+          "pin_nets.4": "^-12V$",
+          "pin_nets.8": "^\\+12V$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"nets.+12V.pins\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U5\", \"pin_name\": \"V-\"}} -> {\"path\": \"components\", \"op\": \"contains_match\", \"field\": \"reference\", \"pattern\": \"^U5$\", \"where\": {\"pin_nets.4\": \"^-12V$\", \"pin_nets.8\": \"^\\\\+12V$\"}} (Intent is the TL072 supply pins on the right rails (V- pin 4 on -12V, V+ pin 8 on +12V); one components item with where on pin_nets expresses both, stricter than the old 'not on +12V' negative.)"
     },
     {
       "id": "FND-00000410-AST-04",
       "description": "INCORRECT: The MCP6001 single-supply op-amp (U6) has its V+ and V- power pins swapped by the same Y-mirror coordinate bug. The analyzer reports V+ on GND and V- on +3.3V. In the actual schematic, V+ is connected to +3.3V and V- to GND, which is the standard single-supply op-amp configuration. This causes the power_domains analysis to incorrectly associate U6 with GND as a power rail rather than +3.3V.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "nets.GND.pins",
-        "op": "not_contains_match",
-        "value": {
-          "component": "U6",
-          "pin_name": "V+"
+        "path": "components",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U6$",
+        "where": {
+          "pin_nets.5": "^\\+3(\\.3V|V3)$",
+          "pin_nets.2": "^GND$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"nets.GND.pins\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U6\", \"pin_name\": \"V+\"}} -> {\"path\": \"components\", \"op\": \"contains_match\", \"field\": \"reference\", \"pattern\": \"^U6$\", \"where\": {\"pin_nets.5\": \"^\\\\+3(\\\\.3V|V3)$\", \"pin_nets.2\": \"^GND$\"}} (MCP6001 V+ (pin 5) on +3V3 and V- (pin 2) on GND; the net is named +3V3 in the v3 output.)"
     },
     {
       "id": "FND-00000410-AST-05",
       "description": "INCORRECT: The GD25Q64C SPI flash (U8) has all its pins assigned to wrong nets due to the Y-mirror bug. The SOIC-8 pin layout is vertically symmetric with all data/control pins on opposite sides. After the incorrect Y-mirror transform: VCC (should be +3.3V) lands on GND, GND (should be GND) lands on +3.3V, CLK (should be FLASH_SCK) lands on FLASH_CS, ~CS (should be FLASH_CS) lands on FLASH_SCK, DO/IO1 and DI/IO0 (should be FLASH_MISO/FLASH_MOSI) end up on +3.3V, and IO2/IO3 (tied high to +3.3V) end up on FLASH_MISO/FLASH_MOSI.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "nets.GND.pins",
-        "op": "not_contains_match",
-        "value": {
-          "component": "U8",
-          "pin_name": "VCC"
+        "path": "components",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U8$",
+        "where": {
+          "pin_nets.8": "^\\+3(\\.3V|V3)$",
+          "pin_nets.4": "^GND$",
+          "pin_nets.6": "^FLASH_SCK$",
+          "pin_nets.1": "^FLASH_CS$",
+          "pin_nets.2": "^FLASH_MISO$",
+          "pin_nets.5": "^FLASH_MOSI$",
+          "pin_nets.3": "^\\+3(\\.3V|V3)$",
+          "pin_nets.7": "^\\+3(\\.3V|V3)$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"nets.GND.pins\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U8\", \"pin_name\": \"VCC\"}} -> {\"path\": \"components\", \"op\": \"contains_match\", \"field\": \"reference\", \"pattern\": \"^U8$\", \"where\": {\"pin_nets.8\": \"^\\\\+3(\\\\.3V|V3)$\", \"pin_nets.4\": \"^GND$\", \"pin_nets.6\": \"^FLASH_SCK$\", \"pin_nets.1\": \"^FLASH_CS$\", \"pin_nets.2\": \"^FLASH_MISO$\", \"pin_nets.5\": \"^FLASH_MOSI$\", \"pin_nets.3\": \"^\\\\+3(\\\\.3V|V3)$\", \"pin_nets.7\": \"^\\\\+3(\\\\.3V|V3)$\"}} (Every GD25Q64C pin on the net the description names (VCC/IO2/IO3 +3V3, GND, CLK FLASH_SCK, ~CS FLASH_CS, DO MISO, DI MOSI) in one where-check.)"
     },
     {
       "id": "FND-00000410-AST-06",
@@ -90,14 +105,19 @@
       "description": "INCORRECT: Multiple GND-named pins of U1 ATSAMD21G18A are reported as being on the +3.3V net: pin 5 (GNDANA), pin 18 (GND), pin 35 (GND), and pin 42 (GND). These are all ground pins and should be on the GND net. The Y-mirror transform causes the VDD/VDDIO pins (which are physically adjacent but on the opposite side) to be swapped with the GND pins. This also inflates the decoupling capacitor count attributed to +3.3V.",
       "created_from": "FND-00000410",
       "check": {
-        "path": "nets.+3.3V.pins",
-        "op": "not_contains_match",
-        "value": {
-          "component": "U1",
-          "pin_name": "GND"
+        "path": "components",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U1$",
+        "where": {
+          "pin_nets.5": "^GND$",
+          "pin_nets.18": "^GND$",
+          "pin_nets.35": "^GND$",
+          "pin_nets.42": "^GND$"
         }
       },
-      "incorrect_review": "graduate (TH-105, 2026-11-06): U1 GND/GNDANA pins now on GND, none on +3.3V; note path 'nets.+3.3V.pins' splits on the dot, so it passes vacuously"
+      "incorrect_review": "graduate (TH-105, 2026-11-06): U1 GND/GNDANA pins now on GND, none on +3.3V; note path 'nets.+3.3V.pins' splits on the dot, so it passes vacuously",
+      "migration_note": "TH-109 triage: {\"path\": \"nets.+3.3V.pins\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U1\", \"pin_name\": \"GND\"}} -> {\"path\": \"components\", \"op\": \"contains_match\", \"field\": \"reference\", \"pattern\": \"^U1$\", \"where\": {\"pin_nets.5\": \"^GND$\", \"pin_nets.18\": \"^GND$\", \"pin_nets.35\": \"^GND$\", \"pin_nets.42\": \"^GND$\"}} (Old path nets.+3.3V.pins never resolves (dotted key, and the net is +3V3 now); intent = U1 GNDANA/GND pins 5/18/35/42 on GND.)"
     },
     {
       "id": "FND-00000410-AST-08",
@@ -106,14 +126,16 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "category": "decoupling",
-          "component": "U5"
-        },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^decoupling$",
+        "where": {
+          "component": "^U5$",
+          "rails_without_caps": "^-12V$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"decoupling\", \"component\": \"U5\"}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"detector_filter\": \"detect_design_observations\", \"field\": \"category\", \"pattern\": \"^decoupling$\", \"where\": {\"component\": \"^U5$\", \"rails_without_caps\": \"^-12V$\"}} (No 'U5 missing decoupling on -12V' observation (C14 decouples -12V); category/component/rails_without_caps still exist in v3 (signal_detectors.py).)"
     },
     {
       "id": "FND-00000410-AST-09",
@@ -122,18 +144,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "resistor": {
-            "ref": "R5"
-          },
-          "capacitor": {
-            "ref": "C15"
-          }
-        },
-        "detector_filter": "detect_rc_filters"
+        "detector_filter": "detect_rc_filters",
+        "field": "resistor.ref",
+        "pattern": "^R5$",
+        "where": {
+          "capacitor.ref": "^C15$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"resistor\": {\"ref\": \"R5\"}, \"capacitor\": {\"ref\": \"C15\"}}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"detector_filter\": \"detect_rc_filters\", \"field\": \"resistor.ref\", \"pattern\": \"^R5$\", \"where\": {\"capacitor.ref\": \"^C15$\"}} (No R5/C15 RC filter; the analyzer still emits RC-network R5/C15 (88.42 kHz, ground_net A1).)"
     },
     {
       "id": "FND-00000410-AST-10",
@@ -142,21 +161,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "resistor": {
-            "ref": "R6"
-          },
-          "capacitor": {
-            "parallel_caps": [
-              "C10",
-              "C15"
-            ]
-          }
-        },
-        "detector_filter": "detect_rc_filters"
+        "detector_filter": "detect_rc_filters",
+        "field": "resistor.ref",
+        "pattern": "^R6$",
+        "where": {
+          "capacitor.parallel_caps": "^C15$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"resistor\": {\"ref\": \"R6\"}, \"capacitor\": {\"parallel_caps\": [\"C10\", \"C15\"]}}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"detector_filter\": \"detect_rc_filters\", \"field\": \"resistor.ref\", \"pattern\": \"^R6$\", \"where\": {\"capacitor.parallel_caps\": \"^C15$\"}} (R6 filter must not group C15 as a parallel cap; the analyzer still reports parallel_caps [C10, C15].)"
     },
     {
       "id": "FND-00000410-AST-11",

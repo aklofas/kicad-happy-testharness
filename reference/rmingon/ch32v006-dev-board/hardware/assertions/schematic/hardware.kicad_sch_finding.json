@@ -328,11 +328,16 @@
       "description": "",
       "created_from": "FND-00002010",
       "check": {
-        "path": "power_sequencing.observations[0]",
+        "path": "power_sequencing_validation.power_tree",
         "op": "contains_match",
-        "value": "/always.enabled/"
+        "field": "enable_type",
+        "pattern": "^always_on$",
+        "where": {
+          "source": "^U2$"
+        }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"power_sequencing.observations[0]\", \"op\": \"contains_match\", \"value\": \"/always.enabled/\"} -> {\"path\": \"power_sequencing_validation.power_tree\", \"op\": \"contains_match\", \"field\": \"enable_type\", \"pattern\": \"^always_on$\", \"where\": {\"source\": \"^U2$\"}} (power_sequencing.observations became power_sequencing_validation.power_tree; U2 (LM1117, no enable pin) is always_on. Passes (graduation candidate).)"
     },
     {
       "id": "FND-00002010-AST-29",

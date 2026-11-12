@@ -41,10 +41,13 @@
       "created_from": "FND-00001499",
       "check": {
         "path": "component_groups.U.references",
-        "op": "contains_match",
-        "value": "U5"
+        "op": "equals",
+        "value": [
+          "U5"
+        ]
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"component_groups.U.references\", \"op\": \"contains_match\", \"value\": \"U5\"} -> {\"path\": \"component_groups.U.references\", \"op\": \"equals\", \"value\": [\"U5\"]} (The PCB fact the description states (\"U group lists only U5\") as an exact list. The defect itself was schematic-side (co2 instance refs); the schematic now reports U5 too, so the mismatch is gone.)"
     }
   ]
 }

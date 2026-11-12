@@ -21,11 +21,14 @@
       "created_from": "FND-00001351",
       "check": {
         "path": "statistics.power_rails",
-        "value": "+5V",
-        "op": "contains_match"
+        "op": "count_matches",
+        "field": "name",
+        "pattern": "^(\\+5V|Earth)$",
+        "value": 2
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check path/value mismatch: expected match for //, got no match in 3 items"
+      "aspirational_reason": "agent-generated check path/value mismatch: expected match for //, got no match in 3 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"value\": \"+5V\", \"op\": \"contains_match\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"count_matches\", \"field\": \"name\", \"pattern\": \"^(\\\\+5V|Earth)$\", \"value\": 2} (+5V and Earth rails, P1 typed connector, spi [] (three of the stated facts; PWR_FLAG left out). All pass (graduation candidate).)"
     },
     {
       "id": "FND-00001351-AST-03",
@@ -68,6 +71,36 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.addressable_led_chains[0].chain_length"
+    },
+    {
+      "id": "FND-00001351-AST-06",
+      "description": "The main sheet's power rails (+5V, Earth) and PWR_FLAG power symbol are all captured. The USB_OTG connector P1 is correctly typed as a connector. The SPI-named nets (sck, mosi) are present in the net list; the analyzer correctly does not fire a SPI bus detection because these nets connect only to connector pins (P2) rather than an MCU SPI peripheral, so bus_analysis.spi=[] is accurate.",
+      "created_from": "FND-00001351",
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected match for //, got no match in 3 items",
+      "check": {
+        "path": "components",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^P1$",
+        "where": {
+          "type": "^connector$"
+        }
+      },
+      "migration_note": "TH-109 triage: split from FND-00001351-AST-02"
+    },
+    {
+      "id": "FND-00001351-AST-07",
+      "description": "The main sheet's power rails (+5V, Earth) and PWR_FLAG power symbol are all captured. The USB_OTG connector P1 is correctly typed as a connector. The SPI-named nets (sck, mosi) are present in the net list; the analyzer correctly does not fire a SPI bus detection because these nets connect only to connector pins (P2) rather than an MCU SPI peripheral, so bus_analysis.spi=[] is accurate.",
+      "created_from": "FND-00001351",
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check path/value mismatch: expected match for //, got no match in 3 items",
+      "check": {
+        "path": "design_analysis.bus_analysis.spi",
+        "op": "equals",
+        "value": []
+      },
+      "migration_note": "TH-109 triage: split from FND-00001351-AST-02"
     }
   ]
 }

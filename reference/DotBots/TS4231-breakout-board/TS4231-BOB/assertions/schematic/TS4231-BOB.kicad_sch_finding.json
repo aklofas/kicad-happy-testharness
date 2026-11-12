@@ -31,14 +31,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rail": "+3.3V",
-          "cap_count": 1
-        },
-        "detector_filter": "detect_decoupling"
+        "detector_filter": "detect_decoupling",
+        "field": "rail",
+        "pattern": "^\\+3\\.3V$",
+        "where": {
+          "cap_count": "^1$"
+        }
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"+3.3V\", \"cap_count\": 1}, \"detector_filter\": \"detect_decoupling\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_decoupling\", \"field\": \"rail\", \"pattern\": \"^\\\\+3\\\\.3V$\", \"where\": {\"cap_count\": \"^1$\"}} (+3.3V decoupling has only C1 (C2 is on the unnamed AVDD net, not +3.3V), which is a true fact; the AVDD gap the description mentions is a separate rail.)"
     }
   ]
 }

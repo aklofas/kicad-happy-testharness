@@ -35,13 +35,13 @@
       "check": {
         "path": "findings",
         "op": "count_matches",
-        "value": {
-          "flyback_diode": "D7"
-        },
-        "detector_filter": "detect_transistor_circuits"
+        "field": "flyback_diode",
+        "pattern": "^D7$",
+        "detector_filter": "detect_transistor_circuits",
+        "value": 1
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits; TH-109 triage: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": {\"flyback_diode\": \"D7\"}, \"detector_filter\": \"detect_transistor_circuits\"} -> {\"path\": \"findings\", \"op\": \"count_matches\", \"field\": \"flyback_diode\", \"pattern\": \"^D7$\", \"detector_filter\": \"detect_transistor_circuits\", \"value\": 1} (Intent: D7 is the flyback of one channel only, not all five BUZ11. Fails today with 0, but for another reason: the five BUZ11 MOSFETs (Q2/4/6/8/10) are absent from transistor_circuits (only the 5 BC84)"
     }
   ]
 }

@@ -9,11 +9,47 @@
       "description": "The MPU6050 schematic has U1=MPU-6050 (I2C IMU), U2=TC2185-3.3VxCTTR (explicit 3.3V LDO regulator with lib_id 'Regulator_Linear:TC2185-3.3VxCTTR'), D1=LED, and 4 resistors. Named nets include SDA, SCL, AD0, INT, XDA, XCL, +3.3V, and VCC. No i2c_bus, voltage_regulator, or led_indicator detector fired. The TC2185 lib_id directly encodes the regulator family and the 3.3V output voltage, making it a clear missed detection for both the regulator and the downstream I2C bus it powers.",
       "created_from": "FND-00002239",
       "check": {
-        "path": "statistics.power_rails",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/\\+3\\.3V/"
+        "detector_filter": "detect_power_regulators",
+        "field": "ref",
+        "pattern": "^U2$",
+        "where": {
+          "output_rail": "^\\+3(\\.3V|V3)$"
+        }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/\\\\+3\\\\.3V/\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_power_regulators\", \"field\": \"ref\", \"pattern\": \"^U2$\", \"where\": {\"output_rail\": \"^\\\\+3(\\\\.3V|V3)$\"}} (Description lists three missed detections: TC2185 regulator U2 (3.3 V), I2C bus to U1, LED D1. All three fire now (old check only read the +3.3V rail name).)"
+    },
+    {
+      "id": "FND-00002239-AST-02",
+      "description": "The MPU6050 schematic has U1=MPU-6050 (I2C IMU), U2=TC2185-3.3VxCTTR (explicit 3.3V LDO regulator with lib_id 'Regulator_Linear:TC2185-3.3VxCTTR'), D1=LED, and 4 resistors. Named nets include SDA, SCL, AD0, INT, XDA, XCL, +3.3V, and VCC. No i2c_bus, voltage_regulator, or led_indicator detector fired. The TC2185 lib_id directly encodes the regulator family and the 3.3V output voltage, making it a clear missed detection for both the regulator and the downstream I2C bus it powers.",
+      "created_from": "FND-00002239",
+      "aspirational": true,
+      "check": {
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "contains_match",
+        "field": "devices",
+        "pattern": "'ref': 'U1'",
+        "where": {
+          "net": "^SDA$"
+        }
+      },
+      "migration_note": "TH-109 triage: split from FND-00002239-AST-01"
+    },
+    {
+      "id": "FND-00002239-AST-03",
+      "description": "The MPU6050 schematic has U1=MPU-6050 (I2C IMU), U2=TC2185-3.3VxCTTR (explicit 3.3V LDO regulator with lib_id 'Regulator_Linear:TC2185-3.3VxCTTR'), D1=LED, and 4 resistors. Named nets include SDA, SCL, AD0, INT, XDA, XCL, +3.3V, and VCC. No i2c_bus, voltage_regulator, or led_indicator detector fired. The TC2185 lib_id directly encodes the regulator family and the 3.3V output voltage, making it a clear missed detection for both the regulator and the downstream I2C bus it powers.",
+      "created_from": "FND-00002239",
+      "aspirational": true,
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "detector_filter": "audit_led_circuits",
+        "field": "components",
+        "pattern": "^D1$"
+      },
+      "migration_note": "TH-109 triage: split from FND-00002239-AST-01"
     }
   ]
 }

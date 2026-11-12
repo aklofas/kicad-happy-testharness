@@ -11,15 +11,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "resistor": {
-            "ref": "R2"
-          },
-          "cutoff_hz": 15.92
-        },
-        "detector_filter": "detect_rc_filters"
+        "detector_filter": "detect_rc_filters",
+        "field": "resistor.ref",
+        "pattern": "^R2$",
+        "where": {
+          "capacitor.ref": "^C7$",
+          "cutoff_hz": "^15\\.92$"
+        }
       },
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"resistor\": {\"ref\": \"R2\"}, \"cutoff_hz\": 15.92}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_rc_filters\", \"field\": \"resistor.ref\", \"pattern\": \"^R2$\", \"where\": {\"capacitor.ref\": \"^C7$\", \"cutoff_hz\": \"^15\\\\.92$\"}} (R2/C7 15.92 Hz filter, and the U1 reset_pin observation with pull-up and filter cap.)"
     },
     {
       "id": "FND-00001536-AST-02",
@@ -37,6 +37,25 @@
       "aspirational": false,
       "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"net\", \"match_value\": \"SDA\", \"assert_field\": \"category\", \"assert_value\": \"i2c_bus\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"i2c_bus\", \"net\": \"SDA\"}, \"detector_filter\": \"detect_design_observations\"})",
       "incorrect_review": "unrelated (TH-105, 2026-11-06): vacuous contains_match (dict value ignored); bug remains: SDA devices still ['U1','U1']"
+    },
+    {
+      "id": "FND-00001536-AST-03",
+      "description": "R2 (10k) + C7 (1.0uF) forming a 15.92 Hz low-pass filter on the OLED RESET line is correctly detected. The reset_pin design observation for U1 (OLED) correctly identifies the pullup and filter capacitor. The RC filter cutoff of 15.92 Hz is accurate for 10k/1.0uF.",
+      "created_from": "FND-00001536",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^reset_pin$",
+        "where": {
+          "component": "^U1$",
+          "has_pullup": "^true$",
+          "has_filter_cap": "^true$"
+        }
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001536-AST-01"
     }
   ]
 }

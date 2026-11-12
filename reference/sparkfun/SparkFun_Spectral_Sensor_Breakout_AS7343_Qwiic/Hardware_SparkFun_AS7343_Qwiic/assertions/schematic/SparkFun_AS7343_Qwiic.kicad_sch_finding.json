@@ -21,15 +21,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U1",
-          "topology": "LDO",
-          "input_rail": "3.3V",
-          "output_rail": "1.8V"
+        "field": "ref",
+        "pattern": "^U1$",
+        "where": {
+          "topology": "^LDO$",
+          "input_rail": "^3\\.3V$",
+          "output_rail": "^1\\.8V$",
+          "estimated_vout": "^1\\.8$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U1\", \"topology\": \"LDO\", \"input_rail\": \"3.3V\", \"output_rail\": \"1.8V\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"ref\", \"pattern\": \"^U1$\", \"where\": {\"topology\": \"^LDO$\", \"input_rail\": \"^3\\\\.3V$\", \"output_rail\": \"^1\\\\.8V$\", \"estimated_vout\": \"^1\\\\.8$\"}, \"detector_filter\": \"detect_power_regulators\"} (U1 LDO 3.3V -> 1.8V, Vout 1.8 from the value suffix, as described.)"
     },
     {
       "id": "FND-00001493-AST-03",
@@ -80,10 +82,12 @@
       "check": {
         "path": "statistics.missing_footprint",
         "op": "contains_match",
-        "value": "G1"
+        "field": ".",
+        "pattern": "^G1$"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.missing_footprint\", \"op\": \"contains_match\", \"value\": \"G1\"} -> {\"path\": \"statistics.missing_footprint\", \"op\": \"contains_match\", \"field\": \".\", \"pattern\": \"^G1$\"} (Description: G1 and G3 lack footprints, G2 and G4 have them. All three pass (graduation candidate).)"
     },
     {
       "id": "FND-00001493-AST-08",
@@ -141,6 +145,34 @@
         "value": 4
       },
       "aspirational": true
+    },
+    {
+      "id": "FND-00001493-AST-13",
+      "description": "G1 and G3 are schematic-only aesthetic symbols with empty footprint strings. The analyzer correctly identifies them in missing_footprint. G2 has a valid footprint (SparkFun_Logo_8mm) and G4 has a Creative_Commons_License footprint, so neither is in missing_footprint.",
+      "created_from": "FND-00001493",
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "contains_match",
+        "field": ".",
+        "pattern": "^G3$"
+      },
+      "migration_note": "TH-109 triage: split from FND-00001493-AST-07"
+    },
+    {
+      "id": "FND-00001493-AST-14",
+      "description": "G1 and G3 are schematic-only aesthetic symbols with empty footprint strings. The analyzer correctly identifies them in missing_footprint. G2 has a valid footprint (SparkFun_Logo_8mm) and G4 has a Creative_Commons_License footprint, so neither is in missing_footprint.",
+      "created_from": "FND-00001493",
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "not_contains_match",
+        "field": ".",
+        "pattern": "^G[24]$"
+      },
+      "migration_note": "TH-109 triage: split from FND-00001493-AST-07"
     }
   ]
 }

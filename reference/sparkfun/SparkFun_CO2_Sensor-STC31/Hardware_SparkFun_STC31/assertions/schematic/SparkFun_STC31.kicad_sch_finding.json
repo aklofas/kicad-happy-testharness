@@ -9,12 +9,18 @@
       "description": "The analyzer correctly identifies the I2C bus with two devices (U3=STC31, U4=SHTC3) on both SCL and SDA nets. The bus_analysis section accurately reflects the design \u2014 both Sensirion sensors share the I2C bus, which matches the schematic intent. The ADDR net for address selection is also captured.",
       "created_from": "FND-00001381",
       "check": {
-        "path": "design_analysis.bus_analysis.i2c[0].devices",
-        "value": "U3",
-        "op": "contains_match"
+        "path": "design_analysis.bus_analysis.i2c",
+        "op": "count_matches",
+        "field": "devices",
+        "pattern": "'ref': 'U3'",
+        "where": {
+          "devices": "'ref': 'U4'"
+        },
+        "value": 2
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check path/value mismatch: expected None, got not a list"
+      "aspirational_reason": "agent-generated check path/value mismatch: expected None, got not a list",
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis.i2c[0].devices\", \"value\": \"U3\", \"op\": \"contains_match\"} -> {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"count_matches\", \"field\": \"devices\", \"pattern\": \"'ref': 'U3'\", \"where\": {\"devices\": \"'ref': 'U4'\"}, \"value\": 2} (Both I2C lines carry both sensors (U3 STC31, U4 SHTC3), index-free. Passes (graduation candidate).)"
     },
     {
       "id": "FND-00001381-AST-02",

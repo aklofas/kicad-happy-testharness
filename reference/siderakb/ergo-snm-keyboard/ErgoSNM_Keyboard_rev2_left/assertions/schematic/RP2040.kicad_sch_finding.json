@@ -9,13 +9,19 @@
       "description": "The analyzer correctly identifies U3 (W25Q128JVS, a 128Mbit SPI NOR flash) connected to U4 (RP2040) with 6 shared signal nets. The memory_interfaces detection properly reports total_pins=8 and the connected processor. The QSPI bus signals (QSPI_D0..D3, QSPI_CLK, QSPI_CS) are also reflected in bus_topology.detected_bus_signals for QSPI_D. The 12MHz crystal circuit (Y1 with 20pF load caps) is correctly detected with calculated effective load of 13pF.",
       "created_from": "FND-00002187",
       "check": {
-        "path": "findings[0].connected_processors[0].reference",
-        "op": "equals",
-        "value": "U4",
+        "path": "findings",
+        "op": "contains_match",
+        "field": "memory_reference",
+        "pattern": "^U3$",
+        "where": {
+          "memory_value": "^W25Q128JVS$",
+          "total_pins": "^8$",
+          "connected_processors": "'reference': 'U4'.*'shared_signal_nets': 6"
+        },
         "detector_filter": "detect_memory_interfaces"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.memory_interfaces[0].connected_processors[0].reference"
+      "migration_note": "Path migrated from: signal_analysis.memory_interfaces[0].connected_processors[0].reference; TH-109 triage: {\"path\": \"findings[0].connected_processors[0].reference\", \"op\": \"equals\", \"value\": \"U4\", \"detector_filter\": \"detect_memory_interfaces\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"memory_reference\", \"pattern\": \"^U3$\", \"where\": {\"memory_value\": \"^W25Q128JVS$\", \"total_pins\": \"^8$\", \"connected_processors\": \"'reference': 'U4'.*'shared_signal_nets': 6\"}, \"detector_filter\": \"detect_memory_interfaces\"} (File moved by TH-107 (now RP2040.kicad_sch_finding.json). The indexed path read findings[0] of any detector; the where form ties U3 to processor U4 with 6 shared nets and 8 pins.)"
     }
   ]
 }

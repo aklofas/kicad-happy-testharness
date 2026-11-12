@@ -9,11 +9,16 @@
       "description": "INCORRECT: SR1 has lib_id 'TLV431BSN1T1G(SOT23-3)' and value 'NA(TLV431BSN1T1G(SOT23-3))'. The TLV431 is a precision programmable shunt voltage reference (3-pin: REF, CATHODE, ANODE), used here to set the ADC reference voltage. It is classified as type 'switch' because the library ID does not match any recognized IC or reference voltage patterns, and it falls through to the switch category. SIG_IN1 (BNC-JD11-50-LF) is the RF input connector for the ADC signal input, but is also classified as 'switch'. Both should be classified as 'connector' or a dedicated 'voltage_reference' type.",
       "created_from": "FND-00002139",
       "check": {
-        "path": "components[?reference=='SR1'].type",
-        "op": "contains_match",
-        "value": "/switch/"
+        "path": "components",
+        "op": "not_contains_match",
+        "field": "type",
+        "pattern": "^switch$",
+        "where": {
+          "reference": "^(SR1|SIG_IN1)$"
+        }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"components[?reference=='SR1'].type\", \"op\": \"contains_match\", \"value\": \"/switch/\"} -> {\"path\": \"components\", \"op\": \"not_contains_match\", \"field\": \"type\", \"pattern\": \"^switch$\", \"where\": {\"reference\": \"^(SR1|SIG_IN1)$\"}} (Intent: TLV431 SR1 and BNC SIG_IN1 are not switches. Old check asserted the defect (inverted). Both still type 'switch'.)"
     },
     {
       "id": "FND-00002139-AST-02",

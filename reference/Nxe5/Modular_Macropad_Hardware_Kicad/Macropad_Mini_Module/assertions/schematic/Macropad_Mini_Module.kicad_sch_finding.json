@@ -23,13 +23,16 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "chain_length": 17,
-          "led_type": "SK6812MINI"
+        "field": "led_type",
+        "pattern": "^SK6812MINI$",
+        "where": {
+          "chain_length": "^17$",
+          "data_in_net": "^LED_GPIO$",
+          "estimated_current_mA": "^1020$"
         },
         "detector_filter": "detect_addressable_leds"
       },
-      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"chain_length\": 17, \"led_type\": \"SK6812MINI\"}, \"detector_filter\": \"detect_addressable_leds\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"led_type\", \"pattern\": \"^SK6812MINI$\", \"where\": {\"chain_length\": \"^17$\", \"data_in_net\": \"^LED_GPIO$\", \"estimated_current_mA\": \"^1020$\"}, \"detector_filter\": \"detect_addressable_leds\"} (17-LED SK6812MINI chain on LED_GPIO at 1020 mA, as described.)"
     },
     {
       "id": "FND-00001776-AST-03",

@@ -20,12 +20,13 @@
       "created_from": "FND-00001576",
       "check": {
         "path": "completeness.found_layers",
-        "op": "contains_match",
-        "value": {
-          "name": "In1.Cu"
-        }
+        "op": "count_matches",
+        "field": ".",
+        "pattern": "^In[12]\\.Cu$",
+        "value": 2
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"completeness.found_layers\", \"op\": \"contains_match\", \"value\": {\"name\": \"In1.Cu\"}} -> {\"path\": \"completeness.found_layers\", \"op\": \"count_matches\", \"field\": \".\", \"pattern\": \"^In[12]\\\\.Cu$\", \"value\": 2} (found_layers is a list of strings; both inner layers (GL1/GL2) must be present. Passes today (fixed).)"
     },
     {
       "id": "FND-00001576-AST-03",

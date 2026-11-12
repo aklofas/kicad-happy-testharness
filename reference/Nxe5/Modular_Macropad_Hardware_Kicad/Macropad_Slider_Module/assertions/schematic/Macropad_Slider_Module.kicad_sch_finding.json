@@ -11,13 +11,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "chain_length": 4,
-          "led_type": "SK6812MINI"
-        },
-        "detector_filter": "detect_addressable_leds"
+        "detector_filter": "detect_addressable_leds",
+        "field": "chain_length",
+        "pattern": "^4$",
+        "where": {
+          "led_type": "^SK6812MINI$",
+          "data_in_net": "^LED_GPIO$"
+        }
       },
-      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"chain_length\": 4, \"led_type\": \"SK6812MINI\"}, \"detector_filter\": \"detect_addressable_leds\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_addressable_leds\", \"field\": \"chain_length\", \"pattern\": \"^4$\", \"where\": {\"led_type\": \"^SK6812MINI$\", \"data_in_net\": \"^LED_GPIO$\"}} (Chain of 4 SK6812MINI with data_in_net LED_GPIO.)"
     },
     {
       "id": "FND-00001778-AST-02",

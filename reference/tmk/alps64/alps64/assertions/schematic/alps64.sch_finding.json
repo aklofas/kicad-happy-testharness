@@ -11,16 +11,19 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rows": 8,
-          "columns": 8,
-          "diodes_on_matrix": 64
+        "field": "rows",
+        "pattern": "^8$",
+        "where": {
+          "columns": "^8$",
+          "diodes_on_matrix": "^64$",
+          "estimated_keys": "^64$",
+          "detection_method": "^net_name$"
         },
         "detector_filter": "detect_key_matrices"
       },
       "aspirational": false,
       "aspirational_reason": "contains_match does not support dict value matching",
-      "migration_note": "Path migrated from: signal_analysis.key_matrices"
+      "migration_note": "Path migrated from: signal_analysis.key_matrices; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rows\": 8, \"columns\": 8, \"diodes_on_matrix\": 64}, \"detector_filter\": \"detect_key_matrices\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"rows\", \"pattern\": \"^8$\", \"where\": {\"columns\": \"^8$\", \"diodes_on_matrix\": \"^64$\", \"estimated_keys\": \"^64$\", \"detection_method\": \"^net_name$\"}, \"detector_filter\": \"detect_key_matrices\"} (8x8 matrix by net_name with 64 diodes and 64 estimated keys on one item (the crystal half is covered by AST-02).)"
     },
     {
       "id": "FND-00001959-AST-02",
@@ -40,16 +43,19 @@
       "created_from": "FND-00001959",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "usb_data",
-          "has_esd_protection": false
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^usb_data$",
+        "where": {
+          "has_esd_protection": "^false$",
+          "components": "^R[12]$"
         },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "value": 2
       },
       "aspirational": false,
       "aspirational_reason": "contains_match does not support dict value matching",
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"usb_data\", \"has_esd_protection\": false}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"count_matches\", \"field\": \"category\", \"pattern\": \"^usb_data$\", \"where\": {\"has_esd_protection\": \"^false$\", \"components\": \"^R[12]$\"}, \"detector_filter\": \"detect_design_observations\", \"value\": 2} (Both USB data observations (R2 and R1 series resistors) report no ESD protection.)"
     },
     {
       "id": "FND-00001959-AST-04",

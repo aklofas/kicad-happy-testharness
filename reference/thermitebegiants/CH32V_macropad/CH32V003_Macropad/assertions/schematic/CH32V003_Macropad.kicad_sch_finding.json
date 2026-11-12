@@ -25,14 +25,14 @@
       "check": {
         "path": "design_analysis.differential_pairs",
         "op": "not_contains_match",
-        "value": {
-          "positive": "MCU_D+",
-          "series_resistors": [
-            "R1"
-          ]
+        "field": "positive",
+        "pattern": "^MCU_D\\+$",
+        "where": {
+          "series_resistors": "^R1$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.differential_pairs\", \"op\": \"not_contains_match\", \"value\": {\"positive\": \"MCU_D+\", \"series_resistors\": [\"R1\"]}} -> {\"path\": \"design_analysis.differential_pairs\", \"op\": \"not_contains_match\", \"field\": \"positive\", \"pattern\": \"^MCU_D\\\\+$\", \"where\": {\"series_resistors\": \"^R1$\"}} (R1 (1.5k D- pull-up to VDD) is still listed in series_resistors of MCU_D+/MCU_D-.)"
     },
     {
       "id": "FND-00000440-AST-03",

@@ -11,14 +11,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "ref": "U5",
-          "topology": "ic_with_internal_regulator"
+        "field": "ref",
+        "pattern": "^U[567]$",
+        "where": {
+          "topology": "^ic_with_internal_regulator$"
         },
         "detector_filter": "detect_power_regulators"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"ref\": \"U5\", \"topology\": \"ic_with_internal_regulator\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"ref\", \"pattern\": \"^U[567]$\", \"where\": {\"topology\": \"^ic_with_internal_regulator$\"}, \"detector_filter\": \"detect_power_regulators\"} (No HX711 (U5/U6/U7, named in the description) listed as ic_with_internal_regulator. Passes today (graduation candidate).)"
     },
     {
       "id": "FND-00000419-AST-02",

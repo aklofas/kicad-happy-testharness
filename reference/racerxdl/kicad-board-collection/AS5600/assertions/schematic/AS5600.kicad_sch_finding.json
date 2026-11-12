@@ -9,11 +9,31 @@
       "description": "The AS5600 schematic has U1=AS5600 (magnetic angle encoder with I2C interface), with named nets SDA, SCL, VCC, VDD3v3, GND, OUT, DIR, and PGO. Two 10k pull-up resistors R2 and R3 are present. No i2c_bus or pull_up_resistor detector fired. The VDD3v3 net suggests an internal 3.3V domain separate from VCC, which is also undetected as a voltage domain.",
       "created_from": "FND-00002240",
       "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "category",
+        "pattern": "^i2c_bus$",
+        "where": {
+          "has_pullup": "^true$"
+        },
+        "detector_filter": "detect_design_observations",
+        "value": 2
+      },
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/VCC/\"} -> {\"path\": \"findings\", \"op\": \"count_matches\", \"field\": \"category\", \"pattern\": \"^i2c_bus$\", \"where\": {\"has_pullup\": \"^true$\"}, \"detector_filter\": \"detect_design_observations\", \"value\": 2} (A 'missed' item: I2C with pull-ups and the VDD3v3 domain went undetected. The old power_rails/VCC check did not express it. Today both lines carry pull-ups (R2/R3) and VDD3v3 is a rail: both pass (gra)"
+    },
+    {
+      "id": "FND-00002240-AST-02",
+      "description": "The AS5600 schematic has U1=AS5600 (magnetic angle encoder with I2C interface), with named nets SDA, SCL, VCC, VDD3v3, GND, OUT, DIR, and PGO. Two 10k pull-up resistors R2 and R3 are present. No i2c_bus or pull_up_resistor detector fired. The VDD3v3 net suggests an internal 3.3V domain separate from VCC, which is also undetected as a voltage domain.",
+      "created_from": "FND-00002240",
+      "aspirational": true,
+      "check": {
         "path": "statistics.power_rails",
         "op": "contains_match",
-        "value": "/VCC/"
+        "field": "name",
+        "pattern": "^VDD3v3$"
       },
-      "aspirational": true
+      "migration_note": "TH-109 triage: split from FND-00002240-AST-01"
     }
   ]
 }

@@ -21,15 +21,19 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rows": 5,
-          "columns": 6
+        "field": "rows",
+        "pattern": "^5$",
+        "where": {
+          "columns": "^6$",
+          "detection_method": "^net_name$",
+          "row_nets": "^Row[0-4]$",
+          "col_nets": "^Col[0-5]$"
         },
         "detector_filter": "detect_key_matrices"
       },
       "aspirational": false,
       "aspirational_reason": "contains_match does not support dict value matching",
-      "migration_note": "Path migrated from: signal_analysis.key_matrices"
+      "migration_note": "Path migrated from: signal_analysis.key_matrices; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rows\": 5, \"columns\": 6}, \"detector_filter\": \"detect_key_matrices\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"rows\", \"pattern\": \"^5$\", \"where\": {\"columns\": \"^6$\", \"detection_method\": \"^net_name$\", \"row_nets\": \"^Row[0-4]$\", \"col_nets\": \"^Col[0-5]$\"}, \"detector_filter\": \"detect_key_matrices\"} (5x6 net_name matrix with Row*/Col* nets on one item.)"
     },
     {
       "id": "FND-00001988-AST-03",

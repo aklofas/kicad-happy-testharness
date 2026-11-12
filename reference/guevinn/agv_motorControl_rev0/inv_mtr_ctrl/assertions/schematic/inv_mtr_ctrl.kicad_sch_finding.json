@@ -56,10 +56,13 @@
       "created_from": "FND-00001980",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/VDC/"
+        "op": "count_matches",
+        "field": "name",
+        "pattern": "^(GND|VCC|VDC)$",
+        "value": 3
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/VDC/\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"count_matches\", \"field\": \"name\", \"pattern\": \"^(GND|VCC|VDC)$\", \"value\": 3} (power_rails items are {name, voltage}; the three named rails are counted by name.)"
     },
     {
       "id": "FND-00001980-AST-06",

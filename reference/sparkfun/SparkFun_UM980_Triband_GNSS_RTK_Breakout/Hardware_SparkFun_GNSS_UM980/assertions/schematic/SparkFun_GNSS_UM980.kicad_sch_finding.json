@@ -11,16 +11,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U2",
-          "topology": "LDO",
-          "input_rail": "+5V",
-          "output_rail": "3.3V",
-          "estimated_vout": 3.3
+        "field": "ref",
+        "pattern": "^U2$",
+        "where": {
+          "topology": "^LDO$",
+          "input_rail": "^\\+5V$",
+          "output_rail": "^3\\.3V$",
+          "estimated_vout": "^3\\.3$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U2\", \"topology\": \"LDO\", \"input_rail\": \"+5V\", \"output_rail\": \"3.3V\", \"estimated_vout\": 3.3}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"ref\", \"pattern\": \"^U2$\", \"where\": {\"topology\": \"^LDO$\", \"input_rail\": \"^\\\\+5V$\", \"output_rail\": \"^3\\\\.3V$\", \"estimated_vout\": \"^3\\\\.3$\"}, \"detector_filter\": \"detect_power_regulators\"} (Regulator facts on one item, plus the second stated fact: C15/C16/C17 grouped under 3.3V_A.)"
     },
     {
       "id": "FND-00001577-AST-02",
@@ -29,15 +30,15 @@
       "check": {
         "path": "usb_compliance.connectors",
         "op": "contains_match",
-        "value": {
-          "connector": "J1",
-          "checks": {
-            "cc1_pulldown_5k1": "pass",
-            "cc2_pulldown_5k1": "pass",
-            "usb_esd_ic": "pass"
-          }
+        "field": "connector",
+        "pattern": "^J1$",
+        "where": {
+          "checks.cc1_pulldown_5k1": "^pass$",
+          "checks.cc2_pulldown_5k1": "^pass$",
+          "checks.usb_esd_ic": "^pass$"
         }
-      }
+      },
+      "migration_note": "TH-109 triage: {\"path\": \"usb_compliance.connectors\", \"op\": \"contains_match\", \"value\": {\"connector\": \"J1\", \"checks\": {\"cc1_pulldown_5k1\": \"pass\", \"cc2_pulldown_5k1\": \"pass\", \"usb_esd_ic\": \"pass\"}}} -> {\"path\": \"usb_compliance.connectors\", \"op\": \"contains_match\", \"field\": \"connector\", \"pattern\": \"^J1$\", \"where\": {\"checks.cc1_pulldown_5k1\": \"^pass$\", \"checks.cc2_pulldown_5k1\": \"^pass$\", \"checks.usb_esd_ic\": \"^pass$\"}} (The three named checks pass on connector J1 (dotted where-keys reach the nested checks dict).)"
     },
     {
       "id": "FND-00001577-AST-03",
@@ -45,14 +46,16 @@
       "created_from": "FND-00001577",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "op": "contains_match",
-        "value": {
-          "devices": [
-            "U5"
-          ],
-          "has_pull_up": false
-        }
-      }
+        "op": "count_matches",
+        "field": "line",
+        "pattern": "^(SDA|SCL)$",
+        "where": {
+          "has_pull_up": "^false$",
+          "devices": "'ref': 'U5'"
+        },
+        "value": 2
+      },
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"value\": {\"devices\": [\"U5\"], \"has_pull_up\": false}} -> {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"count_matches\", \"field\": \"line\", \"pattern\": \"^(SDA|SCL)$\", \"where\": {\"has_pull_up\": \"^false$\", \"devices\": \"'ref': 'U5'\"}, \"value\": 2} (SDA and SCL on U5 with has_pull_up false; devices is a list of dicts so U5 is matched on the stringified dict.)"
     },
     {
       "id": "FND-00001577-AST-04",
@@ -61,12 +64,14 @@
       "check": {
         "path": "bus_topology.detected_bus_signals",
         "op": "not_contains_match",
-        "value": {
-          "prefix": "RXD",
-          "width": 7
+        "field": "prefix",
+        "pattern": "^(RXD|TXD)$",
+        "where": {
+          "width": "^7$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"bus_topology.detected_bus_signals\", \"op\": \"not_contains_match\", \"value\": {\"prefix\": \"RXD\", \"width\": 7}} -> {\"path\": \"bus_topology.detected_bus_signals\", \"op\": \"not_contains_match\", \"field\": \"prefix\", \"pattern\": \"^(RXD|TXD)$\", \"where\": {\"width\": \"^7$\"}} (Width 7 for a 3-signal RXD/TXD group is the defect; still width 7 today, so the aspirational lock keeps failing.)"
     },
     {
       "id": "FND-00001577-AST-05",
@@ -75,12 +80,14 @@
       "check": {
         "path": "design_analysis.cross_domain_signals",
         "op": "not_contains_match",
-        "value": {
-          "net": "D+",
-          "needs_level_shifter": true
+        "field": "net",
+        "pattern": "^D[+-]$",
+        "where": {
+          "needs_level_shifter": "^true$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.cross_domain_signals\", \"op\": \"not_contains_match\", \"value\": {\"net\": \"D+\", \"needs_level_shifter\": true}} -> {\"path\": \"design_analysis.cross_domain_signals\", \"op\": \"not_contains_match\", \"field\": \"net\", \"pattern\": \"^D[+-]$\", \"where\": {\"needs_level_shifter\": \"^true$\"}} (D+/D- through a passive TVS array should not need a level shifter; both still flagged true.)"
     },
     {
       "id": "FND-00001577-AST-06",
@@ -100,15 +107,16 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "category": "usb_data",
-          "net": "D+",
-          "has_esd_protection": false
+        "field": "net",
+        "pattern": "^D[+-]$",
+        "where": {
+          "category": "^usb_data$",
+          "has_esd_protection": "^false$"
         },
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"usb_data\", \"net\": \"D+\", \"has_esd_protection\": false}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"net\", \"pattern\": \"^D[+-]$\", \"where\": {\"category\": \"^usb_data$\", \"has_esd_protection\": \"^false$\"}, \"detector_filter\": \"detect_design_observations\"} (U1 (DT1042) is the USB ESD IC; usb_data D+/D- still report has_esd_protection false (description covers both lines).)"
     },
     {
       "id": "FND-00001577-AST-08",
@@ -283,6 +291,26 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.design_observations[?(@.component=='U5')].rails_without_caps"
+    },
+    {
+      "id": "FND-00001577-AST-09",
+      "description": "signal_analysis.power_regulators correctly identifies U2 as an LDO with input_rail='+5V', output_rail='3.3V', and estimated_vout=3.3V (inferred from the '-3.3' suffix). The separate 3.3V_A rail for the UM980 GNSS IC is correctly understood as a filtered derivative of 3.3V via the L2 ferrite bead \u2014 the decoupling_analysis correctly groups C15/C16/C17 under 3.3V_A.",
+      "created_from": "FND-00001577",
+      "check": {
+        "path": "findings",
+        "op": "field_equals",
+        "detector_filter": "detect_decoupling",
+        "match_field": "rail",
+        "match_value": "3.3V_A",
+        "assert_field": "components",
+        "assert_value": [
+          "C15",
+          "C16",
+          "C17"
+        ]
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001577-AST-01"
     }
   ]
 }

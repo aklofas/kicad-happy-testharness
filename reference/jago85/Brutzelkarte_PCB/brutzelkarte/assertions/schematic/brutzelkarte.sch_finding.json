@@ -24,15 +24,12 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "r_top": {
-            "ref": "R21"
-          }
-        },
+        "field": "mid_net",
+        "pattern": "^(ROM_SCK|BOOT_SCK)$",
         "detector_filter": "detect_voltage_dividers"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"r_top\": {\"ref\": \"R21\"}}, \"detector_filter\": \"detect_voltage_dividers\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"mid_net\", \"pattern\": \"^(ROM_SCK|BOOT_SCK)$\", \"detector_filter\": \"detect_voltage_dividers\"} (Neither SPI-clock bias pair may be a voltage divider (keyed on mid_net, covers R21/R22 and R24/R25); both still are.)"
     },
     {
       "id": "FND-00000434-AST-03",

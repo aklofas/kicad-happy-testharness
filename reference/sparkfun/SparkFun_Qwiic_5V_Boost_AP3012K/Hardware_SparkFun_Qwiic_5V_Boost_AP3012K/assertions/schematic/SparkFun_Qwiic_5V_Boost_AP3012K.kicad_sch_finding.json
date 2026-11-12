@@ -90,18 +90,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "reference": "Q1",
-          "gate_driver_ics": [
-            {
-              "reference": "U1"
-            }
-          ]
+        "field": "reference",
+        "pattern": "^Q[12]$",
+        "where": {
+          "gate_driver_ics": "AP3012"
         },
         "detector_filter": "detect_transistor_circuits"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.transistor_circuits"
+      "migration_note": "Path migrated from: signal_analysis.transistor_circuits; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"reference\": \"Q1\", \"gate_driver_ics\": [{\"reference\": \"U1\"}]}, \"detector_filter\": \"detect_transistor_circuits\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"reference\", \"pattern\": \"^Q[12]$\", \"where\": {\"gate_driver_ics\": \"AP3012\"}, \"detector_filter\": \"detect_transistor_circuits\"} (Neither level-shifter MOSFET may list the AP3012 as a gate driver; today Q1 and Q2 both list it (U5).)"
     }
   ]
 }

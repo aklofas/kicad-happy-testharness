@@ -10,12 +10,15 @@
       "created_from": "FND-00001604",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "op": "contains_match",
-        "value": {
-          "line": "SDA",
-          "has_pull_up": false
-        }
-      }
+        "op": "count_matches",
+        "field": "line",
+        "pattern": "^(SDA|SCL)$",
+        "where": {
+          "has_pull_up": "^false$"
+        },
+        "value": 2
+      },
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"value\": {\"line\": \"SDA\", \"has_pull_up\": false}} -> {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"count_matches\", \"field\": \"line\", \"pattern\": \"^(SDA|SCL)$\", \"where\": {\"has_pull_up\": \"^false$\"}, \"value\": 2} (SDA and SCL both reported without pull-ups (description says correct). Passes.)"
     },
     {
       "id": "FND-00001604-AST-02",
@@ -47,20 +50,15 @@
       "created_from": "FND-00001604",
       "check": {
         "path": "bom",
-        "op": "not_contains_match",
-        "value": {
-          "references": [
-            "kbLBrack1"
-          ],
-          "value": [
-            [
-              "id",
-              "1"
-            ]
-          ]
+        "op": "contains_match",
+        "field": "references",
+        "pattern": "^kbLBrack1$",
+        "where": {
+          "value": "^\\($"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"bom\", \"op\": \"not_contains_match\", \"value\": {\"references\": [\"kbLBrack1\"], \"value\": [[\"id\", \"1\"]]}} -> {\"path\": \"bom\", \"op\": \"contains_match\", \"field\": \"references\", \"pattern\": \"^kbLBrack1$\", \"where\": {\"value\": \"^\\\\($\"}} (Value '(' for kbLBrack1 in both the BOM and the component list (description names both). Fixed today: both pass (graduation candidate).)"
     },
     {
       "id": "FND-00001604-AST-05",
@@ -85,6 +83,22 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.key_matrices"
+    },
+    {
+      "id": "FND-00001604-AST-07",
+      "description": "INCORRECT: Component kbLBrack1 has value='(' in the source schematic (the open-parenthesis key on the TI-92 keyboard). The schematic analyzer misparses this as the start of an s-expression, yielding value=\"[['id', '1'], ['at', '62.738', '116.205', '0']]\" in the output instead of the string '('. This affects both the components list and BOM entry. The same bug occurs in keyboard.kicad_sch where kbLBrack1 appears.",
+      "created_from": "FND-00001604",
+      "aspirational": true,
+      "check": {
+        "path": "components",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^kbLBrack1$",
+        "where": {
+          "value": "^\\($"
+        }
+      },
+      "migration_note": "TH-109 triage: split from FND-00001604-AST-04"
     }
   ]
 }

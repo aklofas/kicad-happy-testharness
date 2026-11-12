@@ -33,15 +33,16 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "category": "usb_data",
-          "net": "USB_DP",
-          "has_esd_protection": false
+        "field": "net",
+        "pattern": "^USB_DP$",
+        "where": {
+          "category": "^usb_data$",
+          "has_esd_protection": "^false$"
         },
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"usb_data\", \"net\": \"USB_DP\", \"has_esd_protection\": false}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"net\", \"pattern\": \"^USB_DP$\", \"where\": {\"category\": \"^usb_data$\", \"has_esd_protection\": \"^false$\"}, \"detector_filter\": \"detect_design_observations\"} (No usb_data observation calls USB_DP unprotected (D1 DT1042 protects it). Passes today (graduation candidate).)"
     }
   ]
 }

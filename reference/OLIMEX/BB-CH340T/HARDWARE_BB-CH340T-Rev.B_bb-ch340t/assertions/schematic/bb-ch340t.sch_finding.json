@@ -11,14 +11,14 @@
       "check": {
         "path": "design_analysis.bus_analysis.uart",
         "op": "not_contains_match",
-        "value": {
-          "net": "TX",
-          "devices": [
-            "U1"
-          ]
+        "field": "net",
+        "pattern": "^TX$",
+        "where": {
+          "devices": "'ref': 'U1'"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis.uart\", \"op\": \"not_contains_match\", \"value\": {\"net\": \"TX\", \"devices\": [\"U1\"]}} -> {\"path\": \"design_analysis.bus_analysis.uart\", \"op\": \"not_contains_match\", \"field\": \"net\", \"pattern\": \"^TX$\", \"where\": {\"devices\": \"'ref': 'U1'\"}} (The description is a defect: the UART section lists net TX with U1 (via pin 18, not a UART pin). Fails today (TX still lists U1).)"
     },
     {
       "id": "FND-00000402-AST-02",

@@ -11,13 +11,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "component": "U1",
-          "adequacy": "adequate"
-        },
-        "detector_filter": "analyze_thermal_pad_vias"
+        "detector_filter": "analyze_thermal_pad_vias",
+        "field": "component",
+        "pattern": "^U1$",
+        "where": {
+          "pad_size_mm": "^2\\.6$",
+          "footprint_via_pads": "^8$",
+          "recommended_min_vias": "^5$",
+          "adequacy": "^(adequate|good)$"
+        }
       },
-      "migration_note": "Path migrated from: thermal_pad_vias"
+      "migration_note": "Path migrated from: thermal_pad_vias; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"component\": \"U1\", \"adequacy\": \"adequate\"}, \"detector_filter\": \"analyze_thermal_pad_vias\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"analyze_thermal_pad_vias\", \"field\": \"component\", \"pattern\": \"^U1$\", \"where\": {\"pad_size_mm\": \"^2\\\\.6$\", \"footprint_via_pads\": \"^8$\", \"recommended_min_vias\": \"^5$\", \"adequacy\": \"^(adequate|good)$\"}} (Selects the 2.6x3.1 mm pad entry (U1 has three thermal-pad entries) with 8 footprint via pads, min 5, adequacy at least adequate. v3 grades it 'good' (scale none<insufficient<adequate<good), so the re)"
     },
     {
       "id": "FND-00001626-AST-02",

@@ -138,6 +138,29 @@ def _empty_aware_strings(field_val):
     return _field_strings(field_val)
 
 
+def _item_match(item, field, pat, where, empty_aware=False):
+    """The string of a list item that `pat` matches, or None. `field` "." is the item itself
+    (lists of plain values); any other field reads a dict item. With `where` ({field: regex}),
+    every listed field must also match (an empty list reads as ""); a missing field never does."""
+    if field == ".":
+        if item is None or isinstance(item, (dict, list)):
+            return None
+        strings = [str(item)]
+    elif isinstance(item, dict):
+        val = _item_field(item, field)
+        strings = _empty_aware_strings(val) if empty_aware else _field_strings(val)
+    else:
+        return None
+    for wfield, wpattern in (where or {}).items():
+        wval = _item_path(item, wfield) if isinstance(item, dict) else None
+        if wval is None or not any(_compile(wpattern).search(s) for s in _empty_aware_strings(wval)):
+            return None
+    for s in strings:
+        if pat.search(s):
+            return s
+    return None
+
+
 def _countable(val):
     if val is None:
         return 0
@@ -267,13 +290,12 @@ def evaluate_assertion(assertion, data):
         pattern = check.get("pattern", "")
         pat = _compile(pattern)
         for item in val:
-            if isinstance(item, dict):
-                for s in _field_strings(_item_field(item, field)):
-                    if pat.search(s):
-                        result["passed"] = True
-                        result["actual"] = s
-                        result["expected"] = f"match for /{pattern}/"
-                        return result
+            s = _item_match(item, field, pat, check.get("where"))
+            if s is not None:
+                result["passed"] = True
+                result["actual"] = s
+                result["expected"] = f"match for /{pattern}/"
+                return result
         result["actual"] = f"no match in {len(val)} items"
         result["expected"] = f"match for /{pattern}/"
     elif op == "not_contains_match":
@@ -285,13 +307,12 @@ def evaluate_assertion(assertion, data):
         pattern = check.get("pattern", "")
         pat = _compile(pattern)
         for item in val:
-            if isinstance(item, dict):
-                for s in _empty_aware_strings(_item_field(item, field)):
-                    if pat.search(s):
-                        result["passed"] = False
-                        result["actual"] = s
-                        result["expected"] = f"no match for /{pattern}/"
-                        return result
+            s = _item_match(item, field, pat, check.get("where"), empty_aware=True)
+            if s is not None:
+                result["passed"] = False
+                result["actual"] = s
+                result["expected"] = f"no match for /{pattern}/"
+                return result
         result["passed"] = True
         result["actual"] = f"no match in {len(val)} items"
         result["expected"] = f"no match for /{pattern}/"
@@ -303,16 +324,10 @@ def evaluate_assertion(assertion, data):
             pattern = check.get("pattern", ".*")
             pat = _compile(pattern)
             count = 0
+            # Count the item once if any element of the (possibly-list) field matches.
             for item in val:
-                if not isinstance(item, dict):
-                    continue
-                # Count the item once if any element of the (possibly-list)
-                # field matches the pattern. This preserves semantics for
-                # scalar fields and adds native list support.
-                for s in _field_strings(_item_field(item, field)):
-                    if pat.search(s):
-                        count += 1
-                        break
+                if _item_match(item, field, pat, check.get("where")) is not None:
+                    count += 1
             result["actual"] = count
         expected = check.get("value", 0)
         result["passed"] = result["actual"] == expected

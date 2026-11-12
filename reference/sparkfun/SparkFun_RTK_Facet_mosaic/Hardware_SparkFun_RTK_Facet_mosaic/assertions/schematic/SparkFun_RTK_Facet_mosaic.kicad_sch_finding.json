@@ -84,14 +84,17 @@
       "created_from": "FND-00001532",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "has_pullup": false
+        "op": "count_matches",
+        "field": "net",
+        "pattern": "(SDA|SCL)$",
+        "where": {
+          "category": "^i2c_bus$",
+          "has_pullup": "^false$"
         },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "value": 2
       },
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"i2c_bus\", \"has_pullup\": false}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"count_matches\", \"field\": \"net\", \"pattern\": \"(SDA|SCL)$\", \"where\": {\"category\": \"^i2c_bus$\", \"has_pullup\": \"^false$\"}, \"detector_filter\": \"detect_design_observations\", \"value\": 2} (Both ESP2x SDA/SCL i2c_bus observations without pull-ups.)"
     },
     {
       "id": "FND-00001532-AST-08",
@@ -100,18 +103,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "resistor": {
-            "ref": "R1"
-          },
-          "capacitor": {
-            "value": "0.1uF"
-          }
+        "field": "output_net",
+        "pattern": "^ESP~\\{RST\\}$",
+        "where": {
+          "capacitor.value": "^0\\.1uF$"
         },
         "detector_filter": "detect_rc_filters"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"resistor\": {\"ref\": \"R1\"}, \"capacitor\": {\"value\": \"0.1uF\"}}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"output_net\", \"pattern\": \"^ESP~\\\\{RST\\\\}$\", \"where\": {\"capacitor.value\": \"^0\\\\.1uF$\"}, \"detector_filter\": \"detect_rc_filters\"} (No 0.1 uF cap on the ESP~{RST} filter, and that filter sits at 15.92 Hz (1 uF). Today R1+C8 1.0 uF at 15.92 Hz: both pass (graduation candidate).)"
     },
     {
       "id": "FND-00001532-AST-09",
@@ -138,6 +138,23 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
+    },
+    {
+      "id": "FND-00001532-AST-11",
+      "description": "INCORRECT: The main schematic analysis includes C3 from both sheet 0 (main, 1.0uF on the ESP~{RST} net) and sheet 2 (GNSS subsheet, 0.1uF). The RC filter detector picks up the GNSS subsheet's C3 (0.1uF) for two filter instances involving R1 and R11 on the ESP~{RST} net, when the actual C3 on that net is 1.0uF from the main sheet. This causes incorrect cutoff frequency reporting (159.15 Hz should be 15.92 Hz for 1.0uF). The BOM correctly uses the sheet-0 value (1.0uF), but signal analysis does not.",
+      "created_from": "FND-00001532",
+      "aspirational": true,
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "output_net",
+        "pattern": "^ESP~\\{RST\\}$",
+        "where": {
+          "cutoff_hz": "^15\\.92$"
+        },
+        "detector_filter": "detect_rc_filters"
+      },
+      "migration_note": "TH-109 triage: split from FND-00001532-AST-08"
     }
   ]
 }

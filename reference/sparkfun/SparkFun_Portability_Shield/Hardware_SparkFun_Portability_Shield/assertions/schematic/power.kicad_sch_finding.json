@@ -21,14 +21,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U1",
-          "topology": "LDO",
-          "output_rail": "3.3V_P"
+        "field": "ref",
+        "pattern": "^U1$",
+        "where": {
+          "topology": "^LDO$",
+          "input_rail": "^5V$",
+          "output_rail": "^3\\.3V_P$",
+          "estimated_vout": "^3\\.3$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U1\", \"topology\": \"LDO\", \"output_rail\": \"3.3V_P\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"ref\", \"pattern\": \"^U1$\", \"where\": {\"topology\": \"^LDO$\", \"input_rail\": \"^5V$\", \"output_rail\": \"^3\\\\.3V_P$\", \"estimated_vout\": \"^3\\\\.3$\"}, \"detector_filter\": \"detect_power_regulators\"} (Regulator facts, the three decoupling_coverage entries, VBATT/5V at 4.8 uF and 3.3V_P at 10.1 uF.)"
     },
     {
       "id": "FND-00001473-AST-03",
@@ -42,6 +45,59 @@
       },
       "aspirational": false,
       "migration_note": "Path migrated from: signal_analysis.bms_systems"
+    },
+    {
+      "id": "FND-00001473-AST-04",
+      "description": "The power_regulators in the power sub-sheet correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V, output_rail 3.3V_P, estimated_vout 3.3. Decoupling analysis correctly groups VBATT (4.8 uF), 5V (4.8 uF), and 3.3V_P (10.1 uF) rail capacitors. The design_observations include all three decoupling_coverage entries with correct bulk/bypass classification.",
+      "created_from": "FND-00001473",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "rail",
+        "pattern": "^(VBATT|5V|3\\.3V_P)$",
+        "where": {
+          "category": "^decoupling_coverage$"
+        },
+        "detector_filter": "detect_design_observations",
+        "value": 3
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001473-AST-02"
+    },
+    {
+      "id": "FND-00001473-AST-05",
+      "description": "The power_regulators in the power sub-sheet correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V, output_rail 3.3V_P, estimated_vout 3.3. Decoupling analysis correctly groups VBATT (4.8 uF), 5V (4.8 uF), and 3.3V_P (10.1 uF) rail capacitors. The design_observations include all three decoupling_coverage entries with correct bulk/bypass classification.",
+      "created_from": "FND-00001473",
+      "check": {
+        "path": "findings",
+        "op": "count_matches",
+        "field": "rail",
+        "pattern": "^(VBATT|5V)$",
+        "where": {
+          "total_capacitance_uF": "^4\\.8$"
+        },
+        "detector_filter": "detect_decoupling",
+        "value": 2
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001473-AST-02"
+    },
+    {
+      "id": "FND-00001473-AST-06",
+      "description": "The power_regulators in the power sub-sheet correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V, output_rail 3.3V_P, estimated_vout 3.3. Decoupling analysis correctly groups VBATT (4.8 uF), 5V (4.8 uF), and 3.3V_P (10.1 uF) rail capacitors. The design_observations include all three decoupling_coverage entries with correct bulk/bypass classification.",
+      "created_from": "FND-00001473",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rail",
+        "pattern": "^3\\.3V_P$",
+        "where": {
+          "total_capacitance_uF": "^10\\.1$"
+        },
+        "detector_filter": "detect_decoupling"
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001473-AST-02"
     }
   ]
 }

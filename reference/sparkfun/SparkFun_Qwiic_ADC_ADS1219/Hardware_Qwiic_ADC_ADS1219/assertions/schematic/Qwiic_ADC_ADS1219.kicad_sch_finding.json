@@ -21,14 +21,16 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "category": "reset_pin",
-          "component": "U1",
-          "has_pullup": true
+        "field": "component",
+        "pattern": "^U1$",
+        "where": {
+          "category": "^reset_pin$",
+          "has_pullup": "^true$",
+          "connected_components": "'ref': 'R5'"
         },
         "detector_filter": "detect_design_observations"
       },
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"reset_pin\", \"component\": \"U1\", \"has_pullup\": true}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"component\", \"pattern\": \"^U1$\", \"where\": {\"category\": \"^reset_pin$\", \"has_pullup\": \"^true$\", \"connected_components\": \"'ref': 'R5'\"}, \"detector_filter\": \"detect_design_observations\"} (reset_pin observation for U1 with has_pullup true and R5 among its connected components (v3 has no pullup_resistor key on reset_pin).)"
     },
     {
       "id": "FND-00001500-AST-03",
@@ -58,16 +60,17 @@
       "created_from": "FND-00001500",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "net": "SCL",
-          "has_pullup": true
+        "op": "contains_match",
+        "field": "net",
+        "pattern": "^SCL$",
+        "where": {
+          "category": "^i2c_bus$",
+          "has_pullup": "^true$"
         },
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"i2c_bus\", \"net\": \"SCL\", \"has_pullup\": true}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"net\", \"pattern\": \"^SCL$\", \"where\": {\"category\": \"^i2c_bus$\", \"has_pullup\": \"^true$\"}, \"detector_filter\": \"detect_design_observations\"} (The description says R2 pulls SCL up through bridged jumper JP3 and the analyzer misses it. The old not_contains pinned the defect direction; the intent is has_pullup true on SCL, which fails today (f)"
     }
   ]
 }

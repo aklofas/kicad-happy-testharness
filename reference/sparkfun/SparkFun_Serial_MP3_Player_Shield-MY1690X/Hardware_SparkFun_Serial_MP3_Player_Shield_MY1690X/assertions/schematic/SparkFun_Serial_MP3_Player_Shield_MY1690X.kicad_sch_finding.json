@@ -21,14 +21,12 @@
       "check": {
         "path": "statistics.power_rails",
         "op": "contains_match",
-        "value": {
-          "op": "equals",
-          "field": "$",
-          "value": "3.3V_P"
-        }
+        "field": "name",
+        "pattern": "^3\\.3V_P$"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 6 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 6 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": {\"op\": \"equals\", \"field\": \"$\", \"value\": \"3.3V_P\"}} -> {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"field\": \"name\", \"pattern\": \"^3\\\\.3V_P$\"} (3.3V_P is listed, and 'all six power rails' are reported (3.3V, 3.3V_P, 5V, GND, VCC, VUSB). Both pass (graduation candidate).)"
     },
     {
       "id": "FND-00001485-AST-03",
@@ -128,6 +126,19 @@
         "value": 1
       },
       "aspirational": true
+    },
+    {
+      "id": "FND-00001485-AST-11",
+      "description": "All six power rails in the schematic are accurately reported. 3.3V_P is the MY1690X internal regulator output, VCC is the 5V input to the IC (via ferrite bead L1), VUSB comes from the USB-C connector through fuse F1, and 5V/3.3V come from the Arduino shield connector. The rail hierarchy is correctly captured.",
+      "created_from": "FND-00001485",
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 6 items",
+      "check": {
+        "path": "statistics.power_rails",
+        "op": "equals",
+        "value": 6
+      },
+      "migration_note": "TH-109 triage: split from FND-00001485-AST-02"
     }
   ]
 }

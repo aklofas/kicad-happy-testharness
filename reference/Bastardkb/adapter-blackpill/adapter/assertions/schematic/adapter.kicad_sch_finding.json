@@ -40,10 +40,13 @@
       "created_from": "FND-00001975",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/\\+5V/"
+        "op": "count_matches",
+        "field": "name",
+        "pattern": "^(\\+5V|\\+3V3|\\+3\\.3V|GND)$",
+        "value": 3
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/\\\\+5V/\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"count_matches\", \"field\": \"name\", \"pattern\": \"^(\\\\+5V|\\\\+3V3|\\\\+3\\\\.3V|GND)$\", \"value\": 3} (Three rails +5V, +3.3V (named +3V3 in v3) and GND.)"
     },
     {
       "id": "FND-00001975-AST-06",

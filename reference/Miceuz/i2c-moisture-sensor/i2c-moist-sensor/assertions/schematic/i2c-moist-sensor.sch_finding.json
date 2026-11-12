@@ -19,11 +19,17 @@
       "description": "INCORRECT: The analyzer reports IC1 pin 1 (named 'VCC' in library) on the GND net, and IC1 pin 14 (named 'GND') on the VCC net. The KiCad-generated .net file confirms the actual connections are correct: pin 1 is on VCC and pin 14 is on GND. The bug occurs because the legacy KiCad 5 schematic parser incorrectly resolves pin positions for components with Y-mirror transform ([1 0 0 -1]), swapping which power symbol endpoint hits which pin. The ATtiny441-SSU is drawn Y-mirrored (mirror_x: true in output), and the parser picks up GND power symbol position as matching pin 1 (VCC) and VCC symbol as matching pin 14 (GND).",
       "created_from": "FND-00002137",
       "check": {
-        "path": "nets.VCC.pins[?component=='IC1'].pin_name",
+        "path": "nets.VCC.pins",
         "op": "contains_match",
-        "value": "/VCC/"
+        "field": "pin_name",
+        "pattern": "^VCC$",
+        "where": {
+          "component": "^IC1$",
+          "pin_number": "^1$"
+        }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"nets.VCC.pins[?component=='IC1'].pin_name\", \"op\": \"contains_match\", \"value\": \"/VCC/\"} -> {\"path\": \"nets.VCC.pins\", \"op\": \"contains_match\", \"field\": \"pin_name\", \"pattern\": \"^VCC$\", \"where\": {\"component\": \"^IC1$\", \"pin_number\": \"^1$\"}} (Pin 1 (VCC) on VCC and pin 14 (GND) on GND, one check per net. Both pass today (mirror pin swap fixed).)"
     },
     {
       "id": "FND-00002137-AST-03",
@@ -37,6 +43,23 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.crystal_circuits[0].load_caps"
+    },
+    {
+      "id": "FND-00002137-AST-04",
+      "description": "INCORRECT: The analyzer reports IC1 pin 1 (named 'VCC' in library) on the GND net, and IC1 pin 14 (named 'GND') on the VCC net. The KiCad-generated .net file confirms the actual connections are correct: pin 1 is on VCC and pin 14 is on GND. The bug occurs because the legacy KiCad 5 schematic parser incorrectly resolves pin positions for components with Y-mirror transform ([1 0 0 -1]), swapping which power symbol endpoint hits which pin. The ATtiny441-SSU is drawn Y-mirrored (mirror_x: true in output), and the parser picks up GND power symbol position as matching pin 1 (VCC) and VCC symbol as matching pin 14 (GND).",
+      "created_from": "FND-00002137",
+      "aspirational": true,
+      "check": {
+        "path": "nets.GND.pins",
+        "op": "contains_match",
+        "field": "pin_name",
+        "pattern": "^GND$",
+        "where": {
+          "component": "^IC1$",
+          "pin_number": "^14$"
+        }
+      },
+      "migration_note": "TH-109 triage: split from FND-00002137-AST-02"
     }
   ]
 }

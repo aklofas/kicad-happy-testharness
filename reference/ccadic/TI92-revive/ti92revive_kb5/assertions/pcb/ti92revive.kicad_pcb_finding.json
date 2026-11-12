@@ -20,19 +20,14 @@
       "created_from": "FND-00001605",
       "check": {
         "path": "footprints",
-        "op": "not_contains_match",
-        "value": {
-          "reference": "kbLBrack1",
-          "value": [
-            [
-              "at",
-              "0.508",
-              "-4.064"
-            ]
-          ]
-        }
+        "op": "field_equals",
+        "match_field": "reference",
+        "match_value": "kbLBrack1",
+        "assert_field": "value",
+        "assert_value": "("
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"footprints\", \"op\": \"not_contains_match\", \"value\": {\"reference\": \"kbLBrack1\", \"value\": [[\"at\", \"0.508\", \"-4.064\"]]}} -> {\"path\": \"footprints\", \"op\": \"field_equals\", \"match_field\": \"reference\", \"match_value\": \"kbLBrack1\", \"assert_field\": \"value\", \"assert_value\": \"(\"} (kbLBrack1 value must be the string '('; field_equals compares exactly. Passes today.)"
     },
     {
       "id": "FND-00001605-AST-03",

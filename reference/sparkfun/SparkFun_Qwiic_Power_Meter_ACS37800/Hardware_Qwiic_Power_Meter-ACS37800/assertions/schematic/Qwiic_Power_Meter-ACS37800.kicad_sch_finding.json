@@ -21,13 +21,16 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rail": "3.3V",
-          "cap_count": 1
+        "field": "rail",
+        "pattern": "^3\\.3V$",
+        "where": {
+          "cap_count": "^1$",
+          "total_capacitance_uF": "^0\\.1$",
+          "capacitors": "'ref': 'C1'"
         },
         "detector_filter": "detect_decoupling"
       },
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"3.3V\", \"cap_count\": 1}, \"detector_filter\": \"detect_decoupling\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"rail\", \"pattern\": \"^3\\\\.3V$\", \"where\": {\"cap_count\": \"^1$\", \"total_capacitance_uF\": \"^0\\\\.1$\", \"capacitors\": \"'ref': 'C1'\"}, \"detector_filter\": \"detect_decoupling\"} (One 3.3V decoupling entry with exactly C1, 0.1 uF total. has_bulk/has_bypass are no longer emitted (null), so they are left out.)"
     },
     {
       "id": "FND-00001514-AST-03",

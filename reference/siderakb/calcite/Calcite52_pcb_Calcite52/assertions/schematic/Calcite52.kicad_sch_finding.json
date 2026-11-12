@@ -10,11 +10,17 @@
       "created_from": "FND-00002300",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": "/USB_D.*has_esd_protection.*true/",
-        "detector_filter": "detect_design_observations"
+        "op": "count_matches",
+        "detector_filter": "detect_design_observations",
+        "field": "net",
+        "pattern": "^USB_D[+-]$",
+        "where": {
+          "category": "^usb_data$",
+          "has_esd_protection": "^true$"
+        },
+        "value": 2
       },
-      "migration_note": "Path migrated from: signal_analysis.design_observations",
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": \"/USB_D.*has_esd_protection.*true/\", \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"count_matches\", \"detector_filter\": \"detect_design_observations\", \"field\": \"net\", \"pattern\": \"^USB_D[+-]$\", \"where\": {\"category\": \"^usb_data$\", \"has_esd_protection\": \"^true$\"}, \"value\": 2} (Both USB_D+ and USB_D- usb_data observations with has_esd_protection true (incorrect_review: graduate).)",
       "incorrect_review": "graduate (TH-105, 2026-11-06): USB_D+ and USB_D- both has_esd_protection=true now; check malformed (value not pattern) but intent holds"
     }
   ]

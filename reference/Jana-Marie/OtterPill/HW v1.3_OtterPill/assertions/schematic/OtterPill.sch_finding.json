@@ -20,11 +20,14 @@
       "created_from": "FND-00001799",
       "check": {
         "path": "components",
-        "value": "reference",
-        "op": "contains_match"
+        "op": "count_matches",
+        "field": "reference",
+        "pattern": ".",
+        "value": 43
       },
       "aspirational": false,
-      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): 'reference' is the documented component key in both parsers; not a defect. Lock also vacuous (contains_match uses value, no field/pattern)"
+      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): 'reference' is the documented component key in both parsers; not a defect. Lock also vacuous (contains_match uses value, no field/pattern)",
+      "migration_note": "TH-109 triage: {\"path\": \"components\", \"value\": \"reference\", \"op\": \"contains_match\"} -> {\"path\": \"components\", \"op\": \"count_matches\", \"field\": \"reference\", \"pattern\": \".\", \"value\": 43} (All 43 components carry the 'reference' key. TH-105 ruled the 'ref vs reference' complaint reviewer_wrong ('reference' is the documented key), so the lock keeps only the fact.)"
     }
   ]
 }

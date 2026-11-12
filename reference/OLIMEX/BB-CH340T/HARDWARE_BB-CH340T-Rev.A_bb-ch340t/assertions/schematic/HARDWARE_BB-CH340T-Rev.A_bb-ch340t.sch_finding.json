@@ -10,25 +10,47 @@
       "created_from": "FND-00000400",
       "check": {
         "path": "design_analysis.bus_analysis.uart",
-        "op": "not_contains_match",
-        "value": {
-          "devices": [
-            "U1"
-          ]
+        "op": "contains_match",
+        "field": "devices",
+        "pattern": "'ref': 'U1'",
+        "where": {
+          "net": "^RXD$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis.uart\", \"op\": \"not_contains_match\", \"value\": {\"devices\": [\"U1\"]}} -> {\"path\": \"design_analysis.bus_analysis.uart\", \"op\": \"contains_match\", \"field\": \"devices\", \"pattern\": \"'ref': 'U1'\", \"where\": {\"net\": \"^RXD$\"}} (The description's premise (U1 UART pins isolated) was a pre-v2.0 mirror-bug symptom; the shipped OLIMEX netlist (bb-ch340t.net) has U1.4 with POUT1.3 (RXD) and U1.3 with POUT1.2 (TXD). v3 now has U1.4)"
     },
     {
       "id": "FND-00000400-AST-02",
       "description": "U1's GND pin (pin 8, at schematic coordinate y=4450) is placed on net __unnamed_4 rather than the named GND net. The wire at y=4450 connects from USB1.D+ (pin 3) to U1.GND (pin 8). As a result, the CH340T GND pin is not detected as connected to the board ground plane. This may be an unusual schematic connection or a design error, but it means the power rail detection misses U1's ground connection. The GND net's power_rails list is present but U1 has no ground rail in its ic_power_rails entry.",
       "created_from": "FND-00000400",
       "check": {
-        "path": "design_analysis.power_domains.ic_power_rails.U1.power_rails",
-        "op": "not_contains_match",
-        "value": "GND"
+        "path": "components",
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^U1$",
+        "where": {
+          "pin_nets.8": "^GND$"
+        }
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.power_domains.ic_power_rails.U1.power_rails\", \"op\": \"not_contains_match\", \"value\": \"GND\"} -> {\"path\": \"components\", \"op\": \"contains_match\", \"field\": \"reference\", \"pattern\": \"^U1$\", \"where\": {\"pin_nets.8\": \"^GND$\"}} (ic_power_rails never lists ground (net_analysis.py: is_power_net and not is_ground), so the old check could not fail. Ground truth (shipped netlist) puts U1.8 on GND, and v3 does; the description's 'U)"
+    },
+    {
+      "id": "FND-00000400-AST-03",
+      "description": "INCORRECT: The analyzer detects UART on the named nets RXD and TXD. However, U1's actual TXD pin (pin 3) is on an isolated unnamed net (__unnamed_0) and U1's actual RXD pin (pin 4) is on another isolated unnamed net (__unnamed_1). Neither is connected to the labeled RXD or TXD nets. The RXD net contains U1.pin20 (NOS#, a modem-control signal) and a connector pin; the TXD net contains R1 and D1 passive pins but no IC UART output. The UART detection is triggered by net name pattern matching, not by tracing actual IC UART pin connectivity.",
+      "created_from": "FND-00000400",
+      "aspirational": true,
+      "check": {
+        "path": "design_analysis.bus_analysis.uart",
+        "op": "contains_match",
+        "field": "devices",
+        "pattern": "'ref': 'U1'",
+        "where": {
+          "net": "^TXD$"
+        }
+      },
+      "migration_note": "TH-109 triage: split from FND-00000400-AST-01"
     }
   ]
 }

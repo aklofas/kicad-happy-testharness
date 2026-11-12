@@ -77,11 +77,13 @@
       "created_from": "FND-00001798",
       "check": {
         "path": "components",
-        "value": "reference",
-        "op": "contains_match"
+        "op": "not_contains_match",
+        "field": "reference",
+        "pattern": "^$"
       },
       "aspirational": false,
-      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): components[] key is 'reference' by schema (43 entries, all set); not a defect; lock itself is vacuous (malformed contains_match value)"
+      "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): components[] key is 'reference' by schema (43 entries, all set); not a defect; lock itself is vacuous (malformed contains_match value)",
+      "migration_note": "TH-109 triage: {\"path\": \"components\", \"value\": \"reference\", \"op\": \"contains_match\"} -> {\"path\": \"components\", \"op\": \"not_contains_match\", \"field\": \"reference\", \"pattern\": \"^$\"} (Every component must carry a non-empty reference (the falsifiable half of the claim). The \"ref key absent\" complaint is the v3 schema: components use `reference`, never `ref`, so that half is not a de)"
     },
     {
       "id": "FND-00001798-AST-08",

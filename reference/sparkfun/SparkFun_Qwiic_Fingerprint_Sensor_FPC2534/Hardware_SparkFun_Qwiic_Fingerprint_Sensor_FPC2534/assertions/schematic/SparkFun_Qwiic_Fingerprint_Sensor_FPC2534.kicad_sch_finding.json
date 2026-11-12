@@ -55,10 +55,12 @@
       "check": {
         "path": "statistics.power_rails",
         "op": "contains_match",
-        "value": "EGND"
+        "field": "name",
+        "pattern": "^EGND$"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 4 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 4 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"EGND\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"field\": \"name\", \"pattern\": \"^EGND$\"} (power_rails items are {name, voltage}; field name.)"
     },
     {
       "id": "FND-00001449-AST-06",
@@ -96,11 +98,14 @@
       "created_from": "FND-00001449",
       "check": {
         "path": "statistics.missing_footprint",
-        "op": "contains_match",
-        "value": "G1"
+        "op": "count_matches",
+        "field": ".",
+        "pattern": "^G[13]$",
+        "value": 2
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.missing_footprint\", \"op\": \"contains_match\", \"value\": \"G1\"} -> {\"path\": \"statistics.missing_footprint\", \"op\": \"count_matches\", \"field\": \".\", \"pattern\": \"^G[13]$\", \"value\": 2} (G1 and G3 listed, G2 (has a footprint) not listed.)"
     },
     {
       "id": "FND-00001449-AST-10",
@@ -108,13 +113,15 @@
       "created_from": "FND-00001449",
       "check": {
         "path": "design_analysis.differential_pairs",
-        "op": "not_contains_match",
-        "value": {
-          "positive": "DP",
-          "has_esd": true
+        "op": "contains_match",
+        "field": "positive",
+        "pattern": "^DP$",
+        "where": {
+          "has_esd": "^false$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.differential_pairs\", \"op\": \"not_contains_match\", \"value\": {\"positive\": \"DP\", \"has_esd\": true}} -> {\"path\": \"design_analysis.differential_pairs\", \"op\": \"contains_match\", \"field\": \"positive\", \"pattern\": \"^DP$\", \"where\": {\"has_esd\": \"^false$\"}} (DP/DM pair must not credit U1 as ESD; has_esd is false now. Positive form so a vanished pair fails too.)"
     },
     {
       "id": "FND-00001449-AST-11",
@@ -122,16 +129,17 @@
       "created_from": "FND-00001449",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "net": "SCL",
-          "has_pullup": true
-        },
-        "detector_filter": "detect_design_observations"
+        "op": "contains_match",
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^i2c_bus$",
+        "where": {
+          "net": "^SCL$",
+          "has_pullup": "^true$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"i2c_bus\", \"net\": \"SCL\", \"has_pullup\": true}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_design_observations\", \"field\": \"category\", \"pattern\": \"^i2c_bus$\", \"where\": {\"net\": \"^SCL$\", \"has_pullup\": \"^true$\"}} (Description says SCL has a pull-up (R12 via JP4 to 3.3V) that the analyzer misses; the OLD check asserted the opposite (no SCL has_pullup=true), i.e. it pinned the defect. Fails today: has_pullup=fals)"
     },
     {
       "id": "FND-00001449-AST-12",
@@ -156,6 +164,20 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
+    },
+    {
+      "id": "FND-00001449-AST-14",
+      "description": "G1 (qwiic_Logo) and G3 (SparkFun_Logo) both have empty footprint fields in the schematic. They are correctly listed in missing_footprint. G2 has a footprint assigned so it is correctly not listed.",
+      "created_from": "FND-00001449",
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items",
+      "check": {
+        "path": "statistics.missing_footprint",
+        "op": "not_contains_match",
+        "field": ".",
+        "pattern": "^G2$"
+      },
+      "migration_note": "TH-109 triage: split from FND-00001449-AST-09"
     }
   ]
 }

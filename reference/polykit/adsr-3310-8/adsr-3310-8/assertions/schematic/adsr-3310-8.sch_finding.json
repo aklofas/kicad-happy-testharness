@@ -21,10 +21,13 @@
       "created_from": "FND-00001977",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/-12V/"
+        "op": "count_matches",
+        "field": "name",
+        "pattern": "^(\\+12V|-12V|GND)$",
+        "value": 3
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/-12V/\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"count_matches\", \"field\": \"name\", \"pattern\": \"^(\\\\+12V|-12V|GND)$\", \"value\": 3} (The three Eurorack rails present. Passes (graduation candidate).)"
     },
     {
       "id": "FND-00001977-AST-03",
@@ -82,9 +85,11 @@
       "check": {
         "path": "design_analysis.power_domains.ic_power_rails.U2.power_rails",
         "op": "contains_match",
-        "value": "/\\+12V/"
+        "field": ".",
+        "pattern": "^-12V$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.power_domains.ic_power_rails.U2.power_rails\", \"op\": \"contains_match\", \"value\": \"/\\\\+12V/\"} -> {\"path\": \"design_analysis.power_domains.ic_power_rails.U2.power_rails\", \"op\": \"contains_match\", \"field\": \".\", \"pattern\": \"^-12V$\"} (Intent: U2's negative supply traces back to -12V. The __unnamed_23 net is gone but U2 rails are ['+12V'] only, so the -12V association is still missing.)"
     },
     {
       "id": "FND-00001977-AST-08",

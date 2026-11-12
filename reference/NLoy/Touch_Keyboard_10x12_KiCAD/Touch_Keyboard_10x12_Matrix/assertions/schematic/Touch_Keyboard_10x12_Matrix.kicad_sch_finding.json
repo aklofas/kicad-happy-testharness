@@ -11,13 +11,16 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rows": 12,
-          "columns": 10
+        "field": "rows",
+        "pattern": "^12$",
+        "where": {
+          "columns": "^10$",
+          "estimated_keys": "^118$",
+          "switches_on_matrix": "^118$"
         },
         "detector_filter": "detect_key_matrices"
       },
-      "migration_note": "Path migrated from: signal_analysis.key_matrices"
+      "migration_note": "Path migrated from: signal_analysis.key_matrices; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rows\": 12, \"columns\": 10}, \"detector_filter\": \"detect_key_matrices\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"rows\", \"pattern\": \"^12$\", \"where\": {\"columns\": \"^10$\", \"estimated_keys\": \"^118$\", \"switches_on_matrix\": \"^118$\"}, \"detector_filter\": \"detect_key_matrices\"} (12x10 matrix with 118 keys/switches, as described.)"
     },
     {
       "id": "FND-00001615-AST-02",

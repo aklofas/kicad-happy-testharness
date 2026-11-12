@@ -23,12 +23,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "D6"
+        "field": "first_led",
+        "pattern": "^D6$",
+        "where": {
+          "chain_length": "^1$",
+          "led_type": "^WS2812B$"
         },
         "detector_filter": "detect_addressable_leds"
       },
-      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"D6\"}, \"detector_filter\": \"detect_addressable_leds\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"first_led\", \"pattern\": \"^D6$\", \"where\": {\"chain_length\": \"^1$\", \"led_type\": \"^WS2812B$\"}, \"detector_filter\": \"detect_addressable_leds\"} (Single-LED WS2812B chain starting at D6 (v3 uses first_led/components, not ref).)"
     },
     {
       "id": "FND-00001571-AST-03",
@@ -47,10 +50,12 @@
       "check": {
         "path": "annotation_issues.duplicate_references",
         "op": "contains_match",
-        "value": "C3"
+        "field": ".",
+        "pattern": "^C3$"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 3 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 3 items",
+      "migration_note": "TH-109 triage: {\"path\": \"annotation_issues.duplicate_references\", \"op\": \"contains_match\", \"value\": \"C3\"} -> {\"path\": \"annotation_issues.duplicate_references\", \"op\": \"contains_match\", \"field\": \".\", \"pattern\": \"^C3$\"} (The description says flagging C3/G3/R1 as duplicates is correct. Today the root output has no duplicate_references key at all (66 components, C3/G3/R1 once each), so the claim no longer holds; needs a)"
     },
     {
       "id": "FND-00001571-AST-05",
@@ -69,11 +74,14 @@
       "check": {
         "path": "subcircuits",
         "op": "contains_match",
-        "value": {
-          "ref": "U5"
+        "field": "center_ic",
+        "pattern": "^U5$",
+        "where": {
+          "ic_value": "^MCP73831$"
         }
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "TH-109 triage: {\"path\": \"subcircuits\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U5\"}} -> {\"path\": \"subcircuits\", \"op\": \"contains_match\", \"field\": \"center_ic\", \"pattern\": \"^U5$\", \"where\": {\"ic_value\": \"^MCP73831$\"}} (Subcircuit centred on U5 = MCP73831 (v3 key center_ic). Note: its neighbor list today is D4 + R16 only, no input/output capacitors as the description claims.)"
     },
     {
       "id": "FND-00001571-AST-07",

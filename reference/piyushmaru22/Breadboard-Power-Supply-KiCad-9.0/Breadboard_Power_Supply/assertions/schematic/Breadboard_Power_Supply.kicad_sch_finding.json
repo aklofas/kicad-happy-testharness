@@ -11,17 +11,14 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "resistor": {
-            "ref": "R1"
-          },
-          "capacitor": {
-            "ref": "C1"
-          }
+        "field": "resistor.ref",
+        "pattern": "^R1$",
+        "where": {
+          "capacitor.ref": "^C1$"
         },
         "detector_filter": "detect_rc_filters"
       },
-      "migration_note": "Path migrated from: signal_analysis.rc_filters",
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"resistor\": {\"ref\": \"R1\"}, \"capacitor\": {\"ref\": \"C1\"}}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"resistor.ref\", \"pattern\": \"^R1$\", \"where\": {\"capacitor.ref\": \"^C1$\"}, \"detector_filter\": \"detect_rc_filters\"} (No RC filter pairing the LED resistor R1 with bulk cap C1. Passes (no RC filters at all today).)",
       "incorrect_review": "graduate (TH-105, 2026-11-06): rc_filters now empty, so R1/C1 no longer reported (check passes only on an empty list, which is right here)"
     },
     {
@@ -31,17 +28,14 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "resistor": {
-            "ref": "R2"
-          },
-          "capacitor": {
-            "ref": "C3"
-          }
+        "field": "resistor.ref",
+        "pattern": "^R2$",
+        "where": {
+          "capacitor.ref": "^C3$"
         },
         "detector_filter": "detect_rc_filters"
       },
-      "migration_note": "Path migrated from: signal_analysis.rc_filters",
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"resistor\": {\"ref\": \"R2\"}, \"capacitor\": {\"ref\": \"C3\"}}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"resistor.ref\", \"pattern\": \"^R2$\", \"where\": {\"capacitor.ref\": \"^C3$\"}, \"detector_filter\": \"detect_rc_filters\"} (No RC filter pairing LM317 feedback R2 with output cap C3. Passes.)",
       "incorrect_review": "graduate (TH-105, 2026-11-06): rc_filters empty, so R2/C3 is no longer reported. Note: the check is malformed ('value' dict, no pattern) and would fail on any rc filter; re-express with field resistor.ref."
     },
     {
@@ -75,14 +69,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "category": "regulator_caps",
-          "component": "U1"
+        "field": "component",
+        "pattern": "^U[12]$",
+        "where": {
+          "category": "^regulator_caps$"
         },
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"regulator_caps\", \"component\": \"U1\"}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"component\", \"pattern\": \"^U[12]$\", \"where\": {\"category\": \"^regulator_caps$\"}, \"detector_filter\": \"detect_design_observations\"} (No regulator_caps (missing-caps) observation for U1 or U2 (category still emitted by signal_detectors.py). Passes (graduation candidate).)"
     },
     {
       "id": "FND-00000394-AST-06",

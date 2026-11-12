@@ -21,15 +21,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U2",
-          "topology": "LDO",
-          "input_rail": "5V",
-          "output_rail": "3.3V"
+        "field": "ref",
+        "pattern": "^U2$",
+        "where": {
+          "topology": "^LDO$",
+          "input_rail": "^5V$",
+          "output_rail": "^3\\.3V$",
+          "estimated_vout": "^3\\.3$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U2\", \"topology\": \"LDO\", \"input_rail\": \"5V\", \"output_rail\": \"3.3V\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"ref\", \"pattern\": \"^U2$\", \"where\": {\"topology\": \"^LDO$\", \"input_rail\": \"^5V$\", \"output_rail\": \"^3\\\\.3V$\", \"estimated_vout\": \"^3\\\\.3$\"}, \"detector_filter\": \"detect_power_regulators\"} (One regulator item must carry all four facts at once; `where` expresses the AND the dict tried to.)"
     },
     {
       "id": "FND-00001445-AST-03",
@@ -50,17 +52,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "inductor": {
-            "ref": "L1"
-          },
-          "capacitor": {
-            "ref": "C6"
-          }
+        "field": "inductor.ref",
+        "pattern": "^L1$",
+        "where": {
+          "capacitor.ref": "^C6$",
+          "resonant_formatted": "^61\\.03 MHz$"
         },
         "detector_filter": "detect_lc_filters"
       },
-      "migration_note": "Path migrated from: signal_analysis.lc_filters"
+      "migration_note": "Path migrated from: signal_analysis.lc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"inductor\": {\"ref\": \"L1\"}, \"capacitor\": {\"ref\": \"C6\"}}, \"detector_filter\": \"detect_lc_filters\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"inductor.ref\", \"pattern\": \"^L1$\", \"where\": {\"capacitor.ref\": \"^C6$\", \"resonant_formatted\": \"^61\\\\.03 MHz$\"}, \"detector_filter\": \"detect_lc_filters\"} (The L1+C6 pair at 61.03 MHz as one LC item (L1 also pairs with C3/C4 at 1.93 MHz, so the pairing must be on one item).)"
     },
     {
       "id": "FND-00001445-AST-05",
@@ -80,14 +80,17 @@
       "created_from": "FND-00001445",
       "check": {
         "path": "findings",
-        "op": "contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "has_pullup": false
+        "op": "count_matches",
+        "field": "net",
+        "pattern": "^(SCL|SDA)$",
+        "where": {
+          "category": "^i2c_bus$",
+          "has_pullup": "^false$"
         },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "value": 2
       },
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"category\": \"i2c_bus\", \"has_pullup\": false}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"count_matches\", \"field\": \"net\", \"pattern\": \"^(SCL|SDA)$\", \"where\": {\"category\": \"^i2c_bus$\", \"has_pullup\": \"^false$\"}, \"detector_filter\": \"detect_design_observations\", \"value\": 2} (Both I2C lines reported as i2c_bus with has_pullup false.)"
     },
     {
       "id": "FND-00001445-AST-07",
@@ -96,13 +99,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rail": "3.3V",
-          "cap_count": 4
+        "field": "rail",
+        "pattern": "^3\\.3V$",
+        "where": {
+          "cap_count": "^4$",
+          "total_capacitance_uF": "^11\\.1$"
         },
         "detector_filter": "detect_decoupling"
       },
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"3.3V\", \"cap_count\": 4}, \"detector_filter\": \"detect_decoupling\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"rail\", \"pattern\": \"^3\\\\.3V$\", \"where\": {\"cap_count\": \"^4$\", \"total_capacitance_uF\": \"^11\\\\.1$\"}, \"detector_filter\": \"detect_decoupling\"} (Description locks the 4-cap/11.1 uF rail AND its bulk/bypass/high-freq coverage; the coverage flags live on the DO-DET decoupling_coverage item, not DC-DET.)"
     },
     {
       "id": "FND-00001445-AST-08",
@@ -110,11 +115,14 @@
       "created_from": "FND-00001445",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "VCC_RF"
+        "op": "count_matches",
+        "field": "name",
+        "pattern": "^(3\\.3V|5V|GND|VCC_RF)$",
+        "value": 4
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 4 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 4 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"VCC_RF\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"count_matches\", \"field\": \"name\", \"pattern\": \"^(3\\\\.3V|5V|GND|VCC_RF)$\", \"value\": 4} (All four named rails present; VCC_RF now reported, so this aspirational lock passes (graduation candidate).)"
     },
     {
       "id": "FND-00001445-AST-09",
@@ -185,6 +193,26 @@
       },
       "aspirational": false,
       "migration_note": "Added (v3.0.1 regen at 246ee5a, ruling 2026-11-05): positive lock for the V_BCKP decoupling that replaced the R7/C9 RC-DET; TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"rail\", \"pattern\": \"^V_BCKP$\"} (the old check passed vacuously: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"V_BCKP\"}, \"detector_filter\": \"detect_decoupling\"})"
+    },
+    {
+      "id": "FND-00001445-AST-14",
+      "description": "The 3.3V rail decoupling analysis correctly lists C5(100nF), C8(33pF), C2(10µF), C13(1µF) for a total of 11.1µF. The coverage is correctly marked as has_bulk=true (C2 10µF), has_bypass=true (C5 100nF), and has_high_freq=true (C8 33pF), reflecting good broadband decoupling practice.",
+      "created_from": "FND-00001445",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rail",
+        "pattern": "^3\\.3V$",
+        "where": {
+          "category": "^decoupling_coverage$",
+          "has_bulk": "^true$",
+          "has_bypass": "^true$",
+          "has_high_freq": "^true$"
+        },
+        "detector_filter": "detect_design_observations"
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001445-AST-07"
     }
   ]
 }

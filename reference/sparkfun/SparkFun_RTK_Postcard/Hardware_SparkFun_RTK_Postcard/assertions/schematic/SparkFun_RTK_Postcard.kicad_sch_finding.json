@@ -20,13 +20,14 @@
       "created_from": "FND-00001481",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": {
-          "item": "VCC_RF"
-        }
+        "op": "count_matches",
+        "field": "name",
+        "pattern": "^(VCC_RF|VBUS|5V|3\\.3V|GND)$",
+        "value": 5
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 5 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 5 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": {\"item\": \"VCC_RF\"}} -> {\"path\": \"statistics.power_rails\", \"op\": \"count_matches\", \"field\": \"name\", \"pattern\": \"^(VCC_RF|VBUS|5V|3\\\\.3V|GND)$\", \"value\": 5} (power_rails items are {name, voltage}; the five named rails are counted by name.)"
     },
     {
       "id": "FND-00001481-AST-03",
@@ -35,15 +36,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U2",
-          "topology": "LDO",
-          "input_rail": "5V",
-          "output_rail": "3.3V"
+        "field": "ref",
+        "pattern": "^U2$",
+        "where": {
+          "topology": "^LDO$",
+          "input_rail": "^5V$",
+          "output_rail": "^3\\.3V$",
+          "estimated_vout": "^3\\.3$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U2\", \"topology\": \"LDO\", \"input_rail\": \"5V\", \"output_rail\": \"3.3V\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"ref\", \"pattern\": \"^U2$\", \"where\": {\"topology\": \"^LDO$\", \"input_rail\": \"^5V$\", \"output_rail\": \"^3\\\\.3V$\", \"estimated_vout\": \"^3\\\\.3$\"}, \"detector_filter\": \"detect_power_regulators\"} (One regulator item must carry all four facts (ref, topology, rails) plus the estimated_vout the description names.)"
     },
     {
       "id": "FND-00001481-AST-04",
@@ -64,18 +67,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "resistor": {
-            "ref": "R13"
-          },
-          "capacitor": {
-            "ref": "C11"
-          },
-          "output_net": "ESP_~{RESET}"
+        "field": "resistor.ref",
+        "pattern": "^R13$",
+        "where": {
+          "capacitor.ref": "^C11$",
+          "output_net": "^ESP_~\\{RESET\\}$",
+          "type": "^low-pass$",
+          "cutoff_hz": "^15\\.9"
         },
         "detector_filter": "detect_rc_filters"
       },
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"resistor\": {\"ref\": \"R13\"}, \"capacitor\": {\"ref\": \"C11\"}, \"output_net\": \"ESP_~{RESET}\"}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"resistor.ref\", \"pattern\": \"^R13$\", \"where\": {\"capacitor.ref\": \"^C11$\", \"output_net\": \"^ESP_~\\\\{RESET\\\\}$\", \"type\": \"^low-pass$\", \"cutoff_hz\": \"^15\\\\.9\"}, \"detector_filter\": \"detect_rc_filters\"} (R13/C11 low-pass on ESP_~{RESET} at 15.92 Hz, all on one rc_filters item.)"
     },
     {
       "id": "FND-00001481-AST-06",
@@ -84,17 +86,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "inductor": {
-            "ref": "L1"
-          },
-          "capacitor": {
-            "ref": "C6"
-          }
+        "field": "inductor.ref",
+        "pattern": "^L1$",
+        "where": {
+          "capacitor.ref": "^C6$",
+          "resonant_hz": "^610\\d{5}(\\.|$)"
         },
         "detector_filter": "detect_lc_filters"
       },
-      "migration_note": "Path migrated from: signal_analysis.lc_filters"
+      "migration_note": "Path migrated from: signal_analysis.lc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"inductor\": {\"ref\": \"L1\"}, \"capacitor\": {\"ref\": \"C6\"}}, \"detector_filter\": \"detect_lc_filters\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"inductor.ref\", \"pattern\": \"^L1$\", \"where\": {\"capacitor.ref\": \"^C6$\", \"resonant_hz\": \"^610\\\\d{5}(\\\\.|$)\"}, \"detector_filter\": \"detect_lc_filters\"} (L1 with C6 on one lc_filters item, resonance 61.0 MHz (resonant_hz).)"
     },
     {
       "id": "FND-00001481-AST-07",
@@ -113,18 +113,18 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "r_top": {
-            "ref": "R15"
-          },
-          "r_bottom": {
-            "ref": "R12"
-          },
-          "top_net": "3.3V"
+        "field": "r_top.ref",
+        "pattern": "^R15$",
+        "where": {
+          "r_bottom.ref": "^R12$",
+          "top_net": "^3\\.3V$",
+          "mid_net": "^ESP35",
+          "bottom_net": "^GND$",
+          "ratio": "^0\\.7518"
         },
         "detector_filter": "detect_voltage_dividers"
       },
-      "migration_note": "Path migrated from: signal_analysis.voltage_dividers"
+      "migration_note": "Path migrated from: signal_analysis.voltage_dividers; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"r_top\": {\"ref\": \"R15\"}, \"r_bottom\": {\"ref\": \"R12\"}, \"top_net\": \"3.3V\"}, \"detector_filter\": \"detect_voltage_dividers\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"r_top.ref\", \"pattern\": \"^R15$\", \"where\": {\"r_bottom.ref\": \"^R12$\", \"top_net\": \"^3\\\\.3V$\", \"mid_net\": \"^ESP35\", \"bottom_net\": \"^GND$\", \"ratio\": \"^0\\\\.7518\"}, \"detector_filter\": \"detect_voltage_dividers\"} (R15 over R12 from 3.3V through ESP35/DeviceSense to GND, ratio 0.75188, on one divider item.)"
     },
     {
       "id": "FND-00001481-AST-09",
@@ -133,11 +133,16 @@
       "check": {
         "path": "usb_compliance.connectors",
         "op": "contains_match",
-        "value": {
-          "connector": "J1",
-          "is_type_c": true
+        "field": "connector",
+        "pattern": "^J1$",
+        "where": {
+          "is_type_c": "^true$",
+          "checks.cc1_pulldown_5k1": "^pass$",
+          "checks.cc2_pulldown_5k1": "^pass$",
+          "checks.usb_esd_ic": "^pass$"
         }
-      }
+      },
+      "migration_note": "TH-109 triage: {\"path\": \"usb_compliance.connectors\", \"op\": \"contains_match\", \"value\": {\"connector\": \"J1\", \"is_type_c\": true}} -> {\"path\": \"usb_compliance.connectors\", \"op\": \"contains_match\", \"field\": \"connector\", \"pattern\": \"^J1$\", \"where\": {\"is_type_c\": \"^true$\", \"checks.cc1_pulldown_5k1\": \"^pass$\", \"checks.cc2_pulldown_5k1\": \"^pass$\", \"checks.usb_esd_ic\": \"^pass$\"}} (J1 is type-C and passes both CC 5k1 checks and the USB ESD IC check, read from its checks dict.)"
     },
     {
       "id": "FND-00001481-AST-10",

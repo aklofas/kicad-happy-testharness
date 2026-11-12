@@ -46,11 +46,14 @@
       "description": "The Production/ directory contains SparkFun_Thing_Plus_ESP32-S3_panelized.GL1 (FileFunction=Copper,L2,Inr) and SparkFun_Thing_Plus_ESP32-S3_panelized.GL2 (FileFunction=Copper,L3,Inr), which are the In1.Cu and In2.Cu inner copper layers of the 4-layer board. These files are completely absent from the gerber analysis output \u2014 they do not appear in files_analyzed, found_layers, or any other section. The analyzer apparently does not recognize .GL1/.GL2 as gerber file extensions.",
       "created_from": "FND-00001574",
       "check": {
-        "path": "found_layers",
-        "op": "contains_match",
-        "value": "In1.Cu"
+        "path": "completeness.found_layers",
+        "op": "count_matches",
+        "field": ".",
+        "pattern": "^In[12]\\.Cu$",
+        "value": 2
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"found_layers\", \"op\": \"contains_match\", \"value\": \"In1.Cu\"} -> {\"path\": \"completeness.found_layers\", \"op\": \"count_matches\", \"field\": \".\", \"pattern\": \"^In[12]\\\\.Cu$\", \"value\": 2} (found_layers moved under completeness; In1.Cu and In2.Cu (from .GL1/.GL2) are reported. Passes (graduation candidate).)"
     }
   ]
 }

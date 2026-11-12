@@ -22,15 +22,17 @@
       "created_from": "FND-00001619",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
-        "value": {
-          "ref": "U2",
-          "assumed_vref": 0.6
-        },
-        "detector_filter": "detect_power_regulators"
+        "op": "contains_match",
+        "detector_filter": "detect_power_regulators",
+        "field": "ref",
+        "pattern": "^U2$",
+        "where": {
+          "assumed_vref": "^1\\.25$",
+          "estimated_vout": "^3\\.2[5-9]"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"ref\": \"U2\", \"assumed_vref\": 0.6}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_power_regulators\", \"field\": \"ref\", \"pattern\": \"^U2$\", \"where\": {\"assumed_vref\": \"^1\\\\.25$\", \"estimated_vout\": \"^3\\\\.2[5-9]\"}} (LM317-type U2 with Vref 1.25 V and Vout ~3.28 V; v3 reports assumed_vref 1.25, estimated_vout 3.281.)"
     },
     {
       "id": "FND-00001619-AST-03",
@@ -39,14 +41,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "ref": "U2",
-          "topology": "LDO"
-        },
-        "detector_filter": "detect_power_regulators"
+        "detector_filter": "detect_power_regulators",
+        "field": "ref",
+        "pattern": "^U2$",
+        "where": {
+          "topology": "^LDO$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"ref\": \"U2\", \"topology\": \"LDO\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"detector_filter\": \"detect_power_regulators\", \"field\": \"ref\", \"pattern\": \"^U2$\", \"where\": {\"topology\": \"^LDO$\"}} (LM317 U2 should not be LDO; still topology=LDO.)"
     },
     {
       "id": "FND-00001619-AST-04",
@@ -55,14 +58,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "category": "regulator_caps",
-          "component": "U2"
-        },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^regulator_caps$",
+        "where": {
+          "component": "^U2$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"regulator_caps\", \"component\": \"U2\"}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"detector_filter\": \"detect_design_observations\", \"field\": \"category\", \"pattern\": \"^regulator_caps$\", \"where\": {\"component\": \"^U2$\"}} (Description says both regulators are decoupled. U2 passes now; U3 still flagged (missing_caps input __unnamed_9, the unnamed-input-rail case).)"
     },
     {
       "id": "FND-00001619-AST-05",
@@ -74,6 +78,23 @@
         "value": 6
       },
       "aspirational": true
+    },
+    {
+      "id": "FND-00001619-AST-06",
+      "description": "INCORRECT: For U2: C12 (10 \u00b5F) is on the 5V input rail and C6\u2013C13 (seven 0.1 \u00b5F/1 \u00b5F caps) are on the 3.3V output rail \u2014 well-decoupled. For U3: C1 (10 \u00b5F) is on the __unnamed_9 input rail and C2 (10 \u00b5F) plus C5 (10 \u00b5F) are on the 5V_ALT output rail. Both regulators have adequate decoupling. The false positive likely occurs because the input rails are unnamed or non-standard ('__unnamed_9' for U3 input, and caps on '5V_ALT' vs the expected '5V' label for U3's output).",
+      "created_from": "FND-00001619",
+      "aspirational": true,
+      "check": {
+        "path": "findings",
+        "op": "not_contains_match",
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^regulator_caps$",
+        "where": {
+          "component": "^U3$"
+        }
+      },
+      "migration_note": "TH-109 triage: split from FND-00001619-AST-04"
     }
   ]
 }

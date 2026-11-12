@@ -11,14 +11,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "ref": "U1",
-          "topology": "LDO"
-        },
-        "detector_filter": "detect_power_regulators"
+        "detector_filter": "detect_power_regulators",
+        "field": "ref",
+        "pattern": "^U1$",
+        "where": {
+          "topology": "^LDO$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"ref\": \"U1\", \"topology\": \"LDO\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"detector_filter\": \"detect_power_regulators\", \"field\": \"ref\", \"pattern\": \"^U1$\", \"where\": {\"topology\": \"^LDO$\"}} (LM7805 should not be classified LDO; still topology=LDO.)"
     },
     {
       "id": "FND-00001618-AST-02",
@@ -26,13 +27,15 @@
       "created_from": "FND-00001618",
       "check": {
         "path": "components",
-        "op": "not_contains_match",
-        "value": {
-          "reference": "C4",
-          "parsed_value": 225000.0
+        "op": "contains_match",
+        "field": "reference",
+        "pattern": "^C4$",
+        "where": {
+          "parsed_value": "^2\\.2\\d*e-06$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"components\", \"op\": \"not_contains_match\", \"value\": {\"reference\": \"C4\", \"parsed_value\": 225000.0}} -> {\"path\": \"components\", \"op\": \"contains_match\", \"field\": \"reference\", \"pattern\": \"^C4$\", \"where\": {\"parsed_value\": \"^2\\\\.2\\\\d*e-06$\"}} (C4 '225K/2.2uF' should parse to 2.2 uF; parsed_value is still 225000.0. Positive form (exact correct value) instead of excluding one wrong value.)"
     },
     {
       "id": "FND-00001618-AST-03",
@@ -41,14 +44,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "category": "regulator_caps",
-          "component": "U1"
-        },
-        "detector_filter": "detect_design_observations"
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^regulator_caps$",
+        "where": {
+          "component": "^U1$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"regulator_caps\", \"component\": \"U1\"}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"detector_filter\": \"detect_design_observations\", \"field\": \"category\", \"pattern\": \"^regulator_caps$\", \"where\": {\"component\": \"^U1$\"}} (No regulator_caps observation for U1 (C1/C2 on input, C3 on output); still emitted, now only missing_caps {input: __unnamed_2} (output half fixed).)"
     },
     {
       "id": "FND-00001618-AST-04",

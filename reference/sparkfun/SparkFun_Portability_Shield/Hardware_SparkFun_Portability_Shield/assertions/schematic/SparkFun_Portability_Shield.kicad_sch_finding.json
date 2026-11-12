@@ -21,14 +21,16 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U1",
-          "topology": "LDO",
-          "output_rail": "3.3V_P"
+        "field": "ref",
+        "pattern": "^U1$",
+        "where": {
+          "topology": "^LDO$",
+          "input_rail": "^5V$",
+          "output_rail": "^3\\.3V_P$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U1\", \"topology\": \"LDO\", \"output_rail\": \"3.3V_P\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"ref\", \"pattern\": \"^U1$\", \"where\": {\"topology\": \"^LDO$\", \"input_rail\": \"^5V$\", \"output_rail\": \"^3\\\\.3V_P$\"}, \"detector_filter\": \"detect_power_regulators\"} (Three stated facts: U1 LDO 5V->3.3V_P, a regulator_voltage observation for U1, 3.3V_P decoupling 7 caps / 22.3 uF.)"
     },
     {
       "id": "FND-00001472-AST-03",
@@ -37,16 +39,19 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "type": "low-pass",
-          "resistor": {
-            "ref": "R1"
-          },
-          "output_net": "OLED_~{RESET}"
+        "field": "resistor.ref",
+        "pattern": "^R1$",
+        "where": {
+          "capacitor.ref": "^C6$",
+          "type": "^low-pass$",
+          "input_net": "^3\\.3V_P$",
+          "output_net": "^OLED_~\\{RESET\\}$",
+          "ground_net": "^GND$",
+          "cutoff_hz": "^15\\.92$"
         },
         "detector_filter": "detect_rc_filters"
       },
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"type\": \"low-pass\", \"resistor\": {\"ref\": \"R1\"}, \"output_net\": \"OLED_~{RESET}\"}, \"detector_filter\": \"detect_rc_filters\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"resistor.ref\", \"pattern\": \"^R1$\", \"where\": {\"capacitor.ref\": \"^C6$\", \"type\": \"^low-pass$\", \"input_net\": \"^3\\\\.3V_P$\", \"output_net\": \"^OLED_~\\\\{RESET\\\\}$\", \"ground_net\": \"^GND$\", \"cutoff_hz\": \"^15\\\\.92$\"}, \"detector_filter\": \"detect_rc_filters\"} (The R1/C6 OLED reset low-pass on one item, plus the U5 reset_pin observation the description also asserts.)"
     },
     {
       "id": "FND-00001472-AST-04",
@@ -69,10 +74,10 @@
         "match_field": "net",
         "match_value": "SCL",
         "assert_field": "has_pull_up",
-        "assert_value": false
+        "assert_value": true
       },
-      "aspirational": false,
-      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"net\", \"match_value\": \"SCL\", \"assert_field\": \"has_pull_up\", \"assert_value\": false} (the old check passed vacuously: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"value\": {\"net\": \"SCL\", \"has_pull_up\": false}})"
+      "aspirational": true,
+      "migration_note": "TH-109 R4: contains_match without pattern (identity + one-key dict under value) -> {\"op\": \"field_equals\", \"match_field\": \"net\", \"match_value\": \"SCL\", \"assert_field\": \"has_pull_up\", \"assert_value\": false} (the old check passed vacuously: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"value\": {\"net\": \"SCL\", \"has_pull_up\": false}}); TH-109 review: inverted (asserted the defect) -> {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"field_equals\", \"match_field\": \"net\", \"match_value\": \"SCL\", \"assert_field\": \"has_pull_up\", \"assert_value\": true}; made aspirational"
     },
     {
       "id": "FND-00001472-AST-06",
@@ -86,6 +91,60 @@
       },
       "aspirational": false,
       "migration_note": "TH-109 R3: contains_match without pattern (one-key dict under value) -> {\"op\": \"contains_match\", \"field\": \"net\", \"pattern\": \"^SDA$\"} (the old check passed vacuously: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"value\": {\"net\": \"SDA\"}})"
+    },
+    {
+      "id": "FND-00001472-AST-07",
+      "description": "The power_regulators section correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V and output_rail 3.3V_P. The design_observations also include the regulator_voltage category for U1. The decoupling_analysis for 3.3V_P shows 7 capacitors totaling 22.3 uF, correctly pulling in C7, C2, C13, C1, C8, C10, C16.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U1$",
+        "where": {
+          "category": "^regulator_voltage$"
+        },
+        "detector_filter": "detect_design_observations"
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001472-AST-02"
+    },
+    {
+      "id": "FND-00001472-AST-08",
+      "description": "The power_regulators section correctly identifies U1 (AP2112K-3.3) as LDO with input_rail 5V and output_rail 3.3V_P. The design_observations also include the regulator_voltage category for U1. The decoupling_analysis for 3.3V_P shows 7 capacitors totaling 22.3 uF, correctly pulling in C7, C2, C13, C1, C8, C10, C16.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "rail",
+        "pattern": "^3\\.3V_P$",
+        "where": {
+          "cap_count": "^7$",
+          "total_capacitance_uF": "^22\\.3$"
+        },
+        "detector_filter": "detect_decoupling"
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001472-AST-02"
+    },
+    {
+      "id": "FND-00001472-AST-09",
+      "description": "The rc_filters section correctly identifies R1 (10k) and C6 (1.0uF) as a low-pass filter on the OLED reset line (input_net 3.3V_P, output_net OLED_~{RESET}, ground_net GND), with cutoff_hz 15.92 Hz and time_constant_s 0.01. The design_observations also correctly identifies the reset_pin observation for U5 with has_pullup: true and has_filter_cap: true.",
+      "created_from": "FND-00001472",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U5$",
+        "where": {
+          "category": "^reset_pin$",
+          "has_pullup": "^true$",
+          "has_filter_cap": "^true$"
+        },
+        "detector_filter": "detect_design_observations"
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001472-AST-03"
     }
   ]
 }

@@ -31,10 +31,12 @@
       "created_from": "FND-00001423",
       "check": {
         "path": "completeness.missing_required",
-        "value": "Edge.Cuts",
-        "op": "contains_match"
+        "op": "not_contains_match",
+        "field": ".",
+        "pattern": "^Edge\\.Cuts$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"completeness.missing_required\", \"value\": \"Edge.Cuts\", \"op\": \"contains_match\"} -> {\"path\": \"completeness.missing_required\", \"op\": \"not_contains_match\", \"field\": \".\", \"pattern\": \"^Edge\\\\.Cuts$\"} (Intent: the .GKO (Profile aperture) is the outline, so Edge.Cuts is not missing. Old check asserted the defect (inverted). GKO still typed B.Mask, Edge.Cuts missing.)"
     },
     {
       "id": "FND-00001423-AST-04",

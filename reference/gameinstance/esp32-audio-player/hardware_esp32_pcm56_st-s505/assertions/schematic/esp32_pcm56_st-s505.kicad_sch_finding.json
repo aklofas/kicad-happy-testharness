@@ -34,11 +34,15 @@
       "description": "The design uses a parallel PCM bus (PCM_CLK, PCM_LE, PCM_CH1, PCM_CH2) to drive two PCM56 16-bit DACs (U5 and U6). This is a well-defined audio interface. The analyzer detects an SPI bus on the SD card (correctly) and a UART, but does not identify the PCM parallel bus at all. PCM_CLK and PCM_LE are named nets clearly indicating a parallel PCM interface. The PCM56 DACs themselves are classified only as generic 'ic' type with no audio-specific annotation.",
       "created_from": "FND-00002046",
       "check": {
-        "path": "design_analysis.bus_analysis",
-        "op": "contains_match",
-        "value": "/pcm|PCM|i2s|I2S/"
+        "path": "findings",
+        "op": "count_matches",
+        "field": "components",
+        "pattern": "^U[56]$",
+        "detector_filter": "detect_audio_circuits",
+        "value": 2
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis\", \"op\": \"contains_match\", \"value\": \"/pcm|PCM|i2s|I2S/\"} -> {\"path\": \"findings\", \"op\": \"count_matches\", \"field\": \"components\", \"pattern\": \"^U[56]$\", \"detector_filter\": \"detect_audio_circuits\", \"value\": 2} (v3 has no parallel-PCM bus detector, so the checkable half is the DACs: both PCM56 (U5, U6) recognised by detect_audio_circuits. None today (PCM56 is not in its codec keyword list).)"
     }
   ]
 }

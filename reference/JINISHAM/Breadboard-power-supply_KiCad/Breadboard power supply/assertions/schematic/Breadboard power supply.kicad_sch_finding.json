@@ -24,14 +24,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "component": "U1",
-          "category": "regulator_caps"
+        "field": "component",
+        "pattern": "^U1$",
+        "where": {
+          "category": "^regulator_caps$"
         },
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U1\", \"category\": \"regulator_caps\"}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"component\", \"pattern\": \"^U1$\", \"where\": {\"category\": \"^regulator_caps$\"}, \"detector_filter\": \"detect_design_observations\"} (No regulator_caps observation for U1 (LM7805, caps C1/C2 present). Passes today (graduation candidate).)"
     },
     {
       "id": "FND-00000416-AST-03",
@@ -73,17 +74,34 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "component": "U2",
-          "category": "regulator_caps",
-          "missing_caps": {
-            "output": "3.3 V"
-          }
+        "field": "component",
+        "pattern": "^U2$",
+        "where": {
+          "category": "^regulator_caps$",
+          "missing_caps.output": "."
         },
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U2\", \"category\": \"regulator_caps\", \"missing_caps\": {\"output\": \"3.3 V\"}}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"component\", \"pattern\": \"^U2$\", \"where\": {\"category\": \"^regulator_caps$\", \"missing_caps.output\": \".\"}, \"detector_filter\": \"detect_design_observations\"} (Description has two halves: the 3.3 V output must not be flagged (C3 present) and the 12 V input warning is right. Both pass today (graduation candidate).)"
+    },
+    {
+      "id": "FND-00000416-AST-07",
+      "description": "INCORRECT: The design_observations reports U2 (LM317) as missing a cap on input rail '12 V'. While the output cap (C3 on 3.3V) is acknowledged in the inrush section, the input cap for '12 V' is genuinely absent in the schematic. The input bypass cap for the LM317 is correctly missing \u2014 however the design_observations also flags the output ('3.3 V') as missing a cap, which is wrong since C3 (1\u00b5F) is on the 3.3V rail. This is a partial false positive: the input cap warning for U2 is correct, but reporting the output ('3.3 V') as missing a cap is incorrect given C3 exists.",
+      "created_from": "FND-00000416",
+      "aspirational": true,
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "field": "component",
+        "pattern": "^U2$",
+        "where": {
+          "category": "^regulator_caps$",
+          "missing_caps.input": "^12 V$"
+        },
+        "detector_filter": "detect_design_observations"
+      },
+      "migration_note": "TH-109 triage: split from FND-00000416-AST-06"
     }
   ]
 }

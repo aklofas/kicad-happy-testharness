@@ -11,9 +11,11 @@
       "check": {
         "path": "statistics.power_rails",
         "op": "contains_match",
-        "value": "/\\+3V3/"
+        "field": "name",
+        "pattern": "^\\+3V3$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/\\\\+3V3/\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"field\": \"name\", \"pattern\": \"^\\\\+3V3$\"} (+3V3 is listed by name. The description's second rail '+3.3V' no longer exists in today's output (all +3.3V power symbols resolve to net +3V3, nets has no '+3.3V'), so that half is not added.)"
     },
     {
       "id": "FND-00002117-AST-02",

@@ -10,14 +10,14 @@
       "created_from": "FND-00001687",
       "check": {
         "path": "statistics.power_rails",
-        "value": [
-          "GND",
-          "VDD"
-        ],
-        "op": "contains_match"
+        "op": "count_matches",
+        "field": "name",
+        "pattern": "^(VDD|GND)$",
+        "value": 2
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"value\": [\"GND\", \"VDD\"], \"op\": \"contains_match\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"count_matches\", \"field\": \"name\", \"pattern\": \"^(VDD|GND)$\", \"value\": 2} (Both VDD and GND rails identified.)"
     },
     {
       "id": "FND-00001687-AST-02",

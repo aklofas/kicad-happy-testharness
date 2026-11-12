@@ -23,14 +23,16 @@
       "created_from": "FND-00000427",
       "check": {
         "path": "findings",
-        "op": "count_matches",
-        "value": {
-          "chain_length": 15
+        "op": "not_contains_match",
+        "field": "first_led",
+        "pattern": "^D6$",
+        "where": {
+          "chain_length": "^1$"
         },
         "detector_filter": "detect_addressable_leds"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains"
+      "migration_note": "Path migrated from: signal_analysis.addressable_led_chains; TH-109 triage: {\"path\": \"findings\", \"op\": \"count_matches\", \"value\": {\"chain_length\": 15}, \"detector_filter\": \"detect_addressable_leds\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"first_led\", \"pattern\": \"^D6$\", \"where\": {\"chain_length\": \"^1$\"}, \"detector_filter\": \"detect_addressable_leds\"} (The defect is the spurious one-LED chain at D6 (+60 mA). The lock now fails while that chain exists (actual: chain D6 length 1). Note both 15-LED chains also start at D5; AST-01 covers chain B's start)"
     },
     {
       "id": "FND-00000427-AST-03",

@@ -21,14 +21,14 @@
       "check": {
         "path": "bom",
         "op": "not_contains_match",
-        "value": {
-          "references": [
-            "QR1"
-          ],
-          "type": "transistor"
+        "field": "references",
+        "pattern": "^QR1$",
+        "where": {
+          "type": "^transistor$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"bom\", \"op\": \"not_contains_match\", \"value\": {\"references\": [\"QR1\"], \"type\": \"transistor\"}} -> {\"path\": \"bom\", \"op\": \"not_contains_match\", \"field\": \"references\", \"pattern\": \"^QR1$\", \"where\": {\"type\": \"^transistor$\"}} (QR1 (graphic QR code) must not be typed transistor; today it still is.)"
     },
     {
       "id": "FND-00000389-AST-03",
@@ -37,12 +37,11 @@
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
         "op": "not_contains_match",
-        "value": {
-          "net": "GND",
-          "line": "SDA"
-        }
+        "field": "net",
+        "pattern": "^GND$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"not_contains_match\", \"value\": {\"net\": \"GND\", \"line\": \"SDA\"}} -> {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"not_contains_match\", \"field\": \"net\", \"pattern\": \"^GND$\"} (GND must never appear as an I2C bus net (any line); today i2c lists only i2c_SCL / i2c_SDA, so the defect is gone.)"
     },
     {
       "id": "FND-00000389-AST-04",

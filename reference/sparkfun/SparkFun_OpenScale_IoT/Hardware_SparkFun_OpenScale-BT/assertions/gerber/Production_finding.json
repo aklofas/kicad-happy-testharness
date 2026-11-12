@@ -32,10 +32,12 @@
       "created_from": "FND-00001469",
       "check": {
         "path": "completeness.missing_required",
-        "op": "contains_match",
-        "value": "Edge.Cuts"
+        "op": "not_contains_match",
+        "field": ".",
+        "pattern": "^Edge\\.Cuts$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"completeness.missing_required\", \"op\": \"contains_match\", \"value\": \"Edge.Cuts\"} -> {\"path\": \"completeness.missing_required\", \"op\": \"not_contains_match\", \"field\": \".\", \"pattern\": \"^Edge\\\\.Cuts$\"} (Defect: the GKO outline is typed B.Mask so Edge.Cuts shows as missing. The old lock pinned the defect; the intent (Edge.Cuts not missing) fails today.)"
     },
     {
       "id": "FND-00001469-AST-04",

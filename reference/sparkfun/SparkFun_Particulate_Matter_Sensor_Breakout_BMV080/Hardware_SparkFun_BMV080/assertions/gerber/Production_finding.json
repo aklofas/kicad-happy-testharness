@@ -10,11 +10,14 @@
       "created_from": "FND-00001509",
       "check": {
         "path": "completeness.found_layers",
-        "op": "contains_match",
-        "value": "F.Cu"
+        "op": "count_matches",
+        "field": ".",
+        "pattern": "^(B|F)\\.(Cu|Mask|Paste|SilkS)$",
+        "value": 8
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 8 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 8 items",
+      "migration_note": "TH-109 triage: {\"path\": \"completeness.found_layers\", \"op\": \"contains_match\", \"value\": \"F.Cu\"} -> {\"path\": \"completeness.found_layers\", \"op\": \"count_matches\", \"field\": \".\", \"pattern\": \"^(B|F)\\\\.(Cu|Mask|Paste|SilkS)$\", \"value\": 8} (All 8 copper/mask/paste/silk layers found (count, so a later Edge.Cuts fix does not break it) and alignment.aligned true.)"
     },
     {
       "id": "FND-00001509-AST-02",
@@ -52,10 +55,12 @@
       "created_from": "FND-00001509",
       "check": {
         "path": "completeness.missing_required",
-        "op": "contains_match",
-        "value": "Edge.Cuts"
+        "op": "not_contains_match",
+        "field": ".",
+        "pattern": "^Edge\\.Cuts$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"completeness.missing_required\", \"op\": \"contains_match\", \"value\": \"Edge.Cuts\"} -> {\"path\": \"completeness.missing_required\", \"op\": \"not_contains_match\", \"field\": \".\", \"pattern\": \"^Edge\\\\.Cuts$\"} (Aspirational intent is that the outline is found; the OLD check (contains Edge.Cuts) pinned the defect. Fails today. The description also concedes the analyzer follows the file's X2 FileFunction=Solde)"
     },
     {
       "id": "FND-00001509-AST-06",
@@ -69,6 +74,19 @@
       "aspirational": true,
       "incorrect_review": "rewrite (TH-105, 2026-11-06): layer_count still 4 (two 2-layer panel versions counted together); reviewer: stack-up is 2 copper layers",
       "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"layer_count\", \"op\": \"equals\", \"value\": 4})"
+    },
+    {
+      "id": "FND-00001509-AST-07",
+      "description": "The gerber set correctly identifies B.Cu, B.Mask, B.Paste, B.SilkS, F.Cu, F.Mask, F.Paste, and F.SilkS layers (though Edge.Cuts is misidentified \u2014 see separate finding). The alignment check correctly reports aligned=true with SameCoordinates=Original in X2 attributes, indicating all gerbers share the same coordinate system.",
+      "created_from": "FND-00001509",
+      "aspirational": true,
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 8 items",
+      "check": {
+        "path": "alignment.aligned",
+        "op": "equals",
+        "value": true
+      },
+      "migration_note": "TH-109 triage: split from FND-00001509-AST-01"
     }
   ]
 }

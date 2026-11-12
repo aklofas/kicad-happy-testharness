@@ -21,14 +21,14 @@
       "check": {
         "path": "bom",
         "op": "contains_match",
-        "value": {
-          "references": [
-            "C2"
-          ],
-          "value": "100nF"
+        "field": "references",
+        "pattern": "^C2$",
+        "where": {
+          "value": "^100nF$"
         }
       },
-      "incorrect_review": "graduate (TH-105, 2026-11-06): bom now has C2 = 100nF (instance values read); check malformed (value dict) but intent holds"
+      "incorrect_review": "graduate (TH-105, 2026-11-06): bom now has C2 = 100nF (instance values read); check malformed (value dict) but intent holds",
+      "migration_note": "TH-109 triage: {\"path\": \"bom\", \"op\": \"contains_match\", \"value\": {\"references\": [\"C2\"], \"value\": \"100nF\"}} -> {\"path\": \"bom\", \"op\": \"contains_match\", \"field\": \"references\", \"pattern\": \"^C2$\", \"where\": {\"value\": \"^100nF$\"}} (Instance-level Value read: bom C2 = 100nF (not the lib name C_Small).)"
     },
     {
       "id": "FND-00001631-AST-03",
@@ -48,13 +48,11 @@
       "check": {
         "path": "design_analysis.differential_pairs",
         "op": "not_contains_match",
-        "value": {
-          "esd_protection": [
-            "U1"
-          ]
-        }
+        "field": "has_esd",
+        "pattern": "^true$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.differential_pairs\", \"op\": \"not_contains_match\", \"value\": {\"esd_protection\": [\"U1\"]}} -> {\"path\": \"design_analysis.differential_pairs\", \"op\": \"not_contains_match\", \"field\": \"has_esd\", \"pattern\": \"^true$\"} (esd_protection key is gone when no ESD is found; has_esd is the field. AST-01 (min_count 2) guards against the pairs vanishing.)"
     },
     {
       "id": "FND-00001631-AST-05",

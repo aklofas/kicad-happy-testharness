@@ -10,10 +10,12 @@
       "created_from": "FND-00002102",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "/GND/"
+        "op": "not_contains_match",
+        "field": "name",
+        "pattern": "^12V"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/GND/\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"not_contains_match\", \"field\": \"name\", \"pattern\": \"^12V\"} (Description: power_rails should be only GND (12V/12V_SW1 are local labels). v3 deliberately adds name-recognised nets to power_rails (bom_stats.py _is_power_net_name), so 12V and 12V_SW1 appear. Descr)"
     }
   ]
 }

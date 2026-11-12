@@ -51,11 +51,11 @@
       "check": {
         "path": "components",
         "op": "not_contains_match",
-        "value": {
-          "ref": null
-        }
+        "field": "reference",
+        "pattern": "^$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"components\", \"op\": \"not_contains_match\", \"value\": {\"ref\": null}} -> {\"path\": \"components\", \"op\": \"not_contains_match\", \"field\": \"reference\", \"pattern\": \"^$\"} (The ref key is 'reference' in v3; empty-aware not_contains_match fails on a null/missing/empty reference. All 140 have refs today.)"
     }
   ]
 }

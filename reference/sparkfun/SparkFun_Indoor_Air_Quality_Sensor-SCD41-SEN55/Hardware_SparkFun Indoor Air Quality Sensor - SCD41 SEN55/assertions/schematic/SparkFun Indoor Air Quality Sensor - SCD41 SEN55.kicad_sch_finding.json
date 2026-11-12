@@ -36,11 +36,14 @@
       "created_from": "FND-00001441",
       "check": {
         "path": "statistics.power_rails",
-        "op": "contains_match",
-        "value": "5V"
+        "op": "count_matches",
+        "field": "name",
+        "pattern": "^(3\\.3V|5V|GND)$",
+        "value": 3
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 3 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 3 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"5V\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"count_matches\", \"field\": \"name\", \"pattern\": \"^(3\\\\.3V|5V|GND)$\", \"value\": 3} (power_rails items are {name, voltage}; the three named rails are counted by name.)"
     },
     {
       "id": "FND-00001441-AST-04",
@@ -123,14 +126,15 @@
       "check": {
         "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "has_pullup": false
+        "field": "category",
+        "pattern": "^i2c_bus$",
+        "where": {
+          "has_pullup": "^false$"
         },
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"i2c_bus\", \"has_pullup\": false}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"field\": \"category\", \"pattern\": \"^i2c_bus$\", \"where\": {\"has_pullup\": \"^false$\"}, \"detector_filter\": \"detect_design_observations\"} (No i2c_bus observation may report has_pullup false; today SDA and SCL both do (R3/R4 not recognised).)"
     },
     {
       "id": "FND-00001441-AST-11",

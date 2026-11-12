@@ -11,10 +11,18 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": "/SY8088/",
+        "field": "value",
+        "pattern": "^SY8088$",
+        "where": {
+          "ref": "^U6$",
+          "topology": "^switching$",
+          "inductor": "^L1$",
+          "input_rail": "^\\+5V$",
+          "output_rail": "^\\+3V3$"
+        },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": \"/SY8088/\", \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"value\", \"pattern\": \"^SY8088$\", \"where\": {\"ref\": \"^U6$\", \"topology\": \"^switching$\", \"inductor\": \"^L1$\", \"input_rail\": \"^\\\\+5V$\", \"output_rail\": \"^\\\\+3V3$\"}, \"detector_filter\": \"detect_power_regulators\"} (SY8088 (U6) switching with L1 from +5V to +3V3 on one regulator item (the USB/Q2/charger claims are outside this lock).)"
     },
     {
       "id": "FND-00002318-AST-02",

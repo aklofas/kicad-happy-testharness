@@ -32,15 +32,16 @@
       "created_from": "FND-00001512",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "has_pullup": true
+        "op": "contains_match",
+        "field": "category",
+        "pattern": "^i2c_bus$",
+        "where": {
+          "has_pullup": "^true$"
         },
         "detector_filter": "detect_design_observations"
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"i2c_bus\", \"has_pullup\": true}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"category\", \"pattern\": \"^i2c_bus$\", \"where\": {\"has_pullup\": \"^true$\"}, \"detector_filter\": \"detect_design_observations\"} (Intent: the switchable R4/R5 pull-ups on SDA{slash}SDI / SCL{slash}SCK are detected. Old check asserted the defect (inverted). No i2c_bus observation at all today.)"
     },
     {
       "id": "FND-00001512-AST-05",

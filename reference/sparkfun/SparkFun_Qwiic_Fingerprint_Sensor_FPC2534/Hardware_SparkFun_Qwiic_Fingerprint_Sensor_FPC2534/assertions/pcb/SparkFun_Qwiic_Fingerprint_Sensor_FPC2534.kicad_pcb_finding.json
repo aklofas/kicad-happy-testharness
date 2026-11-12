@@ -116,12 +116,11 @@
       "check": {
         "path": "zones",
         "op": "not_contains_match",
-        "value": {
-          "net_name": "GND",
-          "fill_ratio": 1.584
-        }
+        "field": "fill_ratio",
+        "pattern": "^(1\\.\\d*[1-9]\\d*|[2-9](\\.\\d+)?|[1-9]\\d+(\\.\\d+)?)$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"zones\", \"op\": \"not_contains_match\", \"value\": {\"net_name\": \"GND\", \"fill_ratio\": 1.584}} -> {\"path\": \"zones\", \"op\": \"not_contains_match\", \"field\": \"fill_ratio\", \"pattern\": \"^(1\\\\.\\\\d*[1-9]\\\\d*|[2-9](\\\\.\\\\d+)?|[1-9]\\\\d+(\\\\.\\\\d+)?)$\"} (Defect: fill_ratio above 1.0 (GND zone 1.584, fill summed over 3 layers). Check: no zone has fill_ratio > 1; fails today.)"
     }
   ]
 }

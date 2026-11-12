@@ -21,15 +21,17 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "ref": "U4",
-          "topology": "LDO",
-          "input_rail": "5V",
-          "output_rail": "3.3V"
+        "field": "ref",
+        "pattern": "^U4$",
+        "where": {
+          "topology": "^LDO$",
+          "input_rail": "^5V$",
+          "output_rail": "^3\\.3V$",
+          "estimated_vout": "^3\\.3$"
         },
         "detector_filter": "detect_power_regulators"
       },
-      "migration_note": "Path migrated from: signal_analysis.power_regulators"
+      "migration_note": "Path migrated from: signal_analysis.power_regulators; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"ref\": \"U4\", \"topology\": \"LDO\", \"input_rail\": \"5V\", \"output_rail\": \"3.3V\"}, \"detector_filter\": \"detect_power_regulators\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"ref\", \"pattern\": \"^U4$\", \"where\": {\"topology\": \"^LDO$\", \"input_rail\": \"^5V$\", \"output_rail\": \"^3\\\\.3V$\", \"estimated_vout\": \"^3\\\\.3$\"}, \"detector_filter\": \"detect_power_regulators\"} (U4 RT9080-3.3 as LDO 5V -> 3.3V with Vout 3.3, as described.)"
     },
     {
       "id": "FND-00001467-AST-03",

@@ -21,13 +21,13 @@
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
         "op": "contains_match",
-        "value": {
-          "net": "SDA",
-          "devices": [
-            "U4"
-          ]
+        "field": "devices",
+        "pattern": "'ref': 'U4'",
+        "where": {
+          "net": "^SDA$"
         }
-      }
+      },
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"value\": {\"net\": \"SDA\", \"devices\": [\"U4\"]}} -> {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"field\": \"devices\", \"pattern\": \"'ref': 'U4'\", \"where\": {\"net\": \"^SDA$\"}} (devices is a list of dicts; the item string match on 'ref': 'U4' with where net SDA.)"
     },
     {
       "id": "FND-00001503-AST-03",
@@ -55,13 +55,15 @@
       "created_from": "FND-00001503",
       "check": {
         "path": "design_analysis.bus_analysis.i2c",
-        "op": "not_contains_match",
-        "value": {
-          "net": "SDA",
-          "has_pull_up": true
+        "op": "contains_match",
+        "field": "net",
+        "pattern": "^SDA$",
+        "where": {
+          "has_pull_up": "^true$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"not_contains_match\", \"value\": {\"net\": \"SDA\", \"has_pull_up\": true}} -> {\"path\": \"design_analysis.bus_analysis.i2c\", \"op\": \"contains_match\", \"field\": \"net\", \"pattern\": \"^SDA$\", \"where\": {\"has_pull_up\": \"^true$\"}} (Description says SDA is pulled up (R13 via JP6); the OLD check asserted no has_pull_up=true (pinned the defect). Fails today: has_pull_up=false, pull_ups [].)"
     }
   ]
 }

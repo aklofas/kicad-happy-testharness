@@ -11,10 +11,12 @@
       "check": {
         "path": "completeness.missing_required",
         "op": "contains_match",
-        "value": "Edge.Cuts"
+        "field": ".",
+        "pattern": "^Edge\\.Cuts$"
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 1 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 1 items",
+      "migration_note": "TH-109 triage: {\"path\": \"completeness.missing_required\", \"op\": \"contains_match\", \"value\": \"Edge.Cuts\"} -> {\"path\": \"completeness.missing_required\", \"op\": \"contains_match\", \"field\": \".\", \"pattern\": \"^Edge\\\\.Cuts$\"} (Edge.Cuts is truly absent (GKO is a mislabelled soldermask), so it must be reported missing.)"
     },
     {
       "id": "FND-00001488-AST-02",

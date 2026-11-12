@@ -40,14 +40,15 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": {
-          "rail": "3.3V",
-          "cap_count": 5,
-          "total_capacitance_uF": 18.8
-        },
-        "detector_filter": "detect_decoupling"
+        "detector_filter": "detect_decoupling",
+        "field": "rail",
+        "pattern": "^3\\.3V$",
+        "where": {
+          "cap_count": "^5$",
+          "total_capacitance_uF": "^18\\.8$"
+        }
       },
-      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
+      "migration_note": "Path migrated from: signal_analysis.decoupling_analysis; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": {\"rail\": \"3.3V\", \"cap_count\": 5, \"total_capacitance_uF\": 18.8}, \"detector_filter\": \"detect_decoupling\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_decoupling\", \"field\": \"rail\", \"pattern\": \"^3\\\\.3V$\", \"where\": {\"cap_count\": \"^5$\", \"total_capacitance_uF\": \"^18\\\\.8$\"}} (Decoupling rail 3.3V with 5 caps / 18.8 uF, plus the has_bypass=false claim, which now lives on the decoupling_coverage observation (detect_decoupling's has_bypass is null).)"
     },
     {
       "id": "FND-00001505-AST-04",
@@ -85,11 +86,14 @@
       "created_from": "FND-00001505",
       "check": {
         "path": "statistics.missing_footprint",
-        "op": "contains_match",
-        "value": "G2"
+        "op": "count_matches",
+        "field": ".",
+        "pattern": "^G[23]$",
+        "value": 2
       },
       "aspirational": true,
-      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items"
+      "aspirational_reason": "agent-generated check failed: expected match for //, got no match in 2 items",
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.missing_footprint\", \"op\": \"contains_match\", \"value\": \"G2\"} -> {\"path\": \"statistics.missing_footprint\", \"op\": \"count_matches\", \"field\": \".\", \"pattern\": \"^G[23]$\", \"value\": 2} (missing_footprint is a list of ref strings; field '.' counts G2 and G3 (both logos named in the description).)"
     },
     {
       "id": "FND-00001505-AST-08",
@@ -120,16 +124,17 @@
       "created_from": "FND-00001505",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
-        "value": {
-          "category": "i2c_bus",
-          "line": "SDA",
-          "has_pullup": false
-        },
-        "detector_filter": "detect_design_observations"
+        "op": "contains_match",
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^i2c_bus$",
+        "where": {
+          "line": "^SDA$",
+          "has_pullup": "^true$"
+        }
       },
       "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.design_observations"
+      "migration_note": "Path migrated from: signal_analysis.design_observations; TH-109 triage: {\"path\": \"findings\", \"op\": \"not_contains_match\", \"value\": {\"category\": \"i2c_bus\", \"line\": \"SDA\", \"has_pullup\": false}, \"detector_filter\": \"detect_design_observations\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_design_observations\", \"field\": \"category\", \"pattern\": \"^i2c_bus$\", \"where\": {\"line\": \"^SDA$\", \"has_pullup\": \"^true$\"}} (SDA pull-up via R5 -> JP4 -> 3.3V should be found; the analyzer still reports has_pullup=false. Positive form so a vanished observation also fails.)"
     },
     {
       "id": "FND-00001505-AST-11",
@@ -147,14 +152,32 @@
       "description": "U1 pin 7 (PS, Protocol Select) is reported on net '__unnamed_6' with only 1 pin. In the PCB, U1 PS pad is connected to Net-(JP1-C) which routes to JP1 center, connecting through the MODE solder jumper. The schematic shows JP1 center (pin 2/C) on net '__unnamed_9' (also single-pin). These two unnamed nets should represent the same electrical node (wire trace exists between PS pin at 77.47,66.04 and connecting to JP1 region), but the net tracer assigns them separate unnamed net IDs. The practical result is that U1 PS appears to be floating in the analysis when it is actually connected to JP1.",
       "created_from": "FND-00001505",
       "check": {
-        "path": "connectivity_issues.single_pin_nets",
+        "path": "findings",
         "op": "not_contains_match",
-        "value": {
-          "component": "U1",
-          "pin_name": "PS"
+        "detector_filter": "analyze_connectivity",
+        "field": "pins",
+        "pattern": "^U1\\.7$"
+      },
+      "aspirational": false,
+      "migration_note": "TH-109 triage: {\"path\": \"connectivity_issues.single_pin_nets\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U1\", \"pin_name\": \"PS\"}} -> {\"path\": \"findings\", \"op\": \"not_contains_match\", \"detector_filter\": \"analyze_connectivity\", \"field\": \"pins\", \"pattern\": \"^U1\\\\.7$\"} (No NT-001 single-pin-net finding on U1 pin 7 (PS); v3 merges U1.7 and JP1.2 on one net (__unnamed_6). connectivity_issues.single_pin_nets skips __unnamed nets, so NT-001 is the field that can fail.)"
+    },
+    {
+      "id": "FND-00001505-AST-13",
+      "description": "The analyzer correctly finds C1-C4 (4x 2.2uF) and C5 (10uF) as decoupling capacitors on the 3.3V rail, totalling 18.8 uF. The BMV080 datasheet requires decoupling on each VDD pin. The analyzer correctly flags 'has_bypass': false because all caps are bulk (>=1uF) with no 100nF or smaller bypass caps.",
+      "created_from": "FND-00001505",
+      "check": {
+        "path": "findings",
+        "op": "contains_match",
+        "detector_filter": "detect_design_observations",
+        "field": "category",
+        "pattern": "^decoupling_coverage$",
+        "where": {
+          "rail": "^3\\.3V$",
+          "has_bypass": "^false$"
         }
       },
-      "aspirational": false
+      "aspirational": false,
+      "migration_note": "TH-109 triage: split from FND-00001505-AST-03"
     }
   ]
 }

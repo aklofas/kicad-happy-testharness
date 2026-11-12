@@ -23,12 +23,14 @@
       "check": {
         "path": "nets.+5V.pins",
         "op": "not_contains_match",
-        "value": {
-          "component": "U2",
-          "pin_name": "VSS"
+        "field": "pin_name",
+        "pattern": "^VSS$",
+        "where": {
+          "component": "^U2$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"nets.+5V.pins\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U2\", \"pin_name\": \"VSS\"}} -> {\"path\": \"nets.+5V.pins\", \"op\": \"not_contains_match\", \"field\": \"pin_name\", \"pattern\": \"^VSS$\", \"where\": {\"component\": \"^U2$\"}} (No U2 VSS pin on +5V, and U4's CANH pin on the CANH net (the two swap symptoms the description names). Both fixed today (graduation candidate).)"
     },
     {
       "id": "FND-00000403-AST-03",
@@ -42,6 +44,23 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.memory_interfaces"
+    },
+    {
+      "id": "FND-00000403-AST-04",
+      "description": "INCORRECT: U2 MCP2515 pin assignments are incorrectly mapped: the GND net receives pin 18 (VDD) instead of VSS, +5V net receives pin 9 (VSS) instead of VDD, RXCAN net maps to pin 17 (~RESET) instead of pin 2 (RXCAN), SCK net maps to pin 8 (OSC1) instead of pin 13 (SCK), SS_MCP maps to pin 3 (CLKOUT/SOF) instead of pin 16 (~CS), TXCAN maps to pin 6 (~TX2RTS) instead of pin 1 (TXCAN). For U4 (TJA1050T from custom CAN2Serial library): GND has pin 1 (TXD) and pin 3 (VCC), +5V has pin 2 (GND), CANH net has pin 6 named 'CANL' and CANL net has pin 7 named 'CANH'. These are pin coordinate resolution errors for components whose library pins do not match the expected absolute positions after applying the component placement transform.",
+      "created_from": "FND-00000403",
+      "aspirational": true,
+      "check": {
+        "path": "nets.CANH.pins",
+        "op": "contains_match",
+        "field": "pin_name",
+        "pattern": "^CANH$",
+        "where": {
+          "component": "^U4$",
+          "pin_number": "^7$"
+        }
+      },
+      "migration_note": "TH-109 triage: split from FND-00000403-AST-02"
     }
   ]
 }

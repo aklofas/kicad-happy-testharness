@@ -25,11 +25,17 @@
       "description": "The iCE40HX8K-EVB schematic has an explicit JTAG connector component (JTAG1, a 6-pin CON6) and a JTAG option enable jumper (JTAG_E1, a JP1E component). The net names visible in the source .sch file include JTAG-related labels. The bus_analysis has keys for i2c, spi, uart, and can, but no jtag key. Neither JTAG1 nor JTAG_E1 appears in any detected bus or protocol section of the analyzer output. A JTAG detector would be a valuable addition, especially for FPGA development boards which commonly include JTAG programming interfaces.",
       "created_from": "FND-00002212",
       "check": {
-        "path": "design_analysis.bus_analysis",
+        "path": "findings",
         "op": "contains_match",
-        "value": "/jtag/"
+        "field": "interface_type",
+        "pattern": "^jtag$",
+        "where": {
+          "connector_ref": "^JTAG1$"
+        },
+        "detector_filter": "detect_debug_interfaces"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"design_analysis.bus_analysis\", \"op\": \"contains_match\", \"value\": \"/jtag/\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"field\": \"interface_type\", \"pattern\": \"^jtag$\", \"where\": {\"connector_ref\": \"^JTAG1$\"}, \"detector_filter\": \"detect_debug_interfaces\"} (v3 has detect_debug_interfaces (interface_type jtag); JTAG1 must be detected as one. No debug-interface finding today.)"
     }
   ]
 }

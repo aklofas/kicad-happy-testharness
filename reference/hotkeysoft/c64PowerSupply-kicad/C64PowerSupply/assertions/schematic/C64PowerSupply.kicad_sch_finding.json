@@ -21,9 +21,11 @@
       "check": {
         "path": "statistics.power_rails",
         "op": "contains_match",
-        "value": "/Earth/"
+        "field": "name",
+        "pattern": "^Earth$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/Earth/\"} -> {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"field\": \"name\", \"pattern\": \"^Earth$\"} (No description; Earth is a rail of this C64 supply and is listed by name.)"
     },
     {
       "id": "FND-00002009-AST-03",

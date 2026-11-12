@@ -22,12 +22,14 @@
       "check": {
         "path": "nets.VCC.pins",
         "op": "not_contains_match",
-        "value": {
-          "component": "U1",
-          "pin_name": "XTAL1"
+        "field": "pin_name",
+        "pattern": "^(XTAL1|PD3|GND)",
+        "where": {
+          "component": "^U1$"
         }
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"nets.VCC.pins\", \"op\": \"not_contains_match\", \"value\": {\"component\": \"U1\", \"pin_name\": \"XTAL1\"}} -> {\"path\": \"nets.VCC.pins\", \"op\": \"not_contains_match\", \"field\": \"pin_name\", \"pattern\": \"^(XTAL1|PD3|GND)\", \"where\": {\"component\": \"^U1$\"}} (The description names wrong pins on both nets (XTAL1, PD3/TXD1, GND on VCC; PD0/INT0, AVCC on GND); one not_contains per net. Both pass today: VCC holds only VCC/UVcc/AVCC/VBus pins and GND only GND/U)"
     },
     {
       "id": "FND-00000436-AST-03",
@@ -63,6 +65,22 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.key_matrices"
+    },
+    {
+      "id": "FND-00000436-AST-06",
+      "description": "Because the custom keyboard_parts:ATMEGA32U4 symbol has non-standard pin positions, the analyzer's geometric wire-to-pin matching incorrectly assigns several I/O and power pins to the wrong nets. Examples: pin 16 (XTAL1) is on VCC, pin 21 (PD3/TXD1) is on VCC, pin 23 (GND) is on VCC, pin 18 (PD0/INT0) is on GND, pin 24 (AVCC) is on GND, pin 44 (AVCC) is on GND. This produces incorrect power domain analysis and false connections between unrelated signals.",
+      "created_from": "FND-00000436",
+      "aspirational": true,
+      "check": {
+        "path": "nets.GND.pins",
+        "op": "not_contains_match",
+        "field": "pin_name",
+        "pattern": "^(PD0|AVCC)",
+        "where": {
+          "component": "^U1$"
+        }
+      },
+      "migration_note": "TH-109 triage: split from FND-00000436-AST-02"
     }
   ]
 }

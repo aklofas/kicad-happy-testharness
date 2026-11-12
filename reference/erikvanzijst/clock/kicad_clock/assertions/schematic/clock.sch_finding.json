@@ -37,11 +37,12 @@
       "check": {
         "path": "findings",
         "op": "contains_match",
-        "value": "/\"reference\":\\s*\"U11\"/",
-        "detector_filter": "detect_crystal_circuits"
+        "detector_filter": "detect_crystal_circuits",
+        "field": "reference",
+        "pattern": "^U11$"
       },
       "aspirational": false,
-      "migration_note": "Path migrated from: signal_analysis.crystal_circuits",
+      "migration_note": "Path migrated from: signal_analysis.crystal_circuits; TH-109 triage: {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": \"/\\\"reference\\\":\\\\s*\\\"U11\\\"/\", \"detector_filter\": \"detect_crystal_circuits\"} -> {\"path\": \"findings\", \"op\": \"contains_match\", \"detector_filter\": \"detect_crystal_circuits\", \"field\": \"reference\", \"pattern\": \"^U11$\"} (Lock = U11 present in crystal_circuits (incorrect_review: reviewer_wrong). The description's output_net=VCC / swapped-supply premise no longer holds: v3 puts U11 pin 8 on VCC, pin 1 on GND, OUT on __u)",
       "incorrect_review": "reviewer_wrong (TH-105, 2026-11-06): INCORRECT label contradicts the text: reviewer says U11 detection is faithful to the miswired source; U11 still present"
     },
     {

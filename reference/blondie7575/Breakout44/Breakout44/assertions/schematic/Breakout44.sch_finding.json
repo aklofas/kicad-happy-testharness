@@ -10,13 +10,14 @@
       "created_from": "FND-00000437",
       "check": {
         "path": "components",
-        "op": "not_contains_match",
-        "value": {
-          "ref": null
-        }
+        "op": "count_matches",
+        "field": "reference",
+        "pattern": "^(U1|P1|P2|P3)$",
+        "value": 4
       },
       "aspirational": true,
-      "aspirational_reason": "KiCad 5 legacy parser bug: components array has ref=null"
+      "aspirational_reason": "KiCad 5 legacy parser bug: components array has ref=null",
+      "migration_note": "TH-109 triage: {\"path\": \"components\", \"op\": \"not_contains_match\", \"value\": {\"ref\": null}} -> {\"path\": \"components\", \"op\": \"count_matches\", \"field\": \"reference\", \"pattern\": \"^(U1|P1|P2|P3)$\", \"value\": 4} (All four refs present in components[]. The reviewer read the `ref` key; components carry `reference`, which is populated.)"
     },
     {
       "id": "FND-00000437-AST-02",

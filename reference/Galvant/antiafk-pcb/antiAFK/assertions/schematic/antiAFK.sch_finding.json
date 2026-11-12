@@ -55,11 +55,13 @@
       "description": "The power_domains section shows IC1 (ATMEGA16U4) with power_rails as unnamed nets (__unnamed_13, __unnamed_32\u201335). The +5V rail is present but not connected to IC1 in the power domain analysis, even though IC1 has multiple VCC pins connected to +5V. This is because the KiCad 5 legacy format uses unnamed nets heavily, and the analyzer cannot always resolve them to named power rails. The design_analysis should ideally report IC1 as powered by +5V.",
       "created_from": "FND-00001939",
       "check": {
-        "path": "statistics.power_rails",
+        "path": "design_analysis.power_domains.ic_power_rails.IC1.power_rails",
         "op": "contains_match",
-        "value": "/\\+5V/"
+        "field": ".",
+        "pattern": "^\\+5V$"
       },
-      "aspirational": true
+      "aspirational": true,
+      "migration_note": "TH-109 triage: {\"path\": \"statistics.power_rails\", \"op\": \"contains_match\", \"value\": \"/\\\\+5V/\"} -> {\"path\": \"design_analysis.power_domains.ic_power_rails.IC1.power_rails\", \"op\": \"contains_match\", \"field\": \".\", \"pattern\": \"^\\\\+5V$\"} (Intent is IC1 powered by +5V in power_domains (the old check read statistics.power_rails instead); v3 now reports IC1 power_rails [+5V].)"
     }
   ]
 }
