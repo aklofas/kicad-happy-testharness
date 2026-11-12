@@ -13,11 +13,11 @@
 
 ### Incorrect
 - The schematic output reports smd_count=1 (D1) and package_breakdown 'other_SMD':1. The source schematic has D1 using footprint 'LED_THT:LED_D1.8mm..._Horizontal', which is explicitly a THT part. The PCB output correctly identifies D1 as through_hole (tht_count=3). The schematic analyzer is apparently classifying D1 based on symbol type rather than footprint library prefix.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 - The schematic contains 3 KiCad 9 netclass_flag items (BAT+, BAT-, LED) used to assign net classes to nets. The analyzer produces no output field for these — they are silently ignored. This is a key feature of KiCad 9 and is the entire point of the NCCM test project.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -58,7 +58,7 @@
 
 ### Incorrect
 - The GND zone has outline_area_mm2=6288.2 but filled_area_mm2=11707.86, giving fill_ratio=1.862. Filled area cannot exceed outline area. This indicates a bug in how the filled area is computed — likely summing both copper layers' fill areas without realizing they overlap in 2D footprint. The zone fills both F.Cu and B.Cu (6024+5683=11707), but the outline polygon is 2D and only 6288 mm2. Filled area should be reported per-layer or capped.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 (none)
@@ -83,7 +83,7 @@
 
 ### Missed
 - The gerber manifest is empty and the NCCM repo contains no gerber outputs. The prompt referenced 'nccm_output.json' and 'nccm_output_2.json' which do not exist on disk. No gerber analysis was possible or performed. This is expected for a plugin test-project repo.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)

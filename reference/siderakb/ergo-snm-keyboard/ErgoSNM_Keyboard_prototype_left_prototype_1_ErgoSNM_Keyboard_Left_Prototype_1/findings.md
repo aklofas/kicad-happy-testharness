@@ -1,0 +1,24 @@
+# Findings: siderakb/ergo-snm-keyboard / ErgoSNM_Keyboard_prototype_left_prototype_1_ErgoSNM_Keyboard_Left_Prototype_1
+
+## FND-00002186: MISO_nRF5 and SCK_nRF5 are falsely detected as bus signals due to duplicate label placement; SPI interface between Pro Micro (M2) and Adafruit Bluefruit LE SPI Friend (M3) not detected
+
+- **Status**: promoted
+- **Analyzer**: schematic
+- **Source**: ErgoSNM_Keyboard_prototype_left_prototype_1_ErgoSNM_Keyboard_Left_Prototype_1.kicad_sch.json
+- **Created**: 2026-03-24
+
+### Correct
+(none)
+
+### Incorrect
+- The schematic has a single net named 'MISO_nRF5' (the '5' refers to the nRF5x chip family, not a bus index). This label is placed 3 times in the schematic. The bus detector sees 3 instances matching prefix 'MISO_nRF' with suffix '5', and because len(members)=3 meets the threshold of >=3, it reports a spurious bus 'MISO_nRF' with width=3 and range 'MISO_nRF5..MISO_nRF5'. Same issue for 'SCK_nRF5'. The root cause is the same as the width-counting bug: label instances are not deduplicated before grouping into bus patterns.
+  (bus_topology)
+
+### Missed
+- The prototype left schematic has explicit SPI nets: MISO_Bluefruit, MOSI_Bluefruit, SCK_Bluefruit, CS_Bluefruit connecting M2 (Pro_Micro) to M3 (Adafruit_Bluefruit_LE_SPI_Friend). Despite these clearly named SPI signals, signal_analysis.spi_interfaces is empty. The root cause is that M1 (nRF51822_Core_board), M2 (Pro_Micro), and M3 (Adafruit_Bluefruit_LE_SPI_Friend) all use custom library identifiers from 'ErgoSNM_Keybaord_Library' and receive component_type='?' (unknown). The SPI detector likely requires at least one recognized 'ic' type component on the bus. M-prefixed module components with non-standard lib_ids are excluded from IC-based detection.
+  (findings)
+
+### Suggestions
+(none)
+
+---

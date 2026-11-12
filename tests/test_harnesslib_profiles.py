@@ -29,7 +29,10 @@ def test_long_tail_and_full_chain_differ_only_where_declared():
     assert PROFILES["long-tail"].analyzers == PROFILES["standard"].analyzers
     assert PROFILES["full-chain"].pcb_full is True
     # TH-072: Phase B pairs off schematic records, so the chained profile must run schematic
-    assert PROFILES["full-chain"].analyzers == ("schematic", "pcb", "emc", "thermal", "cross_analysis")
+    assert PROFILES["full-chain"].analyzers == ("schematic", "pcb", "gerber", "emc", "thermal", "cross_analysis")
+    # TH-101: the gerber --full lane (pin->net connectivity) runs in full-chain only
+    assert PROFILES["full-chain"].gerber_full is True
+    assert not any(p.gerber_full for n, p in PROFILES.items() if n != "full-chain")
     assert PROFILES["spice-offline"].analyzers == ("spice",)
     assert PROFILES["distributor-offline"].analyzers == ("distributor",)
     assert PROFILES["distributor-offline"].timeout_s == 120 and PROFILES["distributor-offline"].offline

@@ -392,13 +392,13 @@ def find_schematic_outputs(repo_filter=None):
     return outputs
 
 
-def retire_orphaned_outputs(out_dir, repo_list, expected):
+def retire_orphaned_outputs(out_dir, repo_list, expected, apply=True):
     """Quarantine (rename to .stale) every downstream output in the run's scope whose upstream
     no longer exists. A chained runner walks its upstream outputs and never submits a unit
     whose schematic/PCB output is missing or quarantined, so without this the old downstream
     output stayed live for run_checks. `expected` maps repo -> output names that have a
     current upstream; `repo_list` None means every repo under out_dir. Returns the retired
-    paths."""
+    paths; apply=False only lists them."""
     out_dir = Path(out_dir)
     if repo_list is None:
         repo_list = sorted(f"{o.name}/{r.name}" for o in out_dir.iterdir() if o.is_dir()
@@ -410,7 +410,8 @@ def retire_orphaned_outputs(out_dir, repo_list, expected):
             if (f.name.startswith("_") or f.name == "capability_mode.json"
                     or f.name.endswith(".parasitics.json") or f.name in keep):
                 continue
-            os.replace(f, f.with_name(f.name + ".stale"))
+            if apply:
+                os.replace(f, f.with_name(f.name + ".stale"))
             retired.append(f)
     return retired
 
@@ -419,7 +420,9 @@ def find_pcb_output(schematic_json):
     """Find matching PCB output for a schematic output.
 
     Given results/outputs/schematic/{repo}/{name}.kicad_sch.json,
-    looks for results/outputs/pcb/{repo}/{name}.kicad_pcb.json.
+    looks for results/outputs/pcb/{repo}/{name}.kicad_pcb.json. Only an output that a
+    current pcb manifest unit writes pairs: a leftover from an older output naming
+    (TH-099) is ignored.
     """
     repo_name = f"{schematic_json.parent.parent.name}/{schematic_json.parent.name}"
     pcb_dir = OUTPUTS_DIR / "pcb" / repo_name
@@ -430,12 +433,25 @@ def find_pcb_output(schematic_json):
     for old, new in [(".kicad_sch.json", ".kicad_pcb.json"),
                      (".sch.json", ".kicad_pcb.json")]:
         if stem.endswith(old):
-            pcb_path = pcb_dir / stem.replace(old, new)
-            if pcb_path.exists() and pcb_path.stat().st_size > 0:
-                return pcb_path
-            return None
+            return _current_pcb_output(repo_name, pcb_dir / stem.replace(old, new))
     # a hash-truncated name lost its suffix: pair through the repo's manifest instead
     return _pcb_output_by_manifest(repo_name, stem, pcb_dir)
+
+
+def _manifest_output_names(repo_name, manifest_name):
+    """Output file names the units of one per-repo manifest write (safe_name + .json)."""
+    manifest = MANIFESTS_DIR / repo_name / manifest_name
+    if not manifest.exists():
+        return set()
+    return {safe_name(line.strip()) + ".json"
+            for line in manifest.read_text(encoding="utf-8").splitlines() if line.strip()}
+
+
+def _current_pcb_output(repo_name, pcb_path):
+    if (pcb_path.exists() and pcb_path.stat().st_size > 0
+            and pcb_path.name in _manifest_output_names(repo_name, "pcbs.txt")):
+        return pcb_path
+    return None
 
 
 def _pcb_output_by_manifest(repo_name, sch_output_name, pcb_dir):
@@ -451,9 +467,8 @@ def _pcb_output_by_manifest(repo_name, sch_output_name, pcb_dir):
             continue
         for suffix in (".kicad_sch", ".sch"):
             if line.endswith(suffix):
-                pcb_path = pcb_dir / (safe_name(line[: -len(suffix)] + ".kicad_pcb") + ".json")
-                if pcb_path.exists() and pcb_path.stat().st_size > 0:
-                    return pcb_path
+                return _current_pcb_output(
+                    repo_name, pcb_dir / (safe_name(line[: -len(suffix)] + ".kicad_pcb") + ".json"))
         return None
     return None
 

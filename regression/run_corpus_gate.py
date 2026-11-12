@@ -102,6 +102,7 @@ ANALYZER_REL = {
 PHASE_A = ["schematic", "pcb", "gerber"]
 PHASE_B = ["thermal", "emc", "cross_analysis"]
 ALL_ANALYZERS = PHASE_A + PHASE_B
+COMPARE_JOBS_MAX = 8   # field comparator workers after phase B (comparator_jobs)
 MANIFEST_FILE = {"schematic": "all_schematics.txt", "pcb": "all_pcbs.txt",
                  "gerber": "all_gerbers.txt"}
 SLOTS = ("baseline", "candidate")
@@ -138,6 +139,8 @@ def file_cmd(analyzer, kh_dir, input_path, out_path, profile):
     if analyzer == "schematic" and profile.schematic_no_hierarchy:
         cmd.append("--no-hierarchy")
     if analyzer == "pcb" and profile.pcb_full:
+        cmd.append("--full")
+    if analyzer == "gerber" and profile.gerber_full:
         cmd.append("--full")
     if profile.only_deterministic:
         cmd.append("--only-deterministic")
@@ -710,6 +713,9 @@ def build_arg_parser():
     ap.add_argument("--jobs", "-j", type=int, default=None,
                     help="parallel units (default: the CPU count, capped so jobs x the profile's "
                          "per-unit RSS hint fits in MemAvailable)")
+    ap.add_argument("--compare-jobs", type=int, default=None,
+                    help=f"worker processes for the field comparator after phase B (default: "
+                         f"min(--jobs, {COMPARE_JOBS_MAX}))")
     ap.add_argument("--label", default=None, help="rollup filename label (default: section)")
     ap.add_argument("--resume", action="store_true",
                     help="reuse units from a previous run ONLY if its manifest identity matches")
@@ -722,6 +728,12 @@ def build_arg_parser():
                     help="baseline-debts ledger for skips_ok (default: reference/baseline_debts/"
                          "<baseline sha7>.json when present)")
     return ap
+
+
+def comparator_jobs(jobs, compare_jobs=None):
+    """Comparator workers: each holds a unit's two documents and its deltas, so the
+    comparator is capped apart from the analyzer job count (TH-096)."""
+    return compare_jobs if compare_jobs else min(jobs, COMPARE_JOBS_MAX)
 
 
 def resolve_kind(kind):
@@ -997,7 +1009,8 @@ def main(argv=None):
     from regression.field_compare import BudgetError, run_modes  # local import keeps the gate importable standalone
     try:
         modes = run_modes(layout.root, budget_path=Path(args.budget) if args.budget else None,
-                          jobs=args.jobs, resolved_units=report["gate_pass"]["resolved_debts"])
+                          jobs=comparator_jobs(args.jobs, args.compare_jobs),
+                          resolved_units=report["gate_pass"]["resolved_debts"])
     except (FileNotFoundError, BudgetError) as e:
         print(f"Error: comparator modes could not run: {e}", file=sys.stderr)
         sys.exit(2)

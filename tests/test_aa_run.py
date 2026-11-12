@@ -54,6 +54,14 @@ def test_summarize_clean_report():
     assert rep["clean"] is True and rep["leaves"] == []
 
 
+def test_summarize_reads_deltas_from_sidecar(tmp_path):
+    (tmp_path / "field_report.deltas.jsonl").write_text(
+        "".join(json.dumps(d) + "\n" for d in REPORT["deltas"]), encoding="utf-8")
+    sidecar = dict(REPORT, deltas=None, deltas_file="field_report.deltas.jsonl")
+    assert (aa_run.summarize_strict_report(sidecar, tmp_path)
+            == aa_run.summarize_strict_report(REPORT))
+
+
 def test_propose_policy_adds_only_new_leaves_and_never_writes_policy():
     policy = {"name": "volatile-leaves-v1",
               "leaves": [{"pointer": "/inputs/run_id", "shape": "^[0-9a-f-]{36}$"}],
@@ -278,6 +286,71 @@ def test_fixture_trees_differing_value_is_deltas(tmp_path, capsys):
     assert rc == 1 and aa["clean"] is False and aa["error"] is False
     assert [l["pointer_glob"] for l in aa["leaves"]] == ["/findings/*/score"]
     assert "A/A DELTAS" in capsys.readouterr().out
+
+
+def _chained_session(bt, run_name, run_id, tamper=False):
+    """One pytest session's basetemp: schematic + pcb in a run dir, and an emc envelope
+    whose inputs name them by absolute path under ``bt`` (as chained analyzers do)."""
+    import hashlib
+    run = bt / "analysis0" / "custom-analysis" / run_name
+    run.mkdir(parents=True)
+    ups = {}
+    for atype in ("schematic", "pcb"):
+        env = dict(_envelope(atype), inputs={"run_id": run_id, "source_files": ["/fixtures/simple.kicad_sch"]})
+        path = run / f"{atype}.json"
+        path.write_text(json.dumps(env))
+        ups[atype] = (str(path), hashlib.sha256(path.read_bytes()).hexdigest())
+    if tamper:
+        ups["pcb"] = (ups["pcb"][0], "0" * 64)
+    emc = dict(_envelope("emc"), elapsed_s=0.5, inputs={
+        "run_id": run_id,
+        "source_files": [p for p, _ in ups.values()],
+        "source_hashes": {p: h for p, h in ups.values()},
+        "upstream_artifacts": {a: {"path": p, "sha256": h, "run_id": run_id} for a, (p, h) in ups.items()},
+    })
+    (run / "emc.json").write_text(json.dumps(emc))
+    return bt
+
+
+def _moved_session(tmp_path, dest, run_name, run_id, tamper=False):
+    bt = _chained_session(tmp_path / "bt", run_name, run_id, tamper)
+    return bt.rename(tmp_path / dest)
+
+
+def test_snapify_reroots_chained_upstream_refs(tmp_path):
+    raw = _moved_session(tmp_path, "raw", "20261015T101500Z-a1b2c3", "20261015T101500Z-a1b2c3")
+    snap = tmp_path / "snap"
+    aa_run.snapify(raw, snap)
+    def unit(atype):
+        return snap / atype / "analysis0" / "custom-analysis" / "RUN-0" / atype / "snap.json"
+    sch, pcb = str(unit("schematic")), str(unit("pcb"))
+    emc = json.loads(unit("emc").read_text())
+    assert emc["inputs"]["source_files"] == [sch, pcb]
+    assert sorted(emc["inputs"]["source_hashes"]) == [pcb, sch]
+    assert emc["inputs"]["upstream_artifacts"]["pcb"]["path"] == pcb
+    # upstream envelopes are copied byte-for-byte, so the recorded hashes still verify
+    src_sch = raw / "analysis0" / "custom-analysis" / "20261015T101500Z-a1b2c3" / "schematic.json"
+    assert Path(sch).read_bytes() == src_sch.read_bytes()
+
+
+def test_fixture_trees_chained_envelopes_verify_after_the_move(tmp_path, capsys):
+    a = _moved_session(tmp_path, "raw_a", "20261015T101500Z-a1b2c3", "20261015T101500Z-a1b2c3")
+    b = _moved_session(tmp_path, "raw_b", "20261015T111111Z-ffffff", "20261015T111111Z-ffffff")
+    g = tmp_path / "aa"
+    rc = aa_run.main(["--fixture-trees", str(a), str(b), "--gate-dir", str(g)])
+    aa = json.loads((g / "aa_report.json").read_text())
+    assert aa["policy_violations"] == []
+    assert rc == 0 and aa["clean"] is True and aa["units_compared"] == 3
+
+
+def test_fixture_trees_chained_hash_mismatch_is_still_caught(tmp_path):
+    a = _moved_session(tmp_path, "raw_a", "20261015T101500Z-a1b2c3", "20261015T101500Z-a1b2c3")
+    b = _moved_session(tmp_path, "raw_b", "20261015T111111Z-ffffff", "20261015T111111Z-ffffff",
+                       tamper=True)
+    g = tmp_path / "aa"
+    assert aa_run.main(["--fixture-trees", str(a), str(b), "--gate-dir", str(g)]) == 2
+    aa = json.loads((g / "aa_report.json").read_text())
+    assert any("mismatch on side b" in v for v in aa["policy_violations"])
 
 
 def test_fixture_trees_refuse_reused_gate_dir(tmp_path):

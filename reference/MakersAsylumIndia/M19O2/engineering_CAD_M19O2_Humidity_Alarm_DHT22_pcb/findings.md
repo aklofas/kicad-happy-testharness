@@ -15,7 +15,7 @@
 
 ### Missed
 - The M19O2 repo in the test harness is a robotics/pneumatics project (humidity alarm DHT22, pneumatic wiring). It contains no PCB_Schaltplan_RFSOC_* files. The RFSOC schematic outputs requested do not exist anywhere in results/outputs/schematic/M19O2/ or any other results directory. The repo hosting the RFSOC project is either not in repos.md or not yet checked out and analyzed.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -37,7 +37,7 @@
 
 ### Missed
 - Same root cause as above. No RFSOC hierarchy sheets present in M19O2 results.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -59,7 +59,7 @@
 
 ### Missed
 - Same root cause as above.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -81,7 +81,7 @@
 
 ### Missed
 - Same root cause as above.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -103,7 +103,7 @@
 
 ### Missed
 - The M19O2 PCB outputs that do exist are for DHT22_pcb and M19O2_Wiring_Simplified. No RFSOC PCB output is present.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -125,7 +125,7 @@
 
 ### Missed
 - The gerber results directory for M19O2 does not exist. No RFSOC gerber outputs are present.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -147,7 +147,7 @@
 
 ### Missed
 - Same root cause as above.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)

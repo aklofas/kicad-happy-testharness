@@ -1,4 +1,4 @@
-# Findings: Kicad / 2019_Manual_Base_u2_2019_Manual_Base_u2
+# Findings: 0Prashant/Kicad / 2019_Manual_Base_u2
 
 ## FND-00002472: I2C false positive: +3.3V power rail detected as SCL line
 

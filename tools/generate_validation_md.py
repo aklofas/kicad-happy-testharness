@@ -173,14 +173,19 @@ def _unit_claims(path):
     if not path.exists():
         raise FileNotFoundError(f"budget report not found: {path}")
     claims = defaultdict(lambda: [set(), 0])
-    if path.suffix == ".jsonl":
-        for line in path.read_text(encoding="utf-8").splitlines():
+    rows_path = path if path.suffix == ".jsonl" else None
+    budget = {}
+    if rows_path is None:
+        budget = json.loads(path.read_text(encoding="utf-8")).get("budget") or {}
+        if budget.get("claims_file"):        # a spilled report keeps per-unit rows in a sidecar
+            rows_path = path.parent / budget["claims_file"]
+    if rows_path is not None:
+        for line in rows_path.read_text(encoding="utf-8").splitlines():
             if line.strip():
                 r = json.loads(line)
                 claims[r["unit"]][0].update(k for k, n in (r.get("claimed") or {}).items() if n)
                 claims[r["unit"]][1] += int(r.get("residuals") or 0)
     else:
-        budget = json.loads(path.read_text(encoding="utf-8")).get("budget") or {}
         for cls, deltas in (budget.get("claimed") or {}).items():
             for d in deltas:
                 claims[d["unit"]][0].add(cls)

@@ -13,19 +13,19 @@
 
 ### Incorrect
 - The Graphic:Logo_Open_Hardware_Large symbol (#LOGO1) is listed in statistics.power_rails alongside +3.3V and GND. It is a decorative graphic element, not a power rail. The parser is treating the lib_id value field as a net name for non-power graphic symbols.
-  (signal_analysis)
+  (findings)
 - bus_analysis.uart reports LED_TX as a UART signal (pin_count=1, no devices). LED_TX is a GPIO signal driving an LED indicator (D4 anode), not a UART TX line. The analyzer is pattern-matching on the '_TX' suffix without verifying connectivity to UART-capable IC pins.
-  (signal_analysis)
+  (findings)
 - U1 is an MCP6004 quad op-amp. All 5 units (including power unit 5) are reported with configuration='unknown'. The 4 active signal-processing units are in inverting, non-inverting, and active filter configurations based on the surrounding R/C components. Opamp configuration detection fails because op-amp pin connections are empty in the KiCad 5 parser.
-  (signal_analysis)
+  (findings)
 - SW1 (a tactile push button, user/boot button) is listed as having a pin on the I2C_SCL net, which is incorrect. SW1 pin 2 goes to GND. This appears to be a wire-tracing error in the KiCad 5 parser placing nearby wires on wrong nets.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 - The schematic has a 24LC32 I2C EEPROM (U2) with I2C_SCL and I2C_SDA nets and 2K2 pull-up resistors (R17, R18), but bus_analysis.i2c is empty. Root cause: U2 has pins:[] in the output (KiCad 5 .sch IC pin connections not parsed), so the I2C bus detector finds no IC pins on the I2C nets.
-  (signal_analysis)
+  (findings)
 - Q1 and Q2 are 2N7000 N-channel MOSFETs used as PTT (push-to-talk) switches. transistor_circuits in signal_analysis is empty. The transistor detector is missing these, likely because pin connections to the FET are not parsed (same KiCad 5 pin extraction issue).
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -46,9 +46,9 @@
 
 ### Incorrect
 - D3, D4, D5, D6 all show -4.95mm edge_clearance_mm. For a TNC in an enclosure, horizontal LED_D3.0mm THT LEDs are commonly placed to protrude through panel holes — their leads overhang the PCB edge intentionally. The warning is technically accurate but likely not a real defect for this board style. The board metadata confirms this is a PCB Rev B (Mobilinkd LLC) with '67mm width' note.
-  (signal_analysis)
+  (findings)
 - The statistics report smd_count=1 which is the LOGO footprint (library=KiCAD:LOGO, reference=G1). This inflates the SMD count by counting a graphic element as an SMD component. The board is effectively all-THT.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 (none)
@@ -115,7 +115,7 @@
 
 ### Missed
 - The review prompt referenced 4 gerber output files (NucleoTNC-gerbers, NucleoTNC_r3-gerbers, NucleoTNC_r4-gerbers, NucleoTNC_r5-gerbers), but the NucleoTNC repo contains no gerber files. The checked-out repo only has .sch and .kicad_pcb files. These outputs do not exist and cannot be reviewed.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)

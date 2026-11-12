@@ -39,6 +39,15 @@ def test_main_accepts_budget_flag(tmp_path):
     assert ns.budget == "regression/budgets/example.json"
 
 
+def test_comparator_has_its_own_worker_cap(tmp_path):
+    assert gate.comparator_jobs(32) == gate.COMPARE_JOBS_MAX == 8
+    assert gate.comparator_jobs(4) == 4
+    assert gate.comparator_jobs(32, 2) == 2
+    ns = gate.build_arg_parser().parse_args(["--baseline-dir", "a", "--candidate-dir", "b", "--gate-dir",
+                                             str(tmp_path), "--repo", "x", "--compare-jobs", "3"])
+    assert ns.compare_jobs == 3
+
+
 def test_main_rejects_malformed_budget_before_running(tmp_path, monkeypatch, capsys):
     """A bad --budget fails at argument validation (exit 2), not after phase A/B."""
     import pytest

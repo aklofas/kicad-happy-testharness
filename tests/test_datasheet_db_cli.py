@@ -469,62 +469,61 @@ def test_fetch_missing_marks_dead_url_after_fetch_error():
 
 
 def test_fetch_missing_local_fallback_from_repo_found_in():
-    """Record with no source_urls but a repo found_in entry → copy from local file."""
+    """Record with no source_urls but a repo found_in entry → copy from local file.
+    The found_in ref resolves under storage.REPOS_DIR, pointed at the tmp dir, so
+    nothing is written into the real repos/ tree."""
     def inner(tmp):
         from validate.datasheet_db.cli import main as cli_main
         from validate.datasheet_db.manifest import save_record, load_record
-        from validate.datasheet_db.storage import store_path, compute_sha256, HARNESS_DIR
+        from validate.datasheet_db import storage as s
+        from validate.datasheet_db.storage import store_path, compute_sha256
 
         body = b"%PDF-1.5\n" + b"L" * 150
         sha = hashlib.sha256(body).hexdigest()
 
-        # Create a fake "repo" file at HARNESS_DIR/repos/owner/repo/some/file.pdf
-        # Note: HARNESS_DIR is the real harness root, so we plant a temp file
-        # under repos/.test_fallback/ to avoid polluting real repos.
-        # The found_in entry references it.
         test_owner = ".test_fallback"
         test_repo = "test_repo_xyz"
         rel_path = "datasheets/local.pdf"
-        local_full = HARNESS_DIR / "repos" / test_owner / test_repo / rel_path
-        local_full.parent.mkdir(parents=True, exist_ok=True)
+        repos = tmp / "repos"
+        local_full = repos / test_owner / test_repo / rel_path
+        local_full.parent.mkdir(parents=True)
         local_full.write_bytes(body)
 
-        try:
-            # Seed a record with found_in pointing at the local file, no URLs
-            save_record({
-                "sha256": sha,
-                "size_bytes": len(body),
-                "page_count": None,
-                "mpns": [{"mpn": "FALLBACK1", "primary": True}],
-                "manufacturers": [],
-                "source_urls": [],
-                "filename_aliases": [],
-                "found_in": [{
-                    "type": "repo",
-                    "ref": f"{test_owner}/{test_repo}",
-                    "path": rel_path,
-                    "first_seen": "2026-04-10T00:00:00Z",
-                }],
-                "revision_label": None,
+        save_record({
+            "sha256": sha,
+            "size_bytes": len(body),
+            "page_count": None,
+            "mpns": [{"mpn": "FALLBACK1", "primary": True}],
+            "manufacturers": [],
+            "source_urls": [],
+            "filename_aliases": [],
+            "found_in": [{
+                "type": "repo",
+                "ref": f"{test_owner}/{test_repo}",
+                "path": rel_path,
                 "first_seen": "2026-04-10T00:00:00Z",
-                "last_seen": "2026-04-10T00:00:00Z",
-                "verified": False,
-                "verification_notes": None,
-            })
+            }],
+            "revision_label": None,
+            "first_seen": "2026-04-10T00:00:00Z",
+            "last_seen": "2026-04-10T00:00:00Z",
+            "verified": False,
+            "verification_notes": None,
+        })
 
-            # Run fetch-missing — no urlopen mock needed because no URL
+        orig_repos = s.REPOS_DIR
+        s.REPOS_DIR = repos
+        try:
+            # no urlopen mock needed: the record has no URL
             rc = cli_main(["fetch-missing", "--jobs", "1"])
-            assert rc == 0
-
-            # Blob should be in the store
-            rec = load_record(sha)
-            blob_path = store_path(rec)
-            assert blob_path.exists()
-            assert compute_sha256(blob_path) == sha
         finally:
-            # Clean up the planted file
-            import shutil
-            shutil.rmtree(HARNESS_DIR / "repos" / test_owner, ignore_errors=True)
+            s.REPOS_DIR = orig_repos
+        assert rc == 0
+
+        rec = load_record(sha)
+        blob_path = store_path(rec)
+        assert blob_path.exists()
+        assert compute_sha256(blob_path) == sha
+        assert not (HARNESS_DIR / "repos" / test_owner).exists()
     _with_temp_store_and_manifest_dirs(inner)
 
 

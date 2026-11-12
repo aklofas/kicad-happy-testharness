@@ -14,7 +14,7 @@
 - The Carrier schematic has 9 component entries in the components list (two separate symbols both annotated 'U?': SDINBDG4-8G and 61082-041400LF). Because the BOM deduplication groups both U? references as one entry, total_components counts 8 (BOM quantity sum) instead of 9 physical symbols. The annotation_issues section correctly flags duplicate_references=['U?'] and unannotated=['U?']. The component count is off by one.
   (statistics)
 - The 61082-041400LF (Amphenol FCI, LCSC C236050) is a 40-pin SMD connector used as the eMMC socket interface between the carrier and the host board. The analyzer classifies it as type='ic' because it comes from a custom library (MyJLCLib2024) and has no connector-recognizable keywords. The symbol's pin type is 'unspecified' throughout, so type heuristics fall back to 'ic'. The statistics.component_types show ic:1 but should show ic:1, connector:2 if both U? components were correctly classified.
-  (signal_analysis)
+  (findings)
 - The SDINBDG4-8G eMMC is powered by both +3.3V (VCC pins E6, F5, J10, K9) and +1V8 (VCCQ pins C6, M4, N4, P3, P5). The power_budget only reports the eMMC on the +3.3V rail (estimated_mA=10) and omits +1V8 entirely. The design_analysis.power_domains correctly identifies both +1V8 and +3.3V as IC power rails for U?, but this information does not propagate to power_budget. Same issue is present in UnifiedBoard output.
   (power_budget)
 
@@ -111,7 +111,7 @@
 
 ### Missed
 - The task listed two gerber output files (Fabrication.json and Fabrication_v2.json) but neither exists under results/outputs/gerber/Spider-eMMC/. The gerbers.txt manifest is empty, confirming no gerber files were found in the Spider-eMMC repository. The repo contains only .kicad_pcb and .kicad_sch source files with no exported gerber/drill files. No gerber analysis was performed.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)

@@ -340,7 +340,7 @@ def _try_found_in_fallback(rec: dict):
     whose bytes hash to rec['sha256'], return those bytes (bytes object).
     Otherwise return None."""
     from pathlib import Path
-    from validate.datasheet_db.storage import compute_sha256, HARNESS_DIR
+    from validate.datasheet_db.storage import compute_sha256, HARNESS_DIR, REPOS_DIR
     for entry in rec.get("found_in") or []:
         kind = entry.get("type")
         if kind not in ("repo", "preserved"):
@@ -350,7 +350,7 @@ def _try_found_in_fallback(rec: dict):
         if not rel:
             continue
         if kind == "repo":
-            candidate = HARNESS_DIR / "repos" / ref / rel
+            candidate = REPOS_DIR / ref / rel
         else:  # preserved
             candidate = HARNESS_DIR / "datasheets_from_repos" / ref / rel
         if not candidate.exists():

@@ -64,7 +64,7 @@ KH-358..365 filed 2026-07-24 from the verified subset of the KiCad-source audit
 KHPA finding ID). Next TH number: **TH-111** (TH-110 filed 2026-11-07 at the v3.0.2 Wave 11b-1 registry rescan — `audit_constants.py` reuses retired `CONST-NNN` ids for new constants, LOW; TH-109 filed 2026-11-06 from the TH-105 triage — 144 live FND locks with a check shape that cannot fail or reads the wrong finding; TH-107 / TH-108 filed 2026-11-06 at the v3.0.2 kickoff while classifying the nine standing non-passing locks for VALIDATION.md — 36 assertions never load their output (2 from a doubled `file_pattern` prefix), and the nine standing locks were never reviewed (7 stale, the analyzer now matches KiCad); earlier: TH-106 filed 2026-11-03 — `generate_analytics.py` issue counts read only `### <id>` headings, the TH-104 undercount in a second tool, LOW; TH-105 filed 2026-11-03 at the v3.0.1 regen — 360 FND locks on INCORRECT-marked findings are not aspirational, some pin the reported defect (six caught as Wave 5 KH-484 `aligned` flips); audit + rule recorded, MEDIUM; TH-104 filed and fixed 2026-11-03 at the v3.0.0 release prep — `generate_validation_md.py` counted only `### <id>` headings, so `## <date> — <id>` closures were dropped and the filed total shrank, see FIXED.md; TH-103 filed and fixed 2026-11-03 at the Waves 8c + 8b push — the hash-seed determinism test compared `elapsed_s`, see FIXED.md; TH-102 filed and fixed 2026-11-01 at the 3.0.x Wave 7 close — the fixture set had no multi-unit schematic (a placed symbol with unit > 1), so product `test_model_records` could not pin per-unit records; `tests/fixtures/multi-unit/dual_opamp.kicad_sch` + `tests/test_multi_unit_fixture.py`, see FIXED.md; TH-101 filed 2026-10-31 at the 3.0.x Wave 5 gate — no profile exercises gerber `--full` connectivity, the Task 52 class is gate-blind harness-side, LOW; TH-100 filed 2026-10-29 at the relock rulings — 235 aspirational FND assertions use operators `checks.py` does not know; TH-099 filed 2026-10-29 at the 3.0.x relock — emc / thermal pair a schematic with an orphan pre-hash pcb output; TH-098 filed and fixed 2026-10-26 — tool-gated skips (pdftotext / ngspice) failed the required-tier skip guard on runners without the tools; listed in `tests/known_skips.json`, see FIXED.md; TH-097 filed and fixed 2026-10-26 — `run_spice.py` checked for ngspice before validating the selection, product CI red at pin `bd551df5b41`, see FIXED.md; TH-096 filed 2026-10-26 at the Wave 3 gate — the field comparator holds every delta in memory, ~55 M deltas exhausted the box, MEDIUM; TH-095 filed and fixed 2026-10-26 — `run_netlist_oracle.py` did not resolve a relative `--kicad-happy`, see FIXED.md; TH-093 and TH-094 filed and fixed 2026-10-25 at the wave 10 final review — bare-list assertion files crash the coverage and health report counters; `audit_equations.py untagged` indicator order follows PYTHONHASHSEED, both LOW, see FIXED.md; TH-091 filed and fixed 2026-10-25 during wave 10 planning — `generate_analytics.py` ignores `KICAD_HAPPY_TESTHARNESS_DATA_DIR`, see FIXED.md; TH-092 filed and fixed 2026-10-25 during wave 10 planning — `audit_equations.py` reads sources as UTF-8 text and `find_untagged` swallows `SyntaxError`, see FIXED.md; TH-090 filed and fixed 2026-10-25 during wave 10 planning — `refresh_findings.py` counted drift's no-checkable-items sentinel as an item and reported such findings as current, see FIXED.md; TH-089 filed and fixed 2026-10-25 by the harness audit fix session — `generate_catalog.py` counted the `capability_mode.json` sidecar as a schematic/PCB/EMC/SPICE output, see FIXED.md; TH-080..088 filed 2026-10-25 from the harness external audit round 1 — budgeted-kind worker exceptions, ledgered-timeout coverage, `discover.py --repo` global-manifest shrink, silent assertion-file drop, null/`[]` required-field locks (all HIGH, gate/assertion false-pass paths), constants corpus-hit names, `audit_equations --diff` no-op, `validate_design_intent` multi-repo scope, `analyze_bom_mismatch` layout (LOW); records `docs/audit/0*-harness-*/findings/VERIFICATION.md`, plan `docs/audit/HARNESS-FIX-PLAN.md`; TH-079 filed 2026-10-25 from the external audit round 1 — `generate_validation_md.py` category table and total use different denominators (1,855 = the aspirational count), LOW; TH-078 filed 2026-10-24 at the v3 round-9b gate — no "debt resolved" disposition: a ledgered unit the candidate fixes fails `skips_ok`, `strict_clean` and the strict comparator (`missing_a`), so the structural criterion cannot pass mechanically and the response builder carries a hand-written exception, LOW; TH-065, TH-066 + TH-077 FIXED 2026-10-24, see FIXED.md; TH-077 filed 2026-10-24 at the v3 round-8 spice-offline gate — `run_spice.py` output is not deterministic run-to-run: `simulation_results[*].model_note` flips `lookup:<MPN>` ↔ `cache:<MPN>` for the same product and inputs (132 of 8,829 reports between two baseline passes), LOW; TH-076 fixed-on-discovery 2026-10-23 during the Checklist 11 backlog pass — `audit_constants.py scan` dropped and re-added every constant whose file moved without a `relocate --map` (rounds 2/3), losing 41 verification records incl. `_REGULATOR_VREF` 55/114 and `_CAP_ESL` 7/7; the registry had also not been rescanned since round 5, see FIXED.md; TH-075 fixed-on-discovery 2026-10-23 at the v2.3.2 corpus regen — `run_spice.py` per-unit `--workdir` carried raw repo/file names into ngspice, 18,464 sims silently skipped on 5,198 corpus units, directory name now sanitized + digest, see FIXED.md; TH-074 fixed-on-discovery 2026-10-22 at the v2.3.2 backport gate — long-run waiters stalled on a `pgrep -f` self-match and on a zombie PID; `tools/wait_for_run.py` + RUNBOOK 26k + full-chain `done.json` marker, see FIXED.md; TH-073 fixed-on-discovery 2026-10-17 at the v3 round-6 gate preflight — `run_corpus_gate.py` accepted analyzer-less profiles (`spice-offline`, the new `distributor-offline`) and would have run a zero-unit gate, guard added, see FIXED.md; TH-072 fixed-on-discovery 2026-10-16 at the v3 round-5 gate preflight — `full-chain` profile declared no schematic analyzer, Phase B ran no chained unit, see FIXED.md; TH-071 filed 2026-10-16 at the v3 round-4 gate — `run_corpus_gate.py --jobs` not memory-aware, hierarchy profile at 32 jobs OOMs the box, LOW; TH-070 filed 2026-10-15 at the v3 round-2 reply — scan-coverage identity by line/file yields ~150 false losses per structural round, MEDIUM; TH-069 FIXED 2026-10-15 at the v3 round-3 reply — discover.py regular-file filter + manifest regen, see FIXED.md; TH-068 filed 2026-10-15 at H0 plan 6 — fixture-lane A/A chained envelopes unverifiable after the basetemp move, LOW; TH-067 filed 2026-10-15 — batch-runner pool workers outlive a killed parent (the TH-063 mechanism), MEDIUM; TH-066 filed 2026-10-15 at the H0 plan 4 final review — audit tools walk 58 of the 90 scanner files; TH-065 filed 2026-10-15 at H0 plan 4 — audit_constants function-scope `name:line` identity churns the registry; TH-064 filed 2026-10-15 — emc/thermal/spice `--resume` refused until identity-based resume exists; TH-063 filed 2026-10-14 — mutating runner launched against the live tree from a TDD RED step, 16,909 emc outputs rewritten, no measurable impact; TH-055 and TH-059 (harness half) fixed 2026-10-15 (H0 plan 2), see FIXED.md; TH-062 filed 2026-10-14 — 58 print-and-return vacuous skip paths in required-tier smoke files; TH-061 filed 2026-10-14 — test_datasheet_db_cli.py fallback fixture writes under repos/; TH-060 filed 2026-10-14 — test_kh393_power_rails_threaded premise stale since PR #44, now strict xfail; TH-052/053/058 fixed 2026-10-14 (H0 plan 1, honest pytest collection), see FIXED.md; TH-059 filed 2026-10-06 at the v2.3.1 regen — batch SPICE side effects: spice/ dirs in repos/ + live DigiKey lookups; TH-058 filed 2026-10-06 — `test_kh420_zone_fill_segment_grid.py` wall-clock assertion (< 30 s on the NLoy corpus board) is load-sensitive: 8.5 s idle, 19.5 s with a 32-job gate running, so the pre-push hook can flake under load; TH-057 FIXED 2026-10-15 at H0 plan 5 — generator rewritten as grouped reconciliation, see FIXED.md; TH-056 filed 2026-10-05 — KH-313 corpus-lock anchor lost: TERES never runs check_inductor_leakage's crash path (no PCB pairing, 0 rf_chains) and `categories_checked` semantics changed, lock re-anchored; TH-055 filed 2026-10-05 — the 198 pcb timeout-class units keep v1.3-era outputs (148 schema 1.3.0 / 29 pre-schema / 21 none) under a hard-coded 120 s `ANALYZER_TIMEOUT`, downstream emc/thermal stale too; TH-054 fixed-on-discovery 2026-10-05 at the v2.3.0 regen — run_emc masked analyzer crashes behind stale outputs, EMC corpus stale since 2026-08-20/2026-05-15, see FIXED.md; TH-053 filed 2026-09-13 — pytest vs run_tests.py tier disagreement on 17 files; TH-052 filed 2026-09-13 — 17 root tests/ files without a `__main__` runner, 190 tests silently skipped by the pre-push hook; TH-051 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — dual-format twins raced on one thermal output, see FIXED.md; TH-050 fixed-on-discovery 2026-09-01 at the v2.2.1 regen — capability_mode.json sidecars fed to spice/emc/thermal runners, see FIXED.md; TH-049 filed 2026-09-01, results/outputs partial-contamination tripwire, found at the v2.2.1 regen before-baseline; TH-048 fixed-on-discovery 2026-08-20, seed.py enum-count gap, see FIXED.md; TH-047 filed 2026-08-20, KH-198 corpus-lock anchor lost at v2.2.0 regen; TH-046 fixed-on-discovery
 2026-07-16, see FIXED.md).
 
-> 288 open issues (273 KH + 15 TH).
+> 280 open issues (273 KH + 7 TH).
 
 ---
 
@@ -3337,16 +3337,6 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 
 ## Test Harness Issues
 
-### TH-110: `audit_constants.py` gives a new constant the lowest free `CONST-NNN`, so a retired id is reused for an unrelated constant
-
-**Severity:** LOW (no tracked doc cites the reused ids today; registry history and any old `CONST-NNN` reference then point at two different constants)
-**File:** `validate/audit_constants.py:338-349` `_next_id` (gap-filling `while n in existing`), called from `update_registry` `:555`
-**Discovered:** 2026-11-07, registry rescan at product `f53d107e` (v3.0.2 Wave 11b-1 gate)
-
-**Symptom:** the rescan retired 8 constants and added 19; six of the new ones took old ids: `CONST-301` `_ISOLATION_RAIL_EVIDENCE`, `CONST-388` `_LTC23_RESOLUTION_SUFFIX`, `CONST-560` `radio_words`, `CONST-690` `_CONNECTOR_WORDS`, `CONST-691` `_DEVICE_PASSIVE_SYMBOL`, `CONST-969` `_USB_SIGNAL_NAME`. `CONST-560` belonged to a different constant in earlier registries (`git log -S'"CONST-560"' -- reference/constants_registry.json`).
-
-**Fix direction:** keep a high-water mark (`next_id` in the registry header, or max id + 1) and never reuse a number, as KH/TH ids are never reused.
-
 ### TH-109: 144 live FND locks have a check shape that cannot fail or reads the wrong finding (467 with the aspirational ones)
 
 **Severity:** MEDIUM (each passes whatever the analyzer does; the TH-105 triage found several hiding defects that are still present)
@@ -3357,73 +3347,7 @@ At `07b7fb1` the helper gives `trust_level: high` with `provenance_coverage_pct 
 
 **Fix direction:** make each shape an `assertion_errors` load error (as TH-100 did for unknown ops) so new ones cannot land; remap mechanically where the intent is unambiguous (`value` → `pattern` when `field` is present or the item field is evident from the detector), apply `detector_filter` before indexing (or reject indexed paths with a filter), and triage the rest by description like TH-105; expect some newly live checks to fail and need a ruling.
 
-
-### TH-107: 34 aspirational assertions (27 sets) never run because their output file is not found
-
-**Severity:** LOW (aspirational only; they fail as "output file not found" forever, so they can never graduate)
-**File:** data under `reference/**/assertions/` (list below); `regression/reference_io.py` `find_output_file`
-**Discovered:** 2026-11-06, v3.0.2 kickoff. The two counted errors (doubled `file_pattern` prefix) are fixed (FIXED.md, same date), and `run_checks` now reports `output_not_found` (JSON) / an "Output not found" line, so the class is visible.
-
-**Remaining sets, by disposition:**
-- **Re-point (11 sets, output exists under another project):** the assertion file sits under the wrong project dir with an old `schematic_<repo>_` / `pcb_<repo>_` pattern. siderakb/ergo-snm-keyboard: 9 sets filed under `EC56_rotary_encoder_pcb` (FND-00002185..2193; outputs `ErgoSNM_Keyboard_rev*_*.json`); keebio/fourier: 1 under `fourier_fourier-left_fourier-left-bottom` (FND-00002181, output `fourier_fourier-right_fourier-right.sch.json`); rjwalters/kicad-tools: 1 under `boards_01-voltage-divider_output_voltage_divider` (output `examples_08-label-based-schematic_label_based_mcu.kicad_sch.json`). Their `findings.json` items carry the same wrong file names, so a fix moves item + assertions together (or `findings.py promote` recreates the bad files).
-- **Retire (3 sets):** 0Prashant/Kicad FND-00002472/2473/2475/2476: the findings name files under `schematic/MyKiCad/`, another repo; the files do not exist in 0Prashant/Kicad.
-- **Retire or re-point (13 gerber sets):** 11 repos with no gerber sources in their manifests at all (KCORES/OCP2PCIe, MakersAsylumIndia/M19O2 ×2, SdtElectronics/Xassette-Asterisk, judge2005/OTC, terjeio/PCBLaserSchematics (pattern is an absolute harness path), xboxoneresearch/Spider-eMMC, and the five empty-pattern sets Mage-Control-Systems-Ltd/NCCM, Neotron-Compute/Neotron-Pico, TU-Darmstadt-APQ/LM399_Burnin_Board, attoparsec/Node, mobilinkd/NucleoTNC); Mustafa5355/cavli_c16qs-carrier-board names a drill dir that has no output.
-
-**Fix direction:** a one-shot script that moves the 11 re-pointable findings items with their assertions; record a disposition on the findings items of the 16 dead sets and delete their assertion files; add a test that every assertion set in the corpus resolves to an output or a disposition.
-
-### TH-101: no gate profile exercises gerber `--full` output (`connectivity`), so the product's Wave 5 Task 52 class is gate-blind harness-side
-
-**Severity:** LOW (not blocking; coverage gap, no wrong verdict)
-**File:** `harnesslib/profiles.py` (`standard` runs gerbers without `--full`; `full-chain` declares no gerber analyzer), `regression/run_corpus_gate.py` (gerber invocation)
-**Discovered:** 2026-10-31, product 3.0.x Wave 5 gate (`results/v30x_w5_gate{,_fc}`)
-
-**Symptom:** `analyze_gerbers.py --full` adds the pin→net `connectivity` list. The Wave 5 handoff budgets a Task 52 class on it (decoded `\uXXXX` names, comment-form `TO.P`/`TO.N`, empty-ref pins dropped; 23-24 of 150 modern units in the product's A/B), but neither harness profile produces that block, so the corpus gate never compared it; the product's own A/B is the only evidence.
-
-**Fix direction:** give a profile a gerber `--full` lane: either add gerber with `--full` to `full-chain` (cheap: ~5.5 k gerber dirs corpus-wide, a few hundred in the 260-repo sample), or a separate `gerber-full` profile over all gerber dirs. Declare it in `harnesslib.profiles`, pass `--full` in the gate's gerber invocation when the profile asks for it, and add the profile to the round-record profile list. Re-measure the Task 52 class once it exists (expect connectivity deltas only on X2-tagged dirs).
-
-### TH-099: emc / thermal can pair a schematic with an orphan pcb output left over from the pre-hash output naming
-
-**Severity:** LOW (one corpus unit at the 40b8ff3 relock)
-**File:** `results/outputs/pcb/` hygiene; the chained runners' sch↔pcb pairing (`run/run_emc.py`, `run/run_thermal.py`) reads any pcb output whose name matches, fresh or not
-**Discovered:** 2026-10-29, 3.0.x relock at 40b8ff3 (`results/v30x_w4b_relock/`)
-
-**Symptom:** 93 pcb outputs (81 repos) were not rewritten by the relock because no manifest unit maps to their names any more (outputs named before long output names were hashed). The emc and thermal runners still pair one schematic with one of them: hmaerki/experiment_microoctopus `…Raspberry Pi Zero W.sch` reads `…Raspberry Pi Zero W.kicad_pcb.json` (2026-04-09) while the fresh `…Raspberry Pi Z_b81a647b03.json` exists. The same unit in the gate tree pairs with nothing. The emc runner already retires orphan emc / spice outputs whose schematic output is gone (`RETIRED … schematic output missing/stale`); pcb and gerber orphans (93 / 10) are not retired.
-
-**Fix direction:** retire pcb and gerber outputs that map to no manifest unit (same `.stale` rename as the emc runner), and have the chained runners pair only with outputs whose source is in the current manifest.
-
-### TH-096: the gate's field comparator keeps every delta in memory and writes them all — an output-changing round of ~55 M deltas exhausts a 62 GB box
-
-**Severity:** MEDIUM (blocks the mechanical verdict on large output-changing rounds; the box is shared)
-**File:** `regression/field_compare.py` (`compare_trees` accumulates `deltas` and serialises `[d.to_json() for d in deltas]`; `budgeted_report` rebuilds every `Delta`); `regression/run_corpus_gate.py` (`run_modes` runs the comparator with the gate's `--jobs`); `regression/compare_snap_trees.py`
-**Discovered:** 2026-10-26, product 3.0.x Wave 3 gate (`results/v30x_w3_gate/`)
-
-**Symptom:** after phases A/B finished, the in-process comparator's 32 workers reached ~67 GB summed RSS, swap climbed 17 → 20.6 GB in 30 s with ~10 GB available; the run was stopped by hand (SIGTERM to its process group, `results/v30x_w3_gate_aux/operations.log`). Sampled estimate: ~55 M strict deltas on schematic units (3,445 per moved unit × 15,884) and ~1.8 M on pcb, before the chained analyzers. No `field_report_*.json` was written. The verdict was produced instead by `results/v30x_w3_gate_aux/stream_budgeted.py` (same `compare_strict` / `evaluate_budget` per unit, counts only), valid because the Wave 3 budget has no `unit_bound` / `expected_magnitude`.
-
-**Fix direction:** stream deltas to a JSONL file and keep counts in memory; evaluate the budget per unit when no class carries a cross-unit bound (bounds can aggregate claimed counts per class); give the comparator its own worker cap.
-
-### TH-061: `tests/test_datasheet_db_cli.py` plants and deletes a file under `HARNESS_DIR/repos/.test_fallback/` — a write into the corpus checkout tree
-
-**Severity:** LOW (corpus inputs must be immutable; the fixture cleans up after
-itself, but a crash between plant and delete leaves a stray dir in `repos/`)
-**File:** `tests/test_datasheet_db_cli.py` (~lines 481-527, the `.test_fallback`
-fixture)
-**Discovered:** 2026-10-14, H0 plan 1 Task 4 corpus-marker audit.
-
-**Fix direction:** point the fallback fixture at `tmp_path` and monkeypatch the
-CLI's repos root, so no test writes into `repos/`.
-
-### TH-060: `test_kh393_power_rails_threaded` premise is stale — "P1_VBUS is not classified power by name heuristics" no longer holds
-
-**Severity:** LOW (one explicit strict xfail; the `--power-rails` override half
-of the test still holds)
-**File:** `tests/test_kh392_kh393_gp001_power.py::test_kh393_power_rails_threaded`
-**Discovered:** 2026-10-14, H0 plan 1 (honest collection). The first assertion
-became false when PR #44 (2026-09-13) broadened `is_power_net_name`. Never
-noticed because the file had no `__main__` block (TH-052 phantom pass). Now
-`xfail(strict=True)` citing this issue (commit a81858a).
-
-**Fix direction:** split the test: keep the override assertions; pick a fixture
-net the heuristics do not match for the negative half; then drop the xfail.
+**Addendum 2026-11-11 (phase 1, dry run):** census over all 194,153 assertion files reproduces 144 live / 323 aspirational (3 locks carry two shapes: FND-00002182-AST-01, FND-00000314-AST-01, FND-00000395-AST-01). One more tracked file the loader never reads: `reference/Arduino_OpenTherm_shield/Arduino_OpenTherm_shield/…_finding.json` (pre-owner layout, FND-00000372-AST-02 still on op `eq`). Plan `results/th109/plan.json` (no `reference/` writes): mechanical remap (R1 `[lo, hi]` → min/max, R2 int count → equals, R3 `{k: v}` → field + anchored pattern, R4 identity + key → field_equals) passes 43 live / 7 asp; now FAILS 15 live / 7 asp (they passed vacuously; several live descriptions describe the defect, so they read as aspirational marked live); ambiguous 81 live / 134 asp (multi-key dicts 94, regex without a field 50, string-list containment 21, unresolvable paths 8, JSONPath filters 7, key on no item 12); indexed paths need the engine change only. Engine guard written test-first and NOT yet landed (`regression/checks.py` + `tests/test_th109_check_shapes.py`, 14 tests): no-pattern match ops and boundless `range` become load errors; `findings[<n>]` with a `detector_filter` filters then indexes (143 of 190 indexed locks carry a `signal_analysis.<det>[n]` migration note). On today's corpus it raises 281 load errors (139 live / 142 asp, all in 125 repos) and flips live FND-00000442-AST-06 (pins `input_rail` null, its description says +5V is right); aspirational indexed: 64 now pass, 4 now fail (FND-00000362-AST-01, FND-00001342-AST-02, FND-00000308-AST-05, FND-00000322-AST-01). Landing order is the open decision: the guard needs the remap + triage first, and the now-failing locks need FND rulings.
 
 ### TH-063: mutating runner launched against the live tree from a TDD RED step — 16,909 `results/outputs/emc` files rewritten
 
@@ -3454,23 +3378,6 @@ runner not yet gated. Closes when the corpus-marker/hermeticity audit also check
 for that env on runner subprocesses (H1 item).
 
 **Addendum 2026-10-15:** mechanism identified — the RED step's 60 s subprocess timeout killed the parent runner; its 32 pool workers survived (ppid 1) and completed the whole emc corpus unsupervised, then idled ~6 h. Tracked as TH-067.
-
-### TH-068: fixture-lane A/A cannot strict-verify chained envelopes after the basetemp tree is moved
-
-**Severity:** LOW (the corpus lanes prove the chained analyzers strict-clean at scale; only the offline fixture lane is affected)
-**File:** `tools/aa_run.py` (`snapify`, `--fixture-trees`), RUNBOOK/plan-6 Task 7 Step 4 recipe
-**Discovered:** 2026-10-15, H0 plan 6 Task 7 Step 4
-
-**Symptom:** emc / thermal / cross_analysis envelopes embed ABSOLUTE upstream paths
-(`inputs.source_hashes` keys, `upstream_artifacts[].path`) under the pytest basetemp.
-The recipe runs the contract suite twice at the same basetemp and moves the tree aside
-between runs, so verify-then-mask (`sha256_of` / `strip_root_prefix_keys`) cannot read
-the upstream file → "linked file missing", 36 violations / 18 source_hashes deltas on the
-9 chained units; the 12 non-chained units are identical.
-
-**Fix direction:** `snapify` re-roots chained upstream references into the snapified
-tree (or the recipe keeps both basetemps in place and passes them as root prefixes), so
-the fixture lane covers all six analyzers in strict mode.
 
 ### TH-064: emc/thermal/spice runners have no identity-based `--resume`
 

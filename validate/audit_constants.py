@@ -335,17 +335,22 @@ def save_registry(registry):
     )
 
 
-def _next_id(registry):
-    """Get the next CONST-NNN ID."""
-    existing = set()
+def _id_high_water(registry):
+    """First never-used CONST number: the stored `next_id`, raised past every current id.
+    Retired entries are popped from the registry, so the stored mark is what keeps their
+    numbers from coming back."""
+    n = registry.get("next_id", 1)
     for c in registry.get("constants", []):
-        cid = c.get("id", "")
-        m = re.match(r"CONST-(\d+)", cid)
+        m = re.match(r"CONST-(\d+)", c.get("id", ""))
         if m:
-            existing.add(int(m.group(1)))
-    n = 1
-    while n in existing:
-        n += 1
+            n = max(n, int(m.group(1)) + 1)
+    return n
+
+
+def _next_id(registry):
+    """Allocate the next CONST-NNN ID; numbers are never reused."""
+    n = _id_high_water(registry)
+    registry["next_id"] = n + 1
     return f"CONST-{n:03d}"
 
 
@@ -568,6 +573,9 @@ def update_registry(registry, scanned):
                     v["source"] = None
             registry["constants"].append(entry)
             added += 1
+
+    # Record the mark before retiring entries, so a retired highest id is not reissued
+    registry["next_id"] = _id_high_water(registry)
 
     # Mark removed entries
     to_remove = []

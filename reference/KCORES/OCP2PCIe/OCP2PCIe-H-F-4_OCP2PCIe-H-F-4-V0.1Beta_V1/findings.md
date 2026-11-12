@@ -12,9 +12,9 @@
 
 ### Incorrect
 - All four capacitors C1-C4 are wired to the +12V rail in the schematic. The analyzer reports rails_without_caps: ['+12V'] for U1 DM02 in every version (V0.1Beta through V2.0Beta). The root cause is that pin net_name is not resolved for KiCad 5 legacy .sch components — component pins show no net assignment (fields are absent), preventing the decoupling detector from linking caps to their power rails. The caps ARE there: C1 (6.3x5.4 electrolytic) and C2 (tantalum) are bulk caps; C3, C4 (1206) are ceramic bypass caps, all on the +12V bus. This is a false positive repeated across all four schematic versions.
-  (signal_analysis)
+  (findings)
 - P5V_AUX (5V auxiliary from OCP mezzanine connector) and 3V3AUX are global labels (GLabel type) in the KiCad 5 schematic. The analyzer classifies them as 'signal' because they don't use the power:* library prefix. Semantically both are power supply nets — P5V_AUX is present as a copper pour zone on B.Cu and F.Cu in the PCB, confirming it carries significant current. This misclassification means these rails are excluded from power_net_routing analysis. Technically defensible given KiCad's representation, but misleading for a board where P5V_AUX is the main supply net.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 (none)
@@ -36,11 +36,11 @@
 
 ### Incorrect
 - J1 uses the Connector_PCBEdge:BUS_PCIexpress_x4 footprint, which intentionally extends beyond the board edge (negative clearance is by design for PCIe card edge connectors). The analyzer generates an edge_clearance_warnings entry for J1 at -5.0mm. This is a false positive — the board outline is correct and the connector is supposed to extend past the edge. The analyzer lacks awareness that card-edge connector footprints intentionally protrude.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 - P5V_AUX has a copper pour zone spanning both B.Cu and F.Cu with 65.3mm² area and 16 stitching vias (thermal_analysis shows this). It is the dominant power net on the board by zone area yet is absent from power_net_routing and current_capacity analysis. This is a consequence of P5V_AUX being a global label rather than a power:* symbol — the PCB analyzer fails to recognize it as a power net, so no track width or current capacity analysis is done for this rail.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -62,7 +62,7 @@
 
 ### Missed
 - The OCP2PCIe repo does not include any gerber/drill files (.gbr, .ger, .drl). The five gerber output paths referenced in the review request (OCP2PCIe_OCP2PCIe-gerber*.json) do not exist. No gerber analysis was possible for this repo.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)

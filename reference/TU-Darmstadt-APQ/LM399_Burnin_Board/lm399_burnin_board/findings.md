@@ -15,7 +15,7 @@
 
 ### Incorrect
 - The analyzer reports estimated_vout=-0.664, inverting=true for U21 (LT1085-ADJ). The LT1085 is a positive adjustable LDO. With R16=160 ohm (OUT to ADJ) and R15=1500 ohm (ADJ to GND), the correct Vout = 1.25*(1 + 1500/160) = 12.97V. The analyzer appears to have applied a negative/inverting formula: -Vref/ratio = -0.6/0.9036 = -0.664. The 'inverting: true' flag is also wrong — this is a standard positive LDO.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 (none)
@@ -40,7 +40,7 @@
 
 ### Missed
 - The reference_circuit sub-sheet contains bypass capacitors (100n on LM399 heater supply, 100n on OPA4202 power rails) but decoupling_analysis=[] for all three schematics. This is a known limitation of flat sub-sheet analysis where power rails come in via hierarchical labels rather than explicit power symbols.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -62,7 +62,7 @@
 
 ### Incorrect
 - J2 (DIN41612_C_2x32 connector) at y=149.37mm has a courtyard extending to y=236.24mm, 76.24mm past the board edge at y=160mm. This is physically correct: DIN41612 backplane connectors are designed to hang off the board edge for mating. Flagging this as a clearance violation is a false positive for this known connector type.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 (none)
@@ -87,7 +87,7 @@
 
 ### Missed
 - The LM399_Burnin_Board repo contains no Gerber files (.gbr, .gtl, .drl etc.). No gerber output file was generated. This is expected behavior — the analyzer correctly did not produce output for a missing input.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)

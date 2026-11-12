@@ -22,10 +22,6 @@ except ImportError:  # pre-push hook runs root tests under bare python3 (no
         def skipif(*_a, **_k):
             return lambda fn: fn
 
-        @staticmethod
-        def xfail(*_a, **_k):
-            return lambda fn: fn
-
     class _StubPytest:
         mark = _StubMark
 
@@ -98,61 +94,54 @@ def run_pcb(path, *args):
     return json.loads(out.stdout)
 
 
-@pytest.mark.xfail(strict=True, reason="TH-060: premise stale since PR #44 broadened is_power_net_name; P1_VBUS now classified power by heuristics")
-def test_kh393_power_rails_threaded(fixture_path, tmp_path):
-    """KH-393 (GitHub #40): P1_VBUS doesn't look like a power net by name
-    heuristics alone, so without an override it's absent from
-    analyze_power_nets's output even though it's a real power rail.
-    --power-rails overrides the name-based classification.
+def _gp001_sample_nets(path, tmp_path, *args):
+    """Run analyze_pcb.py --full --gp001-debug, return the set of sampled nets."""
+    dbg_dir = tmp_path / "dbg"
+    dbg_dir.mkdir(parents=True)
+    out = subprocess.run(
+        [sys.executable, str(PCB), str(path), "--full", *args,
+         "--gp001-debug", "--analysis-dir", str(dbg_dir)],
+        capture_output=True, text=True, timeout=120,
+    )
+    assert out.returncode == 0, out.stderr[-2000:]
+    return {s["net"] for s in json.loads((dbg_dir / "gp001_debug.json").read_text())["samples"]}
 
-    Note: this can't be observed via return_path_continuity on this
-    fixture — KH-392's antipad credit (Task 7) is net-agnostic, so
-    P1_VBUS (same via/void geometry as SENSE1) already reads 100%
-    coverage and is absent from that list whether it's walked as a
-    signal net or skipped as a power net (see task-7-report.md
-    "Concerns"). GP-001 debug samples are used below to directly prove
-    call site #2 (analyze_return_path_continuity) is threaded: with
-    rails supplied, P1_VBUS must be skipped *before* sampling, not just
-    coincidentally covered.
+
+def test_kh393_power_rails_override(fixture_path):
+    """KH-393 (GitHub #40): --power-rails P1_VBUS marks the rail power and
+    records the CLI as the resolution source. (P1_VBUS itself is also a
+    power name to the heuristics since PR #44, so the no-override half
+    lives in the SENSE1 test below.)
     """
-    # No rails: P1_VBUS doesn't match power-name heuristics -> absent from
-    # power routing, classified under "heuristic" resolution.
-    base = run_pcb(fixture_path, "--full")
-    assert "P1_VBUS" not in {e["net"] for e in base["power_net_routing"]}
-    assert base["power_net_resolution"]["source"] == "heuristic"
-    assert "P1_VBUS" not in base["power_net_resolution"]["power"]
-
-    # With rails: present in power routing, resolution source is "cli"
     fixed = run_pcb(fixture_path, "--full", "--power-rails", "P1_VBUS")
     assert "P1_VBUS" in {e["net"] for e in fixed["power_net_routing"]}
     assert fixed["power_net_resolution"]["source"] == "cli"
     assert "P1_VBUS" in fixed["power_net_resolution"]["power"]
 
-    # GP-001 debug: P1_VBUS enters the sample loop without rails (its
-    # heuristic classification lets it through as a signal net), and is
-    # excluded from the loop entirely once rails are supplied.
-    base_dbg_dir = tmp_path / "base_dbg"
-    base_dbg_dir.mkdir()
-    out = subprocess.run(
-        [sys.executable, str(PCB), str(fixture_path), "--full",
-         "--gp001-debug", "--analysis-dir", str(base_dbg_dir)],
-        capture_output=True, text=True, timeout=120,
-    )
-    assert out.returncode == 0, out.stderr[-2000:]
-    base_samples = json.loads((base_dbg_dir / "gp001_debug.json").read_text())["samples"]
-    assert any(s["net"] == "P1_VBUS" for s in base_samples)
 
-    fixed_dbg_dir = tmp_path / "fixed_dbg"
-    fixed_dbg_dir.mkdir()
-    out = subprocess.run(
-        [sys.executable, str(PCB), str(fixture_path), "--full",
-         "--power-rails", "P1_VBUS", "--gp001-debug",
-         "--analysis-dir", str(fixed_dbg_dir)],
-        capture_output=True, text=True, timeout=120,
-    )
-    assert out.returncode == 0, out.stderr[-2000:]
-    fixed_samples = json.loads((fixed_dbg_dir / "gp001_debug.json").read_text())["samples"]
-    assert not any(s["net"] == "P1_VBUS" for s in fixed_samples)
+def test_kh393_power_rails_threaded(fixture_path, tmp_path):
+    """KH-393: a net the name heuristics do not match (SENSE1) is absent
+    from power routing without an override and present with one, and
+    both call sites honour it.
+
+    GP-001 debug samples prove call site #2 (analyze_return_path_continuity)
+    is threaded: return_path_continuity cannot show it on this fixture,
+    because KH-392's antipad credit already gives SENSE1 100 % coverage.
+    With the rail supplied, SENSE1 must be skipped before sampling.
+    """
+    base = run_pcb(fixture_path, "--full")
+    assert "SENSE1" not in {e["net"] for e in base["power_net_routing"]}
+    assert base["power_net_resolution"]["source"] == "heuristic"
+    assert "SENSE1" not in base["power_net_resolution"]["power"]
+
+    fixed = run_pcb(fixture_path, "--full", "--power-rails", "SENSE1")
+    assert "SENSE1" in {e["net"] for e in fixed["power_net_routing"]}
+    assert fixed["power_net_resolution"]["source"] == "cli"
+    assert "SENSE1" in fixed["power_net_resolution"]["power"]
+
+    assert "SENSE1" in _gp001_sample_nets(fixture_path, tmp_path / "base")
+    assert "SENSE1" not in _gp001_sample_nets(
+        fixture_path, tmp_path / "fixed", "--power-rails", "SENSE1")
 
 
 def test_kh393_rails_from_schematic_json(fixture_path, tmp_path):

@@ -12,7 +12,7 @@
 
 ### Incorrect
 - In Bridge.sch, '12V' and '3V3' are power rail net labels but net_classification assigns them 'signal'. These are clearly power distribution nets (multiple pins, PWR flag symbol on GND). The classifier only promotes nets to 'power' when backed by power symbols; label-only power rails are misclassified.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 (none)
@@ -36,11 +36,11 @@
 
 ### Incorrect
 - The UART bus entry lists U1 (FT232RL) on the TxD net via pin CBUS4, which is a configurable I/O pin, not the standard TXD line. The analyzer is matching net-name 'TxD' heuristically without verifying the pin function. MSP430 P3.6 is also not a dedicated UART TX in this schematic's multi-function pin context. The detection should require the pin name to include 'TX' or the component to be a known UART device on a known TX pin.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 - The +3V3 rail is sourced from the FT232RL's built-in 3.3V output (USBDP pin tied to +3V3 in the netlist), which serves MSP430, A4988s, and connectors. The power_regulators array is empty; an integrated regulator detection is missing.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -59,15 +59,15 @@
 
 ### Incorrect
 - Four I2C bus entries are reported but only one is real. The GND net is flagged as SCL because MCP4725 pin 5 (SCL) is mis-wired to GND in the schematic — the analyzer correctly follows netlist connectivity but should not classify GND as an I2C bus line. Net __unnamed_1 is flagged as SDA because MCP4725 pin 4 (SDA) connects there via a resistor, not to the named SDA net. This is a schematic wiring anomaly but the I2C bus classification itself is misleading.
-  (signal_analysis)
+  (findings)
 - The observation reports U1 pins VOUT (net 'SDA') and VSS (net 'SCL') as single-pin nets. This is because the 'SDA' and 'SCL' named nets connect only to VOUT and VSS respectively (due to the schematic's wiring anomaly), not to the actual I2C pins of MCP4725. The root cause is the schematic's net naming — but the observation is factually misleading.
-  (signal_analysis)
+  (findings)
 - RV1 (value '5K', lib_id 'POT', footprint 'Potentiometer_Bourns_3296Y') is classified as type 'resistor' in both the BOM and component list. The lib_id 'POT' and the RV reference designator prefix clearly indicate a potentiometer and should map to a distinct type.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 - Q2 (BC547) emitter is on net __unnamed_25, which contains only C7 pin 1 and Q2 emitter. C7 appears to be a bypass cap — if the other side of C7 is GND, then the emitter is effectively AC-grounded. However the analyzer cannot determine this without checking the other pin of C7. Worth noting as a potential improvement area.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -152,7 +152,7 @@
 
 ### Missed
 - The repo contains only .sch and .kicad_pcb files with no exported gerber/drill files. No gerber output directory exists. This is expected for a design-only repo without manufacturing outputs.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)

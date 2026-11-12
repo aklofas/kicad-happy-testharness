@@ -1,3 +1,42 @@
 {
-  "findings": []
+  "findings": [
+    {
+      "analyzer_type": "schematic",
+      "source_file": "ErgoSNM_Keyboard_rev1_ErgoSNM_keyboard.kicad_sch.json",
+      "status": "promoted",
+      "summary": "Bus width counts label instances instead of unique signal names, systematically overcounting; Key matrix correctly detected in rev1 flat schematic (5 rows x 7 cols, 35 keys with 35 diodes)",
+      "correct": [
+        {
+          "description": "The rev1 flat schematic (no hierarchy, no MCU on-sheet, uses Pro Micro connectors J5/J6) correctly detects the 5x7 key matrix with ROW_0..ROW_4 and COL_0..COL_6, counting exactly 35 switch and 35 diode components all on the matrix. The 4 PWR_FLAG warnings (VCC, GND, VBUS, +BATT have no PWR_FLAG or power_out driver) are accurate\u2014rev1 uses Pro Micro connectors without explicit power flags. The 17 label_shape_warnings for ROW/COL global labels shaped as 'input' with no driver are correctly flagged since the MCU is external.",
+          "analyzer_section": "findings",
+          "check": {
+            "path": "findings",
+            "op": "equals",
+            "value": 35,
+            "detector_filter": "detect_key_matrices[0].estimated_keys"
+          }
+        }
+      ],
+      "incorrect": [
+        {
+          "description": "The bus_topology 'width' field reports the total number of label placements on the sheet rather than the number of unique signal names. In the rev1 schematic, COL_0..COL_6 (7 unique nets) produces width=18 because each global label appears 2-3 times in the schematic. Similarly, ROW_0..ROW_4 (5 unique nets) gives width=20. This is a bug in analyze_bus_topology() at line 4109: `'width': len(members)` where 'members' is the un-deduplicated list of label occurrences. The fix is `len(set(members))` or deduplication before counting.",
+          "analyzer_section": "bus_topology",
+          "check": {
+            "path": "bus_topology.detected_bus_signals[0].width",
+            "op": "equals",
+            "value": 7
+          }
+        }
+      ],
+      "missed": [],
+      "suggestions": [],
+      "related_issues": [],
+      "should_become_assertion": true,
+      "repo": "siderakb/ergo-snm-keyboard",
+      "project": "ErgoSNM_Keyboard_rev1_ErgoSNM_keyboard",
+      "created": "2026-03-24T08:12:59.796693+00:00",
+      "datasheets_used": [],
+      "id": "FND-00002185"
+    }
+  ]
 }

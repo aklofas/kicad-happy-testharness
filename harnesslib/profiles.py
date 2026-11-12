@@ -22,6 +22,8 @@ class Profile:
     # max_rss_mb), and the address-space ceiling each unit runs under (None: no ceiling).
     max_rss_mb: int = 1024
     unit_mem_limit_mb: int | None = None
+    # gerbers run with --full (adds the pin->net `connectivity` list)
+    gerber_full: bool = False
 
 
 PROFILES: dict[str, Profile] = {
@@ -29,8 +31,10 @@ PROFILES: dict[str, Profile] = {
     # schematic is declared because chained jobs are selected from successful
     # schematic records; without it the chained analyzers never run (TH-072)
     # caps above 120 s let a runaway unit (KH-447 LT3514: 53.7 GB) reach the host OOM killer
-    "full-chain": Profile("full-chain", ("schematic", "pcb", "emc", "thermal", "cross_analysis"),
-                          600, True, True, True, True, max_rss_mb=6144, unit_mem_limit_mb=16384),
+    # gerber is the --full lane: no other profile produces gerber connectivity (TH-101)
+    "full-chain": Profile("full-chain", ("schematic", "pcb", "gerber", "emc", "thermal", "cross_analysis"),
+                          600, True, True, True, True, max_rss_mb=6144, unit_mem_limit_mb=16384,
+                          gerber_full=True),
     "hierarchy": Profile("hierarchy", ("schematic",), 300, False, False, True, True,
                          max_rss_mb=6144, unit_mem_limit_mb=16384),
     "spice-offline": Profile("spice-offline", ("spice",), 60, False, True, True, True),

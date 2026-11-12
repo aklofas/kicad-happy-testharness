@@ -144,14 +144,17 @@ def test_failed_extraction_never_reuses_or_simulates(tmp_path):
     stale.parent.mkdir(parents=True); stale.write_text('{"old": true}')
     ext = tmp_path / "ext.py"; ext.write_text("import sys; sys.exit(0)\n")   # exit 0, writes nothing
     sim = tmp_path / "sim.py"; sim.write_text("raise SystemExit('simulator must not run')\n")
+    mf = tmp_path / "manifests" / "o" / "r" / "pcbs.txt"
+    mf.parent.mkdir(parents=True); mf.write_text(f"{tmp_path}/repos/o/r/x.kicad_pcb\n")
     import utils
-    orig = utils.OUTPUTS_DIR
+    orig = utils.OUTPUTS_DIR, utils.MANIFESTS_DIR, utils.REPOS_DIR
     try:
-        utils.OUTPUTS_DIR = tmp_path / "outputs"
+        utils.OUTPUTS_DIR, utils.MANIFESTS_DIR, utils.REPOS_DIR = (
+            tmp_path / "outputs", tmp_path / "manifests", tmp_path / "repos")
         res = run_spice._process_one_spice(sch, sim, spice_dir, 5, [], True, ext,
                                            tmp_path / "work", None, 60)
     finally:
-        utils.OUTPUTS_DIR = orig
+        utils.OUTPUTS_DIR, utils.MANIFESTS_DIR, utils.REPOS_DIR = orig
     _, rc, summary, out_json, _, extracted = res
     assert rc == 1 and summary is None and extracted is False
     assert not stale.exists() and not out_json.exists()

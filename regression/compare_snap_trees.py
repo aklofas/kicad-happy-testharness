@@ -9,7 +9,9 @@ Usage:
 Exit codes: 0 clean, 1 deltas (raw/strict) or residuals/over_budget (budgeted), 2 error
 (missing root, missing/unparseable units beyond the budget's allowance, policy
 violation, bad arguments). The report is written on every exit except bad
-arguments / missing roots.
+arguments / missing roots. A report of more than field_compare.INLINE_DELTAS_MAX deltas
+keeps them in <report stem>.deltas.jsonl beside it (budgeted: also .residuals.jsonl and
+.claims.jsonl), named in the report.
 """
 from __future__ import annotations
 
@@ -21,8 +23,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from regression.field_compare import (  # noqa: E402
-    BudgetError, PolicyError, budgeted_report, compare_trees, load_budget, load_policy,
+    BudgetError, PolicyError, compare_budgeted, compare_trees, load_budget, load_policy, sidecar_path,
 )
+
+# each comparison worker holds one unit's two documents and its deltas; the box is shared
+DEFAULT_JOBS = min(os.cpu_count() or 1, 8)
 
 
 def main(argv=None) -> int:
@@ -32,8 +37,8 @@ def main(argv=None) -> int:
     ap.add_argument("--policy", default="volatile-leaves-v1", help="normalization policy name, or 'none'")
     ap.add_argument("--budget", help="budget record JSON (required for --mode budgeted)")
     ap.add_argument("--key-order", action="store_true", help="also report object key-order differences")
-    ap.add_argument("--jobs", "-j", type=int, default=os.cpu_count() or 1,
-                    help="worker processes for the per-unit comparison (default: cpu_count)")
+    ap.add_argument("--jobs", "-j", type=int, default=DEFAULT_JOBS,
+                    help=f"worker processes for the per-unit comparison (default: {DEFAULT_JOBS})")
     ap.add_argument("-o", "--output", required=True)
     args = ap.parse_args(argv)
 
@@ -62,23 +67,27 @@ def main(argv=None) -> int:
             print(f"error: {e}", file=sys.stderr)
             return 2
 
-    report = compare_trees(a_root, b_root, mode="strict" if args.mode == "budgeted" else args.mode,
-                           policy=policy, key_order=args.key_order, jobs=args.jobs)
+    out = Path(args.output)
+    out.parent.mkdir(parents=True, exist_ok=True)
     if args.mode == "budgeted":
         try:
-            report = budgeted_report(report, budget, a_root, b_root)
+            _, report = compare_budgeted(a_root, b_root, budget, policy=policy, key_order=args.key_order,
+                                         jobs=args.jobs, deltas_path=sidecar_path(out, "deltas"),
+                                         residuals_path=sidecar_path(out, "residuals"),
+                                         claims_path=sidecar_path(out, "claims"))
         except BudgetError as e:
             print(f"error: {e}", file=sys.stderr)
             return 2
+    else:
+        report = compare_trees(a_root, b_root, mode=args.mode, policy=policy, key_order=args.key_order,
+                               jobs=args.jobs, deltas_path=sidecar_path(out, "deltas"))
 
-    out = Path(args.output)
-    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=1, sort_keys=False), encoding="utf-8")
     s = report["summary"]
     print(f"{args.mode}: {report['verdict']} — units {s['units']} compared {s['compared']} "
           f"identical {s['identical']} with_deltas {s['with_deltas']} missing {s['missing']} "
           f"parse_errors {s['parse_errors']} deltas {s['deltas']}"
-          + (f" residuals {len(report['budget']['residuals'])}" if report["budget"] else "")
+          + (f" residuals {report['budget']['residual_count']}" if report["budget"] else "")
           + (f" policy_violations {len(report['policy_violations'])}" if report["policy_violations"] else ""))
     if report["budget"]:
         for cid in report["budget"].get("over_budget", []):

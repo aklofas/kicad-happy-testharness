@@ -64,6 +64,7 @@ def test_truncated_schematic_output_still_pairs_with_its_pcb(tmp_path, monkeypat
     assert not sch_name.endswith(".kicad_sch.json")            # the cap truncated it
     (tmp_path / "manifests" / "o" / "r").mkdir(parents=True)
     (tmp_path / "manifests" / "o" / "r" / "schematics.txt").write_text(f"{sch_in}\n")
+    (tmp_path / "manifests" / "o" / "r" / "pcbs.txt").write_text(f"{pcb_in}\n")
     for kind, name in (("schematic", sch_name), ("pcb", pcb_name)):
         d = tmp_path / "outputs" / kind / "o" / "r"
         d.mkdir(parents=True, exist_ok=True)

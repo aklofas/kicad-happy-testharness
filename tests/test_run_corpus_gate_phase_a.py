@@ -44,6 +44,9 @@ def test_file_cmd_follows_profile():
     sch = gate.file_cmd("schematic", "/wt", "/in/a.kicad_sch", "/o.json", PROFILES["standard"])
     assert "--no-hierarchy" in sch
     assert "--no-hierarchy" not in gate.file_cmd("schematic", "/wt", "/in/a.kicad_sch", "/o.json", PROFILES["hierarchy"])
+    gstd = gate.file_cmd("gerber", "/wt", "/in/gerbers", "/o.json", PROFILES["standard"])
+    assert gstd[1].endswith("skills/kicad/scripts/analyze_gerbers.py") and "--full" not in gstd
+    assert "--full" in gate.file_cmd("gerber", "/wt", "/in/gerbers", "/o.json", PROFILES["full-chain"])
 
 
 def test_phase_a_job_records_both_sides_and_passes(tmp_path):

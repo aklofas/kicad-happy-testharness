@@ -27,34 +27,6 @@
       "created": "2026-03-24T08:12:58.644815+00:00",
       "datasheets_used": [],
       "id": "FND-00002180"
-    },
-    {
-      "analyzer_type": "schematic",
-      "source_file": "schematic_fourier_fourier_fourier-right_fourier-right.sch.json",
-      "status": "promoted",
-      "summary": "'rowA' appears in both row_nets and col_nets simultaneously; switch count overcounted 56 vs actual 39",
-      "correct": [],
-      "incorrect": [
-        {
-          "description": "Fourier right has 39 actual key switches and 4 named row nets (rowA\u2013rowD). The topology detector reports 5 rows and 18 columns but places 'rowA' in both row_nets and col_nets \u2014 a net cannot be both a row and column driver. switches_on_matrix=56 and diodes_on_matrix=56 significantly exceed the 39 actual switches (44% overcount). This is the same topology detection failure as the left half.",
-          "analyzer_section": "findings",
-          "check": {
-            "path": "findings",
-            "op": "less_than",
-            "value": 45,
-            "detector_filter": "detect_key_matrices[0].switches_on_matrix"
-          }
-        }
-      ],
-      "missed": [],
-      "suggestions": [],
-      "related_issues": [],
-      "should_become_assertion": true,
-      "repo": "keebio/fourier",
-      "project": "fourier_fourier-left_fourier-left-top",
-      "created": "2026-03-24T08:12:58.644833+00:00",
-      "datasheets_used": [],
-      "id": "FND-00002181"
     }
   ]
 }

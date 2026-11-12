@@ -355,7 +355,7 @@ def _delta_units(slot_root: str) -> frozenset | None:
         rep = Path(gate) / "field_report_strict.json"
         try:
             doc = json.loads(rep.read_text(encoding="utf-8"))
-            _DELTA_UNITS[gate] = frozenset(d["unit"] for d in doc.get("deltas") or [])
+            _DELTA_UNITS[gate] = frozenset(u["unit"] for u in doc.get("units") or [] if u.get("delta_count"))
         except (OSError, json.JSONDecodeError):
             _DELTA_UNITS[gate] = None
     return _DELTA_UNITS[gate]
@@ -465,8 +465,9 @@ ds = _label_is("DS")
 def summarize(gate_dir: Path, report_name: str = "field_report_strict.json") -> dict:
     rep = json.loads((gate_dir / report_name).read_text(encoding="utf-8"))
     units: dict[tuple[str, str], int] = OrderedDict()
-    for d in rep.get("deltas") or []:
-        units[(d["analyzer"], d["unit"])] = units.get((d["analyzer"], d["unit"]), 0) + 1
+    for u in rep.get("units") or []:
+        if u.get("delta_count"):
+            units[(u["analyzer"], u["unit"])] = u["delta_count"]
     per: dict[str, dict] = {}
     unexplained = []
     for (analyzer, unit), n in units.items():

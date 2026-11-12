@@ -13,7 +13,7 @@
 
 ### Incorrect
 - The board has a circular Edge.Cuts outline (center 130,110; end 165,110; radius=35mm). The bounding box is computed with min_y=max_y=110 giving height=0.0mm and board_height_mm=0.0. The actual board is circular with diameter ~70mm. The DFM metrics also show board_height_mm=0.0. The analyzer needs to account for circular outlines when computing bounding boxes.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 (none)
@@ -37,15 +37,15 @@
 
 ### Incorrect
 - K1 has lib_id='MICROSWITCH', value='RST', and footprint 'nixiemisc-B3U-1100P(M)' which is an Omron tactile microswitch. The analyzer typed it as 'relay', which is wrong. It should be classified as 'other' or a dedicated 'switch' type. This causes the 'relay' count in statistics to be 1 instead of 0.
-  (signal_analysis)
+  (findings)
 - The AO4294 is a complementary dual MOSFET (one N-channel + one P-channel in SO8). The analyzer reports is_pchannel=false, missing the P-channel half. Additionally gate_net and source_net appear to be the same net, suggesting the pin-to-role mapping may be off for this dual-FET package.
-  (signal_analysis)
+  (findings)
 - U8 (LM3478SOIC8) is a boost (step-up) controller IC. The power_regulators entry lists topology='unknown'. The LM3478 is a well-known boost controller and should be detectable as such from its lib_id or value string.
-  (signal_analysis)
+  (findings)
 
 ### Missed
 - Rsen1 is a 40mΩ shunt resistor in an R_2010 package, used in the LM3478-based high-voltage boost supply. The current_sense detector returned an empty list. This is a real current sensing element that should be detected.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)
@@ -67,7 +67,7 @@
 
 ### Missed
 - OTC-gerbers.json, OTC-gerbers_v2.json, and OTC-gerbers_v3.json were listed for review but no gerber output directory exists at results/outputs/gerber/OTC/. Either the gerbers were never generated or the repo has no gerber files.
-  (signal_analysis)
+  (findings)
 
 ### Suggestions
 (none)

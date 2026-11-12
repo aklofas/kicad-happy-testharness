@@ -25,9 +25,12 @@ from __future__ import annotations
 import copy
 import hashlib
 import importlib
+import itertools
 import json
 import os
 import re
+import shutil
+import tempfile
 from collections import Counter, OrderedDict
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -549,41 +552,166 @@ def _root_forms(root: Path) -> tuple[str, ...]:
     return (given,) if given == resolved else (given, resolved)
 
 
-def _compare_unit(task: tuple) -> tuple[dict, list[Delta], list[str], bool]:
-    """One unit of compare_trees (module-level so ProcessPoolExecutor can pickle it)."""
+# A report keeps its delta lists inline up to this many deltas; past it (when the caller gave
+# sidecar paths) they go to JSONL sidecars named in the report.
+INLINE_DELTAS_MAX = 200_000
+# Units queued per worker: workers never wait on the parent, and finished results stay small
+# (each worker spools its unit's deltas to disk and returns counts and file ranges only).
+_IN_FLIGHT_PER_JOB = 4
+
+# Per-process state of a comparison worker: spool dir, open spool files, budget classes.
+_WORKER: dict = {}
+
+
+def _init_worker(spool_dir: str, budget: dict | None) -> None:
+    _close_worker()
+    _WORKER["spool"] = Path(spool_dir)
+    _WORKER["files"] = {}
+    if budget is not None:
+        _WORKER["classes"] = budget["classes"]
+        _WORKER["preds"] = _predicates(budget)
+
+
+def _close_worker() -> None:
+    for fh in _WORKER.get("files", {}).values():
+        fh.close()
+    _WORKER.clear()
+
+
+def _spool(kind: str, lines: list[str]) -> tuple[str, int, int] | None:
+    """Append lines to this process's spool file of ``kind``; returns (file name, offset, length)."""
+    if not lines:
+        return None
+    fh = _WORKER["files"].get(kind)
+    if fh is None:
+        fh = _WORKER["files"][kind] = open(_WORKER["spool"] / f"{os.getpid()}.{kind}", "ab")
+    off = fh.tell()
+    data = "".join(lines).encode("utf-8")
+    fh.write(data)
+    fh.flush()
+    return fh.name.rsplit("/", 1)[-1], off, len(data)
+
+
+def sidecar_path(report_path: Path, kind: str) -> Path:
+    """``<report stem>.<kind>.jsonl`` beside a report (kind: deltas, residuals, claims)."""
+    p = Path(report_path)
+    return p.with_name(f"{p.stem}.{kind}.jsonl")
+
+
+def iter_report_deltas(report: dict, report_dir: Path):
+    """The delta dicts of a field report, inline or from its ``deltas_file`` sidecar
+    (a name relative to the report's directory)."""
+    if report.get("deltas") is not None:
+        yield from report["deltas"]
+    elif report.get("deltas_file"):
+        with open(Path(report_dir) / report["deltas_file"], encoding="utf-8") as fh:
+            for line in fh:
+                if line.strip():
+                    yield json.loads(line)
+
+
+def _compare_unit(task: tuple) -> tuple:
+    """One unit of the comparison (module-level so ProcessPoolExecutor can pickle it):
+    (rec, violations, run_id_differs, info). The unit's deltas go to the worker's spool;
+    ``info`` holds their count, per-op counts, spool ranges and, with a budget, the
+    per-class claim counts and residual count."""
     unit, analyzer, pa, pb, rec, mode, policy, key_order, prefixes = task
+    viol: list[str] = []
+    run_id_differs = False
+    docs = None
     if mode == "raw":
         ds = compare_raw_unit(pa.parent, pb.parent, unit=unit, analyzer=analyzer)
-        run_id_differs = False
         if any(d.path == "/snap.json" and d.op == "bytes" for d in ds):
             run_id_differs = _run_id_of(pa) != _run_id_of(pb)
-        return rec, ds, [], run_id_differs
-    docs = []
-    for side, p in (("a", pa), ("b", pb)):
+    else:
+        docs = []
+        for side, p in (("a", pa), ("b", pb)):
+            try:
+                docs.append(json.loads(p.read_text(encoding="utf-8")))
+            except (json.JSONDecodeError, OSError, UnicodeDecodeError):
+                return dict(rec, status=f"parse_error_{side}"), [], False, None
+        ds, viol = compare_strict(docs[0], docs[1], policy, unit=unit, analyzer=analyzer,
+                                  key_order=key_order, root_prefixes=prefixes)
+    lines = [json.dumps(d.to_json()) + "\n" for d in ds]
+    info = {"n": len(ds), "by_op": dict(Counter(d.op for d in ds)), "deltas": _spool("deltas", lines)}
+    if "classes" in _WORKER and ds:
+        claims = _claim_indices(ds, _WORKER["classes"], _WORKER["preds"], {unit: (docs[0], docs[1])})
+        info["claims"] = _spool("claims", [json.dumps(c) + "\n" for c in claims])
+        info["residuals"] = _spool("residuals", [ln for ln, c in zip(lines, claims) if not c])
+        info["class_counts"] = dict(Counter(i for c in claims for i in c))
+        info["n_resid"] = sum(1 for c in claims if not c)
+    return rec, viol, run_id_differs, info
+
+
+def _results(work: list, jobs: int, spool: Path, budget: dict | None):
+    """(index, _compare_unit result) for every task, in completion order. With jobs > 1, a
+    process pool holding at most jobs * _IN_FLIGHT_PER_JOB unfinished units."""
+    if jobs <= 1 or len(work) <= 1:
+        _init_worker(str(spool), budget)
         try:
-            docs.append(json.loads(p.read_text(encoding="utf-8")))
-        except (json.JSONDecodeError, OSError, UnicodeDecodeError):
-            return dict(rec, status=f"parse_error_{side}"), [], [], False
-    ds, viol = compare_strict(docs[0], docs[1], policy, unit=unit, analyzer=analyzer,
-                              key_order=key_order, root_prefixes=prefixes)
-    return rec, ds, viol, False
+            for i, t in enumerate(work):
+                yield i, _compare_unit(t)
+        finally:
+            _close_worker()
+        return
+    from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, wait
+    with ProcessPoolExecutor(max_workers=jobs, initializer=_init_worker, initargs=(str(spool), budget)) as pool:
+        it = iter(enumerate(work))
+        pending: dict = {}
+
+        def fill():
+            for i, t in itertools.islice(it, jobs * _IN_FLIGHT_PER_JOB - len(pending)):
+                pending[pool.submit(_compare_unit, t)] = i
+        fill()
+        while pending:
+            done, _ = wait(pending, return_when=FIRST_COMPLETED)
+            for f in done:
+                yield pending.pop(f), f.result()
+            fill()
 
 
-def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | None,
-                  key_order: bool = False,
-                  root_prefixes: tuple | None = None, jobs: int = 1) -> dict:
-    """Compare two snap trees. ``root_prefixes`` = (a, b), each a string or a sequence of
-    strings; by default each side's as-given and resolved root forms. ``jobs`` > 1 runs the
-    per-unit comparisons in a process pool; results are reassembled in sorted unit order,
-    so the report is byte-identical for any ``jobs``."""
+class _SpoolReader:
+    def __init__(self, spool: Path):
+        self.spool, self.files = spool, {}
+
+    def read(self, ref) -> bytes:
+        if ref is None:
+            return b""
+        name, off, n = ref
+        fh = self.files.get(name)
+        if fh is None:
+            fh = self.files[name] = open(self.spool / name, "rb")
+        fh.seek(off)
+        return fh.read(n)
+
+    def lines(self, ref) -> list:
+        return [json.loads(x) for x in self.read(ref).splitlines()]
+
+    def close(self) -> None:
+        for fh in self.files.values():
+            fh.close()
+
+
+def _report_header(a_root: Path, b_root: Path, mode: str, policy: Policy | None, key_order: bool) -> dict:
+    return {"report_version": 1, "mode": mode, "policy": policy.name if policy else None,
+            "key_order": key_order, "a_root": str(a_root), "b_root": str(b_root),
+            "identity": {"a": _manifest_identity(a_root), "b": _manifest_identity(b_root)}}
+
+
+def _compare(a_root: Path, b_root: Path, *, mode: str, policy: Policy | None, key_order: bool,
+             root_prefixes: tuple | None, jobs: int, deltas_path: Path | None,
+             tally: "_BudgetTally | None" = None, residuals_path: Path | None = None,
+             claims_path: Path | None = None) -> dict:
+    """The comparison pass. Workers spool each unit's deltas (and, with ``tally``, its budget
+    claims) to a scratch dir and return counts; the parent reassembles everything in sorted
+    unit order, so the report is byte-identical for any ``jobs``. Inline when there is no
+    ``deltas_path`` or at most INLINE_DELTAS_MAX deltas, else copied to the sidecars."""
     if mode not in ("raw", "strict", "budgeted"):
         raise ValueError(f"mode must be raw|strict|budgeted, got {mode!r}")
     prefixes = root_prefixes or (_root_forms(a_root), _root_forms(b_root))
     a_root, b_root = Path(a_root).resolve(), Path(b_root).resolve()
     a_units = {u: (an, p) for u, an, p in iter_units(a_root)}
     b_units = {u: (an, p) for u, an, p in iter_units(b_root)}
-    units_out, deltas, violations = [], [], []
-    counts = Counter()
     tasks = []
     for unit in sorted(set(a_units) | set(b_units)):
         analyzer = (a_units.get(unit) or b_units.get(unit))[0]
@@ -597,52 +725,91 @@ def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | Non
             continue
         tasks.append((unit, analyzer, a_units[unit][1], b_units[unit][1], rec, mode, policy, key_order, prefixes))
     work = [t for t in tasks if isinstance(t, tuple)]
-    if jobs > 1 and len(work) > 1:
-        from concurrent.futures import ProcessPoolExecutor
-        with ProcessPoolExecutor(max_workers=jobs) as pool:
-            done = iter(list(pool.map(_compare_unit, work, chunksize=max(1, len(work) // (jobs * 8)))))
-    else:
-        done = iter([_compare_unit(t) for t in work])
-    for t in tasks:
-        if isinstance(t, dict):
-            counts["missing"] += 1
-            units_out.append(t)
-            continue
-        rec, ds, viol, rid = next(done)
-        if rec["status"] != "compared":
-            counts["parse_errors"] += 1
+    for p in (deltas_path, residuals_path, claims_path):
+        if p is not None:
+            Path(p).unlink(missing_ok=True)    # a stale sidecar must not outlive an inline report
+    spool = Path(tempfile.mkdtemp(prefix=".field_compare-", dir=Path(deltas_path).parent if deltas_path else None))
+    reader = _SpoolReader(spool)
+    try:
+        results: list = [None] * len(work)
+        for i, res in _results(work, jobs, spool, tally.budget if tally is not None else None):
+            results[i] = res
+        units_out, violations, kept = [], [], []
+        counts, by_op, by_an = Counter(), Counter(), Counter()
+        done = iter(results)
+        for t in tasks:
+            if isinstance(t, dict):
+                counts["missing"] += 1
+                units_out.append(t)
+                continue
+            rec, viol, rid, info = next(done)
             units_out.append(rec)
-            continue
-        violations.extend(viol)
-        rec["delta_count"] = len(ds)
-        counts["compared"] += 1
-        counts["identical" if not ds else "with_deltas"] += 1
-        counts["run_id_differs"] += int(rid)
-        deltas.extend(ds)
-        units_out.append(rec)
-    by_op = Counter(d.op for d in deltas)
-    by_an = Counter(d.analyzer for d in deltas)
+            if rec["status"] != "compared":
+                counts["parse_errors"] += 1
+                continue
+            violations.extend(viol)
+            rec["delta_count"] = info["n"]
+            counts["compared"] += 1
+            counts["identical" if not info["n"] else "with_deltas"] += 1
+            counts["run_id_differs"] += int(rid)
+            counts["deltas"] += info["n"]
+            by_op.update(info["by_op"])
+            if info["n"]:
+                by_an[rec["analyzer"]] += info["n"]
+                kept.append((rec, info))
+        inline = deltas_path is None or counts["deltas"] <= INLINE_DELTAS_MAX
+        deltas = None
+        if inline:
+            deltas = []
+            for rec, info in kept:
+                ds = reader.lines(info["deltas"])
+                deltas.extend(ds)
+                if tally is not None:
+                    for d, idx in zip(ds, reader.lines(info["claims"])):
+                        tally.add(d, idx)
+        else:
+            with open(deltas_path, "wb") as out:
+                for _, info in kept:
+                    out.write(reader.read(info["deltas"]))
+            if tally is not None:
+                tally.spill(kept, reader, residuals_path, claims_path)
+    finally:
+        reader.close()
+        shutil.rmtree(spool, ignore_errors=True)
     summary = {"units": len(units_out), "compared": counts["compared"], "identical": counts["identical"],
                "with_deltas": counts["with_deltas"], "missing": counts["missing"],
-               "parse_errors": counts["parse_errors"], "deltas": len(deltas),
+               "parse_errors": counts["parse_errors"], "deltas": counts["deltas"],
                "by_op": dict(sorted(by_op.items())), "by_analyzer": dict(sorted(by_an.items()))}
     if mode == "raw":
         summary["run_id_differs"] = counts["run_id_differs"]
     # zero compared units is no evidence of equality (ruling R3)
     if counts["missing"] or counts["parse_errors"] or violations or not counts["compared"]:
         verdict = "error"
-    elif deltas:
+    elif counts["deltas"]:
         verdict = "deltas"
     else:
         verdict = "clean"
-    report = {"report_version": 1, "mode": mode, "policy": policy.name if policy else None,
-              "key_order": key_order, "a_root": str(a_root), "b_root": str(b_root),
-              "identity": {"a": _manifest_identity(a_root), "b": _manifest_identity(b_root)},
-              "units": units_out, "deltas": [d.to_json() for d in deltas],
+    report = {**_report_header(a_root, b_root, mode, policy, key_order),
+              "units": units_out, "deltas": deltas,
+              "deltas_file": None if inline else Path(deltas_path).name,
               "policy_violations": violations, "summary": summary, "budget": None, "verdict": verdict}
     if mode == "raw":
         report["note"] = RAW_NOTE
     return report
+
+
+def compare_trees(a_root: Path, b_root: Path, *, mode: str, policy: Policy | None,
+                  key_order: bool = False,
+                  root_prefixes: tuple | None = None, jobs: int = 1,
+                  deltas_path: Path | None = None) -> dict:
+    """Compare two snap trees. ``root_prefixes`` = (a, b), each a string or a sequence of
+    strings; by default each side's as-given and resolved root forms. ``jobs`` > 1 runs the
+    per-unit comparisons in a process pool; results are reassembled in sorted unit order,
+    so the report is byte-identical for any ``jobs``. With ``deltas_path``, a report of more
+    than INLINE_DELTAS_MAX deltas holds ``deltas: null`` and names that JSONL file in
+    ``deltas_file`` (read it back with iter_report_deltas)."""
+    return _compare(a_root, b_root, mode=mode, policy=policy, key_order=key_order,
+                    root_prefixes=root_prefixes, jobs=jobs, deltas_path=deltas_path)
 
 
 # ---- budgets ----------------------------------------------------------------
@@ -812,48 +979,96 @@ def _class_claims(cls: dict, delta: Delta, docs, pred) -> bool:
     return True
 
 
+def _predicates(budget: dict) -> list:
+    return [_load_predicate(c["predicate"], str(c.get("id"))) if c.get("predicate") else None
+            for c in budget["classes"]]
+
+
+def _claim_indices(deltas: list[Delta], classes: list, preds: list, docs) -> list[list[int]]:
+    """Per delta, the indices of every class whose selectors ALL match it."""
+    return [[i for i, c in enumerate(classes) if _class_claims(c, d, docs, preds[i])] for d in deltas]
+
+
+class _BudgetTally:
+    """Claims accumulated delta by delta (``add``) or unit by unit (``spill``); unit bounds and
+    magnitudes are judged on the totals, so feeding it one unit at a time gives the same
+    result as one call over every delta."""
+
+    def __init__(self, budget: dict):
+        self.budget = budget
+        n = len(budget["classes"])
+        self.counts = [0] * n
+        self.units: list[set] = [set() for _ in range(n)]
+        self.claimed: list[list] | None = [[] for _ in range(n)]
+        self.residuals: list | None = []
+        self.residual_count = 0
+        self.claims_file = self.residuals_file = None
+
+    def add(self, delta: dict, idx: list[int]) -> None:
+        for i in idx:
+            self.counts[i] += 1
+            self.units[i].add(delta["unit"])
+            self.claimed[i].append(delta)
+        if not idx:
+            self.residuals.append(delta)
+            self.residual_count += 1
+
+    def spill(self, kept: list, reader, residuals_path: Path, claims_path: Path) -> None:
+        """Per-class lists dropped (``claimed: null``); residual deltas copied to
+        ``residuals_path`` and per-unit claim rows written to ``claims_path``, in unit order."""
+        ids = [c["id"] for c in self.budget["classes"]]
+        self.claimed = self.residuals = None
+        with open(residuals_path, "wb") as res, open(claims_path, "w", encoding="utf-8") as rows:
+            for rec, info in kept:
+                for i, n in info["class_counts"].items():
+                    self.counts[i] += n
+                    self.units[i].add(rec["unit"])
+                self.residual_count += info["n_resid"]
+                res.write(reader.read(info["residuals"]))
+                rows.write(json.dumps({"unit": rec["unit"], "analyzer": rec["analyzer"], "deltas": info["n"],
+                                       "claimed": {ids[i]: n for i, n in sorted(info["class_counts"].items())},
+                                       "residuals": info["n_resid"]}) + "\n")
+        self.residuals_file, self.claims_file = Path(residuals_path).name, Path(claims_path).name
+
+    def result(self, missing_units: int = 0) -> dict:
+        budget, classes = self.budget, self.budget["classes"]
+        violations, bound_status, over_budget = [], {}, []
+        for i, c in enumerate(classes):
+            bound = (c.get("unit_bound") or {}).get("max_units")
+            n_units = len(self.units[i])
+            ok = bound is None or n_units <= bound
+            mag = c.get("expected_magnitude")
+            n_deltas = self.counts[i]
+            over = mag is not None and n_deltas > 2 * mag
+            bound_status[c["id"]] = {"max_units": bound, "units": n_units, "ok": ok,
+                                     "expected_magnitude": mag, "deltas": n_deltas, "over_budget": over}
+            if not ok:
+                violations.append(f"class {c['id']} claimed {n_units} units > max_units {bound}")
+            if over:
+                over_budget.append(c["id"])
+                violations.append(f"class {c['id']} claimed {n_deltas} deltas > 2x expected_magnitude {mag} (over_budget)")
+        allowed_missing = int(budget.get("unexplained_missing_units_allowed", 0))
+        if missing_units > allowed_missing:
+            violations.append(f"{missing_units} missing units > unexplained_missing_units_allowed {allowed_missing}")
+        clean = self.residual_count <= int(budget.get("unexplained_deltas_allowed", 0)) and not violations
+        return {"budget_id": budget["budget_id"], "clean": clean,
+                "claimed": None if self.claimed is None else
+                {c["id"]: self.claimed[i] for i, c in enumerate(classes)},
+                "claimed_counts": {c["id"]: self.counts[i] for i, c in enumerate(classes) if self.counts[i]},
+                "claimed_units": {c["id"]: len(self.units[i]) for i, c in enumerate(classes) if self.counts[i]},
+                "bound_status": bound_status, "over_budget": sorted(over_budget),
+                "residuals": self.residuals, "violations": violations,
+                "residual_count": self.residual_count, "claims_file": self.claims_file,
+                "residuals_file": self.residuals_file}
+
+
 def evaluate_budget(deltas: list[Delta], budget: dict, *, docs: dict | None = None,
                     missing_units: int = 0) -> dict:
     """Classify deltas against budget classes. A delta is claimed iff ALL selectors of some class match."""
-    classes = budget["classes"]
-    preds = [_load_predicate(c["predicate"], str(c.get("id"))) if c.get("predicate") else None for c in classes]
-    claimed: list[list[Delta]] = [[] for _ in classes]
-    residuals: list[Delta] = []
-    for d in deltas:
-        hit = False
-        for i, c in enumerate(classes):
-            if _class_claims(c, d, docs, preds[i]):
-                claimed[i].append(d)
-                hit = True
-        if not hit:
-            residuals.append(d)
-    violations = []
-    bound_status = {}
-    over_budget = []
-    for i, c in enumerate(classes):
-        bound = (c.get("unit_bound") or {}).get("max_units")
-        n_units = len({d.unit for d in claimed[i]})
-        ok = bound is None or n_units <= bound
-        mag = c.get("expected_magnitude")
-        n_deltas = len(claimed[i])
-        over = mag is not None and n_deltas > 2 * mag
-        bound_status[c["id"]] = {"max_units": bound, "units": n_units, "ok": ok,
-                                 "expected_magnitude": mag, "deltas": n_deltas, "over_budget": over}
-        if not ok:
-            violations.append(f"class {c['id']} claimed {n_units} units > max_units {bound}")
-        if over:
-            over_budget.append(c["id"])
-            violations.append(f"class {c['id']} claimed {n_deltas} deltas > 2x expected_magnitude {mag} (over_budget)")
-    allowed_missing = int(budget.get("unexplained_missing_units_allowed", 0))
-    if missing_units > allowed_missing:
-        violations.append(f"{missing_units} missing units > unexplained_missing_units_allowed {allowed_missing}")
-    clean = len(residuals) <= int(budget.get("unexplained_deltas_allowed", 0)) and not violations
-    return {"budget_id": budget["budget_id"], "clean": clean,
-            "claimed": {c["id"]: [d.to_json() for d in claimed[i]] for i, c in enumerate(classes)},
-            "claimed_counts": {c["id"]: len(claimed[i]) for i, c in enumerate(classes) if claimed[i]},
-            "claimed_units": {c["id"]: len({d.unit for d in claimed[i]}) for i, c in enumerate(classes) if claimed[i]},
-            "bound_status": bound_status, "over_budget": sorted(over_budget),
-            "residuals": [d.to_json() for d in residuals], "violations": violations}
+    tally = _BudgetTally(budget)
+    for d, idx in zip(deltas, _claim_indices(deltas, budget["classes"], _predicates(budget), docs)):
+        tally.add(d.to_json(), idx)
+    return tally.result(missing_units)
 
 
 class _LazyDocs:
@@ -934,14 +1149,11 @@ def check_budget_identity(budget: dict, strict_report: dict) -> None:
                                   f"manifest {slot} sha {have!r}")
 
 
-def budgeted_report(strict_report: dict, budget: dict, a_root: Path, b_root: Path) -> dict:
-    """The one budgeted field report (CLI and run_modes share it): identity check, docs for
-    units with deltas, evaluate_budget, verdict with precedence
+def _budgeted(strict_report: dict, budget: dict, tally: _BudgetTally) -> dict:
+    """Budgeted report from a strict report and its tally; verdict precedence
     error > over_budget > residuals > clean."""
-    check_budget_identity(budget, strict_report)
     s = strict_report["summary"]
-    ev = evaluate_budget([Delta(**d) for d in strict_report["deltas"]], budget,
-                         docs=docs_for_report(strict_report, a_root, b_root), missing_units=s["missing"])
+    ev = tally.result(missing_units=s["missing"])
     missing_allowed = int(budget.get("unexplained_missing_units_allowed", 0))
     hard_error = s["missing"] > missing_allowed or s["parse_errors"] > 0 or bool(strict_report["policy_violations"])
     if hard_error:
@@ -951,6 +1163,46 @@ def budgeted_report(strict_report: dict, budget: dict, a_root: Path, b_root: Pat
     else:
         verdict = "clean" if ev["clean"] else "residuals"
     return dict(strict_report, mode="budgeted", budget=ev, verdict=verdict)
+
+
+def budgeted_report(strict_report: dict, budget: dict, a_root: Path, b_root: Path) -> dict:
+    """Budgeted field report over a finished strict report with inline deltas: identity check,
+    docs for units with deltas, the same per-delta claims as compare_budgeted."""
+    check_budget_identity(budget, strict_report)
+    if strict_report.get("deltas") is None:
+        raise ValueError("strict report keeps its deltas in a sidecar; use compare_budgeted "
+                         "(compare_snap_trees.py --mode budgeted) to budget it")
+    tally = _BudgetTally(budget)
+    classes, preds = budget["classes"], _predicates(budget)
+    docs = docs_for_report(strict_report, a_root, b_root)
+    for d in strict_report["deltas"]:
+        tally.add(d, _claim_indices([Delta(**d)], classes, preds, docs)[0])
+    return _budgeted(strict_report, budget, tally)
+
+
+def compare_budgeted(a_root: Path, b_root: Path, budget: dict, *, policy: Policy | None,
+                     key_order: bool = False, root_prefixes: tuple | None = None, jobs: int = 1,
+                     deltas_path: Path | None = None, residuals_path: Path | None = None,
+                     claims_path: Path | None = None, resolved_units=()) -> tuple[dict, dict]:
+    """(strict report, budgeted report) from ONE pass: each worker classifies its unit's
+    deltas against the budget while it holds the unit's documents, so no delta list is
+    rebuilt. Unit bounds and magnitudes are judged on the totals. ``resolved_units`` are
+    exempt from the missing count (see _exempt_resolved). A budget whose policy/SHAs
+    contradict the run, or an unloadable predicate, raises BudgetError before any unit is
+    compared. Past INLINE_DELTAS_MAX deltas (with sidecar paths) the budget section holds
+    ``claimed: null`` and ``residuals: null`` and names ``residuals_file`` / ``claims_file``
+    (per-unit rows ``{unit, analyzer, deltas, claimed: {class: n}, residuals}``)."""
+    if deltas_path is not None and (residuals_path is None or claims_path is None):
+        raise ValueError("deltas_path needs residuals_path and claims_path")
+    check_budget_identity(budget, _report_header(Path(a_root).resolve(), Path(b_root).resolve(),
+                                                 "strict", policy, key_order))
+    _predicates(budget)
+    tally = _BudgetTally(budget)
+    strict = _compare(a_root, b_root, mode="strict", policy=policy, key_order=key_order,
+                      root_prefixes=root_prefixes, jobs=jobs, deltas_path=deltas_path, tally=tally,
+                      residuals_path=residuals_path, claims_path=claims_path)
+    strict = _exempt_resolved(strict, set(resolved_units))
+    return strict, _budgeted(strict, budget, tally)
 
 
 def _slots(gate_root: Path) -> tuple[Path, Path]:
@@ -978,7 +1230,7 @@ def _exempt_resolved(report: dict, resolved_units) -> dict:
     if s["missing"] or s["parse_errors"] or report["policy_violations"] or not s["compared"]:
         report["verdict"] = "error"
     else:
-        report["verdict"] = "deltas" if report["deltas"] else "clean"
+        report["verdict"] = "deltas" if s["deltas"] else "clean"
     return report
 
 
@@ -992,11 +1244,26 @@ def run_modes(gate_root: Path, *, budget_path: Path | None = None, key_order: bo
     g = Path(gate_root)
     a_root, b_root = _slots(g)
     policy = load_policy(policy_name)
+    budget = load_budget(Path(budget_path)) if budget_path is not None else None
     out: dict = {"policy": policy.name, "key_order": key_order}
 
-    raw = compare_trees(a_root, b_root, mode="raw", policy=None, jobs=jobs)
-    strict = _exempt_resolved(compare_trees(a_root, b_root, mode="strict", policy=policy,
-                                            key_order=key_order, jobs=jobs), set(resolved_units))
+    def side(name, kind):
+        return sidecar_path(g / f"field_report_{name}.json", kind) if write_reports else None
+
+    if write_reports:
+        for name in ("raw", "strict", "budgeted"):     # budget predicates may read a strict report
+            (g / f"field_report_{name}.json").unlink(missing_ok=True)
+    if budget is None:
+        strict = _exempt_resolved(compare_trees(a_root, b_root, mode="strict", policy=policy, key_order=key_order,
+                                                jobs=jobs, deltas_path=side("strict", "deltas")),
+                                  set(resolved_units))
+        budgeted = None
+    else:
+        strict, budgeted = compare_budgeted(a_root, b_root, budget, policy=policy, key_order=key_order, jobs=jobs,
+                                            deltas_path=side("strict", "deltas"),
+                                            residuals_path=side("budgeted", "residuals"),
+                                            claims_path=side("budgeted", "claims"), resolved_units=resolved_units)
+    raw = compare_trees(a_root, b_root, mode="raw", policy=None, jobs=jobs, deltas_path=side("raw", "deltas"))
     if write_reports:
         (g / "field_report_raw.json").write_text(json.dumps(raw, indent=1), encoding="utf-8")
         (g / "field_report_strict.json").write_text(json.dumps(strict, indent=1), encoding="utf-8")
@@ -1004,18 +1271,16 @@ def run_modes(gate_root: Path, *, budget_path: Path | None = None, key_order: bo
     out["strict"] = {"verdict": strict["verdict"], "report": "field_report_strict.json",
                      "summary": strict["summary"], "policy_violations": len(strict["policy_violations"])}
 
-    if budget_path is None:
+    if budgeted is None:
         out["budgeted"] = {"verdict": "n/a"}
         out["strict_field_clean"] = strict["verdict"] == "clean"
         return out
 
-    budget = load_budget(Path(budget_path))
-    budgeted = budgeted_report(strict, budget, a_root, b_root)
     ev, verdict = budgeted["budget"], budgeted["verdict"]
     if write_reports:
         (g / "field_report_budgeted.json").write_text(json.dumps(budgeted, indent=1), encoding="utf-8")
     out["budgeted"] = {"verdict": verdict, "report": "field_report_budgeted.json", "budget_id": budget["budget_id"],
-                       "claimed_counts": ev["claimed_counts"], "residuals": len(ev["residuals"]),
+                       "claimed_counts": ev["claimed_counts"], "residuals": ev["residual_count"],
                        "violations": len(ev["violations"]), "over_budget": ev["over_budget"]}
     out["strict_field_clean"] = verdict == "clean"
     return out

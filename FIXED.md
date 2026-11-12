@@ -11,6 +11,129 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-11 — TH-110: `audit_constants.py` gives a new constant the lowest free `CONST-NNN`, so a retired id is reused for an unrelated constant
+
+**Severity:** LOW (no tracked doc cites the reused ids today; registry history and any old `CONST-NNN` reference then point at two different constants)
+**File:** `validate/audit_constants.py:338-349` `_next_id` (gap-filling `while n in existing`), called from `update_registry` `:555`
+**Discovered:** 2026-11-07, registry rescan at product `f53d107e` (v3.0.2 Wave 11b-1 gate)
+
+**Symptom:** the rescan retired 8 constants and added 19; six of the new ones took old ids: `CONST-301` `_ISOLATION_RAIL_EVIDENCE`, `CONST-388` `_LTC23_RESOLUTION_SUFFIX`, `CONST-560` `radio_words`, `CONST-690` `_CONNECTOR_WORDS`, `CONST-691` `_DEVICE_PASSIVE_SYMBOL`, `CONST-969` `_USB_SIGNAL_NAME`. `CONST-560` belonged to a different constant in earlier registries (`git log -S'"CONST-560"' -- reference/constants_registry.json`).
+
+**Fix direction:** keep a high-water mark (`next_id` in the registry header, or max id + 1) and never reuse a number, as KH/TH ids are never reused.
+
+- **Root cause:** `_next_id` took the lowest free `CONST-NNN`, and retired constants are deleted from the registry, so a retired id went to an unrelated new constant (CONST-301/388/560/690/691/969 at the f53d107 rescan).
+- **Fix:** the registry stores a `next_id` high-water mark, which `update_registry` records before retiring entries; ids come from the larger of the mark and the highest current id + 1. A registry without the field starts at its highest id + 1 = CONST-1018, which is also the highest id in the registry's git history (45 versions). The next rescan adds the field.
+- **Verification:** new `tests/test_audit_constants_ids.py` (gap not refilled, retired highest id not reissued, stored mark honoured, ids distinct within one scan) failed 4 of 5 before the fix and passes after; the existing audit_constants tests pass.
+
+## 2026-11-11 — TH-060: `test_kh393_power_rails_threaded` premise is stale — "P1_VBUS is not classified power by name heuristics" no longer holds
+
+**Severity:** LOW (one explicit strict xfail; the `--power-rails` override half
+of the test still holds)
+**File:** `tests/test_kh392_kh393_gp001_power.py::test_kh393_power_rails_threaded`
+**Discovered:** 2026-10-14, H0 plan 1 (honest collection). The first assertion
+became false when PR #44 (2026-09-13) broadened `is_power_net_name`. Never
+noticed because the file had no `__main__` block (TH-052 phantom pass). Now
+`xfail(strict=True)` citing this issue (commit a81858a).
+
+**Fix direction:** split the test: keep the override assertions; pick a fixture
+net the heuristics do not match for the negative half; then drop the xfail.
+
+- **Root cause:** PR #44 broadened `is_power_net_name`, so P1_VBUS became power by name and the test's no-override half no longer held.
+- **Fix:** split into `test_kh393_power_rails_override` (P1_VBUS override assertions) and `test_kh393_power_rails_threaded` on SENSE1, a net the heuristics do not match (at product 6138b12: absent without an override, `source: cli` with `--power-rails SENSE1`, and dropped from the GP-001 samples). Strict xfail removed.
+- **Verification:** the file runs 5 passed, 0 xfailed.
+
+## 2026-11-11 — TH-061: `tests/test_datasheet_db_cli.py` plants and deletes a file under `HARNESS_DIR/repos/.test_fallback/` — a write into the corpus checkout tree
+
+**Severity:** LOW (corpus inputs must be immutable; the fixture cleans up after
+itself, but a crash between plant and delete leaves a stray dir in `repos/`)
+**File:** `tests/test_datasheet_db_cli.py` (~lines 481-527, the `.test_fallback`
+fixture)
+**Discovered:** 2026-10-14, H0 plan 1 Task 4 corpus-marker audit.
+
+**Fix direction:** point the fallback fixture at `tmp_path` and monkeypatch the
+CLI's repos root, so no test writes into `repos/`.
+
+- **Root cause:** `validate/datasheet_db/cli.py` `_try_found_in_fallback` resolved `repo` found_in refs against a hard-coded `HARNESS_DIR / "repos"` instead of `storage.REPOS_DIR` (the root `insert --scan-repos` records refs against, which follows `KICAD_HAPPY_TESTHARNESS_DATA_DIR` / `DATASHEET_DB_REPOS_DIR`), so the test had to plant a file in the live corpus tree.
+- **Fix:** the fallback uses `REPOS_DIR`; the test plants under a tmp tree, redirects `storage.REPOS_DIR`, and asserts `HARNESS_DIR/repos/.test_fallback` never appears. The `preserved` branch still reads `HARNESS_DIR / "datasheets_from_repos"` (out of scope).
+- **Verification:** the rewritten test failed against the old CLI and passes after; 115 datasheet_db tests and `test_collection_policy` pass.
+
+## 2026-11-11 — TH-068: fixture-lane A/A cannot strict-verify chained envelopes after the basetemp tree is moved
+
+**Severity:** LOW (the corpus lanes prove the chained analyzers strict-clean at scale; only the offline fixture lane is affected)
+**File:** `tools/aa_run.py` (`snapify`, `--fixture-trees`), RUNBOOK/plan-6 Task 7 Step 4 recipe
+**Discovered:** 2026-10-15, H0 plan 6 Task 7 Step 4
+
+**Symptom:** emc / thermal / cross_analysis envelopes embed ABSOLUTE upstream paths
+(`inputs.source_hashes` keys, `upstream_artifacts[].path`) under the pytest basetemp.
+The recipe runs the contract suite twice at the same basetemp and moves the tree aside
+between runs, so verify-then-mask (`sha256_of` / `strip_root_prefix_keys`) cannot read
+the upstream file → "linked file missing", 36 violations / 18 source_hashes deltas on the
+9 chained units; the 12 non-chained units are identical.
+
+**Fix direction:** `snapify` re-roots chained upstream references into the snapified
+tree (or the recipe keeps both basetemps in place and passes them as root prefixes), so
+the fixture lane covers all six analyzers in strict mode.
+
+- **Root cause:** emc / thermal / cross_analysis envelopes name their upstream schematic / pcb envelopes by absolute basetemp path; after the recipe moved the tree aside the comparator could not open them ("linked file missing"), and run-dir names inside the paths differed between sessions.
+- **Fix:** `tools/aa_run.py` `snapify` rewrites absolute paths in `inputs` that end in an envelope of the tree to that upstream's byte-exact `snap.json` (longest suffix match); envelopes that need no rewrite are copied byte for byte, so the recorded sha256 still verifies. A chained envelope used as another chained analyzer's upstream would be re-serialized and fail loudly as a policy violation. `summarize_strict_report` also reads a report whose deltas sit in a `deltas_file` sidecar (TH-096).
+- **Verification:** the real contract-suite fixture lane went from 36 violations / 54 deltas on 9 chained units to 21 / 21 identical with 0 violations; a tampered hash still errors (exit 2). `tests/test_aa_run.py` 30 / 30 (4 new).
+
+## 2026-11-11 — TH-096: the gate's field comparator keeps every delta in memory and writes them all — an output-changing round of ~55 M deltas exhausts a 62 GB box
+
+**Severity:** MEDIUM (blocks the mechanical verdict on large output-changing rounds; the box is shared)
+**File:** `regression/field_compare.py` (`compare_trees` accumulates `deltas` and serialises `[d.to_json() for d in deltas]`; `budgeted_report` rebuilds every `Delta`); `regression/run_corpus_gate.py` (`run_modes` runs the comparator with the gate's `--jobs`); `regression/compare_snap_trees.py`
+**Discovered:** 2026-10-26, product 3.0.x Wave 3 gate (`results/v30x_w3_gate/`)
+
+**Symptom:** after phases A/B finished, the in-process comparator's 32 workers reached ~67 GB summed RSS, swap climbed 17 → 20.6 GB in 30 s with ~10 GB available; the run was stopped by hand (SIGTERM to its process group, `results/v30x_w3_gate_aux/operations.log`). Sampled estimate: ~55 M strict deltas on schematic units (3,445 per moved unit × 15,884) and ~1.8 M on pcb, before the chained analyzers. No `field_report_*.json` was written. The verdict was produced instead by `results/v30x_w3_gate_aux/stream_budgeted.py` (same `compare_strict` / `evaluate_budget` per unit, counts only), valid because the Wave 3 budget has no `unit_bound` / `expected_magnitude`.
+
+**Fix direction:** stream deltas to a JSONL file and keep counts in memory; evaluate the budget per unit when no class carries a cross-unit bound (bounds can aggregate claimed counts per class); give the comparator its own worker cap.
+
+- **Fix:** comparator workers spool each unit's deltas to a scratch file and return only counts, at most 4 units per worker in flight, taken in completion order; the report is rebuilt in sorted unit order (byte-identical for any `--jobs`). The budget is evaluated per unit inside the workers (`field_compare.compare_budgeted`), with unit bounds and magnitudes summed over units. Up to `INLINE_DELTAS_MAX` (200,000) deltas the report keeps its inline lists (`deltas_file: null`); above it `deltas`, `budget.claimed` and `budget.residuals` are null and the lists sit in `<stem>.deltas.jsonl`, `.residuals.jsonl` and per-unit `.claims.jsonl` sidecars named in the report; `budget.residual_count` is always present; read with `field_compare.iter_report_deltas`. The gate has `--compare-jobs` (default `min(--jobs, 8)`); `compare_snap_trees.py --jobs` defaults to `min(cpu, 8)`. Budget predicates v30x_wave2/3/4a read `units[].delta_count` instead of `len(report["deltas"])`; `run_modes` deletes stale `field_report_*.json` first; `generate_validation_md` follows `claims_file`; `aa_run` follows `deltas_file`. The `stream_budgeted.py` copies under `results/*_aux/` are superseded.
+- **Verification:** new `tests/test_field_compare_streaming.py` (11) plus the comparator, budget, gate and validation tests, 568 passed. The w11b2 std gate re-compared ALL MATCH against the recorded report (149,633 units, 196,210 deltas, all residual under the draft budget, complete delta and residual lists) both inline and with sidecars forced, 10:56 vs 14:05 before; fc ALL MATCH (21,411 units, 37,839 deltas). Synthetic 3 M-delta tree: parent 39 MB (old code 9.3 GB). Whole-tree peak on std inline 15.0 GB vs 13.9 GB is the per-worker high-water of the largest units (about 6 GB each, the same as before), not deltas; lower `--compare-jobs` to cut it. `generate_validation_md` output is byte-identical before and after on the v3.0.2 draft's recorded arguments.
+
+## 2026-11-11 — TH-099: emc / thermal can pair a schematic with an orphan pcb output left over from the pre-hash output naming
+
+**Severity:** LOW (one corpus unit at the 40b8ff3 relock)
+**File:** `results/outputs/pcb/` hygiene; the chained runners' sch↔pcb pairing (`run/run_emc.py`, `run/run_thermal.py`) reads any pcb output whose name matches, fresh or not
+**Discovered:** 2026-10-29, 3.0.x relock at 40b8ff3 (`results/v30x_w4b_relock/`)
+
+**Symptom:** 93 pcb outputs (81 repos) were not rewritten by the relock because no manifest unit maps to their names any more (outputs named before long output names were hashed). The emc and thermal runners still pair one schematic with one of them: hmaerki/experiment_microoctopus `…Raspberry Pi Zero W.sch` reads `…Raspberry Pi Zero W.kicad_pcb.json` (2026-04-09) while the fresh `…Raspberry Pi Z_b81a647b03.json` exists. The same unit in the gate tree pairs with nothing. The emc runner already retires orphan emc / spice outputs whose schematic output is gone (`RETIRED … schematic output missing/stale`); pcb and gerber orphans (93 / 10) are not retired.
+
+**Fix direction:** retire pcb and gerber outputs that map to no manifest unit (same `.stale` rename as the emc runner), and have the chained runners pair only with outputs whose source is in the current manifest.
+
+- **Fix:** `utils.find_pcb_output` returns a pcb output only if a unit in the repo's `pcbs.txt` manifest writes that file name (plain name swap and the hash-truncated lookup alike; no manifest, no pairing), so emc, thermal and `run_spice --with-parasitics` match the gate's `_pcb_key_for` pairing. New `tools/retire_orphan_outputs.py` lists outputs no manifest unit writes and renames them `.stale` (reuses `utils.retire_orphaned_outputs`, which gained `apply=`); dry-run unless `--apply`, needs a selector or `--all`, exit 2 on a missing manifest.
+- **Census (2026-11-11, live tree, not applied):** orphans schematic 0 / pcb 29 (17 repos) / gerber 7 (5 repos), down from 93 / 10 at 40b8ff3; 2 of the pcb orphans sit in pre-owner pseudo-repo dirs (`Arduino_OpenTherm_shield`, `Mechanical-Keyboard`). Mis-paired today: 1 emc + 1 thermal unit (the hmaerki Raspberry Pi Zero W unit), now unpaired. Run `tools/retire_orphan_outputs.py --all --apply` at the next corpus regen.
+- **Verification:** new `tests/test_th099_orphan_outputs.py` (9, every subprocess under a tmp data dir) plus the chained / spice runner tests, 101 passed; 0 `.stale` files in the live tree before and after.
+
+## 2026-11-11 — TH-101: no gate profile exercises gerber `--full` output (`connectivity`), so the product's Wave 5 Task 52 class is gate-blind harness-side
+
+**Severity:** LOW (not blocking; coverage gap, no wrong verdict)
+**File:** `harnesslib/profiles.py` (`standard` runs gerbers without `--full`; `full-chain` declares no gerber analyzer), `regression/run_corpus_gate.py` (gerber invocation)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 gate (`results/v30x_w5_gate{,_fc}`)
+
+**Symptom:** `analyze_gerbers.py --full` adds the pin→net `connectivity` list. The Wave 5 handoff budgets a Task 52 class on it (decoded `\uXXXX` names, comment-form `TO.P`/`TO.N`, empty-ref pins dropped; 23-24 of 150 modern units in the product's A/B), but neither harness profile produces that block, so the corpus gate never compared it; the product's own A/B is the only evidence.
+
+**Fix direction:** give a profile a gerber `--full` lane: either add gerber with `--full` to `full-chain` (cheap: ~5.5 k gerber dirs corpus-wide, a few hundred in the 260-repo sample), or a separate `gerber-full` profile over all gerber dirs. Declare it in `harnesslib.profiles`, pass `--full` in the gate's gerber invocation when the profile asks for it, and add the profile to the round-record profile list. Re-measure the Task 52 class once it exists (expect connectivity deltas only on X2-tagged dirs).
+
+- **Fix:** `Profile.gerber_full`; `full-chain` now declares gerber with `gerber_full=True`, and `run_corpus_gate.file_cmd` passes `--full` for it. Full-chain budgets must claim gerber deltas from now on; re-measure the Wave 5 Task 52 connectivity class at the next full-chain gate.
+- **Verification:** `tests/test_harnesslib_profiles.py` and `tests/test_run_corpus_gate_phase_a.py` failed before and pass after; gate tests 195 passed. No gate run yet.
+
+## 2026-11-11 — TH-107: 34 aspirational assertions (27 sets) never run because their output file is not found
+
+**Severity:** LOW (aspirational only; they fail as "output file not found" forever, so they can never graduate)
+**File:** data under `reference/**/assertions/` (list below); `regression/reference_io.py` `find_output_file`
+**Discovered:** 2026-11-06, v3.0.2 kickoff. The two counted errors (doubled `file_pattern` prefix) are fixed (FIXED.md, same date), and `run_checks` now reports `output_not_found` (JSON) / an "Output not found" line, so the class is visible.
+
+**Remaining sets, by disposition:**
+- **Re-point (11 sets, output exists under another project):** the assertion file sits under the wrong project dir with an old `schematic_<repo>_` / `pcb_<repo>_` pattern. siderakb/ergo-snm-keyboard: 9 sets filed under `EC56_rotary_encoder_pcb` (FND-00002185..2193; outputs `ErgoSNM_Keyboard_rev*_*.json`); keebio/fourier: 1 under `fourier_fourier-left_fourier-left-bottom` (FND-00002181, output `fourier_fourier-right_fourier-right.sch.json`); rjwalters/kicad-tools: 1 under `boards_01-voltage-divider_output_voltage_divider` (output `examples_08-label-based-schematic_label_based_mcu.kicad_sch.json`). Their `findings.json` items carry the same wrong file names, so a fix moves item + assertions together (or `findings.py promote` recreates the bad files).
+- **Retire (3 sets):** 0Prashant/Kicad FND-00002472/2473/2475/2476: the findings name files under `schematic/MyKiCad/`, another repo; the files do not exist in 0Prashant/Kicad.
+- **Retire or re-point (13 gerber sets):** 11 repos with no gerber sources in their manifests at all (KCORES/OCP2PCIe, MakersAsylumIndia/M19O2 ×2, SdtElectronics/Xassette-Asterisk, judge2005/OTC, terjeio/PCBLaserSchematics (pattern is an absolute harness path), xboxoneresearch/Spider-eMMC, and the five empty-pattern sets Mage-Control-Systems-Ltd/NCCM, Neotron-Compute/Neotron-Pico, TU-Darmstadt-APQ/LM399_Burnin_Board, attoparsec/Node, mobilinkd/NucleoTNC); Mustafa5355/cavli_c16qs-carrier-board names a drill dir that has no output.
+
+**Fix direction:** a one-shot script that moves the 11 re-pointable findings items with their assertions; record a disposition on the findings items of the 16 dead sets and delete their assertion files; add a test that every assertion set in the corpus resolves to an output or a disposition.
+
+- **Fix:** a one-shot pass re-pointed 10 misfiled sets (siderakb/ergo-snm-keyboard 2185..2193, keebio/fourier 2181: finding and assertions moved to the owning project, `file_pattern` and `source_file` corrected) and retired 17: disposition `output_not_found` on the findings, assertion files deleted (0Prashant 3 sets / 4 ids, other repo's files; rjwalters/kicad-tools 2352 and Mustafa5355/cavli 2316, output exists but no project path owns it; 11 gerber sets on repos with no gerber sources). rjwalters moved from re-point to retire for that reason. 84 files under `reference/`.
+- **Verification:** on the 17 repos hard assertions 13,297 / 13,297 before and after, `output_not_found` 34 → 0, aspirational 62 → 42 (10 of the 14 re-pointed now pass: graduation candidates). New `tests/test_assertion_sets_resolve.py` (corpus tier, ~18 s: every set resolves to an output or its findings carry a disposition) flags all 27 sets on the pre-fix tree. Records `results/th107/`. Left alone: an empty stub set in analogdevicesinc/education_tools (0 assertions).
+
 ## 2026-11-08 — KH-436: `test_coverage` counts `Connector:TestPoint`-based touch pads as test points
 
 

@@ -38,12 +38,17 @@ def test_find_thermal_pairs_dedupes_dual_format_twins():
             (sch_dir / name).write_text(json.dumps({"findings": []}))
         for name in ("board.kicad_pcb.json", "other.kicad_pcb.json"):
             (pcb_dir / name).write_text(json.dumps({"findings": []}))
-        saved = utils.OUTPUTS_DIR
+        # only an output a current pcb manifest unit writes pairs (TH-099)
+        mf_dir = td / "manifests" / "owner" / "repo"
+        mf_dir.mkdir(parents=True)
+        (mf_dir / "pcbs.txt").write_text(
+            "".join(f"{td}/repos/owner/repo/{b}.kicad_pcb\n" for b in ("board", "other")))
+        saved = utils.OUTPUTS_DIR, utils.MANIFESTS_DIR, utils.REPOS_DIR
         try:
-            utils.OUTPUTS_DIR = td
+            utils.OUTPUTS_DIR, utils.MANIFESTS_DIR, utils.REPOS_DIR = td, td / "manifests", td / "repos"
             pairs = find_thermal_pairs()
         finally:
-            utils.OUTPUTS_DIR = saved
+            utils.OUTPUTS_DIR, utils.MANIFESTS_DIR, utils.REPOS_DIR = saved
         sch_names = sorted(p[0].name for p in pairs)
         assert sch_names == ["board.kicad_sch.json", "other.kicad_sch.json"], sch_names
 

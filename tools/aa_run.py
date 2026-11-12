@@ -21,7 +21,10 @@ never snap.json, so each tree is first snapified: every *.json whose top-level o
 "analyzer_type" becomes <gate-dir>/{baseline,candidate}/<analyzer_type>/<relpath without
 .json>/snap.json (run-dir path segments such as 20261015T101500Z-a1b2c3 or 2026-10-15_1015
 are renamed RUN-<n> in sorted order so both sides line up), then the two trees are compared
-with the strict policy. Recipe — both sessions at the SAME --basetemp so
+with the strict policy. Chained envelopes (emc, thermal, cross_analysis) name their upstream
+envelopes by absolute path under the basetemp; snapify re-roots those paths in "inputs" to
+the upstream's snap.json (copied byte-exact), so the comparator can verify the recorded
+hashes after the tree has moved. Recipe — both sessions at the SAME --basetemp so
 embedded tmp paths are identical, moving the tree aside between runs:
 
   BT=$PWD/results/v3_baseline/aa_fixtures/tmp
@@ -58,6 +61,9 @@ GATE = HARNESS_ROOT / "regression" / "run_corpus_gate.py"
 COMPARE = HARNESS_ROOT / "regression" / "compare_snap_trees.py"
 POLICY_DIR = HARNESS_ROOT / "regression" / "normalization"
 
+sys.path.insert(0, str(HARNESS_ROOT))
+from regression.field_compare import iter_report_deltas  # noqa: E402
+
 _UUID = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
 _ISO = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$")
 _RUN_ID = re.compile(r"^\d{8}T\d{6}Z-[0-9a-f]{6}$")  # field_compare named shape run_id
@@ -91,9 +97,9 @@ def guess_shape(values: list) -> str:
     return kinds.pop() if len(kinds) == 1 else "mixed"
 
 
-def summarize_strict_report(report: dict) -> dict:
+def summarize_strict_report(report: dict, report_dir: Path | None = None) -> dict:
     groups: dict[str, list[dict]] = defaultdict(list)
-    for d in report.get("deltas", []):
+    for d in iter_report_deltas(report, report_dir or Path(".")):
         groups[generalize_pointer(d["path"])].append(d)
     leaves = []
     for glob, ds in sorted(groups.items()):
@@ -205,12 +211,36 @@ def snapify(src_root: Path, dst_root: Path) -> int:
                 run_dirs[parts[:i]].add(seg)
     rename = {(parent, seg): f"RUN-{n}" for parent, segs in run_dirs.items()
               for n, seg in enumerate(sorted(segs))}
+    outs = {}
     for parts, atype, p in envs:
         norm = [rename.get((parts[:i], seg), seg) if i < len(parts) - 1 else seg
                 for i, seg in enumerate(parts)]
-        out = dst_root.joinpath(atype, *norm, "snap.json")
+        outs[p] = dst_root.joinpath(atype, *norm, "snap.json")
+    # the tree was written elsewhere (pytest --basetemp) and moved, so the original root is
+    # unknown: an absolute path ending in "/<rel>.json" of an envelope names that envelope
+    by_rel = sorted((("/" + p.relative_to(src_root).as_posix(), str(out)) for p, out in outs.items()),
+                    key=lambda kv: -len(kv[0]))
+
+    def reroot(v):
+        if isinstance(v, str) and v.startswith("/"):
+            return next((out for rel, out in by_rel if v.endswith(rel)), v)
+        if isinstance(v, dict):
+            return {reroot(k): reroot(x) for k, x in v.items()}
+        if isinstance(v, list):
+            return [reroot(x) for x in v]
+        return v
+
+    for _, _, p in envs:
+        out = outs[p]
         out.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(p, out)
+        data = json.loads(p.read_text(encoding="utf-8"))
+        inputs = data.get("inputs")
+        new_inputs = reroot(inputs)
+        if new_inputs == inputs:
+            shutil.copyfile(p, out)   # byte-exact: chained envelopes hash their upstreams
+        else:
+            data["inputs"] = new_inputs
+            out.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     return len(envs)
 
 
@@ -281,7 +311,7 @@ def main(argv=None) -> int:
 
 def _summarize(gate_dir: Path, propose: bool) -> int:
     report = json.loads((gate_dir / "field_report.json").read_text(encoding="utf-8"))
-    aa = summarize_strict_report(report)
+    aa = summarize_strict_report(report, gate_dir)
     (gate_dir / "aa_report.json").write_text(json.dumps(aa, indent=2) + "\n", encoding="utf-8")
     if aa["error"]:
         print(f"A/A ERROR: verdict {aa['verdict']}, compared {aa['units_compared']} "
