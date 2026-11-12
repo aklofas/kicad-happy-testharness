@@ -11,6 +11,30 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-11 — TH-109: FND locks whose check could not fail or read the wrong finding (144 live / 467 with the aspirational ones)
+
+**Severity:** MEDIUM (each passed whatever the analyzer did; several hid defects still present)
+**File:** `regression/checks.py` (`assertion_errors`, `evaluate_assertion`); data under `reference/**/assertions/` (FND locks)
+**Discovered:** 2026-11-06, TH-105 triage
+
+**Root cause:** `contains_match` / `not_contains_match` / `count_matches` read `field` + `pattern` only, so a regex left under `value` compiled `""` and matched anything; a `range` without bounds read 0..inf; `findings[<n>]` with a `detector_filter` indexed the unfiltered list.
+
+**Fix:**
+- Remapped in three passes, each checked against the lock's description: 50 mechanical R1-R4 remaps (4 found inverted and corrected), 172 triaged locks + 36 split assertions with the new `where: {field: regex}` / `field: "."` match keys, then the held set per the product's rulings (LOG `[main-repo] 2026-11-11 — TH-109 RULINGS`): 82 lock records on 61 files. 19 live locks that describe a present defect became aspirational with a real check (KH-1073..1079 filed for the classes the ruling named); 27 retired (the 23 ruled, FND-00001445-AST-11, FND-00001389-AST-04 once G1/G2/G4 were found `in_bom=yes`, and the KH-1070 pair FND-00001904-AST-05 / FND-00002289-AST-03 by analogy with FND-00002228-AST-02); 16 graduated (5 FND, FND-00001461-AST-04 on `^3\.3V$`, 8 TH-107 re-pointed siderakb / keebio sets, FND-00002192-AST-02 with a real courtyard check plus its split FND-00002192-AST-03, and FND-00001457-AST-09 overruled to live); FND-00000395-AST-01 and FND-00000442-AST-06 re-anchored live by ref. Four locks the ruling made aspirational did not describe a present defect when the analyzer was re-run at `6138b126` (kicad-cli 10.0.8 for the netlist one) and were re-anchored live instead: FND-00000417-AST-06 (LED audit D2 → R8), FND-00001642-AST-07 (J1 CC role sink), FND-00000386-AST-03 (R2 pin 1 is on the Q1 collector net; the description had the 180° pins backwards), FND-00001498-AST-05 (AP3012 is this project's U5, output 5V). Not graduated although they pass: FND-00002186-AST-02 (min_count over all findings, vacuous), FND-00002188-AST-02 and FND-00002191-AST-01 (unclear intent); FND-00000425-AST-04 stays aspirational (withdrawn).
+- Guard (`assertion_errors`): a regex op with neither `pattern` nor a non-empty `where`, and a `range` with neither `min` nor `max`, are load errors; `findings[<n>]` with a `detector_filter` filters, then indexes. Tests `tests/test_th109_check_shapes.py` (20).
+
+**Verification:** on the 56 touched repos hard 13,795 → 13,791 / 0 failed / 0 load errors, every transition reconciled per lock (records `results/th109/rulings/`: `apply_rulings.py`, `applied.json`, `before.json` / `after.json`); mutation check 32 / 32 live checks fail on a mutated output. Full corpus with the guard `--era all`: 2,717,768 / 2,717,768, 0 errors, 0 load errors, aspirational 525 passing of 1,883 (`full_guard.json`). Tiers vs product_6138b12 3,759 / 0 / 8 / 3.
+
+## 2026-11-11 — TH-064: emc / thermal / spice runners had no identity-based `--resume`
+
+**Severity:** LOW (the flag was refused, so nothing ran on stale identity)
+**File:** `run/run_emc.py`, `run/run_thermal.py`, `run/run_spice.py`, `run/_chained.py`, `harnesslib/batch.py`, `harness.py`, `regression/compare_spice_offline.py`
+**Discovered:** 2026-10-15, H0 plan 2 final review
+
+**Fix:** `harnesslib.batch.start_run` is `run_batch`'s manifest lifecycle moved out unchanged (write the manifest, keep the prior run_id on a matched resume, otherwise archive `units.jsonl`); `run/_chained.ChainedRun` gives the three chained runners a manifest + per-unit records keyed by output path (`owner/repo/<output>`). A unit's input sha covers the upstream outputs it reads (schematic; + pcb for emc / thermal and for spice `--with-parasitics`). A unit is reused only under the matched run, with an `ok` record and its output unchanged. `map_units` records each result as it finishes (`on_result`). `harness.py run` passes `--resume` to spice / emc again; `compare_spice_offline` ignores the root `manifest.json`. The chained runners now need the product to be a git worktree, as `run_batch` already did (gate clones and the spice-offline lane use clones). Argv is part of the identity, so `--jobs` / `--timeout` changes disable resume.
+
+**Verification:** `tests/test_chained_resume.py` (reuse; rerun on upstream / product / argv / output / failed-record / run_id change; log archive; no prior manifest; `--jobs 2` logs every unit), refusal test replaced; an A/B of old vs new runners on fake data gave byte-identical analyzer outputs, `.parasitics.json` and `_aggregate.json` on the non-resume path. Tiers vs product_6138b12 3,759 / 0 / 8 / 3.
+
 ## 2026-11-11 — TH-111: a check path cannot reach a net whose name contains a dot (`nets.+3.3V.pins`)
 
 **Severity:** LOW (FND locks on dotted net names can never resolve; met in the TH-109 triage, worked around where the net was renamed, e.g. hawk `+3V3`)
