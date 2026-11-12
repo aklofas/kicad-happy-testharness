@@ -11,6 +11,26 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-11 — TH-063: a test spawned a mutating runner against the live tree (16,909 EMC outputs rewritten)
+
+**Severity:** LOW
+**File:** `tests/test_collection_policy.py`
+**Discovered:** 2026-10-14, H0 plan 2 Task 6 (the pool-survival mechanism was TH-067, fixed)
+
+**Fix:** the closing condition from the entry: the collection-policy audit now checks runner subprocesses. `test_runner_subprocesses_redirect_the_data_dir` walks every test file; any Python subprocess whose argv, enclosing function (with its parametrize list) or calling helper names a corpus-writing entry point (`run_{schematic,pcb,gerbers,spice,emc,thermal,datasheets}.py`, `discover.py`, `harness.py`, `checkout.py`, `retire_orphan_outputs.py`) must set `KICAD_HAPPY_TESTHARNESS_DATA_DIR`: inline in `env=`, through a local env built in the function, a module-level env dict or a module helper, or by `monkeypatch.setenv`. `git` / `ngspice` calls and other scripts are out of scope.
+
+**Verification:** synthetic sources: a bare spawn, an env without the data dir and a parametrized script name are flagged; the five redirect styles in use are accepted. Real tree: 0 offenders; with the token stripped from every file the audit flags 19 functions in 9 files, every runner-spawning test the tree has. Tiers vs product_6138b12 3,762 / 0 / 8 / 3.
+
+## 2026-11-11 — TH-049: an unscoped full-corpus sweep partly rewrote results/outputs between regens (writer unidentified)
+
+**Severity:** LOW
+**File:** the corpus runners' selection (`harnesslib/selection.py`)
+**Discovered:** 2026-09-01, v2.2.1 regen before-baseline
+
+**Fix:** fix direction (b) is in place: every corpus-writing entry point refuses an unscoped run without an explicit `--all` (`resolve_repos_with_source(..., require_explicit_all=True)`: `utils.run_analyzer` for schematic / pcb / gerber at `utils.py:632`, `run/_chained.py` for emc / thermal / spice, `run/run_datasheets.py`, `tools/retire_orphan_outputs.py`, `regression/run_corpus_gate.py`), and tests that spawn a runner must redirect the data dir (TH-063). The writer was never identified, and the tripwire (post-regen failures clustered on alphabetically early repos with fresh mtimes but stale run ids) did not fire at any of the eight regens and relocks since (v2.3.0 through the v3.0.1 regen at `4c2a0d6`), each with a fully attributed after-check.
+
+**Verification:** `tests/test_harnesslib_selection.py`, `tests/test_run_chained_execution.py::test_unqualified_runs_exit_2_without_all`, `tests/test_run_spice_isolation.py::test_unqualified_run_exits_2_without_all`, `tests/test_runner_failure_exit.py` (no selector exits 2).
+
 ## 2026-11-11 — TH-109: FND locks whose check could not fail or read the wrong finding (144 live / 467 with the aspirational ones)
 
 **Severity:** MEDIUM (each passed whatever the analyzer did; several hid defects still present)
