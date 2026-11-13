@@ -11,6 +11,156 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-13 — KH-939: shared `is_power_net_name` over-matches `V<digit>` signal names, `_VDD` tails and text after an escaped slash
+
+**Severity:** MEDIUM (~170 corpus IO-002 lost, estimated)
+**File:** `skills/kicad/scripts/kicad_core/netnames.py:119-200` (`is_power_net_name`), `:100` (`_RAIL_SIGNAL_SUFFIXES`, private; imported by `skills/emc/scripts/emc_rules.py:42`), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9C/task-8-report.md`; `L9C/progress.md` Tasks 7, 8)
+
+**Symptom:** probe at `8c42799`: True for `/V1AMP1`, `V24.rx`, `EN_EXT_VDD` and `SDIO_CMD{slash}3V3`; the leaf is read after the escaped slash. `/VCC{slash}2` is False, so the R 106 half-rail is "not recovered". The over-matches cost 5 R IO-002 (of 37 removals, 32 correct) and an estimated ~170 corpus IO-002 until fixed (Task 8 ruling). The EMC module imports the private `_RAIL_SIGNAL_SUFFIXES`.
+
+**Fix direction / budget:** require a voltage or rail token after `V<digit>` (not a word such as `AMP`), make `_VDD` a tail only without an enable/control prefix, split the leaf on real `/` only (not `{slash}`); add a public alias for `_RAIL_SIGNAL_SUFFIXES`. Output-changing across every consumer; gate with KH-938.
+
+
+---
+
+- **Root cause / fix:** `is_power_net_name` took any `V<digit>` plus one character as a rail, took any `<prefix>_VDD` tail, and decoded `{slash}` before splitting off the sheet path. Now `_is_v_number_rail` needs a voltage part, two digits or a rail word after the number; `_SUPPLY_TAIL_CONTROL_PREFIXES` (EN, PWM, CTRL, SENSE, …) keeps `EN_EXT_VDD` a signal; the leaf is split on a real `/` only, and a `{slash}` label is a rail only when every part is one. `_RAIL_SIGNAL_SUFFIXES` is renamed public `RAIL_SIGNAL_SUFFIXES` (EMC and cross_analysis moved; no private alias left, no harness importer).
+- **Fixed:** product v3.0.x-dev fe6e48a7, abdab66b (v3.0.2 Wave 11c, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at db551674: `kicad_core/netnames.py:101` (`RAIL_SIGNAL_SUFFIXES`), `:105` (`_SUPPLY_TAIL_CONTROL_PREFIXES`), `:115-145` (`_is_v_number_rail`), `:186-191` (split on real `/`, then `all(is_power_net_name(p) for p in parts)`), `:221`, `:272`; `skills/emc/scripts/emc_rules.py:42,106`, `cross_analysis.py:29,61`. Probe base → candidate: `/V1AMP1`, `V24.rx`, `EN_EXT_VDD`, `SDIO_CMD{slash}3V3`, `V2OUT`, `EN_VCC` True → False; `V3V3`, `V33IO`, `V12`, `V5REG`, `5V{slash}3V3` stay True; `/VCC{slash}2` False at both (not a rail; the 9c "not recovered" note is deliberate).
+- **Gate:** v3.0.2 Wave 11c whole-range gate `046985ac..db551674` vs `product_6138b12` (ledger `6138b12.json`), 2026-11-13: standard 149,633 units + full-chain 22,028, every moved unit (5,851 std / 764 fc) claimed by the per-unit name-mechanism judge `regression/budgets/v302_wave11c_judge.py` (both products' `kicad_core.netnames` imported side by side; 0 residual); spice-offline (44 reports, 0 residual), text oracle and fixture JSON (exactly the 26 declared ko001 description deltas), `--schema` x6 identical, distributor-offline 0/310 and a gerber `--full` A/B (0/5,502) as declared (records `results/v302_w11c_gate{,_fc,_aux,_do}/`).
+
+---
+
+## 2026-11-13 — KH-726: a sheet-local `/x/PGND` gets no 0 V in the rail map
+
+**Severity:** LOW
+**File:** `schematic/net_analysis.py` (~:1397, ground set)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** the ground set omits PGND, so a sheet-local `/x/PGND` gets no 0 V entry.
+
+**Fix direction / budget:** add PGND to the ground set; budget `rail_voltages` keys.
+
+
+---
+
+- **Root cause / fix:** `_estimate_rail_voltage` gave 0 V only to an exact `GND` / `VSS` / `AGND` / `DGND` leaf. It now uses the shared `is_ground_name` (sheet path stripped). A VSS-family name other than bare `VSS` (`VSSA`, `AVSS`) gets no 0 V from its name, since it can be a negative supply (3ea7f96f).
+- **Fixed:** product v3.0.x-dev b2307f70, 3ea7f96f (v3.0.2 Wave 11c, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at db551674: `schematic/net_analysis.py:1714-1721` (`if is_ground_name(net_name) and not (is_vss_name(net_name) and nu != "VSS"): return 0`), reached from `schematic/pipeline.py:367-368`. Probe base → candidate `_estimate_rail_voltage`: `/x/PGND`, `PGND`, `GNDA`, `/pwr/GNDPWR`, `SGND`, `GND_ISO` None → 0; `VSSA`, `AVSS` None at both.
+- **Gate:** v3.0.2 Wave 11c whole-range gate `046985ac..db551674` vs `product_6138b12` (ledger `6138b12.json`), 2026-11-13: standard 149,633 units + full-chain 22,028, every moved unit (5,851 std / 764 fc) claimed by the per-unit name-mechanism judge `regression/budgets/v302_wave11c_judge.py` (both products' `kicad_core.netnames` imported side by side; 0 residual); spice-offline (44 reports, 0 residual), text oracle and fixture JSON (exactly the 26 declared ko001 description deltas), `--schema` x6 identical, distributor-offline 0/310 and a gerber `--full` A/B (0/5,502) as declared (records `results/v302_w11c_gate{,_fc,_aux,_do}/`).
+
+---
+
+## 2026-11-13 — KH-465: `cross_analysis.is_cross_analysis_ground_name` matches an exact name set only — `SGND`, `GNDPWR`, `GND_ISO`, `VSSA` and sheet-pathed `/Power/GND` are not ground to cross_analysis
+
+**Severity:** LOW (pre-existing policy, named in round 7; the schematic side already classifies these as ground via `kicad_core.netnames.is_ground_name`, so cross-analysis plane-split / ground-domain checks disagree with the schematic on such designs)
+**File:** `skills/kicad/scripts/cross_analysis.py:41` (`is_cross_analysis_ground_name`, formerly `_is_ground_net`; strips `/`, `-`, `_` then matches an exact set; the `GND_D` / `GND_A` entries are unreachable after stripping)
+**Discovered:** 2026-10-23, v3 round-7 handoff §11; verified at `0490c49`: `{'GND': True, 'SGND': False, 'GNDPWR': False, 'GND_ISO': False, 'VSSA': False, '/Power/GND': False, '/GND': True, 'EARTH': True}`
+
+**Fix direction:** delegate to `kicad_core.netnames.is_ground_name` (strip the sheet path first) plus the cross-analysis extras (EARTH, CHASSIS). Gate budget at the fixing round: cross_analysis findings on every board whose ground nets use the newly-recognised names — size with a corpus walk before the gate.
+
+
+---
+
+- **Root cause / fix:** cross_analysis stripped `/`, `-`, `_` and matched an exact name set, so it disagreed with the schematic's ground rule. It now calls the shared `is_ground_name` (sheet path stripped) plus `EARTH` / `CHASSIS` by leaf.
+- **Fixed:** product v3.0.x-dev 4c93e5b4 (v3.0.2 Wave 11c, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at db551674: `cross_analysis.py:47-51` (`return is_ground_name(name) or net_leaf(name).upper() in ('EARTH', 'CHASSIS')`). Probe base → candidate: `SGND`, `GNDPWR`, `GND_ISO`, `VSSA`, `/Power/GND`, `/x/Earth`, `/a/CHASSIS` False → True; `GND`, `/GND`, `EARTH`, `0V` True at both.
+- **Gate:** v3.0.2 Wave 11c whole-range gate `046985ac..db551674` vs `product_6138b12` (ledger `6138b12.json`), 2026-11-13: standard 149,633 units + full-chain 22,028, every moved unit (5,851 std / 764 fc) claimed by the per-unit name-mechanism judge `regression/budgets/v302_wave11c_judge.py` (both products' `kicad_core.netnames` imported side by side; 0 residual); spice-offline (44 reports, 0 residual), text oracle and fixture JSON (exactly the 26 declared ko001 description deltas), `--schema` x6 identical, distributor-offline 0/310 and a gerber `--full` A/B (0/5,502) as declared (records `results/v302_w11c_gate{,_fc,_aux,_do}/`).
+
+---
+
+## 2026-11-13 — KH-962: `rail_voltages` drops the name voltage of a regulator output net known only by its pins
+
+**Severity:** LOW (a correct rail voltage is lost; accepted cost under ruling P2-rails)
+**File:** `skills/kicad/scripts/schematic/pipeline.py:349-353` (`build_rail_map` name pass uses `ctx.is_power_net(net_name, by_pins=False)`) at `2abc8496`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10b handoff (new in Wave 10b)
+
+**Symptom:** For hedong2023/ovobot `ELZS-01/cleanrobot-square-main.kicad_sch`, U6 (HT7533-1-SOT89, LDO) has `output_rail` `3V3_OFF` and no `estimated_vout`. `rail_voltages` has `3V3_OFF: 3.3` at `e60d03b5` and no entry at `2abc8496`. Per the product's sample, dmanla/ModularPSU `POE_3V3` (TLV741P) and six more names (`HDMI_TX_5V0`, `SWITCHED 5V`, `TAU_5V`, …) lose a correct value the same way. Downstream readers of the rail map (derating, the I2C VOL check, power budget) lose the value too.
+
+**Fix direction / budget:** In the name pass, keep a pin-only net when it is some regulator's `output_rail`, which is the narrower rule from the final review. Standard lane: `rail_voltages` additions on those regulator outputs, plus the downstream readers' value classes. The scale is a subset of this wave's `rail_voltages` removals.
+
+
+---
+
+- **Root cause / fix:** the rail map's name pass skipped any net that is a rail only by its pins, including a regulator's own `output_rail` (`3V3_OFF`). A regulator output now gets the voltage in its name when the sign agrees with the regulator's `inverting` flag and the name has no comma decimal (ruling C-R4; the parser fixes are v3.0.3 slugs).
+- **Fixed:** product v3.0.x-dev 3ffcb084 (v3.0.2 Wave 11c, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at db551674: `schematic/pipeline.py:356-362` (`inverting_out`), `:371-375` (`elif net_name in inverting_out and not re.search(r"\d,\d", net_name)` … sign check). Gate snaps base → candidate: hedong2023/ovobot `ELZS-01_cleanrobot-square-main` `3V3_OFF` absent → 3.3; dmanla/ModularPSU `POE_3V3` absent → 3.3 on `ModularPSU`, `POE_PWR_IN`, `PWR_INPUT`.
+- **Gate:** v3.0.2 Wave 11c whole-range gate `046985ac..db551674` vs `product_6138b12` (ledger `6138b12.json`), 2026-11-13: standard 149,633 units + full-chain 22,028, every moved unit (5,851 std / 764 fc) claimed by the per-unit name-mechanism judge `regression/budgets/v302_wave11c_judge.py` (both products' `kicad_core.netnames` imported side by side; 0 residual); spice-offline (44 reports, 0 residual), text oracle and fixture JSON (exactly the 26 declared ko001 description deltas), `--schema` x6 identical, distributor-offline 0/310 and a gerber `--full` A/B (0/5,502) as declared (records `results/v302_w11c_gate{,_fc,_aux,_do}/`).
+
+---
+
+## 2026-11-13 — KH-778: KO-001 tests a footprint by its bounding box; KiCad by courtyard / pad shape
+
+**Severity:** LOW
+**File:** `pcb/` keepout check (KO-001)
+**Discovered:** 2026-10-29, product 3.0.x Wave 4 Part B close triage (KH-575 rider); filed by the harness
+
+**Symptom:** KiCad's keepout test judges a footprint by its courtyard (`pcbexpr_functions.cpp:581-620`) and pads by their shape; we test the footprint bounding box. Boards 27, 89, 148, 239, 261, 278 and 284 of the product's pcbchecks 300 sample still report KO-001 where kicad-cli reports none (residue of KH-575 after Wave 4 Part B Tasks 101 / 105).
+
+**Fix direction / budget:** test the courtyard polygon (pad outlines for pads) as KiCad does; KO-001 removals only, measured against kicad-cli on the pcbchecks sample.
+
+
+---
+
+- **Root cause / fix:** KO-001 tested the footprint centre against the area's bounding box. It now tests the footprint's courtyard polygon on the side the area covers (`F.CrtYd` for `F.Cu`, `B.CrtYd` for `B.Cu`, both for `F&B.Cu` / `*.Cu`) against the area outline; a footprint without a readable courtyard there is not judged, as in KiCad (ruling K-R1). The `pads` / `tracks` restrictions are still not checked (KH-1102).
+- **Fixed:** product v3.0.x-dev 0b31c7f6, 60244de2, 5dc595db (v3.0.2 Wave 11c, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at db551674: `pcb/assembly.py:1220-1226` (`_area_courtyard_layers`), `:1229-1247` (`_courtyard_meets_area`, `if not side or not side.get("polys"): continue`), `:1286-1287`, `:1302` (description "courtyard overlaps keepout zone"). Both shapes are deflated 0.005 mm (`courtyards_collide`); KiCad deflates the area by 0.0005 mm (comment at `:1242-1243`).
+- **Gate:** v3.0.2 Wave 11c whole-range gate `046985ac..db551674` vs `product_6138b12` (ledger `6138b12.json`), 2026-11-13: standard 149,633 units + full-chain 22,028, every moved unit (5,851 std / 764 fc) claimed by the per-unit name-mechanism judge `regression/budgets/v302_wave11c_judge.py` (both products' `kicad_core.netnames` imported side by side; 0 residual); spice-offline (44 reports, 0 residual), text oracle and fixture JSON (exactly the 26 declared ko001 description deltas), `--schema` x6 identical, distributor-offline 0/310 and a gerber `--full` A/B (0/5,502) as declared (records `results/v302_w11c_gate{,_fc,_aux,_do}/`).
+
+---
+
+## 2026-11-13 — KH-921: KO-001 footprint test ignores `F&B.Cu` rule areas and the copper-layer test
+
+**Severity:** LOW (KO-001 false negative / pre-existing false-positive shape)
+**File:** `skills/kicad/scripts/pcb/assembly.py:1222-1231` (footprint branch: `fp_layer in kz_layers or "*.Cu" in kz_layers`); the via branch uses `_area_copper_layers` (`:1195-1197`, `:1252`), the footprint branch does not, at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-10-report.md` :12, `task-10-review.md` :12, :24; kicad-cli case `fp_zFB`)
+
+**Symptom:** kicad-cli agrees with KO-001 on 12 of 13 cases. The 13th is a footprint under an `F&B.Cu` rule area: KiCad reports it and the analyzer does not, because `"F.Cu"` is not in `["F&B.Cu"]`. THT footprints (which span both sides) are matched by their placement layer only. The review also notes the footprint branch does not apply `_area_copper_layers`. By code read, a footprint is matched only when the area lists the footprint's own layer, so the Edge.Cuts-only false case it describes is not reproduced from the code alone (no kicad-cli case shown).
+
+**Fix direction / budget:** expand `F&B.Cu` / `*.Cu` / THT before the layer test, and apply `_area_copper_layers` to the footprint branch. With KH-778 (bbox residue). Output-changing: KO-001 on boards with such areas.
+
+
+---
+
+- **Root cause / fix:** the footprint branch matched only when the area listed the footprint's own layer, so `F&B.Cu` areas never matched, and it had no copper-layer test. It now maps the area's copper layers to courtyard sides (`F&B.Cu` and `*.Cu` give both; an inner-only or non-copper area judges no footprint). THT parts are judged by courtyard side as KiCad does, not by pad layers (survey K: the entry's "THT spans both sides" is not KiCad's rule).
+- **Fixed:** product v3.0.x-dev 0b31c7f6, 5dc595db (v3.0.2 Wave 11c, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at db551674: `pcb/assembly.py:1220-1226` (`front = any(layer in ("F.Cu", "F&B.Cu", "*.Cu") …)`, same for back), `:1286-1287` (`if _prohibits(restrictions, "footprints") and crtyd_layers:`).
+- **Gate:** v3.0.2 Wave 11c whole-range gate `046985ac..db551674` vs `product_6138b12` (ledger `6138b12.json`), 2026-11-13: standard 149,633 units + full-chain 22,028, every moved unit (5,851 std / 764 fc) claimed by the per-unit name-mechanism judge `regression/budgets/v302_wave11c_judge.py` (both products' `kicad_core.netnames` imported side by side; 0 residual); spice-offline (44 reports, 0 residual), text oracle and fixture JSON (exactly the 26 declared ko001 description deltas), `--schema` x6 identical, distributor-offline 0/310 and a gerber `--full` A/B (0/5,502) as declared (records `results/v302_w11c_gate{,_fc,_aux,_do}/`).
+
+---
+
+## 2026-11-13 — KH-1088: KO-001 tests a rule area's bounding box, so vias outside a round, ring or L-shaped area are reported (GitHub #70)
+
+**Severity:** MEDIUM (KO-001 errors; 2,210 base items on 154 KO boards, 69 confirmed by kicad-cli)
+**File:** base `skills/kicad/scripts/pcb/assembly.py` `analyze_keepout_violations` (via branch: centre in `bounding_box`; footprint branch: centre in the box); `pcb/reader.py` `extract_zones` kept only the first contour's box
+**Discovered:** GitHub #70 (reporter Nickperillo, v3.0.1); product v3.0.2 Wave 11c survey K
+
+**Symptom:** a via in the corner of a non-rectangular area's box is reported inside the keep-out. A via inside a hole is reported too. A via whose copper ring crosses the edge but whose centre lies outside the box is missed. KiCad DRC reports none of the first two and does report the third.
+
+---
+- **Root cause / fix:** the area outline was not kept. `pcb/reader.py:1436-1443` now keeps every `(polygon (pts …))` ring as private `_outline_polys` (first ring = outline, later rings = holes), `:1493-1494` copies it onto the keepout entry, and `pcb/presentation.py:290-291` strips it from the output. `pcb/assembly.py:1253-1255` `_via_meets_area`: `_signed_depth(vx, vy, polys) > _AREA_EPSILON_MM - radius` (even-odd, so holes are excluded). `:1276-1279` skips an area without an outline, and `:1320-1321` widens the box pre-filter by the via radius. The footprint half (courtyard against the outline, `:1229-1246`) is K2 under KH-778 / KH-921.
+- **Fixed:** product v3.0.x-dev e487ccf0 (vias; footprints 0b31c7f6 / 60244de2 / 5dc595db under KH-778) (v3.0.2 Wave 11c, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at db551674: code as above. crabik-slot-esp32-s3 KO-001 goes 3 → 0 (base descriptions "… keepout zone  (bbox check)"). Product A/B std-K: vias −2,107 / +9, kicad-cli agreement 15 → 151 of 154 boards (the rest are KiCad-5 `(tstamp 0)` artefacts). Gate classes ko-via-outline(-fc), ko-description, ko-rollups, ko-text; fixture re-snapshot `ko001__{antenna,plain}_keepout` (26 description deltas). The corpus gate is the harness measurement.
+- **Gate:** v3.0.2 Wave 11c whole-range gate `046985ac..db551674` vs `product_6138b12` (ledger `6138b12.json`), 2026-11-13: standard 149,633 units + full-chain 22,028, every moved unit (5,851 std / 764 fc) claimed by the per-unit name-mechanism judge `regression/budgets/v302_wave11c_judge.py` (both products' `kicad_core.netnames` imported side by side; 0 residual); spice-offline (44 reports, 0 residual), text oracle and fixture JSON (exactly the 26 declared ko001 description deltas), `--schema` x6 identical, distributor-offline 0/310 and a gerber `--full` A/B (0/5,502) as declared (records `results/v302_w11c_gate{,_fc,_aux,_do}/`).
+
+---
+
+## 2026-11-13 — KH-1089: PS-002 reports a "plane split" on a ground or power net that has no copper zone
+
+**Severity:** LOW-MEDIUM (false PS-002 info/warning/error; 108 at base on the full-chain lane, 114 after N6 widened the ground set)
+**File:** `skills/kicad/scripts/cross_analysis.py` `check_plane_splits` (base: islands from the connectivity graph are tested for every ground/power-named net)
+**Discovered:** product v3.0.2 Wave 11c N6 review (6 of N6's 14 PS-002 adds were on no-zone nets), ruling R18
+
+**Symptom:** a track-routed or unrouted ground or power net with more than one connectivity island is reported as a split plane, with "signals crossing" on warning/error items. The islands are unrouted connections, which RT-001 and KiCad DRC already report.
+
+---
+- **Root cause / fix:** a net with no zone has no plane to split. `cross_analysis.py:1044` builds `zone_nets = {z.get('net_name') for z in pcb.get('zones') or []}`, and `:1048-1049` skips a net not in it. The `_record` row is unchanged.
+- **Fixed:** product v3.0.x-dev 781b6afe (v3.0.2 Wave 11c, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at db551674: code as above. Base census from the 11b-2 fc snaps (pairing each cross snap to its own `upstream_artifacts.pcb`): 349 PS-002, 108 on no-zone nets = 70/28/10, the same as the product census. Gate class `ps002-no-plane` (fc, removal only, M = 114 / 89 designs, plus summary/trust/audience/checks_run rollups). The corpus gate is the harness measurement. Not covered: a plane drawn as netted `gr_poly` copper gets no PS-002 (0 corpus cases per the product).
+- **Gate:** v3.0.2 Wave 11c whole-range gate `046985ac..db551674` vs `product_6138b12` (ledger `6138b12.json`), 2026-11-13: standard 149,633 units + full-chain 22,028, every moved unit (5,851 std / 764 fc) claimed by the per-unit name-mechanism judge `regression/budgets/v302_wave11c_judge.py` (both products' `kicad_core.netnames` imported side by side; 0 residual); spice-offline (44 reports, 0 residual), text oracle and fixture JSON (exactly the 26 declared ko001 description deltas), `--schema` x6 identical, distributor-offline 0/310 and a gerber `--full` A/B (0/5,502) as declared (records `results/v302_w11c_gate{,_fc,_aux,_do}/`).
+
+---
+
 ## 2026-11-11 — TH-063: a test spawned a mutating runner against the live tree (16,909 EMC outputs rewritten)
 
 **Severity:** LOW
