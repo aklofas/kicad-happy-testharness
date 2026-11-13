@@ -2,15 +2,15 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-11-08T17:34:27.072846+00:00
+**Last scan:** 2026-11-13T22:20:45.134770+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 1016 |
+| Total constants | 1024 |
 | Verified | 194 |
-| Unverified | 796 |
+| Unverified | 804 |
 | Stale (changed since verification) | 26 |
 | Critical risk | 6 |
 | High risk | 13 |
@@ -785,9 +785,16 @@
 | CONST-831 | `_RAIL_TAILS_GATED` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-897 | `_NEGATIVE_SUPPLY_NAMES` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-832 | `_VOLTAGE_SIGNAL_SUFFIXES` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1018 | `_SUPPLY_TAIL_CONTROL_PREFIXES` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1019 | `_V_NUMBER_RAIL_WORDS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1020 | `_V_NUMBER_VOLTAGE_SUFFIXES` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1021 | `_V_NUMBER` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-809 | `_USB_D_SUFFIX` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-969 | `_USB_SIGNAL_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-898 | `IC_SIGNAL_PIN_TYPES` | standard | 6 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1022 | `_GROUND_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1023 | `_VIRTUAL_GROUND_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1024 | `_SPLIT_RAIL_N_LEAF` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-078 | `_UUID_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 
 ## skills/kicad/scripts/kicad_core/netquery.py
@@ -937,6 +944,7 @@
 | CONST-964 | `loop` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-014 | `analyze_fiducials:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-344 | `finding` | keyword_classification | 17 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-1025 | `_AREA_EPSILON_MM` | physics | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 
 ## skills/kicad/scripts/pcb/connectivity.py
 
