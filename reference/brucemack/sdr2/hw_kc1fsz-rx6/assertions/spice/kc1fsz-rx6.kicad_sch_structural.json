@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 8 rc_filter simulation(s)",
+      "description": "Exactly 12 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 8
+        "value": 12
       }
     },
     {
@@ -180,6 +180,26 @@
     },
     {
       "id": "STRUCT-00000018",
+      "description": "C8 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC8\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000019",
+      "description": "C9 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC9\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
       "description": "R1 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -189,7 +209,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000021",
       "description": "R2 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -199,7 +219,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000022",
       "description": "U2 simulated as opamp_circuit",
       "check": {
         "path": "simulation_results",
@@ -209,7 +229,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000023",
       "description": "U3 simulated as opamp_circuit",
       "check": {
         "path": "simulation_results",
@@ -219,7 +239,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000024",
       "description": "C18 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -229,7 +249,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000025",
       "description": "C20 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -239,7 +259,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000026",
       "description": "C19 simulated as decoupling",
       "check": {
         "path": "simulation_results",

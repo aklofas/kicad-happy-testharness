@@ -46,7 +46,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-14T04:16:36Z",
+        "tagged_at": "2026-11-14T08:38:03Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -62,7 +62,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-14T04:16:36Z",
+        "tagged_at": "2026-11-14T08:38:03Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -98,12 +98,12 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 10 detect_design_observations",
+      "description": "Exactly 11 detect_design_observations",
       "check": {
         "path": "findings",
         "detector_filter": "detect_design_observations",
         "op": "equals",
-        "value": 10
+        "value": 11
       }
     },
     {
@@ -236,12 +236,12 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "Exactly 3 detect_voltage_dividers",
+      "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 3
+        "value": 4
       }
     },
     {
@@ -257,6 +257,17 @@
     },
     {
       "id": "STRUCT-00000024",
+      "description": "R135 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R135$"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
       "description": "R157 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -267,7 +278,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "R23 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -278,7 +289,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000027",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

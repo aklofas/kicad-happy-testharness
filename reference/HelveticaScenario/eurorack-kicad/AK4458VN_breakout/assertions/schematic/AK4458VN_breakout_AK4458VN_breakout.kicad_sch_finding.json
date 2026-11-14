@@ -20,13 +20,19 @@
       "created_from": "FND-00000258",
       "check": {
         "path": "findings",
-        "op": "not_contains_match",
+        "op": "contains_match",
+        "detector_filter": "detect_rc_filters",
         "field": "resistor.ref",
         "pattern": "^R32$",
-        "detector_filter": "detect_rc_filters"
+        "where": {
+          "capacitor.ref": "^C14$",
+          "capacitor.value": "^(?!.*parallel)",
+          "cutoff_hz": "^88[34]\\d{4}(\\.|$)"
+        }
       },
-      "aspirational": true,
-      "migration_note": "Path migrated from: signal_analysis.rc_filters"
+      "aspirational": false,
+      "migration_note": "Path migrated from: signal_analysis.rc_filters; v3.0.2 regen 2 2026-11-14: 11e ruling (user, 2026-11-13): re-shaped to the R32 + C14 op-amp input filter at ~8.84 MHz with C11 not merged in; graduated, fixed in Wave 11e (365aea94)",
+      "incorrect_review": "graduated (v3.0.2 regen 2026-11-13): fixed in Wave 11e; R32 + C14 is its own filter at 8.84 MHz and C11 is no longer merged in, which the check asserts."
     },
     {
       "id": "FND-00000258-AST-03",

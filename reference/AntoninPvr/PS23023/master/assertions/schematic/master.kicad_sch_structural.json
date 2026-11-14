@@ -173,12 +173,12 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Exactly 5 detect_voltage_dividers",
+      "description": "Exactly 6 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -205,6 +205,17 @@
     },
     {
       "id": "STRUCT-00000020",
+      "description": "R25 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R25$"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
       "description": "R26 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -215,7 +226,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "R32 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -226,7 +237,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "R45 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -237,7 +248,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
       "description": "Exactly 1 validate_voltage_levels",
       "check": {
         "path": "findings",

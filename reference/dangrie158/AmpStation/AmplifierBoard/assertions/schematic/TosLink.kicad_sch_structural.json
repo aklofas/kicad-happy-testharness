@@ -46,7 +46,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-14T04:16:37Z",
+        "tagged_at": "2026-11-14T08:38:04Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -188,12 +188,12 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 4 detect_rc_filters",
+      "description": "Exactly 6 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 4
+        "value": 6
       }
     },
     {
@@ -220,6 +220,17 @@
     },
     {
       "id": "STRUCT-00000021",
+      "description": "R12 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
       "description": "R15 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -230,7 +241,18 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
+      "description": "R20 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R20$"
+      }
+    },
+    {
+      "id": "STRUCT-00000024",
       "description": "R57 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -241,7 +263,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000025",
       "description": "Exactly 4 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -251,7 +273,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000026",
       "description": "R10 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -262,7 +284,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000027",
       "description": "R12 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -273,7 +295,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000028",
       "description": "R16 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -284,7 +306,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000029",
       "description": "R20 in detect_voltage_dividers",
       "check": {
         "path": "findings",

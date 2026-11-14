@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 5 rc_filter simulation(s)",
+      "description": "Exactly 6 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -98,6 +98,16 @@
     },
     {
       "id": "STRUCT-00000010",
+      "description": "C83 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC83\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000011",
       "description": "C79 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -107,7 +117,7 @@
       }
     },
     {
-      "id": "STRUCT-00000011",
+      "id": "STRUCT-00000012",
       "description": "C84 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -117,7 +127,7 @@
       }
     },
     {
-      "id": "STRUCT-00000012",
+      "id": "STRUCT-00000013",
       "description": "C85 simulated as decoupling",
       "check": {
         "path": "simulation_results",

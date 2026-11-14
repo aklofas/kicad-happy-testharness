@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-14T04:16:40Z",
+        "tagged_at": "2026-11-14T08:38:06Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -94,12 +94,12 @@
     },
     {
       "id": "STRUCT-00000009",
-      "description": "Exactly 6 detect_rc_filters",
+      "description": "Exactly 11 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 6
+        "value": 11
       }
     },
     {
@@ -170,6 +170,17 @@
     },
     {
       "id": "STRUCT-00000016",
+      "description": "R226 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R226$"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "Exactly 1 detect_rf_chains",
       "check": {
         "path": "findings",
@@ -179,7 +190,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "Exactly 2 detect_rf_matching",
       "check": {
         "path": "findings",
@@ -189,7 +200,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "Exactly 3 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -199,7 +210,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "R224 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -210,7 +221,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "R226 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -221,7 +232,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "R232 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -232,7 +243,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "Exactly 2 suggest_certifications",
       "check": {
         "path": "findings",
@@ -242,7 +253,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

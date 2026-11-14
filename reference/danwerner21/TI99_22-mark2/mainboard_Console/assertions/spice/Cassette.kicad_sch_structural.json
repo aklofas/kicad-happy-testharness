@@ -28,13 +28,13 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 5 rc_filter simulation(s)",
+      "description": "Exactly 6 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 5
+        "value": 6
       }
     },
     {
@@ -222,12 +222,12 @@
     },
     {
       "id": "STRUCT-00000022",
-      "description": "R77 simulated as voltage_divider",
+      "description": "R75 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bR77\\b"
+        "pattern": "\\bR75\\b"
       }
     },
     {
@@ -242,6 +242,16 @@
     },
     {
       "id": "STRUCT-00000024",
+      "description": "R77 simulated as voltage_divider",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR77\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
       "description": "R74 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -251,23 +261,13 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "R76 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bR76\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000026",
-      "description": "R75 simulated as voltage_divider",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR75\\b"
       }
     },
     {

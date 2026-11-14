@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 8 rc_filter simulation(s)",
+      "description": "Exactly 10 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 8
+        "value": 10
       }
     },
     {
@@ -113,6 +113,26 @@
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC87\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000012",
+      "description": "C91 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC91\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000013",
+      "description": "C92 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC92\\b"
       }
     }
   ]

@@ -39,13 +39,13 @@
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Exactly 11 rc_filter simulation(s)",
+      "description": "Exactly 12 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 11
+        "value": 12
       }
     },
     {
@@ -212,22 +212,22 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "R193 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR193\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000022",
       "description": "C60 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC60\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000022",
+      "description": "R193 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR193\\b"
       }
     },
     {

@@ -204,12 +204,12 @@
     },
     {
       "id": "STRUCT-00000020",
-      "description": "Exactly 9 detect_voltage_dividers",
+      "description": "Exactly 10 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 9
+        "value": 10
       }
     },
     {
@@ -309,6 +309,17 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R23$"
+      }
+    },
+    {
+      "id": "STRUCT-00000030",
+      "description": "R24 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R24$"
       }
     }
   ]

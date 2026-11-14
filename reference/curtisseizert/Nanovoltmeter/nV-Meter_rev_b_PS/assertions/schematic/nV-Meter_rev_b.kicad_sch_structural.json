@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-14T04:16:37Z",
+        "tagged_at": "2026-11-14T08:38:04Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -92,7 +92,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-14T04:16:37Z",
+        "tagged_at": "2026-11-14T08:38:04Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -108,7 +108,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-14T04:16:37Z",
+        "tagged_at": "2026-11-14T08:38:04Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -1132,12 +1132,12 @@
     },
     {
       "id": "STRUCT-00000104",
-      "description": "Exactly 7 detect_voltage_dividers",
+      "description": "Exactly 8 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 7
+        "value": 8
       }
     },
     {
@@ -1186,6 +1186,17 @@
     },
     {
       "id": "STRUCT-00000109",
+      "description": "R152 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R152$"
+      }
+    },
+    {
+      "id": "STRUCT-00000110",
       "description": "R158 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -1196,7 +1207,7 @@
       }
     },
     {
-      "id": "STRUCT-00000110",
+      "id": "STRUCT-00000111",
       "description": "R3 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -1207,7 +1218,7 @@
       }
     },
     {
-      "id": "STRUCT-00000111",
+      "id": "STRUCT-00000112",
       "description": "R89 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -1218,7 +1229,7 @@
       }
     },
     {
-      "id": "STRUCT-00000112",
+      "id": "STRUCT-00000113",
       "description": "Exactly 1 validate_i2c_bus",
       "check": {
         "path": "findings",
@@ -1229,12 +1240,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-001",
-        "tagged_at": "2026-11-14T04:16:37Z",
+        "tagged_at": "2026-11-14T08:38:04Z",
         "tagged_reason": "schema_era key added (PR-001; 4 sites)"
       }
     },
     {
-      "id": "STRUCT-00000113",
+      "id": "STRUCT-00000114",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -1245,12 +1256,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-11-14T04:16:37Z",
+        "tagged_at": "2026-11-14T08:38:04Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "STRUCT-00000114",
+      "id": "STRUCT-00000115",
       "description": "Exactly 5 validate_pullups",
       "check": {
         "path": "findings",
@@ -1260,7 +1271,7 @@
       }
     },
     {
-      "id": "STRUCT-00000115",
+      "id": "STRUCT-00000116",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",
@@ -1271,12 +1282,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-11-14T04:16:37Z",
+        "tagged_at": "2026-11-14T08:38:04Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     },
     {
-      "id": "STRUCT-00000116",
+      "id": "STRUCT-00000117",
       "description": "Exactly 6 validate_voltage_levels",
       "check": {
         "path": "findings",

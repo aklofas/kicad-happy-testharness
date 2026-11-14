@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 8 rc_filter simulation(s)",
+      "description": "Exactly 9 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 8
+        "value": 9
       }
     },
     {
@@ -139,6 +139,16 @@
     },
     {
       "id": "STRUCT-00000014",
+      "description": "C3 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC3\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "C44 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -148,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "R45 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -158,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "R56 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -168,7 +178,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "C12 simulated as decoupling",
       "check": {
         "path": "simulation_results",

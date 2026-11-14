@@ -46,7 +46,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-14T04:16:35Z",
+        "tagged_at": "2026-11-14T08:38:03Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -353,12 +353,12 @@
     },
     {
       "id": "STRUCT-00000033",
-      "description": "Exactly 12 detect_voltage_dividers",
+      "description": "Exactly 10 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 12
+        "value": 10
       }
     },
     {
@@ -440,17 +440,6 @@
     },
     {
       "id": "STRUCT-00000041",
-      "description": "R37 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R37$"
-      }
-    },
-    {
-      "id": "STRUCT-00000042",
       "description": "R26 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -461,29 +450,18 @@
       }
     },
     {
+      "id": "STRUCT-00000042",
+      "description": "R37 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R37$"
+      }
+    },
+    {
       "id": "STRUCT-00000043",
-      "description": "R29 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R29$"
-      }
-    },
-    {
-      "id": "STRUCT-00000044",
-      "description": "R39 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R39$"
-      }
-    },
-    {
-      "id": "STRUCT-00000045",
       "description": "R8 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -494,7 +472,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000044",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

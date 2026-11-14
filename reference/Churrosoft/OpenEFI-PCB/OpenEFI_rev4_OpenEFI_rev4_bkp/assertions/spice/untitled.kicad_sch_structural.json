@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 7 rc_filter simulation(s)",
+      "description": "Exactly 11 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 7
+        "value": 11
       }
     },
     {
@@ -148,22 +148,22 @@
     },
     {
       "id": "STRUCT-00000015",
-      "description": "R120 simulated as rc_filter",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bR120\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000016",
       "description": "C57 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bC57\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000016",
+      "description": "R120 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bR120\\b"
       }
     },
     {

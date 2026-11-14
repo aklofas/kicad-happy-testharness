@@ -6,13 +6,13 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 7 rc_filter simulation(s)",
+      "description": "Exactly 10 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 7
+        "value": 10
       }
     },
     {
@@ -128,16 +128,26 @@
     },
     {
       "id": "STRUCT-00000013",
-      "description": "RR2 simulated as rc_filter",
+      "description": "C17 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bRR2\\b"
+        "pattern": "\\bC17\\b"
       }
     },
     {
       "id": "STRUCT-00000014",
+      "description": "C66 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC66\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000015",
       "description": "C68 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -147,7 +157,17 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
+      "description": "RR2 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bRR2\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000017",
       "description": "R6 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -157,7 +177,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000018",
       "description": "RV1 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -167,7 +187,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000019",
       "description": "R8 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",
@@ -177,7 +197,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000020",
       "description": "RR18 simulated as voltage_divider",
       "check": {
         "path": "simulation_results",

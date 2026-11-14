@@ -163,7 +163,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-14T04:16:21Z",
+        "tagged_at": "2026-11-14T08:37:50Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -338,6 +338,27 @@
     },
     {
       "id": "SEED-00000032",
+      "description": "1 detect_voltage_dividers detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000033",
+      "description": "All detect_voltage_dividers have non-zero ratio",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "not_contains_match",
+        "field": "ratio",
+        "pattern": "^(0(\\.0+)?|None|)$"
+      }
+    },
+    {
+      "id": "SEED-00000034",
       "description": "1 detect_wireless_modules detected",
       "check": {
         "path": "findings",
@@ -347,7 +368,7 @@
       }
     },
     {
-      "id": "SEED-00000033",
+      "id": "SEED-00000035",
       "description": "1 suggest_certifications detected",
       "check": {
         "path": "findings",
@@ -357,7 +378,7 @@
       }
     },
     {
-      "id": "SEED-00000034",
+      "id": "SEED-00000036",
       "description": "Has 11 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -366,7 +387,7 @@
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000037",
       "description": "Has 19 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",
@@ -375,7 +396,7 @@
       }
     },
     {
-      "id": "SEED-00000036",
+      "id": "SEED-00000038",
       "description": "Has 5 ic(s)",
       "check": {
         "path": "statistics.component_types.ic",
@@ -384,7 +405,7 @@
       }
     },
     {
-      "id": "SEED-00000037",
+      "id": "SEED-00000039",
       "description": "Has 18 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

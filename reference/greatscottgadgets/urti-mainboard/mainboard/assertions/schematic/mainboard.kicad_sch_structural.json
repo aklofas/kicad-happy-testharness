@@ -16,7 +16,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-11-14T04:16:39Z",
+        "tagged_at": "2026-11-14T08:38:05Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -82,7 +82,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-14T04:16:39Z",
+        "tagged_at": "2026-11-14T08:38:05Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -352,12 +352,12 @@
     },
     {
       "id": "STRUCT-00000033",
-      "description": "Exactly 47 detect_rc_filters",
+      "description": "Exactly 53 detect_rc_filters",
       "check": {
         "path": "findings",
         "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 47
+        "value": 53
       }
     },
     {
@@ -855,6 +855,27 @@
     },
     {
       "id": "STRUCT-00000079",
+      "description": "Exactly 1 detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "equals",
+        "value": 1
+      }
+    },
+    {
+      "id": "STRUCT-00000080",
+      "description": "R30 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R30$"
+      }
+    },
+    {
+      "id": "STRUCT-00000081",
       "description": "Exactly 2 suggest_certifications",
       "check": {
         "path": "findings",
@@ -864,7 +885,7 @@
       }
     },
     {
-      "id": "STRUCT-00000080",
+      "id": "STRUCT-00000082",
       "description": "Exactly 4 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -875,12 +896,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-11-14T04:16:39Z",
+        "tagged_at": "2026-11-14T08:38:05Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     },
     {
-      "id": "STRUCT-00000081",
+      "id": "STRUCT-00000083",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -890,7 +911,7 @@
       }
     },
     {
-      "id": "STRUCT-00000082",
+      "id": "STRUCT-00000084",
       "description": "Exactly 61 validate_voltage_levels",
       "check": {
         "path": "findings",

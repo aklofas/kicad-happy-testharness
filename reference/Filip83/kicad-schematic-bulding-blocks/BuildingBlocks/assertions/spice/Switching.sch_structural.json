@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 10 rc_filter simulation(s)",
+      "description": "Exactly 14 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 10
+        "value": 14
       }
     },
     {
@@ -188,6 +188,26 @@
     },
     {
       "id": "STRUCT-00000019",
+      "description": "C240 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC240\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000020",
+      "description": "C241 simulated as rc_filter",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC241\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000021",
       "description": "C230 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -197,7 +217,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000022",
       "description": "C231 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -207,7 +227,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000023",
       "description": "C234 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -217,7 +237,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000024",
       "description": "C235 simulated as decoupling",
       "check": {
         "path": "simulation_results",
@@ -227,7 +247,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000025",
       "description": "C223 simulated as decoupling",
       "check": {
         "path": "simulation_results",

@@ -6,21 +6,21 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~74 (tolerance 10%)",
+      "description": "Simulation count ~80 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 70,
-        "max": 78
+        "min": 76,
+        "max": 84
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "At least 56 passing simulation(s)",
+      "description": "At least 60 passing simulation(s)",
       "check": {
         "path": "summary.pass",
         "op": "min_count",
-        "value": 56
+        "value": 60
       }
     },
     {
@@ -58,13 +58,13 @@
     },
     {
       "id": "SEED-00000006",
-      "description": "44 rc_filter simulation(s)",
+      "description": "50 rc_filter simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^rc_filter$",
-        "value": 44
+        "value": 50
       }
     },
     {

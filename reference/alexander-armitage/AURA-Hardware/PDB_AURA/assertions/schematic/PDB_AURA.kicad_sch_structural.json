@@ -16,7 +16,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-14T04:16:35Z",
+        "tagged_at": "2026-11-14T08:38:02Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -72,7 +72,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-14T04:16:35Z",
+        "tagged_at": "2026-11-14T08:38:02Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -255,17 +255,6 @@
     },
     {
       "id": "STRUCT-00000024",
-      "description": "R207 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R207$"
-      }
-    },
-    {
-      "id": "STRUCT-00000025",
       "description": "R206 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -273,6 +262,17 @@
         "op": "contains_match",
         "field": "r_top.ref",
         "pattern": "^R206$"
+      }
+    },
+    {
+      "id": "STRUCT-00000025",
+      "description": "R207 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R207$"
       }
     },
     {
