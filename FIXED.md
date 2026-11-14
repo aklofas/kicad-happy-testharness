@@ -11,6 +11,40 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-13 — TH-113: `generate_validation_md.py` read KH-1000 and up as three-digit ids
+
+**Severity:** MEDIUM (wrong issue counts in a release document)
+**File:** `tools/generate_validation_md.py` (`_heading_ids`, `_severity_by_id`)
+**Discovered:** 2026-11-13, v3.0.2 VALIDATION.md draft at `206403e8`: the issue line read "212 open" while ISSUES.md holds 303 open KH.
+
+**Root cause:** the id patterns were `KH-\d{3}`, so `KH-1040` matched as `KH-104` and every id from 1000 up was merged into an existing three-digit id (open, closed and max all low). The v3.0.1 draft was not affected (highest id then KH-967).
+
+**Fix:** the four id patterns take `\d{3,}`.
+
+**Verification:** `tests/test_generate_validation_md.py::test_issue_counts_read_four_digit_ids` RED before / GREEN after (open / closed / max and severities with KH-1040 beside KH-104); the generator and facts suites 31 / 0. The regenerated v3.0.2 draft reads the tracker counts ISSUES.md and FIXED.md hold.
+
+## 2026-11-13 — TH-112: `seed.py --prune-stale` never pruned STRUCT files, so STRUCT locks on vanished outputs stayed as errors
+
+**Severity:** LOW
+**File:** `regression/seed.py` (`prune_stale_assertions`)
+**Discovered:** 2026-11-13, v3.0.2 regen at `206403e8`: after the TH-099 orphan retirement (`tools/retire_orphan_outputs.py --all --apply`, 29 pcb + 7 gerber), the reseed's final `run_checks` reported 41 errors, all `output file not found` on STRUCT locks of 13 retired pcb units.
+
+**Root cause:** `prune_stale_assertions` skipped every file whose `generated_by` was not `seed.py`, so `seed_structural.py` files were never considered, even when their output no longer existed.
+
+**Fix:** SEED and STRUCT files are both pruned when their output is missing or unreadable; the seeding-threshold rule stays SEED-only (structural files have their own selection). Curated files (FND / BUGFIX / NEG) are untouched.
+
+**Verification:** `tests/test_seed_prune_structural.py` (4 tests: STRUCT pruned when the output is gone, kept below the SEED threshold, curated files kept, dry run writes nothing) RED before / GREEN after; `tests/test_seed.py` green. Corpus: the dry run listed exactly the 13 retired-orphan STRUCT files (`results/v302_regen/prune_structural_dryrun.log`); after `--prune-stale` the final checks went from 2,712,917 / 0 failed / 41 errors to 2,712,876 / 0 / 0 (both eras).
+
+## 2026-11-13 — TH-044: `hierarchical` cross-section read 0 repos (catalog `max_hierarchy_sheets` stale)
+
+**Severity:** LOW
+**File:** `tools/generate_catalog.py`, `reference/repo_catalog.json`, `reference/cross_sections.json`
+**Discovered:** 2026-05-16 (LOG 9 hierarchy regression gate)
+
+**Fix:** the generator half landed 2026-11-06 (`_max_hierarchy_sheets` reads the v3 top-level `sheets` list); the data half ran at the v3.0.2 regen: `tools/generate_catalog.py` then `tools/generate_cross_sections.py` over the regen outputs at `206403e8`.
+
+**Verification:** `generate_cross_sections.py --list`: `hierarchical` 1,589 repos (the 2026-11-06 dry run predicted 1,589). The regenerated catalog also refreshes the 17 stale fields, which moves the derived sections: quick_200 257 -> 248 (-37 / +28), detector_coverage -24 / +24, complexity_tiers -15 / +15, emc_rich -13 / +13, spice_rich -8 / +8, category_sample -4 / +4, kicad_versions -2 / +2, kicad10 41 -> 40 (airsoftak25/NeoSumec-MiniSumo-HW); smoke unchanged (curated). Before copies: `results/v302_regen/{cross_sections,repo_catalog}.before.json`.
+
 ## 2026-11-13 — KH-939: shared `is_power_net_name` over-matches `V<digit>` signal names, `_VDD` tails and text after an escaped slash
 
 **Severity:** MEDIUM (~170 corpus IO-002 lost, estimated)
