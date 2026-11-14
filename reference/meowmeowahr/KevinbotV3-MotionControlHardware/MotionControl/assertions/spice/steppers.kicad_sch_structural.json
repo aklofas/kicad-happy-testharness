@@ -6,68 +6,69 @@
   "assertions": [
     {
       "id": "STRUCT-00000001",
-      "description": "Exactly 8 transistor_circuit simulation(s)",
+      "description": "Exactly 1 bridge_circuit simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
-        "pattern": "^transistor_circuit$",
-        "value": 8
+        "pattern": "^bridge_circuit$",
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Q13 simulated as transistor_circuit",
+      "description": "Exactly 4 decoupling simulation(s)",
       "check": {
         "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ13\\b"
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^decoupling$",
+        "value": 4
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Q17 simulated as transistor_circuit",
+      "description": "C66 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ17\\b"
+        "pattern": "\\bC66\\b"
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "Q20 simulated as transistor_circuit",
+      "description": "C62 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ20\\b"
+        "pattern": "\\bC62\\b"
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "Q21 simulated as transistor_circuit",
+      "description": "C54 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ21\\b"
+        "pattern": "\\bC54\\b"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "Q24 simulated as transistor_circuit",
+      "description": "C56 simulated as decoupling",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
-        "pattern": "\\bQ24\\b"
+        "pattern": "\\bC56\\b"
       }
     },
     {
       "id": "STRUCT-00000007",
-      "description": "Q25 simulated as transistor_circuit",
+      "description": "Q25 simulated as bridge_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
@@ -77,17 +78,7 @@
     },
     {
       "id": "STRUCT-00000008",
-      "description": "Q32 simulated as transistor_circuit",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bQ32\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000009",
-      "description": "Q33 simulated as transistor_circuit",
+      "description": "Q33 simulated as bridge_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",

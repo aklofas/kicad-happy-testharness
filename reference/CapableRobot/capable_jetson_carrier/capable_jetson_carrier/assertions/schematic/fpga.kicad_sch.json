@@ -171,7 +171,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:30Z",
+        "tagged_at": "2026-11-14T04:16:13Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -187,60 +187,6 @@
     },
     {
       "id": "SEED-00000018",
-      "description": "1 detect_clock_distribution detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_clock_distribution",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000019",
-      "description": "All detect_clock_distribution have ref",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_clock_distribution",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^$"
-      }
-    },
-    {
-      "id": "SEED-00000020",
-      "description": "All detect_clock_distribution type values are valid",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_clock_distribution",
-        "op": "count_matches",
-        "field": "type",
-        "pattern": "^(clock_generator|pll|oscillator_output)$",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000021",
-      "description": "1 detect_crystal_circuits detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "All detect_crystal_circuits have reference present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_crystal_circuits",
-        "op": "not_contains_match",
-        "field": "reference",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000023",
       "description": "7 detect_design_observations detected",
       "check": {
         "path": "findings",
@@ -250,7 +196,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000019",
       "description": "1 detect_level_shifters detected",
       "check": {
         "path": "findings",
@@ -260,7 +206,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000020",
       "description": "All detect_level_shifters have ref",
       "check": {
         "path": "findings",
@@ -271,7 +217,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000021",
       "description": "All detect_level_shifters type values are valid",
       "check": {
         "path": "findings",
@@ -283,7 +229,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000022",
       "description": "1 detect_protection_devices detected",
       "check": {
         "path": "findings",
@@ -293,7 +239,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000023",
       "description": "1 detect_transistor_circuits detected",
       "check": {
         "path": "findings",
@@ -303,7 +249,7 @@
       }
     },
     {
-      "id": "SEED-00000029",
+      "id": "SEED-00000024",
       "description": "All detect_transistor_circuits have reference present",
       "check": {
         "path": "findings",
@@ -314,7 +260,7 @@
       }
     },
     {
-      "id": "SEED-00000030",
+      "id": "SEED-00000025",
       "description": "Has 18 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -323,7 +269,7 @@
       }
     },
     {
-      "id": "SEED-00000031",
+      "id": "SEED-00000026",
       "description": "Has 34 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

@@ -173,7 +173,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-06T18:42:31Z",
+        "tagged_at": "2026-11-14T04:16:14Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -189,7 +189,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:31Z",
+        "tagged_at": "2026-11-14T04:16:14Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -226,6 +226,16 @@
     },
     {
       "id": "SEED-00000021",
+      "description": "1 suggest_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000022",
       "description": "1 validate_led_resistors detected",
       "check": {
         "path": "findings",
@@ -235,7 +245,7 @@
       }
     },
     {
-      "id": "SEED-00000022",
+      "id": "SEED-00000023",
       "description": "Has 9 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",

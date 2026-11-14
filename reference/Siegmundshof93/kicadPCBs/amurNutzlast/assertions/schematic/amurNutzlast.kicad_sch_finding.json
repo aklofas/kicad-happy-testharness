@@ -27,9 +27,9 @@
         "assert_value": "R12",
         "detector_filter": "detect_power_regulators"
       },
-      "aspirational": true,
-      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": \"/\\\"estimated_vout\\\":\\\\s*[0-9]/\", \"detector_filter\": \"detect_power_regulators\"})",
-      "incorrect_review": "rewrite (TH-105, 2026-11-06): Old check used 'value', not 'pattern' (vacuous). U2 still uses R10/R11 sense resistors, Vout 0.601 V; correct divider is R12 (top)/R13 on ADJ1."
+      "aspirational": false,
+      "migration_note": "TH-105: re-anchored to the value the review calls correct (was {\"path\": \"findings\", \"op\": \"contains_match\", \"value\": \"/\\\"estimated_vout\\\":\\\\s*[0-9]/\", \"detector_filter\": \"detect_power_regulators\"}); v3.0.2 regen 2026-11-13: graduated, fixed in Wave 11b-1: U2 (LT3030) reads its feedback from R12, not the R10 sense resistor",
+      "incorrect_review": "graduated (v3.0.2 regen 2026-11-13): fixed in Wave 11b-1; U2 (LT3030) reads its feedback from R12, not the R10 sense resistor, which the check asserts."
     }
   ]
 }

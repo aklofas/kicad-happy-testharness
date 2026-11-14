@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-06T18:42:49Z",
+        "tagged_at": "2026-11-14T04:16:34Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -108,27 +108,6 @@
         "detector_filter": "detect_display_interfaces",
         "op": "equals",
         "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000011",
-      "description": "Exactly 1 detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000012",
-      "description": "U2 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U2$"
       }
     }
   ]

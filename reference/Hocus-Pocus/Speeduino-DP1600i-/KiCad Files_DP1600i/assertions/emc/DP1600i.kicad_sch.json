@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~146 (tolerance 10%)",
+      "description": "Finding count ~147 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 138,
-        "max": 154
+        "min": 139,
+        "max": 155
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~78",
+      "description": "by_severity.error ~79",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 74,
-        "max": 82
+        "min": 75,
+        "max": 83
       }
     },
     {
@@ -46,12 +46,12 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~38.5 (+-10)",
+      "description": "EMC risk score ~32.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 28.5,
-        "max": 48.5
+        "min": 22.5,
+        "max": 42.5
       }
     },
     {
@@ -100,13 +100,13 @@
     },
     {
       "id": "SEED-00000010",
-      "description": "25 io_filtering finding(s)",
+      "description": "26 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 25
+        "value": 26
       }
     },
     {
@@ -140,11 +140,11 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "~19 probe point(s) in test plan",
+      "description": "~20 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 17
+        "value": 18
       }
     },
     {

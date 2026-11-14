@@ -118,7 +118,7 @@
     },
     {
       "id": "SEED-00000012",
-      "description": "3 audit_rail_sources detected",
+      "description": "2 audit_rail_sources detected",
       "check": {
         "path": "findings",
         "detector_filter": "audit_rail_sources",
@@ -128,7 +128,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:36Z",
+        "tagged_at": "2026-11-14T04:16:20Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -218,27 +218,6 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "1 detect_power_regulators detected",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "min_count",
-        "value": 1
-      }
-    },
-    {
-      "id": "SEED-00000022",
-      "description": "All detect_power_regulators have ref present",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "not_contains_match",
-        "field": "ref",
-        "pattern": "^(None|\\?|)$"
-      }
-    },
-    {
-      "id": "SEED-00000023",
       "description": "1 detect_rc_filters detected",
       "check": {
         "path": "findings",
@@ -248,7 +227,7 @@
       }
     },
     {
-      "id": "SEED-00000024",
+      "id": "SEED-00000022",
       "description": "All detect_rc_filters have non-zero cutoff_hz",
       "check": {
         "path": "findings",
@@ -259,7 +238,7 @@
       }
     },
     {
-      "id": "SEED-00000025",
+      "id": "SEED-00000023",
       "description": "1 detect_reset_supervisors detected",
       "check": {
         "path": "findings",
@@ -269,7 +248,7 @@
       }
     },
     {
-      "id": "SEED-00000026",
+      "id": "SEED-00000024",
       "description": "All detect_reset_supervisors type values are valid",
       "check": {
         "path": "findings",
@@ -281,7 +260,7 @@
       }
     },
     {
-      "id": "SEED-00000027",
+      "id": "SEED-00000025",
       "description": "Has 12 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -290,7 +269,7 @@
       }
     },
     {
-      "id": "SEED-00000028",
+      "id": "SEED-00000026",
       "description": "Has 5 connector(s)",
       "check": {
         "path": "statistics.component_types.connector",

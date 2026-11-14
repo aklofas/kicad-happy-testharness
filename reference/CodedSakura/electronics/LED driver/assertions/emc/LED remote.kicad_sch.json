@@ -6,22 +6,22 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~64 (tolerance 10%)",
+      "description": "Finding count ~63 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 60,
-        "max": 68
+        "min": 59,
+        "max": 67
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.error ~23",
+      "description": "by_severity.error ~24",
       "check": {
         "path": "summary.by_severity.error",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 21,
+        "max": 27
       }
     },
     {
@@ -36,22 +36,22 @@
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~18",
+      "description": "by_severity.info ~16",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 16,
-        "max": 20
+        "min": 14,
+        "max": 18
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~44.5 (+-10)",
+      "description": "EMC risk score ~38.5 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 34.5,
-        "max": 54.5
+        "min": 28.5,
+        "max": 48.5
       }
     },
     {
@@ -111,13 +111,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "2 io_filtering finding(s)",
+      "description": "1 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -162,11 +162,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~3 probe point(s) in test plan",
+      "description": "~2 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 2
+        "value": 1
       }
     },
     {

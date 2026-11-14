@@ -63,7 +63,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-11-06T18:42:37Z",
+        "tagged_at": "2026-11-14T04:16:22Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -79,7 +79,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-06T18:42:37Z",
+        "tagged_at": "2026-11-14T04:16:22Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -160,7 +160,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:37Z",
+        "tagged_at": "2026-11-14T04:16:22Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -356,16 +356,26 @@
     },
     {
       "id": "SEED-00000033",
-      "description": "1 validate_pullups detected",
+      "description": "1 detect_wireless_modules detected",
       "check": {
         "path": "findings",
-        "detector_filter": "validate_pullups",
+        "detector_filter": "detect_wireless_modules",
         "op": "min_count",
         "value": 1
       }
     },
     {
       "id": "SEED-00000034",
+      "description": "1 suggest_certifications detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000035",
       "description": "2 validate_usb_bus detected",
       "check": {
         "path": "findings",
@@ -376,12 +386,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-11-06T18:42:37Z",
+        "tagged_at": "2026-11-14T04:16:22Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     },
     {
-      "id": "SEED-00000035",
+      "id": "SEED-00000036",
       "description": "Has 5 capacitor(s)",
       "check": {
         "path": "statistics.component_types.capacitor",
@@ -390,7 +400,7 @@
       }
     },
     {
-      "id": "SEED-00000036",
+      "id": "SEED-00000037",
       "description": "Has 17 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -399,7 +409,7 @@
       }
     },
     {
-      "id": "SEED-00000037",
+      "id": "SEED-00000038",
       "description": "Has 5 switch(s)",
       "check": {
         "path": "statistics.component_types.switch",
@@ -408,7 +418,7 @@
       }
     },
     {
-      "id": "SEED-00000038",
+      "id": "SEED-00000039",
       "description": "Has 7 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",

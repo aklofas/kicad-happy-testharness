@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-06T18:42:47Z",
+        "tagged_at": "2026-11-14T04:16:32Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -72,7 +72,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:47Z",
+        "tagged_at": "2026-11-14T04:16:32Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -193,27 +193,6 @@
     },
     {
       "id": "STRUCT-00000018",
-      "description": "Exactly 1 detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
-      "description": "U1 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U1$"
-      }
-    },
-    {
-      "id": "STRUCT-00000020",
       "description": "Exactly 1 detect_rf_matching",
       "check": {
         "path": "findings",
@@ -223,7 +202,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000019",
       "description": "Exactly 1 detect_solder_jumpers",
       "check": {
         "path": "findings",
@@ -233,17 +212,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
-      "description": "Exactly 1 detect_wireless_modules",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_wireless_modules",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000020",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -253,7 +222,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000021",
       "description": "Exactly 1 validate_spi_bus",
       "check": {
         "path": "findings",
@@ -264,7 +233,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-002",
-        "tagged_at": "2026-11-06T18:42:47Z",
+        "tagged_at": "2026-11-14T04:16:32Z",
         "tagged_reason": "schema_era key added (PR-002; 1 site)"
       }
     }

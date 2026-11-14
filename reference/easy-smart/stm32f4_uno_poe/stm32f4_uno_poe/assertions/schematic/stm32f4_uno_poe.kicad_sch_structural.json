@@ -16,7 +16,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-06T18:42:51Z",
+        "tagged_at": "2026-11-14T04:16:37Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -82,7 +82,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:51Z",
+        "tagged_at": "2026-11-14T04:16:37Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -291,12 +291,12 @@
     },
     {
       "id": "STRUCT-00000027",
-      "description": "Exactly 4 detect_voltage_dividers",
+      "description": "Exactly 5 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 4
+        "value": 5
       }
     },
     {
@@ -345,6 +345,17 @@
     },
     {
       "id": "STRUCT-00000032",
+      "description": "R225 in detect_voltage_dividers",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_voltage_dividers",
+        "op": "contains_match",
+        "field": "r_top.ref",
+        "pattern": "^R225$"
+      }
+    },
+    {
+      "id": "STRUCT-00000033",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",

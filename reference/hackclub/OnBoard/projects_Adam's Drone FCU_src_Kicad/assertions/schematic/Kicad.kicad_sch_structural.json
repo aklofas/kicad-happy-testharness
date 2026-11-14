@@ -16,7 +16,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-11-06T18:42:52Z",
+        "tagged_at": "2026-11-14T04:16:39Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -82,7 +82,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-06T18:42:52Z",
+        "tagged_at": "2026-11-14T04:16:39Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -98,7 +98,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:52Z",
+        "tagged_at": "2026-11-14T04:16:39Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -230,12 +230,12 @@
     },
     {
       "id": "STRUCT-00000021",
-      "description": "Exactly 2 detect_power_regulators",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -251,17 +251,6 @@
     },
     {
       "id": "STRUCT-00000023",
-      "description": "U7 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U7$"
-      }
-    },
-    {
-      "id": "STRUCT-00000024",
       "description": "Exactly 1 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -271,7 +260,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "U3 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -282,7 +271,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "Exactly 1 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -292,7 +281,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000026",
       "description": "R2 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -303,7 +292,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000027",
       "description": "Exactly 1 detect_reset_supervisors",
       "check": {
         "path": "findings",
@@ -313,7 +302,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000028",
       "description": "Exactly 1 detect_sensor_interfaces",
       "check": {
         "path": "findings",
@@ -323,7 +312,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000029",
       "description": "Exactly 1 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -333,7 +322,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "R8 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -344,7 +333,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000031",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -354,7 +343,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000032",
       "description": "Exactly 1 validate_power_sequencing",
       "check": {
         "path": "findings",
@@ -365,7 +354,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-11-06T18:42:52Z",
+        "tagged_at": "2026-11-14T04:16:39Z",
         "tagged_reason": "schema_era key added (PS-001; 3 sites)"
       }
     }

@@ -17,13 +17,13 @@
     },
     {
       "id": "STRUCT-00000002",
-      "description": "Exactly 1 inrush simulation(s)",
+      "description": "Exactly 2 inrush simulation(s)",
       "check": {
         "path": "simulation_results",
         "op": "count_matches",
         "field": "subcircuit_type",
         "pattern": "^inrush$",
-        "value": 1
+        "value": 2
       }
     },
     {
@@ -1153,6 +1153,36 @@
     },
     {
       "id": "STRUCT-00000115",
+      "description": "C59 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC59\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000116",
+      "description": "C5 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC5\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000117",
+      "description": "C64 simulated as inrush",
+      "check": {
+        "path": "simulation_results",
+        "op": "contains_match",
+        "field": "components",
+        "pattern": "\\bC64\\b"
+      }
+    },
+    {
+      "id": "STRUCT-00000118",
       "description": "C30 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -1162,7 +1192,7 @@
       }
     },
     {
-      "id": "STRUCT-00000116",
+      "id": "STRUCT-00000119",
       "description": "C35 simulated as inrush",
       "check": {
         "path": "simulation_results",
@@ -1172,7 +1202,7 @@
       }
     },
     {
-      "id": "STRUCT-00000117",
+      "id": "STRUCT-00000120",
       "description": "C46 simulated as inrush",
       "check": {
         "path": "simulation_results",

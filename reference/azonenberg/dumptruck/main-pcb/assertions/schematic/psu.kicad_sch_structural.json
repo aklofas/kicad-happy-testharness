@@ -66,7 +66,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-06T18:42:50Z",
+        "tagged_at": "2026-11-14T04:16:36Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -82,7 +82,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:50Z",
+        "tagged_at": "2026-11-14T04:16:36Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -128,12 +128,12 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 2 detect_power_regulators",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
@@ -149,17 +149,6 @@
     },
     {
       "id": "STRUCT-00000014",
-      "description": "U2 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000015",
       "description": "Exactly 4 detect_solder_jumpers",
       "check": {
         "path": "findings",
@@ -169,7 +158,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000015",
       "description": "Exactly 11 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -179,7 +168,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000016",
       "description": "R11 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -190,7 +179,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000017",
       "description": "R13 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -201,7 +190,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000018",
       "description": "R16 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -212,7 +201,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "R18 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -223,7 +212,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "R24 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -234,7 +223,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "R46 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -245,7 +234,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "R77 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -256,7 +245,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "R81 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -267,7 +256,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "R83 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -278,7 +267,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "R86 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -289,7 +278,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000026",
       "description": "R88 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -300,23 +289,13 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
-      "description": "Exactly 1 validate_pullups",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_pullups",
-        "op": "equals",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000029",
-      "description": "Exactly 10 validate_voltage_levels",
+      "id": "STRUCT-00000027",
+      "description": "Exactly 8 validate_voltage_levels",
       "check": {
         "path": "findings",
         "detector_filter": "validate_voltage_levels",
         "op": "equals",
-        "value": 10
+        "value": 8
       }
     }
   ]

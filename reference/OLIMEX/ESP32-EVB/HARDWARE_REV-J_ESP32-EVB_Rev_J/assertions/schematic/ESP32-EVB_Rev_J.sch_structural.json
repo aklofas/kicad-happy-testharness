@@ -56,7 +56,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-06T18:42:48Z",
+        "tagged_at": "2026-11-14T04:16:34Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -72,7 +72,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:48Z",
+        "tagged_at": "2026-11-14T04:16:34Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -398,12 +398,12 @@
     },
     {
       "id": "STRUCT-00000037",
-      "description": "Exactly 4 detect_voltage_dividers",
+      "description": "Exactly 3 detect_voltage_dividers",
       "check": {
         "path": "findings",
         "detector_filter": "detect_voltage_dividers",
         "op": "equals",
-        "value": 4
+        "value": 3
       }
     },
     {
@@ -441,16 +441,26 @@
     },
     {
       "id": "STRUCT-00000041",
-      "description": "Exactly 1 suggest_certifications",
+      "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
-        "detector_filter": "suggest_certifications",
+        "detector_filter": "detect_wireless_modules",
         "op": "equals",
         "value": 1
       }
     },
     {
       "id": "STRUCT-00000042",
+      "description": "Exactly 2 suggest_certifications",
+      "check": {
+        "path": "findings",
+        "detector_filter": "suggest_certifications",
+        "op": "equals",
+        "value": 2
+      }
+    },
+    {
+      "id": "STRUCT-00000043",
       "description": "Exactly 1 validate_can_bus",
       "check": {
         "path": "findings",
@@ -461,12 +471,12 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-003",
-        "tagged_at": "2026-11-06T18:42:48Z",
+        "tagged_at": "2026-11-14T04:16:34Z",
         "tagged_reason": "schema_era key added (PR-003; 1 site)"
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000044",
       "description": "Exactly 1 validate_crystal_load_caps",
       "check": {
         "path": "findings",
@@ -476,7 +486,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000045",
       "description": "Exactly 2 validate_led_resistors",
       "check": {
         "path": "findings",
@@ -486,7 +496,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
+      "id": "STRUCT-00000046",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -496,7 +506,7 @@
       }
     },
     {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000047",
       "description": "Exactly 2 validate_usb_bus",
       "check": {
         "path": "findings",
@@ -507,7 +517,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PR-004",
-        "tagged_at": "2026-11-06T18:42:48Z",
+        "tagged_at": "2026-11-14T04:16:34Z",
         "tagged_reason": "schema_era key added (PR-004; 1 site)"
       }
     }

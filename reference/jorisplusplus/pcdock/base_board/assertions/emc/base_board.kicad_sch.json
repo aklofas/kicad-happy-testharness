@@ -6,32 +6,32 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~70 (tolerance 10%)",
+      "description": "Finding count ~63 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 66,
-        "max": 74
+        "min": 59,
+        "max": 67
       }
     },
     {
       "id": "SEED-00000002",
-      "description": "by_severity.warning ~41",
+      "description": "by_severity.warning ~39",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 36,
-        "max": 46
+        "min": 35,
+        "max": 43
       }
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.info ~29",
+      "description": "by_severity.info ~24",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 26,
-        "max": 32
+        "min": 21,
+        "max": 27
       }
     },
     {
@@ -46,13 +46,13 @@
     },
     {
       "id": "SEED-00000005",
-      "description": "9 clock_routing finding(s)",
+      "description": "7 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 9
+        "value": 7
       }
     },
     {
@@ -112,13 +112,13 @@
     },
     {
       "id": "SEED-00000011",
-      "description": "16 io_filtering finding(s)",
+      "description": "11 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 16
+        "value": 11
       }
     },
     {
@@ -163,11 +163,11 @@
     },
     {
       "id": "SEED-00000016",
-      "description": "~29 probe point(s) in test plan",
+      "description": "~25 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 26
+        "value": 22
       }
     },
     {

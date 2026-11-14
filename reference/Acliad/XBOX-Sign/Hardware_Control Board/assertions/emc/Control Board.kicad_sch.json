@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Finding count ~57 (tolerance 10%)",
+      "description": "Finding count ~51 (tolerance 10%)",
       "check": {
         "path": "summary.total_findings",
         "op": "range",
-        "min": 54,
-        "max": 60
+        "min": 48,
+        "max": 54
       }
     },
     {
@@ -26,43 +26,43 @@
     },
     {
       "id": "SEED-00000003",
-      "description": "by_severity.warning ~23",
+      "description": "by_severity.warning ~21",
       "check": {
         "path": "summary.by_severity.warning",
         "op": "range",
-        "min": 20,
-        "max": 26
+        "min": 18,
+        "max": 24
       }
     },
     {
       "id": "SEED-00000004",
-      "description": "by_severity.info ~31",
+      "description": "by_severity.info ~27",
       "check": {
         "path": "summary.by_severity.info",
         "op": "range",
-        "min": 27,
-        "max": 35
+        "min": 24,
+        "max": 30
       }
     },
     {
       "id": "SEED-00000005",
-      "description": "EMC risk score ~55.0 (+-10)",
+      "description": "EMC risk score ~61.0 (+-10)",
       "check": {
         "path": "summary.emc_risk_score",
         "op": "range",
-        "min": 45.0,
-        "max": 65.0
+        "min": 51.0,
+        "max": 71.0
       }
     },
     {
       "id": "SEED-00000006",
-      "description": "3 clock_routing finding(s)",
+      "description": "1 clock_routing finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^clock_routing$",
-        "value": 3
+        "value": 1
       }
     },
     {
@@ -89,13 +89,13 @@
     },
     {
       "id": "SEED-00000009",
-      "description": "10 io_filtering finding(s)",
+      "description": "6 io_filtering finding(s)",
       "check": {
         "path": "findings",
         "op": "count_matches",
         "field": "category",
         "pattern": "^io_filtering$",
-        "value": 10
+        "value": 6
       }
     },
     {
@@ -140,11 +140,11 @@
     },
     {
       "id": "SEED-00000014",
-      "description": "~15 probe point(s) in test plan",
+      "description": "~12 probe point(s) in test plan",
       "check": {
         "path": "test_plan.probe_points",
         "op": "min_count",
-        "value": 13
+        "value": 10
       }
     },
     {
@@ -167,11 +167,11 @@
     },
     {
       "id": "SEED-00000017",
-      "description": "~18 net(s) with EMC scores",
+      "description": "~17 net(s) with EMC scores",
       "check": {
         "path": "per_net_scores",
         "op": "min_count",
-        "value": 16
+        "value": 15
       }
     }
   ]

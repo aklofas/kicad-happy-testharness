@@ -26,44 +26,77 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 detect_voltage_dividers",
+      "description": "Exactly 7 detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 7
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "R13 in detect_voltage_dividers",
+      "description": "R16 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R13$"
+        "field": "resistor.ref",
+        "pattern": "^R16$"
       }
     },
     {
       "id": "STRUCT-00000005",
-      "description": "R14 in detect_voltage_dividers",
+      "description": "R19 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R14$"
+        "field": "resistor.ref",
+        "pattern": "^R19$"
       }
     },
     {
       "id": "STRUCT-00000006",
-      "description": "R4 in detect_voltage_dividers",
+      "description": "R3 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
-        "field": "r_top.ref",
+        "field": "resistor.ref",
+        "pattern": "^R3$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R13 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R13$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R14 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R14$"
+      }
+    },
+    {
+      "id": "STRUCT-00000009",
+      "description": "R4 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
         "pattern": "^R4$"
       }
     }

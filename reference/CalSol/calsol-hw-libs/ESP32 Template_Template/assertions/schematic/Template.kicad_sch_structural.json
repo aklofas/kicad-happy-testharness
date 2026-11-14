@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "UC-004",
-        "tagged_at": "2026-11-06T18:42:47Z",
+        "tagged_at": "2026-11-14T04:16:31Z",
         "tagged_reason": "schema_era key added (UC-001/UC-002/UC-003, UC-004; 2 sites)"
       }
     },
@@ -92,7 +92,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-06T18:42:47Z",
+        "tagged_at": "2026-11-14T04:16:31Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -108,7 +108,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:47Z",
+        "tagged_at": "2026-11-14T04:16:31Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -134,16 +134,27 @@
     },
     {
       "id": "STRUCT-00000012",
-      "description": "Exactly 1 detect_current_sense",
+      "description": "Exactly 2 detect_current_sense",
       "check": {
         "path": "findings",
         "detector_filter": "detect_current_sense",
         "op": "equals",
-        "value": 1
+        "value": 2
       }
     },
     {
       "id": "STRUCT-00000013",
+      "description": "R7 in detect_current_sense",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_current_sense",
+        "op": "contains_match",
+        "field": "shunt.ref",
+        "pattern": "^R7$"
+      }
+    },
+    {
+      "id": "STRUCT-00000014",
       "description": "R9 in detect_current_sense",
       "check": {
         "path": "findings",
@@ -154,7 +165,7 @@
       }
     },
     {
-      "id": "STRUCT-00000014",
+      "id": "STRUCT-00000015",
       "description": "Exactly 1 detect_decoupling",
       "check": {
         "path": "findings",
@@ -164,7 +175,7 @@
       }
     },
     {
-      "id": "STRUCT-00000015",
+      "id": "STRUCT-00000016",
       "description": "Exactly 9 detect_design_observations",
       "check": {
         "path": "findings",
@@ -174,7 +185,7 @@
       }
     },
     {
-      "id": "STRUCT-00000016",
+      "id": "STRUCT-00000017",
       "description": "Exactly 3 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -184,7 +195,7 @@
       }
     },
     {
-      "id": "STRUCT-00000017",
+      "id": "STRUCT-00000018",
       "description": "D1 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -195,7 +206,7 @@
       }
     },
     {
-      "id": "STRUCT-00000018",
+      "id": "STRUCT-00000019",
       "description": "D3 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -206,7 +217,7 @@
       }
     },
     {
-      "id": "STRUCT-00000019",
+      "id": "STRUCT-00000020",
       "description": "U2 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -217,7 +228,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000021",
       "description": "Exactly 2 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -227,7 +238,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000022",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -238,7 +249,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000023",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -249,7 +260,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000024",
       "description": "Exactly 1 detect_wireless_modules",
       "check": {
         "path": "findings",
@@ -259,7 +270,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000025",
       "description": "Exactly 1 suggest_certifications",
       "check": {
         "path": "findings",
@@ -269,7 +280,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000026",
       "description": "Exactly 1 validate_pullups",
       "check": {
         "path": "findings",
@@ -279,7 +290,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000027",
       "description": "Exactly 4 validate_voltage_levels",
       "check": {
         "path": "findings",

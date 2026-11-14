@@ -6,12 +6,12 @@
   "assertions": [
     {
       "id": "SEED-00000001",
-      "description": "Simulation count ~79 (tolerance 10%)",
+      "description": "Simulation count ~80 (tolerance 10%)",
       "check": {
         "path": "summary.total",
         "op": "range",
-        "min": 75,
-        "max": 83
+        "min": 76,
+        "max": 84
       }
     },
     {
@@ -80,6 +80,17 @@
     },
     {
       "id": "SEED-00000008",
+      "description": "1 regulator_feedback simulation(s)",
+      "check": {
+        "path": "simulation_results",
+        "op": "count_matches",
+        "field": "subcircuit_type",
+        "pattern": "^regulator_feedback$",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000009",
       "description": "14 voltage_divider simulation(s)",
       "check": {
         "path": "simulation_results",

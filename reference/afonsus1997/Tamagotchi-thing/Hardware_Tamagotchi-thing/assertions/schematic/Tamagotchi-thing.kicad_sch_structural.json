@@ -26,7 +26,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "VD-001",
-        "tagged_at": "2026-11-06T18:42:49Z",
+        "tagged_at": "2026-11-14T04:16:34Z",
         "tagged_reason": "schema_era key added (VD-001, VD-002, VD-003, VD-004; 6 sites)"
       }
     },
@@ -82,7 +82,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "PP-001",
-        "tagged_at": "2026-11-06T18:42:49Z",
+        "tagged_at": "2026-11-14T04:16:34Z",
         "tagged_reason": "schema_era key added (PP-001; 1 site); behaviour: KH-455 (dedup key (ref, pin, net): a duplicate / unannotated ref keeps every power pin)"
       }
     },
@@ -98,7 +98,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:49Z",
+        "tagged_at": "2026-11-14T04:16:34Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -186,27 +186,16 @@
     },
     {
       "id": "STRUCT-00000017",
-      "description": "Exactly 2 detect_power_regulators",
+      "description": "Exactly 1 detect_power_regulators",
       "check": {
         "path": "findings",
         "detector_filter": "detect_power_regulators",
         "op": "equals",
-        "value": 2
+        "value": 1
       }
     },
     {
       "id": "STRUCT-00000018",
-      "description": "U2 in detect_power_regulators",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_power_regulators",
-        "op": "contains_match",
-        "field": "ref",
-        "pattern": "^U2$"
-      }
-    },
-    {
-      "id": "STRUCT-00000019",
       "description": "U4 in detect_power_regulators",
       "check": {
         "path": "findings",
@@ -217,7 +206,7 @@
       }
     },
     {
-      "id": "STRUCT-00000020",
+      "id": "STRUCT-00000019",
       "description": "Exactly 1 detect_protection_devices",
       "check": {
         "path": "findings",
@@ -227,7 +216,7 @@
       }
     },
     {
-      "id": "STRUCT-00000021",
+      "id": "STRUCT-00000020",
       "description": "U1 in detect_protection_devices",
       "check": {
         "path": "findings",
@@ -238,7 +227,7 @@
       }
     },
     {
-      "id": "STRUCT-00000022",
+      "id": "STRUCT-00000021",
       "description": "Exactly 5 detect_rc_filters",
       "check": {
         "path": "findings",
@@ -248,7 +237,7 @@
       }
     },
     {
-      "id": "STRUCT-00000023",
+      "id": "STRUCT-00000022",
       "description": "R11 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -259,7 +248,7 @@
       }
     },
     {
-      "id": "STRUCT-00000024",
+      "id": "STRUCT-00000023",
       "description": "R12 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -270,7 +259,7 @@
       }
     },
     {
-      "id": "STRUCT-00000025",
+      "id": "STRUCT-00000024",
       "description": "R23 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -281,7 +270,7 @@
       }
     },
     {
-      "id": "STRUCT-00000026",
+      "id": "STRUCT-00000025",
       "description": "R24 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -292,7 +281,7 @@
       }
     },
     {
-      "id": "STRUCT-00000027",
+      "id": "STRUCT-00000026",
       "description": "R35 in detect_rc_filters",
       "check": {
         "path": "findings",
@@ -303,7 +292,7 @@
       }
     },
     {
-      "id": "STRUCT-00000028",
+      "id": "STRUCT-00000027",
       "description": "Exactly 1 detect_solder_jumpers",
       "check": {
         "path": "findings",
@@ -313,7 +302,7 @@
       }
     },
     {
-      "id": "STRUCT-00000029",
+      "id": "STRUCT-00000028",
       "description": "Exactly 5 detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -323,7 +312,7 @@
       }
     },
     {
-      "id": "STRUCT-00000030",
+      "id": "STRUCT-00000029",
       "description": "Q1 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -334,7 +323,7 @@
       }
     },
     {
-      "id": "STRUCT-00000031",
+      "id": "STRUCT-00000030",
       "description": "Q2 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -345,7 +334,7 @@
       }
     },
     {
-      "id": "STRUCT-00000032",
+      "id": "STRUCT-00000031",
       "description": "Q3 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -356,7 +345,7 @@
       }
     },
     {
-      "id": "STRUCT-00000033",
+      "id": "STRUCT-00000032",
       "description": "Q4 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -367,7 +356,7 @@
       }
     },
     {
-      "id": "STRUCT-00000034",
+      "id": "STRUCT-00000033",
       "description": "Q5 in detect_transistor_circuits",
       "check": {
         "path": "findings",
@@ -378,7 +367,7 @@
       }
     },
     {
-      "id": "STRUCT-00000035",
+      "id": "STRUCT-00000034",
       "description": "Exactly 7 detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -388,7 +377,7 @@
       }
     },
     {
-      "id": "STRUCT-00000036",
+      "id": "STRUCT-00000035",
       "description": "R16 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -399,7 +388,7 @@
       }
     },
     {
-      "id": "STRUCT-00000037",
+      "id": "STRUCT-00000036",
       "description": "R18 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -410,7 +399,7 @@
       }
     },
     {
-      "id": "STRUCT-00000038",
+      "id": "STRUCT-00000037",
       "description": "R21 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -421,7 +410,7 @@
       }
     },
     {
-      "id": "STRUCT-00000039",
+      "id": "STRUCT-00000038",
       "description": "R25 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -432,7 +421,7 @@
       }
     },
     {
-      "id": "STRUCT-00000040",
+      "id": "STRUCT-00000039",
       "description": "R27 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -443,7 +432,7 @@
       }
     },
     {
-      "id": "STRUCT-00000041",
+      "id": "STRUCT-00000040",
       "description": "R31 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -454,7 +443,7 @@
       }
     },
     {
-      "id": "STRUCT-00000042",
+      "id": "STRUCT-00000041",
       "description": "R37 in detect_voltage_dividers",
       "check": {
         "path": "findings",
@@ -465,7 +454,7 @@
       }
     },
     {
-      "id": "STRUCT-00000043",
+      "id": "STRUCT-00000042",
       "description": "Exactly 2 suggest_certifications",
       "check": {
         "path": "findings",
@@ -475,7 +464,7 @@
       }
     },
     {
-      "id": "STRUCT-00000044",
+      "id": "STRUCT-00000043",
       "description": "Exactly 1 validate_crystal_load_caps",
       "check": {
         "path": "findings",
@@ -485,23 +474,7 @@
       }
     },
     {
-      "id": "STRUCT-00000045",
-      "description": "Exactly 1 validate_power_sequencing",
-      "check": {
-        "path": "findings",
-        "detector_filter": "validate_power_sequencing",
-        "op": "equals",
-        "value": 1
-      },
-      "schema_era": {
-        "era": "v3.0",
-        "tagged_by_rule": "PS-001",
-        "tagged_at": "2026-11-06T18:42:49Z",
-        "tagged_reason": "schema_era key added (PS-001; 3 sites)"
-      }
-    },
-    {
-      "id": "STRUCT-00000046",
+      "id": "STRUCT-00000044",
       "description": "Exactly 4 validate_pullups",
       "check": {
         "path": "findings",

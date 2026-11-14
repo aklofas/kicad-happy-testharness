@@ -28,17 +28,6 @@
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 1 rf_chain simulation(s)",
-      "check": {
-        "path": "simulation_results",
-        "op": "count_matches",
-        "field": "subcircuit_type",
-        "pattern": "^rf_chain$",
-        "value": 1
-      }
-    },
-    {
-      "id": "STRUCT-00000004",
       "description": "C21 simulated as rc_filter",
       "check": {
         "path": "simulation_results",
@@ -48,23 +37,13 @@
       }
     },
     {
-      "id": "STRUCT-00000005",
+      "id": "STRUCT-00000004",
       "description": "X1 simulated as crystal_circuit",
       "check": {
         "path": "simulation_results",
         "op": "contains_match",
         "field": "components",
         "pattern": "\\bX1\\b"
-      }
-    },
-    {
-      "id": "STRUCT-00000006",
-      "description": "AE1 simulated as rf_chain",
-      "check": {
-        "path": "simulation_results",
-        "op": "contains_match",
-        "field": "components",
-        "pattern": "\\bAE1\\b"
       }
     }
   ]

@@ -26,50 +26,72 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:47Z",
+        "tagged_at": "2026-11-14T04:16:31Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
     {
       "id": "STRUCT-00000003",
-      "description": "Exactly 3 detect_voltage_dividers",
+      "description": "Exactly 6 detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "equals",
-        "value": 3
+        "value": 6
       }
     },
     {
       "id": "STRUCT-00000004",
-      "description": "R12 in detect_voltage_dividers",
+      "description": "R13 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
-        "field": "r_top.ref",
-        "pattern": "^R12$"
-      }
-    },
-    {
-      "id": "STRUCT-00000005",
-      "description": "R13 in detect_voltage_dividers",
-      "check": {
-        "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
-        "op": "contains_match",
-        "field": "r_top.ref",
+        "field": "resistor.ref",
         "pattern": "^R13$"
       }
     },
     {
-      "id": "STRUCT-00000006",
-      "description": "R14 in detect_voltage_dividers",
+      "id": "STRUCT-00000005",
+      "description": "R16 in detect_rc_filters",
       "check": {
         "path": "findings",
-        "detector_filter": "detect_voltage_dividers",
+        "detector_filter": "detect_rc_filters",
         "op": "contains_match",
-        "field": "r_top.ref",
+        "field": "resistor.ref",
+        "pattern": "^R16$"
+      }
+    },
+    {
+      "id": "STRUCT-00000006",
+      "description": "R4 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R4$"
+      }
+    },
+    {
+      "id": "STRUCT-00000007",
+      "description": "R12 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
+        "pattern": "^R12$"
+      }
+    },
+    {
+      "id": "STRUCT-00000008",
+      "description": "R14 in detect_rc_filters",
+      "check": {
+        "path": "findings",
+        "detector_filter": "detect_rc_filters",
+        "op": "contains_match",
+        "field": "resistor.ref",
         "pattern": "^R14$"
       }
     }

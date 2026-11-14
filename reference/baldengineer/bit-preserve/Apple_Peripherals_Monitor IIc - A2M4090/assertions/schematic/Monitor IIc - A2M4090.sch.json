@@ -153,7 +153,7 @@
       "schema_era": {
         "era": "v3.0",
         "tagged_by_rule": "RS-001",
-        "tagged_at": "2026-11-06T18:42:34Z",
+        "tagged_at": "2026-11-14T04:16:17Z",
         "tagged_reason": "schema_era key added (RS-001; 1 site); behaviour: KH-454 (no RS-001 on a net whose only power_in pins are bootstrap pins)"
       }
     },
@@ -221,7 +221,7 @@
     },
     {
       "id": "SEED-00000021",
-      "description": "10 detect_protection_devices detected",
+      "description": "7 detect_protection_devices detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_protection_devices",
@@ -262,7 +262,7 @@
     },
     {
       "id": "SEED-00000025",
-      "description": "4 detect_solder_jumpers detected",
+      "description": "7 detect_solder_jumpers detected",
       "check": {
         "path": "findings",
         "detector_filter": "detect_solder_jumpers",
@@ -370,6 +370,15 @@
     },
     {
       "id": "SEED-00000036",
+      "description": "Has 7 jumper(s)",
+      "check": {
+        "path": "statistics.component_types.jumper",
+        "op": "min_count",
+        "value": 5
+      }
+    },
+    {
+      "id": "SEED-00000037",
       "description": "Has 5 other(s)",
       "check": {
         "path": "statistics.component_types.other",
@@ -378,7 +387,7 @@
       }
     },
     {
-      "id": "SEED-00000037",
+      "id": "SEED-00000038",
       "description": "Has 72 resistor(s)",
       "check": {
         "path": "statistics.component_types.resistor",
@@ -387,7 +396,7 @@
       }
     },
     {
-      "id": "SEED-00000038",
+      "id": "SEED-00000039",
       "description": "Has 6 transformer(s)",
       "check": {
         "path": "statistics.component_types.transformer",
@@ -396,7 +405,7 @@
       }
     },
     {
-      "id": "SEED-00000039",
+      "id": "SEED-00000040",
       "description": "Has 10 transistor(s)",
       "check": {
         "path": "statistics.component_types.transistor",
@@ -405,12 +414,12 @@
       }
     },
     {
-      "id": "SEED-00000040",
-      "description": "Has 9 varistor(s)",
+      "id": "SEED-00000041",
+      "description": "Has 6 varistor(s)",
       "check": {
         "path": "statistics.component_types.varistor",
         "op": "min_count",
-        "value": 6
+        "value": 4
       }
     }
   ]

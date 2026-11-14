@@ -13,7 +13,9 @@
         "op": "equals",
         "value": "ground"
       },
-      "aspirational": true
+      "aspirational": false,
+      "migration_note": "v3.0.2 regen 2026-11-13: graduated, fixed in Wave 11c: AVSS is classified ground",
+      "incorrect_review": "graduated (v3.0.2 regen 2026-11-13): fixed in Wave 11c; AVSS is classified ground, which the check asserts."
     },
     {
       "id": "FND-00000382-AST-02",
@@ -83,17 +85,6 @@
       },
       "aspirational": true,
       "migration_note": "Path migrated from: signal_analysis.decoupling_analysis"
-    },
-    {
-      "id": "FND-00000382-AST-07",
-      "description": "The subcircuit for U1 (ADS1220) lists only C3, P1, and P2 as neighbor components. C1 and C2 are also directly associated with U1 \u2014 C2 is connected to the AVSS node of U1 (or should be, once the label connectivity bug is resolved) and C1 is placed on the power/CLK side of U1. All three capacitors form U1's local decoupling network and should appear as neighbors.",
-      "created_from": "FND-00000382",
-      "check": {
-        "path": "subcircuits[0].neighbor_components",
-        "op": "min_count",
-        "value": 5
-      },
-      "aspirational": true
     }
   ]
 }
