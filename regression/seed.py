@@ -1125,7 +1125,8 @@ def _meets_seeding_threshold(data, atype, min_components=10):
 
 
 def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
-    """Remove seed assertion files whose outputs no longer meet thresholds.
+    """Remove SEED files whose outputs no longer meet thresholds, and SEED or STRUCT
+    files whose output is gone.
 
     Returns (pruned_count, checked_count).
     """
@@ -1147,12 +1148,13 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
         pp = resolve_project_path(repo_name, proj_dir.name)
 
         for af in sorted(type_dir.glob("*.json")):
-            # Only prune SEED assertions
+            # Only prune SEED and STRUCT files; STRUCT ones only when their output is gone
             try:
                 adata = json.loads(af.read_text(encoding="utf-8"))
             except (json.JSONDecodeError, OSError):
                 continue
-            if adata.get("generated_by") != "seed.py":
+            generator = adata.get("generated_by")
+            if generator not in ("seed.py", "seed_structural.py"):
                 continue
 
             checked += 1
@@ -1171,7 +1173,7 @@ def prune_stale_assertions(repo_name, atype, min_components, dry_run=True):
                     should_prune = True
                     reason = "output unreadable"
                 else:
-                    if not _meets_seeding_threshold(odata, atype, min_components):
+                    if generator == "seed.py" and not _meets_seeding_threshold(odata, atype, min_components):
                         should_prune = True
                         reason = "below threshold"
 

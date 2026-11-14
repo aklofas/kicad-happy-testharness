@@ -241,6 +241,22 @@ def test_table_total_must_equal_measured_total():
         gvm.generate_markdown(check_results=bad)
 
 
+def test_issue_counts_read_four_digit_ids(tmp_path, monkeypatch):
+    """KH-1040 was read as KH-104, so ids from 1000 up merged into three-digit ones."""
+    issues = tmp_path / "ISSUES.md"
+    fixed = tmp_path / "FIXED.md"
+    issues.write_text(
+        "### KH-1040: open\n\n**Severity:** MEDIUM\n\n"
+        "### KH-104: open, three digits\n\n**Severity:** LOW\n", encoding="utf-8")
+    fixed.write_text(
+        "## 2026-11-13 — KH-1088: fixed\n\n"
+        "### KH-1102 (LOW) / KH-1103 (LOW): two ids\n", encoding="utf-8")
+    monkeypatch.setattr(gvm, "ISSUES_FILE", issues)
+    monkeypatch.setattr(gvm, "FIXED_FILE", fixed)
+    assert gvm._count_kh_issues() == (2, 3, 1103)
+    assert gvm._open_by_severity("KH") == {"MEDIUM": 1, "LOW": 1}
+
+
 def test_open_issue_lines_break_down_by_severity(tmp_path, monkeypatch):
     issues = tmp_path / "ISSUES.md"
     fixed = tmp_path / "FIXED.md"

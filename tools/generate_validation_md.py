@@ -53,13 +53,13 @@ def _heading_ids(path, prefix):
     """Ids a heading opens with: `### TH-012: ...`, `## 2026-11-03 — TH-012: ...` or
     `### KH-398 (MEDIUM) / KH-399 (LOW): ...`. Ids later in the title (rule ids such as
     `TH-001/PDN`, ranges in an `Earlier fixes` heading) are not the heading's own."""
-    one = rf"{prefix}-\d{{3}}(?:\s*\([A-Z-]+\))?"
+    one = rf"{prefix}-\d{{3,}}(?:\s*\([A-Z-]+\))?"
     lead = re.compile(rf"#+\s+(?:\d{{4}}-\d\d-\d\d\s+—\s+)?({one}(?:\s*(?:/|,|and|\+)\s*{one})*)")
     ids = set()
     for line in path.read_text(encoding="utf-8").splitlines():
         m = lead.match(line)
         if m:
-            ids.update(int(n) for n in re.findall(rf"{prefix}-(\d{{3}})", m.group(1)))
+            ids.update(int(n) for n in re.findall(rf"{prefix}-(\d{{3,}})", m.group(1)))
     return ids
 
 
@@ -93,7 +93,7 @@ def _severity_by_id(path, prefix):
     "unclassified"."""
     if not Path(path).exists():
         return {}
-    one = rf"{prefix}-\d{{3}}(?:\s*\([A-Z-]+\))?"
+    one = rf"{prefix}-\d{{3,}}(?:\s*\([A-Z-]+\))?"
     lead = re.compile(rf"#+\s+(?:\d{{4}}-\d\d-\d\d\s+—\s+)?({one}(?:\s*(?:/|,|and|\+)\s*{one})*)")
 
     def norm(word):
@@ -107,7 +107,7 @@ def _severity_by_id(path, prefix):
             m = lead.match(line)
             current = []
             if m:
-                for n, word in re.findall(rf"{prefix}-(\d{{3}})(?:\s*\(([A-Z-]+)\))?", m.group(1)):
+                for n, word in re.findall(rf"{prefix}-(\d{{3,}})(?:\s*\(([A-Z-]+)\))?", m.group(1)):
                     i = int(n)
                     sev.setdefault(i, "unclassified")
                     if word and norm(word) and sev[i] == "unclassified":
