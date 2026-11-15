@@ -401,8 +401,14 @@ def generate_markdown(check_results=None, gate_rollup=None,
     open_kh, closed_kh, max_kh = _count_kh_issues()
     open_th, closed_th, max_th = _count_th_issues()
     bugfix_count = 0
+    guarded_kh = 0
     if BUGFIX_FILE.exists():
-        bugfix_count = len(json.loads(BUGFIX_FILE.read_text(encoding="utf-8")))
+        guards = json.loads(BUGFIX_FILE.read_text(encoding="utf-8"))
+        bugfix_count = len(guards)
+        closed_ids = ((_heading_ids(FIXED_FILE, "KH") if FIXED_FILE.exists() else set())
+                      - (_heading_ids(ISSUES_FILE, "KH") if ISSUES_FILE.exists() else set()))
+        guarded_kh = len({int(m.group(1)) for g in guards
+                          if (m := re.fullmatch(r"KH-(\d{3,})", str(g.get("issue", ""))))} & closed_ids)
 
     # Count output files
     sch_files = _count_output_files("schematic")
@@ -641,7 +647,7 @@ All analyzer bugs found during validation are tracked with sequential IDs:
 - `KH-001` through `KH-{max_kh}`: analyzer issues ({closed_kh + open_kh} filed, {closed_kh} closed, {open_kh} open{_severity_text("KH")})
 - `TH-001` through `TH-{max_th:03d}`: harness infrastructure issues ({closed_th + open_th} filed, {closed_th} closed, {open_th} open{_severity_text("TH")})
 
-Each closed analyzer issue has a corresponding bugfix regression guard assertion that prevents the bug from returning.
+{guarded_kh} of the {closed_kh} closed analyzer issues have a bugfix regression guard ({bugfix_count} guard entries in `regression/bugfix_registry.json`): an assertion that fails if the bug returns.
 
 ## Numbers at a glance
 

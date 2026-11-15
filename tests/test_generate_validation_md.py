@@ -390,3 +390,24 @@ def test_main_reads_arguments_from_a_file_and_exits_nonzero_on_a_contradiction(t
         gvm.main()
     assert e.value.code not in (0, None)
     assert not out.exists()
+
+
+def test_bugfix_guard_sentence_counts_the_guarded_issues(tmp_path, monkeypatch):
+    """Only some closed issues have a guard (175 guards / 758 closed at v3.0.2); the text
+    must say how many, not claim every closed issue has one."""
+    import json
+    issues = tmp_path / "ISSUES.md"
+    fixed = tmp_path / "FIXED.md"
+    registry = tmp_path / "bugfix_registry.json"
+    issues.write_text("### KH-005: open\n\n**Severity:** LOW\n", encoding="utf-8")
+    fixed.write_text("### KH-001: a\n\n### KH-002: b\n\n### KH-003: c\n", encoding="utf-8")
+    registry.write_text(json.dumps([{"issue": "KH-001"}, {"issue": "KH-001"}, {"issue": "KH-003"}]),
+                        encoding="utf-8")
+    monkeypatch.setattr(gvm, "ISSUES_FILE", issues)
+    monkeypatch.setattr(gvm, "FIXED_FILE", fixed)
+    monkeypatch.setattr(gvm, "BUGFIX_FILE", registry)
+    md = gvm.generate_markdown(check_results=_results(1))
+    assert "Each closed analyzer issue has" not in md
+    assert ("2 of the 3 closed analyzer issues have a bugfix regression guard "
+            "(3 guard entries in `regression/bugfix_registry.json`)") in md
+    assert "| Bugfix guards | 3 |" in md
