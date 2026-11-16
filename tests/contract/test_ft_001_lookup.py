@@ -35,6 +35,8 @@ def _build_facts(pins):
     fake_base.pinout = fake_pinout
     fake_facts = MagicMock()
     fake_facts.base = fake_base
+    fake_facts.quality = 90  # facts_trusted(): scored >= 60 and not stale
+    fake_facts.stale = False
     return fake_facts
 
 
@@ -156,10 +158,10 @@ def _non_tolerant_pin_ctx(net_name, tmp_path):
     return ctx
 
 
-def test_ft_001_stale_cache_still_fires(tmp_path):
-    """Detector does NOT branch on facts.stale — FT-001 fires identically
-    whether the cache is fresh or stale. Per-detector half of the A3.3
-    staleness ↔ trust-gating orthogonality lock."""
+def test_ft_001_stale_cache_does_not_fire(tmp_path):
+    """A stale extraction (source PDF missing or changed) is skipped by the
+    lookup checks since product v3.0.3: no FT-001 from facts that would fire
+    when current."""
     import lookup_detectors
 
     pin = _build_pin("PA0", "1", is_5v_tolerant=False)
@@ -172,7 +174,7 @@ def test_ft_001_stale_cache_still_fires(tmp_path):
             ctx, rail_voltages={"V5V": 5.0})
 
     ft = [f for f in findings if f.get("rule_id") == "FT-001"]
-    assert ft, "stale cache must NOT suppress FT-001 — orthogonality lock"
+    assert ft == [], f"stale cache must suppress FT-001, got {ft}"
 
 
 def test_ft_001_threshold_boundary_exactly_at_4_5_fires(tmp_path):
@@ -213,6 +215,8 @@ def test_ft_001_missing_pinout_skips(tmp_path):
     fake_base = MagicMock()
     fake_base.pinout = None  # partial extraction
     fake_facts = MagicMock()
+    fake_facts.quality = 90  # trusted, so the detector reaches the guard
+    fake_facts.stale = False
     fake_facts.base = fake_base
 
     ctx = _non_tolerant_pin_ctx("V5V", tmp_path)

@@ -79,6 +79,8 @@ def test_am_001_fires_when_rail_exceeds_absolute_max(tmp_path):
 
     fake_facts = MagicMock()
     fake_facts.base = fake_base
+    fake_facts.quality = 90  # facts_trusted(): scored >= 60 and not stale
+    fake_facts.stale = False
 
     ic_ref = "U1"
     ic = {
@@ -128,6 +130,8 @@ def test_am_001_resolves_synonyms_for_rail_keys(tmp_path):
 
     fake_facts = MagicMock()
     fake_facts.base = fake_base
+    fake_facts.quality = 90  # facts_trusted(): scored >= 60 and not stale
+    fake_facts.stale = False
 
     ic_ref = "U1"
     ic = {
@@ -173,6 +177,8 @@ def test_am_001_per_pin_override_tightens_limit(tmp_path):
 
     fake_facts = MagicMock()
     fake_facts.base = fake_base
+    fake_facts.quality = 90  # facts_trusted(): scored >= 60 and not stale
+    fake_facts.stale = False
 
     ic_ref = "U1"
     ic = {
@@ -221,6 +227,7 @@ def _build_am_facts_with_amax(sv_amax, stale=False, pinout_override=None):
     fake_base.pinout = fake_pinout
     fake_facts = MagicMock()
     fake_facts.base = fake_base
+    fake_facts.quality = 90
     fake_facts.stale = stale
     return fake_facts
 
@@ -237,12 +244,10 @@ def _vdd_ic_and_ctx(net_name, tmp_path):
     return ctx
 
 
-def test_am_001_stale_cache_still_fires(tmp_path):
-    """Detector does NOT branch on facts.stale — same finding emitted as for
-    a fresh cache. Per-detector half of the A3.3 staleness ↔ trust-gating
-    orthogonality lock (lookup-layer half is in
-    tests/datasheets/test_a3_lookup_path.py). A regression that introduces
-    `if facts.stale: continue` in this detector would trip this test."""
+def test_am_001_stale_cache_does_not_fire(tmp_path):
+    """A stale extraction (source PDF missing or changed) is skipped by the
+    lookup checks since product v3.0.3: no AM-001 from facts that would fire
+    when current."""
     from datasheet_types import SpecValue, Evidence
     import lookup_detectors
 
@@ -256,7 +261,7 @@ def test_am_001_stale_cache_still_fires(tmp_path):
             ctx, rail_voltages={"VCC_5V": 5.0})
 
     am = [f for f in findings if f.get("rule_id") == "AM-001"]
-    assert am, "stale cache must NOT suppress AM-001 — orthogonality lock"
+    assert am == [], f"stale cache must suppress AM-001, got {am}"
 
 
 def test_am_001_low_confidence_absolute_max_no_finding(tmp_path):
@@ -315,6 +320,8 @@ def test_am_001_missing_pinout_skips(tmp_path):
     fake_base.absolute_max = {"VDD": [sv_amax]}
     fake_base.pinout = None
     fake_facts = MagicMock()
+    fake_facts.quality = 90  # trusted, so the detector reaches the guard
+    fake_facts.stale = False
     fake_facts.base = fake_base
 
     ctx = _vdd_ic_and_ctx("VCC_5V", tmp_path)

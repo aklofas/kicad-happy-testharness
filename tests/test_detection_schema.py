@@ -40,6 +40,7 @@ from detection_schema import (
     get_inverse_solver,
     get_primary_metric,
 )
+from finding_schema import DETECTOR_TO_SCHEMA_KEY
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 
@@ -299,7 +300,6 @@ def test_no_inverse_for_transistor():
 # ============================================================
 
 @pytest.mark.corpus
-@pytest.mark.xfail(strict=False, reason="TH-042: 7 v1.4 detectors lack SCHEMAS entries")
 def test_schema_completeness_zebra_x():
     """Every findings detector in a real output has a SCHEMAS entry."""
     output_path = (
@@ -315,7 +315,10 @@ def test_schema_completeness_zebra_x():
     detector_keys = set()
     for f in findings:
         det = f.get("detector", "")
-        if det.startswith("detect_"):
+        if det in DETECTOR_TO_SCHEMA_KEY:
+            # the product's own detector -> SCHEMAS key map
+            detector_keys.add(DETECTOR_TO_SCHEMA_KEY[det])
+        elif det.startswith("detect_"):
             detector_keys.add(det[len("detect_"):])
         elif det.startswith("validate_"):
             # Map validate_feedback_stability -> feedback_networks
@@ -336,7 +339,13 @@ def test_schema_completeness_zebra_x():
         if key in ("design_observations", "esd_coverage_audit", "led_audit",
                     "power_sequencing_validation", "power_path",
                     "audit_esd_protection", "audit_led_circuits",
-                    "detect_design_observations"):
+                    "detect_design_observations",
+                    # audits / validators with no identity or derived fields
+                    # (product ruling, v3.0.3)
+                    "audit_datasheet_coverage", "audit_lifecycle_skipped",
+                    "audit_rail_sources", "audit_sourcing_gate",
+                    "validate_pullups", "validate_voltage_levels",
+                    "analyze_usb_compliance"):
             continue
         if key not in schema_keys:
             missing_schemas.append(key)
@@ -451,13 +460,7 @@ def test_derived_fields_are_derived_field():
 #
 # KH-231 closed 2026-04-10 PM (kicad-happy commit beaddb8) — 3 entries removed.
 # KH-232 closed 2026-04-10 PM (same commit) — 1 entry removed.
-KNOWN_FAILURES = {
-    # KH-233: SCHEMAS dict has not kept up with detector additions in
-    # analyze_schematic.py — 22 findings detector keys lack a
-    # corresponding SCHEMAS entry as of 2026-04-10. Deferred to a
-    # dedicated kicad-happy plan.
-    "test_schema_completeness_zebra_x": "KH-233",
-}
+KNOWN_FAILURES = {}
 
 
 if __name__ == "__main__":

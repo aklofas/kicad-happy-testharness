@@ -18,10 +18,10 @@ Rules covered:
 Cache strategy: the harness ships A7 gold extractions at
 regression/reference_extractions/<slug>/gold_v1.0.json. Each test copies
 the relevant gold JSON to a tmp cache_dir as <MPN>.json and points
-ctx.cache_dir at it. The PDF is intentionally absent — datasheet_lookup
-flags facts._cache_context.is_stale=True but still returns the parsed
-DatasheetFacts. trust_gating.best() doesn't consult cache staleness, so
-all high-confidence gold specs pass min_confidence='medium'.
+ctx.cache_dir at it, next to a stub PDF whose sha256 the copy records, so
+the extraction is current: the lookup detectors skip a stale extraction
+(product v3.0.3+). All high-confidence gold specs pass
+min_confidence='medium'.
 
 Skipping policy: tests skip cleanly when KICAD_HAPPY_DIR points to a
 checkout missing lookup_detectors.py or datasheet_types/ (older v1.3
@@ -31,8 +31,8 @@ from __future__ import annotations
 
 TIER = "unit"
 
+import hashlib
 import json
-import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -78,7 +78,8 @@ def _datasheet_types():
 
 
 def _setup_cache(tmp: Path, slug: str, mpn_filename: str) -> Path | None:
-    """Copy A7 gold extraction to a tmp cache_dir as <mpn_filename>.json.
+    """Copy A7 gold extraction to a tmp cache_dir as <mpn_filename>.json,
+    with a stub PDF in tmp whose hash the copy records (a current extraction).
 
     Returns the cache_dir Path or None if the gold file is missing.
     """
@@ -87,7 +88,11 @@ def _setup_cache(tmp: Path, slug: str, mpn_filename: str) -> Path | None:
         return None
     cache = tmp / "extracted"
     cache.mkdir(parents=True, exist_ok=True)
-    shutil.copy(src, cache / f"{mpn_filename}.json")
+    ext = json.loads(src.read_text(encoding="utf-8"))
+    pdf = tmp / Path(ext["source"]["local_path"]).name
+    pdf.write_bytes(b"%PDF-1.4\n")
+    ext["source"]["sha256"] = "sha256:" + hashlib.sha256(pdf.read_bytes()).hexdigest()
+    (cache / f"{mpn_filename}.json").write_text(json.dumps(ext), encoding="utf-8")
     return cache
 
 

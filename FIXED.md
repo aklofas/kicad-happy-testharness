@@ -11,6 +11,832 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-16 — TH-042: `test_schema_completeness_zebra_x` fails — 7 new v1.4 detectors lack `SCHEMAS` entries
+
+**Severity:** LOW
+**File:** `tests/test_detection_schema.py:289-333` (`test_schema_completeness_zebra_x`)
+and `SCHEMAS` dict (location TBD — likely under `regression/` or main-repo helper)
+**Discovered:** 2026-05-16 during first venv-backed full-suite run after v1.4.0-rc.1
+
+**Symptom:**
+```
+AssertionError: findings detector keys missing from SCHEMAS: [
+  'audit_datasheet_coverage', 'audit_rail_sources', 'decoupling',
+  'integrated_ldos', 'validate_pullups', 'validate_voltage_levels',
+  'audit_sourcing_gate'
+]
+```
+
+The test walks the `findings[]` array of a known-clean repo (`zebra-x`) and
+asserts every detector short-name maps to an entry in `SCHEMAS`. Seven v1.4-era
+detectors emit findings but have no schema entry, so the test fails the
+"every detector has a schema" invariant.
+
+**Root cause:** v1.4 added these seven detectors (auditors for datasheet
+coverage, rail sources, integrated LDOs, sourcing gates; validators for
+pullups and voltage levels; a `decoupling` analyzer family) but the harness
+`SCHEMAS` dict was never updated alongside them. The `test_detection_schema`
+ignore-list at `:312-316` only covers the older informational sections
+(`design_observations`, `esd_coverage_audit`, etc.).
+
+**Likely fix paths:**
+- **Add schemas** for each of the 7 detectors (preferred long-term; the test
+  exists specifically to force this discipline).
+- **Add to ignore-list** if any of the 7 are intentionally schema-less
+  informational sections (decide per-detector; treat as a stop-gap).
+- **Process gap:** when adding a new detector to the analyzer, the schema-companion
+  step is currently implicit. Worth a `CONTRIBUTING.md` or RUNBOOK Checklist
+  note so v1.5 detector additions don't recreate the gap.
+
+**Not tag-blocking** — pre-existing in rc.1, the seven detectors still produce
+valid findings; the test is enforcing harness-side completeness, not analyzer
+correctness.
+
+**Addendum 2026-11-15 (v3.0.3 kickoff, run with `--runxfail` against the v3.0.2 Zebra-X output):** the list has grown to 9: `audit_lifecycle_skipped`, `audit_datasheet_coverage`, `audit_sourcing_gate`, `audit_rail_sources`, `integrated_ldos`, `decoupling`, `validate_voltage_levels`, `analyze_usb_compliance`, `validate_pullups`. `SCHEMAS` lives in the product (`skills/kicad/scripts/detection_schema.py:334`), so each entry is a product call: a `SCHEMAS` entry only where the detector has identity / derived fields for `recalc_derived` / the inverse solvers, otherwise the harness test ignore-lists it as an informational section.
+
+- **Fix (product ruling, v3.0.3 Wave 12a handoff):** `test_schema_completeness_zebra_x` maps each finding's detector through the product's `finding_schema.DETECTOR_TO_SCHEMA_KEY` (`detect_decoupling` -> `decoupling_analysis`, `detect_integrated_ldos` -> `power_regulators`) and ignore-lists the 7 audits / validators with no identity or derived fields (`audit_datasheet_coverage`, `audit_lifecycle_skipped`, `audit_rail_sources`, `audit_sourcing_gate`, `validate_pullups`, `validate_voltage_levels`, `analyze_usb_compliance`); the xfail and the `KNOWN_FAILURES` entry are gone.
+- **Verification:** `-m corpus` run of `tests/test_detection_schema.py`: 29 passed at `365aea94` and at `08879e2d` / `f254cb23`.
+
+---
+
+## 2026-11-16 — KH-1028: symbol instance resolution rescans every `(instances …)` path entry for each sheet instance, O(instances²) per symbol (discrete-nes ram > 300 s in `parse_all_sheets`)
+
+**Severity:** MEDIUM (the remaining parse cost on ram.kicad_sch, a standard-profile timeout; neutral fix)
+**File:** `skills/kicad/scripts/kicad_core/instances.py:48-81` `inline_instances` (walks all path entries), `:26-46` `resolve_instance` (linear scan); caller `schematic/reader.py:859-883` (per symbol, per sheet instance, also the `si_by_uuid` loop at `:862`)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b survey A (harness ask 5); verified by the harness at `f53d107e` (code read + gate status)
+
+**Symptom:** each sheet instance re-reads a symbol and rebuilds and scans the list of all its instance paths, one per instance of that sheet, so the work grows with the square of the instance count. Survey A: ram `parse_all_sheets` > 300 s both with and without this wave's per-file parse cache (row_group fell from 295 to 30 s with it). The running gate records `boards_ram_ram.kicad_sch` as a timeout on both sides (120.1 s).
+
+**Fix direction:** index each symbol's instance entries by normalized path once per file (cached with the parse tree) and look the instance up by key.
+
+- **Closed:** fixed; product b6c6c34b (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `kicad_core/instances.py:39` builds one index per symbol per hierarchy walk. Synthetic sheet placed N times (20 symbols, inline instances): base 0.74 / 2.35 / 8.73 s for N = 100 / 200 / 400, candidate 0.16 / 0.32 / 0.70 s, same references.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-599: `inputs.config_hash` hashes only `<search_dir>/.kicad-happy.json`, not the ancestor and home layers that were merged
+
+**Severity:** MEDIUM (provenance contract; corpus has no configs)
+**File:** `skills/kicad/scripts/project_config.py:193-195` (`hash_input`), `inputs_builder.py:62`; envelope description `analyzer_envelope.py:267-269`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R13-F8)
+
+**Symptom:** a change to the user's home or a parent-directory config changes the resolved configuration but leaves `config_hash` unchanged. With only an ancestor config, the envelope still promises "the hash of the resolved .kicad-happy.json … or null when no project config was loaded". The `resolve_config` docstring keeps this behaviour on purpose.
+
+**Fix direction / budget:** hash the resolved merged content (canonical JSON) or every layer in `paths`, or narrow the envelope description. Budget: corpus-neutral (0 corpus configs); a `--schema` text change if the description changes. Waits on ruling: R13-F8 (layer set vs resolved-content hash).
+
+- **Closed:** fixed; product 53f0f5b8 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `project_config.py:203` `_settings_hash` hashes the merged settings: a parent-folder-only or home-only config gives `config_hash` null at base, a hash at the candidate; a home-layer change moves the hash unless a closer layer overrides the key.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1038: `classify_inductor_shielding` still reads `NON SHIELDED` (with a space) as shielded
+
+**Severity:** LOW (one spelling)
+**File:** `skills/kicad/scripts/kicad_core/classify.py` `classify_inductor_shielding`
+**Discovered:** 2026-11-07, harness, verifying the KH-557 closure at `f53d107e` (code read)
+
+**Symptom:** the semi/non-shielded words are tested before `SHIELDED` now (KH-557), but the spaced form `NON SHIELDED` is not among them, so it matches `SHIELDED`.
+
+**Fix direction:** normalise spaces / hyphens / underscores before the word test.
+
+- **Closed:** fixed; product e0c6c77a (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `passives.py:223` matches `NON[\s_]*SHIELDED`: `NON SHIELDED` / `non shielded` / `NON  SHIELDED` shielded -> unshielded; `SEMI SHIELDED` shielded -> semi-shielded.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1059: the repeated-constraint refusal compares raw type names, so `hole` + `hole_size` in one rule loads, while KiCad refuses the file
+
+**Severity:** LOW (custom rules applied where KiCad applies none)
+**File:** `skills/kicad/scripts/kicad_core/project.py:897-903` (`ctype = item[1]`; `if ctype in constraint_types`, before `_DRU_CONSTRAINT_ALIASES` is applied at `:996`)
+**Discovered:** 2026-11-08, harness, v3.0.2 Wave 11b-2 gate (from the product handoff's DRU refusal siblings, "raw-type duplicate constraint")
+
+**Symptom:** probe: `(rule d (constraint hole (min 0.1mm)) (constraint hole_size (min 0.1mm)))` next to a sentinel `track_width (min 5mm)` rule. kicad-cli 10 drops the sentinel (file refused). `load_kicad_dru_checked` returns error `None` and two `hole_size` constraints. The same applies to `mechanical_clearance` / `physical_clearance` and `mechanical_hole_clearance` / `physical_hole_clearance`.
+
+**Fix direction:** map aliases before the duplicate test (one line). Expect ~0 corpus delta (KH-924's census found 0 refused files in 586).
+
+- **Closed:** fixed; product 313da87b (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `project.py:1200` maps the alias before the repeat test: `hole`+`hole_size`, `mechanical_clearance`+`physical_clearance`, `mechanical_hole_clearance`+`physical_hole_clearance` load at base, refused at the candidate ("Rule already has a '…' constraint.").
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1060: a length bound written with a comma decimal and no unit (`(min 0,1)`) is accepted, while KiCad refuses the file
+
+**Severity:** LOW (custom rules applied where KiCad applies none)
+**File:** `skills/kicad/scripts/kicad_core/project.py:801-821` `_dru_bound_error` (evaluates the raw text: `parse_dru_length('0,1')` is None and `_dru_eval` returns `other` for the comma, `:719-720`, so no "Missing units."); the loader's comma→point rewrite `:1004` happens only on the value path
+**Discovered:** 2026-11-08, harness, v3.0.2 Wave 11b-2 gate (from the product handoff's DRU refusal siblings, "unitless comma bound")
+
+**Symptom:** probes with a sentinel rule, kicad-cli 10:
+- `clearance (min 0,1)`: refused. The reader says error `None` and keeps `'0,1'`.
+- `clearance (min 0.1)`: refused. The reader correctly says "Missing units.".
+- `clearance (min 0,1mm)`: loaded. The reader reads 0.1, as KiCad does.
+- `via_count (max 1,5)`: loaded by KiCad, so no refusal is missing on unitless types.
+
+**Fix direction:** apply the same comma→point rewrite before the bound check, so a unitless comma number reads as a number → "Missing units.". Expect ~0 corpus delta.
+
+- **Closed:** fixed; product b6d84770 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `(min 0,1)` loads at base, "Missing units." at the candidate; `(min 0,1mm)` and `via_count (max 1,5)` still load.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1058: a custom rule whose `(layer …)` names a copper layer by its user name applies to holes but not to tracks, via diameters or annular rings
+
+**Severity:** LOW (missed custom-rule violations on boards with renamed copper layers)
+**File:** `skills/kicad/scripts/pcb/dfm.py:902-908` `_dru_layer_match` (pattern against the item's canonical layer), `:916-943` `_rule_items` (tracks on `t['layer']`, vias / annular on `'F.Cu'`), `:966-973` (holes tested against `board_layers`, which `pcb/presentation.py:173-183` fills with user names too)
+**Discovered:** 2026-11-08, harness, v3.0.2 Wave 11b-2 gate (from the product handoff slug `KH-new-dru-user-layer-tracks`)
+
+**Symptom:** probe with kicad-cli 10 `pcb drc`: `simple.kicad_pcb` with `(0 "F.Cu" signal "TopCopper")` and `(rule s (layer "TopCopper") (constraint track_width (min 5mm)))`. KiCad reports 3 `track_width` violations (the 3 F.Cu tracks), and the analyzer reports `compliant: true`. With `(layer "F.Cu")`, both flag them. This is the copper residue of KH-762 (closed by D8 for non-copper / hole matching).
+
+**Fix direction:** map a rule layer through the board's user names to the canonical name before matching items. Budget `design_rule_compliance` additions on boards whose rules use user layer names.
+
+- **Closed:** fixed; product 9221f2e5 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `pcb/dfm.py:973` matches the rule layer against the board's own names: F.Cu renamed `TopCopper`, In1.Cu renamed `GND` -> track_width / via_diameter / annular_width (TopCopper) and track_width (GND) go from 0 violations to `custom:s` in a full `analyze_pcb` run.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1067: TV-001 counts a same-point stacked via column once per segment, so one F.Cu–B.Cu column of three microvias reads as three thermal vias
+
+**Severity:** LOW (can lift the grade on HDI thermal pads; corpus reach 0 at this gate)
+**File:** `skills/kicad/scripts/pcb/copper.py:48` `_vias_reaching` (every via of a same-point, same-net chain that reaches the pad layer is returned), used by `analyze_thermal_pad_vias` (Tier 1); pinned by `tools/tests/test_pcb_thermal_pad_via_reach.py:87-94` (`via_count` 3 for one stacked F-In1 / In1-In2 / In2-B column)
+**Discovered:** 2026-11-08, harness, verifying the KH-573 closure at `6138b126` (code read)
+
+**Symptom:** D3 (KH-573) lets a blind or buried via count when a stack at the same point carries it to the pad's copper (ruling D P6). Each segment of the stack is then counted, so one column through the board gives `via_count` 3 and an effective count of three vias. Heat leaves through one barrel, so the adequacy grade can be one step too high. Survey D measured reach 0 (reDIP-64's blind vias are staggered).
+
+**Fix direction:** count a same-point stacked chain as one via (its narrowest drill for the drill weighting). Budget TV-001 `via_count` / adequacy on HDI boards.
+
+- **Closed:** fixed; product 570e9a00 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `copper.py:48` counts a stacked column once at its narrowest drill (`via_count` 3 -> 1 on the pinned case); product test file 8/8.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-908: LTspice / Xyce `format_measurement_block` drop `extra_vars` (no `model_source` note)
+
+**Severity:** LOW (roadmap)
+**File:** `skills/spice/scripts/spice_simulator.py` — only the ngspice backend reads `extra_vars` (:181); the other backends accept and ignore it, at `6009004`
+**Discovered:** 2026-11-03, product 3.0.x Waves 9a + 9e handoff
+
+**Symptom:** model metadata (the `model_source` note) is lost under LTspice / Xyce.
+
+**Fix direction / budget:** carry metadata outside the measurement echo stream for every backend. ngspice is the only simulator the corpus lanes run.
+
+- **Closed:** closed by the W1 refusal; product e1357434 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): Closed by the refusal: `extra_vars` is passed only by `simulate_subcircuits`' templates, which now refuse LTspice / Xyce (exit 1); EMC's `SpiceTestbench` calls (`emc_spice.py:167`, `:579`) pass no `extra_vars`, so the model-source note cannot be lost anywhere. Generated-bench LTspice / Xyce support moves to the roadmap (probe decks in the product's `w12a/scratch-C-spice-emc/probe/`).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-745: Monte Carlo varies a parallel equivalent arm as one part, overstating the spread
+
+**Severity:** LOW
+**File:** `skills/spice/scripts/spice_tolerance.py:67-86`
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** the spread is overstated by up to √N for N equal members (wider, never narrower). Members' values are not in the record. MC is opt-in.
+
+**Fix direction:** carry member values and vary each.
+
+**Addendum 2026-11-15 (product v3.0.3 triage survey at `6b9767e1`):** the fix needs no new field (reclassified for 3.0.3).
+
+- **Closed:** fixed; product 2f38e565 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `spice_tolerance.py:106` `parallel_members` samples each member with its own value and tolerance (two equal members: spread ≈ tol/√3/√2); an unresolvable arm falls back to one part as before; product tests 8/8.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1026: `simulate_subcircuits.py` checks for a simulator before refusing a symlinked `--workdir`, so the symlink test fails when ngspice is absent
+
+**Severity:** LOW (test-only failure; without a simulator the CLI still exits 1 and writes nothing)
+**File:** `skills/spice/scripts/simulate_subcircuits.py:609-617` (simulator detection returns 1) before `:667-670` (symlink refusal) `main`; test `tools/tests/test_spice_workdir.py:169-183` `test_a_workdir_that_is_a_symlink_is_refused`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe)
+
+**Symptom:** with ngspice off PATH the test fails with `'symlink' not found in 'Error: no SPICE simulator found. Install one of: …'`. With ngspice on PATH it passes. The same failure occurs at `727d0ab3`.
+
+**Fix direction:** validate `--workdir` (the symlink refusal) before simulator detection. Alternatively, mock `detect_simulator` in the test.
+
+- **Closed:** fixed; product 1cf7c4ad (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): symlink refusal first (`:663`): ngspice off PATH + symlinked `--workdir` gives "no SPICE simulator found" at base, "workdir … is a symlink" at the candidate.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1069: a failed-simulation `diagnostics` record copies ngspice's first error lines verbatim, so an include error carrying an absolute path makes the record machine-dependent
+
+**Severity:** LOW (latent: 0 of the 108 records in the gate's quick_200 spice lane carry an absolute path)
+**File:** `skills/spice/scripts/simulate_subcircuits.py:264-268` (`reason = " ".join(err_lines[:3])`; the comment notes an include error names the include path as written)
+**Discovered:** 2026-11-08, harness, verifying the KH-480 closure at `6138b126` (code read; spice-offline census)
+
+**Symptom:** the KH-480 fix records `<bench>.cir: <first 3 stderr lines>` for every failed simulation. The deck name is reduced to its basename, but the stderr text is kept as ngspice wrote it. When a bench includes a model by absolute path (a model cache or project dir), an include failure puts that path, and so the user's home or temp dir, into the output JSON. Two machines would then write different records for the same input.
+
+**Fix direction:** replace known roots (workdir, model cache dir, project dir) in the copied lines with placeholders, or keep only the basename of any path token.
+
+- **Closed:** fixed; product 5399da2c (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `_hide_roots` (`:521`) replaces the workdir, model-cache and project folders with `<workdir>` / `<model-cache>` / `<project>`; a path outside those three is still copied as written (within the fix direction).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1104: `analyze_harmonic_limits.py` and `run_external_deck.py` fail on `--output /dev/null` or `/dev/stdout`
+**Severity:** LOW (v3.0.3)
+**File:** `skills/emc/scripts/analyze_harmonic_limits.py:423-450` (`_write_json`: temp file `.<name>.<hex>.tmp` beside the target + `os.replace`), `skills/spice/scripts/run_external_deck.py:128-150` (`_write_json`: `tempfile.mkstemp(dir=target.resolve().parent)` + `os.replace`), at 206403e8
+**Discovered:** 2026-11-13, product CHANGELOG accuracy pass for v3.0.2 Wave 11d (handoff), re-read by the harness at `206403e8`
+**Symptom:** both write `--output` through their own temp-and-rename, so a stream target makes a temp file under `/dev` (`Permission denied: '/dev/.null.….tmp'`). `kicad_core.fileio.atomic_write_text` already writes `/dev/stdout`, `/dev/null`, `/dev/fd/N` and FIFOs in place.
+**Fix direction:** route both through `kicad_core.fileio.atomic_write_text`.
+**Gate budget (when fixed):** none (CLI write path only).
+
+- **Closed:** fixed; product 8029a311 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): both tools write through `atomic_write_text`: `--output /dev/null` / `/dev/stdout` rc 2 / 1 at base (Permission denied, cross-device link), rc 0 and JSON on stdout at the candidate.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1002: `datasheet_verify` trusts an infinite quality score, reports NaN / bool scores as `quality_score: NaN` / `true`, and the cache never re-queues a NaN score
+
+**Severity:** LOW (needs a malformed extraction; NaN makes the verify JSON non-standard)
+**File:** `skills/datasheets/scripts/datasheet_verify.py:164-194` (`_v13_score`, `_v14_score`, `_passes_trust_gate`), `:197-215` `_quality_finding`; `skills/datasheets/scripts/datasheet_extract_cache.py:468-471` (`score < MIN_SCORE` retry check)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe)
+
+**Symptom:** probe: `extraction.quality_score` inf (and v1.3 `extraction_score` inf) passes the gate, while `trust_gating.finite_score` / `facts_trusted` now reject it. NaN fails the gate, but the info finding carries `"quality_score": NaN` (`json.dumps` emits a bare `NaN`) and the detail "score nan". `True` gives `"quality_score": true`. `is_extraction_stale` on a cached extraction with `extraction_score: NaN` returns `(False, '')` (a 2.0 score returns `low_score`), so a NaN extraction is never retried.
+
+**Fix direction:** read both scores through `trust_gating.finite_score` (None → untrusted, reported as none). Treat a non-finite score as stale in `is_extraction_stale`.
+
+- **Closed:** fixed; product dbc1833d (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): inf / NaN / `True` scores fail the trust gate and the finding's `quality_score` reads `null` ("has no valid quality score"); `is_extraction_stale` with a NaN / inf `extraction_score` goes `(False, '')` -> `(True, 'malformed extraction_metadata')`.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1037: `cache_reader.lookup` reads `<sanitize_mpn>.json` with no recorded-MPN check, so MPNs that sanitize alike share one extraction
+
+**Severity:** LOW (needs a collision in the cache; a datasheet-backed value from another part)
+**File:** `skills/datasheets/datasheet_types/cache_reader.py:280-284` `lookup`
+**Discovered:** 2026-11-07, harness, verifying the KH-986 closure at `f53d107e` (code read)
+
+**Symptom:** KH-986 made `find_extraction`'s file-name fallback check the file's recorded MPN. `cache_reader.lookup` still opens `<sanitize_mpn>.json` directly, so `BAV99 215` reads the v1.4 file written for `BAV99/215`. Its docstring accepts rare collisions.
+
+**Fix direction:** check the record's `mpn` (as `_records_mpn` does) or route through `find_extraction`.
+
+- **Closed:** fixed; product dbc1833d (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `cache_reader.py:319` calls `records_mpn`: `BAV99_215.json` recording `BAV99/215`, queried as `BAV99 215`, hits at base, None at the candidate; `BAV99/215` still hits.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-606: `datasheet_verify` cannot find any extraction written by `datasheet_extract_cache` (hashed file names and manifest keys), and reads quality from a `meta` key no producer writes
+
+**Severity:** HIGH (the verifier runs on every schematic analysis; all three verifier families skip silently)
+**File:** `skills/datasheets/scripts/datasheet_verify.py:40` (name sanitiser keeps `.-`, no hash), `:43` (direct `<mpn>.json` read), `:62` (manifest key compared to the unhashed name), `:195`, `:210` (`"meta"`); writer `datasheet_extract_cache.py:152-154` (`_sanitize_mpn` = `[^A-Za-z0-9_]`→`_` + `_<md5[:6]>`), `:293-294`, `:315`, `:304`, `:322` (`extraction_metadata`); caller `schematic/pipeline.py:1474-1484`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R3-F1, sk/R3-F10)
+
+**Symptom:** `cache_extraction(d, 'LM2596-ADJ', …)` writes `LM2596_ADJ_d61933.json` and a manifest key with the hash; `_load_extraction` looks for `LM2596-ADJ.json` / an unhashed key → `{}`, while the cache's own `get_cached_extraction` finds it. Every legacy-cache verifier family skips and `ics_with_extractions` undercounts, though `kicad/SKILL.md:479` tells the agent to cache via `datasheet_extract_cache` (and names `datasheets/extracted/<MPN>.json`, which the writer never emits). Separately, `:195` / `:210` read `meta`, which no producer in `skills/` writes (the writer and `datasheet_features.py:92` use `extraction_metadata`), so a low legacy score never yields `extraction_quality_low`.
+
+**Fix direction / budget:** resolve through the manifest's `mpn` value or the cache manager's reader, keeping the direct-file path as a fallback; read `extraction_metadata`; fix the SKILL.md:479 filename. Budget: the schematic envelope's `datasheet_verification` gains findings on legacy caches — expected ≈0 corpus-wide (round-8 pre-scan: 0 units carry `datasheet_verification`); harness to confirm.
+
+**Addendum 2026-10-31 (3.0.x Wave 5, candidate `698116c`):** fixed in 3.0.x Wave 5 (`740d2b6`, `5728851`): the verifier matches legacy manifest entries by their `mpn` value, reads cache-manager (hashed) names, accepts only leaf `file` names, ignores non-object files, refuses symlinked caches and reads `extraction_metadata` (fallback `meta`); `kicad/SKILL.md:479` and `references/datasheet-verification.md` name the cache manager's files. The multi-unit merge it needed is KH-781. The handoff lists this entry as fixed with a note; kept open for the note: `datasheet_verify._v1_view` passes v2 pin types through unchanged (latent). Close when that is ruled or fixed.
+
+- **Closed:** fixed; product dbc1833d (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `datasheet_verify.py:154-173`: a v2 `power_in` / `power_out` pin becomes `power` with a direction, or `function: GND` for a ground name: pins (GND, VIN, VOUT) `power_in`/`power_in`/`power_out` with no role at base, `power/GND`, `power/input`, `power/output` at the candidate.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-554: lookup detectors (AM / OV / TJ / EX / FT / PM) never inspect fact staleness or quality, and AM-001 skips per-pin limits when no domain limit resolves [group 14]
+
+**Severity:** MEDIUM (cache-backed parts only; no corpus caches)
+**File:** consumers `lookup_detectors.py:108`, `:203`, `:316`, `:407`, `:504`, `:610` (no read of `_cache_context.is_stale` or `quality`); `lookup_helpers.py:34-38` (`get_facts` docstring names a nonexistent `facts.best(field, trust_gate=...)`); `skills/datasheets/datasheet_types/cache_reader.py:213-232` (`lookup` marks stale and still returns, by design); `lookup_detectors.py:116`, `:133-147` (`detect_absolute_max_violations`: per-pin `absolute_max` only tightens a resolved global limit; `:134-135` `continue`, empty `am_block` skips the component at :116); VDD synonym pool `:38-39`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/02-v3-kicad-code/findings/VERIFICATION.md` kc/R7-F1, kc/R7-F8)
+
+**Symptom:** `get_facts` returning facts with a quality flag is the deliberate v2.0 §3.A.1 design (consumers decide); the validation detectors do decide (`validation_detectors.py:485/580/924/1053`), the lookup detectors never do, so a stale or score <60 extraction drives deterministic AM / OV findings. An extraction with per-pin limits and no domain limit produces no AM-001 check at all. The VDD synonym pool can merge distinct domains.
+
+**Fix direction / budget:** per-consumer gating (not inside `get_facts`, which would reverse §3.A.1); evaluate per-pin limits without a domain limit; correct the docstring now (neutral). Waits on ruling: the lookup-detector trust policy (stale / score <60 / unscored / pin-level evidence / synonym pool), which must come after KH-433 because staleness is unreliable on copied projects. Budget: corpus-invisible (no extraction caches in the corpus); user-visible on cached projects.
+
+**Addendum 2026-11-01 (3.0.x Wave 6, candidate `c0a8a62`):** the docs now describe today's behaviour (ruling W6-11): `skills/datasheets/references/cache-layout.md:124-133` says `lookup()` only marks a stale entry, the regulator detector skips stale or low-score facts and the lookup detectors do not read `stale` yet (`0dd234e`, `7c55b17`, tagged KH-638). Re-edit that paragraph when this entry's per-consumer gating lands. Code unchanged.
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, partly fixed):**
+- **Fixed:** product v3.0.x-dev 1a4702a4 fix(kicad): a stale datasheet extraction is named once in diagnostics; get_facts docstring matches its behaviour (v3.0.2 Wave 11a Task 5, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: the `get_facts` docstring (`skills/kicad/scripts/lookup_helpers.py:40-49`) now names the real `best(specs, min_confidence=...)` / `has_data(specs)` (`datasheet_types/trust_gating.py:68,78`), with no nonexistent `facts.best(trust_gate=)`.
+- **Left open:** per-consumer stale/quality gating in AM/OV/TJ/EX/FT/PM (`lookup_detectors.py` has no `stale`/`quality` read), AM-001 per-pin limits without a domain limit, and the VDD synonym pool (expected PARTIAL).
+
+- **Closed:** fixed; product 47b46417 (with 6cc82e92 and 1a4702a4 earlier) (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): all six lookup detectors skip untrusted facts (`if facts is None or not facts_trusted(facts)`, e.g. `lookup_detectors.py:112`, `:213`: stale, score < 60, unscored); VDD pool split by domain (`_SUPPLY_GROUPS` `:40`); per-pin AM-001 limit and docstring in place; `cache-layout.md` re-edited. The silent below-60 / unscored skip is KH-1189.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-632: datasheet completeness score gives full category credit to five of six categories and a free 30 points for `reserved_v15`, so a sparse MCU extraction scores 71
+
+**Severity:** MEDIUM (visible quality metadata; gates `extraction_quality_low` and `_quality_v14.trusted`)
+**File:** `skills/datasheets/scripts/datasheet_score.py:361-367` (`_CATEGORY_FIELD_REQS` has only `regulator`), `:424-426`, `:449`; legacy pin scorer `:94-127` (unnamed pin `:111-112` adds no counter; `pins_with_specs` `:107` never read); `datasheet_features.py:107-119`
+**Discovered:** 2026-10-25, external audit round 1 at `07b7fb1` (`docs/audit/03-v3-skills-code/findings/VERIFICATION.md` sk/R3-F3; R3 spot check #2)
+
+**Symptom:** the report's sparse MCU example scores exactly 71 (pinout .5, base .25, category 1.0, reserved 1.0) — over the 60 threshold, so `extraction_quality_low` is suppressed and `trusted` is set. A topology-only regulator scores ≈51 (real rubric). Legacy scorer: N unnamed pins at the expected count score 10/10 on pin coverage.
+
+**Fix direction / budget:** per-category field requirements for the other five categories, no free credit for reserved fields, count unnamed pins. Waits on ruling: score thresholds, with frozen examples. Budget: score values and `trusted` flags on extractions (deterministic detectors are affected only through regulator/MCU features).
+
+- **Closed:** fixed; product c75bd412, 880d87a5 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): field lists for mcu / opamp / crystal / transistor / diode, no free `reserved_v15` credit, unnamed pins counted, re-scored on read (lower of stored and new): a sparse MCU 60 -> 13; 8 unnamed legacy pins 10.0 -> 2.0.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1111: `capability_mode` `datasheet_coverage_pct` reads only `datasheets/manifest.json`; a legacy `index.json` gives 0 %
+
+**Severity:** LOW (v3.0.3; residue of KH-458)
+**File:** `skills/kicad/scripts/capability_mode.py:105` (`read_json_object(Path(cache_dir).parent / "manifest.json")`, 0 when missing); `skills/datasheets/scripts/distributor_core/manifest.py:75-86` (`_manifest_path` falls back to `index.json`), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** SacMap's datasheet dir carries a legacy `index.json`: coverage reads 0 % where the distributor tools see 3 of 22 parts. KH-458's fix direction named `index.json`; the landed fix reads `manifest.json` only.
+**Fix direction:** load the manifest through `distributor_core.manifest` (`_manifest_path` / `load_index`).
+**Gate budget (when fixed):** the `capability_mode.json` sidecar only (outside the strict gate).
+
+- **Closed:** fixed; product e8df3f5d (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `capability_mode.py:129` reads through `load_index` (falls back to `index.json`): legacy `index.json` coverage 0 -> 50.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1112: `capability_mode.json` records `"platform": "claude-code"` on every host
+
+**Severity:** LOW (v3.0.3)
+**File:** `skills/kicad/scripts/capability_mode.py:144` (`_fresh_record`: literal `"platform": "claude-code"`, no detection or parameter), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** the Codex soak run (13) records `claude-code`.
+**Fix direction:** take the platform from a caller parameter or environment variable, else write `"unknown"`.
+**Gate budget (when fixed):** sidecar only.
+
+- **Closed:** fixed; product e8df3f5d (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `capability_mode.py:187`: `platform` is `claude-code` only when `CLAUDECODE=1`, else `unknown` (probe with `CLAUDECODE` unset: `claude-code` -> `unknown`). Harness contract `test_capability_mode.py` sets the variable and locks the `unknown` case.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-871: on Windows, the KH-811 identity fallback returns None for every read if `fstat` and `lstat` disagree on `st_ino`/`st_dev`
+
+**Severity:** LOW (Windows only; risk not demonstrated)
+**File:** `skills/datasheets/datasheet_types/cache_reader.py:74` (`if not hasattr(os, "O_NOFOLLOW") and not os.path.samestat(st, os.lstat(path)): return None`)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8c (slug KH-new-windows-fstat-identity); verified harness-side at `0efc012` by reading only (Linux box; the branch is not reachable here)
+
+**Symptom:** if some Windows filesystem or Python version fills `st_ino`/`st_dev` differently for `fstat` and `lstat`, every extraction read silently returns None and datasheet-backed findings disappear with no warning.
+
+**Fix direction / budget:** a Windows smoke run (one cached extraction read through `read_json_object`) before v3.0.1 ships; consider a one-time stderr note when the identity check refuses a regular file. Corpus-neutral. Before v3.0.1 ships (smoke run); any code change post-3.0.
+
+- **Closed:** fixed; product 51f4b2ca (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `cache_reader.py:61` adds a one-time stderr note when the identity check refuses a regular file; Windows read test `tools/tests/test_cache_reader.py:484` runs in the product's windows CI job (result not visible from the harness). A ReFS Dev Drive still refuses every read, now with the note.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-661: decide whether `cross_verify` is kept or retired (its decoupling check, KH-566 half, and DNP handling, KH-594)
+
+**Severity:** LOW (decision item)
+**File:** `skills/kicad/scripts/cross_verify.py:422` (rail name used as `ic_ref` in the decoupling check), `:121-186` (DNP, see KH-594)
+**Discovered:** 2026-10-25, product 3.0.x Wave 2 (handoff §Asks 4j); the decoupling half of KH-566 was left out of the Wave 2 fix
+
+**Symptom:** `cross_verify`'s decoupling check never matches (it looks up a rail name as an IC ref), and KH-594 / KH-570 show the module drifting from the producer keys; Wave 2 fixed `cross_analysis` DA-001 but not this copy.
+
+**Fix direction / budget:** rule keep or retire. Keep: port the DA-001 key reading and the `on_board` handling. Retire: remove the CLI and its harness tests. No corpus profile runs `cross_verify`.
+
+**Addendum 2026-11-15 (SacMap rev2 soak runs 12 + 13, v3.0.2 `2c645996`, code read at `365aea94`):** still present: nine "C1 or +5V not found" rows on SacMap (`cross_verify.py:434` puts the rail in the IC slot, message at `:478`). Logo orphans: KH-1115.
+
+- **Closed:** fixed; product 95d9891c (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): decoupling resolves the rail's fitted ICs as DA-001 does instead of putting the rail name in the IC slot: `('+3V3','C1','info','C1 or +3V3 not found')` -> `('U1','C1','pass')`. Connector / module loads: KH-1188.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1115: `cross_verify` reports a board-only logo (`G***`) as a failing orphan; the KH-456 fab-gate fix was not ported
+
+**Severity:** LOW (v3.0.3; tool only, see KH-661 keep-or-retire)
+**File:** `skills/kicad/scripts/cross_verify.py:141-155` (every `pcb_only` ref gets `"status": "fail"`, "stale placement?"); `skills/kicad/scripts/kicad_core/pairing.py:6-7,29-45` (`_part_ref` drops only `#` refs); the fab gate subtracts `board_only` at `fab_release_gate.py:212-220`, at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** SacMap's logo footprints show as orphans in cross_verify while the fab gate (since KH-456) passes them.
+**Not confirmed from source:** the soak's USB skew (0.527 mm vs a 6.341 mm full route). `cross_verify.py:224-226` reads `net_lengths[...]["total_length_mm"]`, which sums every segment and arc of the named net (`pcb/routing.py:834-885`), so the short figure is the whole of the net the schematic names. The likely cause is a route split into several nets by a series part (cross_verify never follows through) or the schematic / PCB name mismatch (KH-487 addendum, `cross_verify.py:232-233`); the design is needed to tell which.
+**Fix direction:** skip `board_only` footprints (no pads / logo / graphics-only) as the fab gate does.
+**Gate budget (when fixed):** none (no corpus profile runs cross_verify).
+
+- **Closed:** fixed; product 95d9891c (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `cross_verify.py:147,158` skip `board_only` footprints: orphans `['G1']` -> `[]`.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-996: the BOM skill's sub-sheet walker does not read backslash or `${VAR}` sheet file names, so those sheets' parts drop out of the BOM
+
+**Severity:** LOW (BOM skill only; the analyzer now resolves both)
+**File:** `skills/bom/scripts/kicad_sexp.py:148-174` `find_sub_sheet_entries` (`:162` `base_dir / unescape_quoted(name)`, `:163-164` skips a path that does not exist); callers `kicad_sexp.py:274`, `bom_manager.py:565`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe)
+
+**Symptom:** the analyzer resolves `expand_sheet_file(...).replace("\\", "/")` (`schematic/reader.py:1361`, `schematic/hierarchy.py:71`); the BOM walker does neither. Probe: a sheet `(property "Sheetfile" "sub\\power.kicad_sch")` with `sub/power.kicad_sch` on disk, and a `${PROJECTNAME}_power.kicad_sch` name, both return no sub-sheet; `sub/power.kicad_sch` is found. The parts on such sheets are missing from `bom_manager` output and its property write-back, with no warning. Corpus: the MST Charges_KiCAD_Project root names 5 backslash sheets.
+
+**Fix direction:** reuse `kicad_core.project.expand_sheet_file` and the backslash replace in `find_sub_sheet_entries`.
+
+- **Closed:** fixed; product cf43af7d (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `kicad_sexp.py:169` expands variables and replaces backslashes, both callers pass the sheet path: sheets `sub\power` and `${PROJECTNAME}_power` 0 -> 2 found; `collect_schematic_files` 1 -> 3 files.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-997: the BOM skill reads mandatory fields by exact name, while the analyzer matches them in any case with the last duplicate winning (KH-711)
+
+**Severity:** LOW (BOM skill disagrees with the analyzer on value / footprint / datasheet / description)
+**File:** `skills/bom/scripts/bom_manager.py:112-122` `extract_properties` (exact-name dict), `:147` (DNP marker from `Value`), `:372-375`, `:515`; analyzer rule `skills/kicad/scripts/schematic/reader.py:421-429` `mandatory_property`, `:751-768` `_symbol_fields`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read)
+
+**Symptom:** a symbol whose field is written `value`, `datasheet` or `DESCRIPTION` (KH-711 measured 4,158 such fields in 350 corpus `.kicad_sch` files) gets an empty value / footprint / datasheet / description in the BOM, and BOM grouping by value / footprint splits from the analyzer's. Rider: for a duplicated `Reference`, the BOM keeps the last (dict overwrite) and the analyzer the first.
+
+**Fix direction:** read the five mandatory fields through the analyzer's rule (case-insensitive, last duplicate wins; `Reference` exact name, first entry). Share one helper.
+
+- **Closed:** fixed; product 4a8cc147 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `bom_manager.extract_properties` reads through `kicad_core/fields.py:128` `symbol_field_map`: `value` / `footprint` / `DESCRIPTION` map to the canonical names; duplicate Reference R1, R9 gives R1. (The analyzer's `reader.py` keeps its own copy of the same rule.)
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-994: `_read_ic_abs_max` keeps its own extraction lookup: an underscored stem with no recorded-MPN check, blind to hash-suffixed cache files and to the v1.4 abs-max block
+
+**Severity:** LOW (needs an extraction cache; a wrong hit gives a datasheet-backed VD-002 error against another part's rating)
+**File:** `skills/kicad/scripts/schematic/system_analyses.py:777-819` `analyze_voltage_derating._read_ic_abs_max`; consumer `:902-950` (VD-002)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read)
+
+**Symptom:** the reader sanitizes with `[^A-Za-z0-9_]` → `_` (`:789`) and opens `<stem>.json` directly (`:790`) without the recorded-MPN check that `find_extraction` gained this wave (`datasheet_extract_cache._records_mpn`). So `BAV99-215`, `BAV99.215` and `BAV99/215` all read one `BAV99_215.json`, whichever part it belongs to (the KH-986 collision, in a reader that fix did not cover). Its manifest step compares keys to the bare stem (`:797-801`), but `cache_extraction` writes `<stem>_<md5[:6]>` keys and files, so an extraction the datasheets skill writes is never found (`LM1117-3.3` → `LM1117_3_3_0956f6.json`). A v1.4 `<MPN>.json` with a dot or hyphen is missed by name. Any v1.4 file is read only for the v1.3 `absolute_maximum_ratings` key (v1.4 keeps ratings under `base.absolute_max`). Same class as KH-980 / KH-987.
+
+**Fix direction:** route the reader through `find_extraction` and read the abs-max ratings from either schema version.
+
+- **Closed:** fixed; product 1a64b750 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `system_analyses.py:797` uses `find_extraction(..., v14_first=False)`: the hashed `LM1117_3_3_0956f6.json` is found and a `BAV99.215` lookup against a file recording `BAV99/215` gives None. The second fix-direction item (read v1.4 `base.absolute_max`) was dropped by the product's ruling (AM-001 covers v1.4 per pin).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-805: `--analysis-dir` carries `lifecycle.json` forward after a BOM change, and `gerber.json` is never judged stale
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/analysis_cache.py` (copy-forward; derived-output staleness from `4c8e838` / `53a917c`)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 16 (KH-596 remainder); not verified harness-side
+
+**Symptom:** after a part swap the run keeps the old `lifecycle.json` (the wrong part's lifecycle); `gerber.json` records no source hashes, so it is never dropped.
+
+**Fix direction / budget:** treat lifecycle as derived from `schematic.json`; record Gerber source hashes. Neutral for the harness (no gate profile uses `--analysis-dir`).
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, partly fixed):**
+- **Fixed:** product v3.0.x-dev 99b688c7 fix: a new schematic drops the run's lifecycle.json instead of carrying it forward (v3.0.2 Wave 11a Task 19, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/kicad/scripts/analysis_cache.py:68-69` adds `lifecycle.json` to `_DERIVED_OUTPUTS`, with `_DERIVED_UPSTREAMS = {'lifecycle.json': ('schematic.json',)}`. `_derived_stale` drops it on both the new-run path (`:694-698`) and the overwrite path (`:795-799`) when schematic.json changes.
+- **Left open:** the gerber half. `gerber.json` still records no source hashes and is never judged stale; this moved to v3.0.3 by ruling 11.
+
+- **Closed:** fixed; product 4f8c54f3, 9dacb176 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `analysis_cache.py:584` `_gerber_inputs_changed` drops `gerber.json` when a recorded Gerber hash changes, on the create and overwrite paths. Residue: a relative hash key is only checked from the same cwd (filed as KH-1194 on the product's ruling); removed / added Gerber files read as unknown. The NUL / surrogate crash in the same function is KH-1192.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-973: `diff_analysis.py` grades an analyzer-version change on an unchanged design as "breaking", and has no diff for `gerber` or `cross_analysis`
+
+**Severity:** LOW (tool output only)
+**File:** `skills/kicad/scripts/diff_analysis.py:505-515` (`diff_funcs` covers schematic / pcb / emc / spice / thermal; any other type prints "no diff function" and returns 1); neither `diff_analysis.py` nor `diff_engine.py` reads `inputs.source_hashes` or the generator version before `classify_regressions`, at `7d9d4d9f`
+**Discovered:** 2026-11-06, SacMap rev2 soak run 11 (`~/Projects/sandbox/Old-Reviews/sacmap-rev2/11/`, v3.0.1 release `7d9d4d9f`, post-release; design files byte-identical to run 10); verified by code read at `7d9d4d9f`
+
+**Symptom:** run 11 against run 10 (same design files): the diff reports "breaking, 3 regressions" when the ERC list realigned with KiCad in v3.0.1. `gerber.json` and `cross_analysis.json` exit rc 1.
+
+**Fix direction / budget:** when both sides' `inputs.source_hashes` match and the generator version differs, say "analyzer change, design unchanged" and do not grade the delta as design breakage; add gerber and cross_analysis diff functions (or exit 0 with a "not supported" note). Tool only, no corpus output change. v3.0.2 or later.
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, partly fixed):**
+- **Fixed:** product v3.0.x-dev b8b0561e fix(diff): say when the design files are unchanged and the changes come from the analyzer (v3.0.2 Wave 11a Task 29, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `diff_analysis.py` `_same_design` compares the `source_hashes` values and `config_hash` and adds `ANALYZER_ONLY_NOTE` to the text output (in JSON mode, to stderr).
+- **Left open:** the delta is still graded by `classify_regressions`, so "breaking" can still be reported. `gerber` and `cross_analysis` still get "no diff function" with rc 1 (:528-537), frozen as declared.
+
+**Addendum 2026-11-15 (SacMap rev2 soak runs 12 + 13, v3.0.2 `2c645996`, code read at `365aea94`):** both halves still present. (1) Unchanged design: the "unchanged design files" note goes to stderr only while the JSON grade stays `major` (`diff_analysis.py:47-61`, `:576-590`; `diff_engine.py:1040-1051`); the JSON carries no `same_design` flag. (2) No gerber / cross_analysis diff: rc 1 "no diff function for analyzer type" (`diff_analysis.py:528-538`). Reworded deep-review findings: KH-1118.
+
+- **Closed:** fixed; product 76fad0ec (with b8b0561e earlier) (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): text output reads "analyzer change only; graded X" and relabels the regressions. Dropped by the product's ruling: the exit code stays 1 for gerber / cross_analysis, and the JSON `same_design` flag is deferred to 3.1 (tracked on the product roadmap and 3.1 seed, product reply 2026-11-16).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1118: `diff_analysis` counts a reworded Deep Review finding as one fixed plus one new
+
+**Severity:** LOW (v3.0.3; diff tool output)
+**File:** `skills/kicad/scripts/diff_engine.py:970-1011` (`diff_deep_review` matches on exact `finding_id`; its docstring says rewording "can surface as fixed+new"; the fuzzy pass at `:988-991` is advisory and needs the same category and the same evidence-component set); `skills/kicad/scripts/diff_analysis.py:262-263` (headline `{len(fixed)} fixed, {len(new)} new` does not subtract matched pairs), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** between soak runs, deep-review findings reworded by the reviewer appear as removed + new in the diff headline.
+**Fix direction:** take matched reworded pairs out of the fixed / new counts (or report "M likely reworded"), and widen the key to shared nets / rule / overlapping components.
+**Gate budget (when fixed):** none (tool only).
+
+- **Closed:** fixed; product 048cf23c (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): the headline subtracts one-to-one reworded pairs (`diff_analysis.py:259`): "2 fixed, 2 new" -> "1 fixed, 1 new, 1 likely reworded". Residue as scoped: a rewording that also changes the evidence components still counts fixed + new (key widening tracked as a 3.1 item on the product roadmap and 3.1 seed); JSON `fixed` / `new` lists unchanged.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1117: `summarize_findings` tallies every `*.json` in the run folder, so a hand-written second lifecycle file mixes into the counts
+
+**Severity:** LOW (v3.0.3)
+**File:** `skills/kicad/scripts/summarize_findings.py:91-110` (`_collect`: `for name in sorted(os.listdir(run_dir))`, no canonical-name filter), `:182-227` (`_aggregate` by `(rule_id, severity)`), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** the soak agent wrote `lifecycle_distributors.json` beside `lifecycle.json`; both files' rows are counted, so an Active part shows as unknown (LC-004 from the network-less file beside the real file's LC-ACT row). The envelopes are not merged, they are summed.
+**Fix direction:** read only the run manifest's `outputs` map (or `CANONICAL_OUTPUTS`) and warn on extra JSON files.
+**Gate budget (when fixed):** summarize_findings text / JSON (product text-oracle artefacts only).
+
+- **Closed:** fixed; product 235bdb56 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `summarize_findings.py:91-98` skips any JSON not in `CANONICAL_OUTPUTS` with a stderr warning: `lifecycle.json` (LC-ACT) + `lifecycle_distributors.json` (LC-004) count `[LC-004, LC-ACT]` at base, `[LC-ACT]` at the candidate.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1103: `export_issues` paragraph text can form a table or a heading in GitHub Markdown
+**Severity:** LOW (v3.0.3)
+**File:** `skills/kicad/scripts/export_issues.py:104-113` (`_paragraph` keeps line breaks and does not escape `|`), `:322-331` (component list item: with no ref, a Value starting `# ` makes `- # ...`, a heading inside a list item; `_md_cell` escapes `|` but not a leading `#`), at 206403e8
+**Discovered:** 2026-11-13, product CHANGELOG accuracy pass for v3.0.2 Wave 11d (handoff), re-read by the harness at `206403e8`
+**Symptom:** a multi-line summary / description / recommendation whose lines carry `|` and a delimiter row (`| --- |`) renders as a table; a ref-less component with Value `# foo` renders as a heading. Bare URLs, `www.` and `#12` still autolink on GitHub in Action and issue text (now documented; decide whether to neutralise).
+**Fix direction:** escape `|` in `_paragraph` (or flatten line breaks where a table could form) and escape a leading `#` in the component item; decide on autolink neutralising.
+**Gate budget (when fixed):** none on the corpus (export text only); product export tests.
+
+- **Closed:** fixed; product d88c8816 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `_paragraph('a | b\n| --- | --- |')` escapes the pipes; a ref-less component with Value `# foo` renders `- \# foo`. Autolinks left undecided, as the issue allowed.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1119: the review's previous-run diff is chosen by folder name, not by project: `auto_diff` is instructions only and `diff_analysis --analysis-dir` takes the two newest run folders
+
+**Severity:** LOW (v3.0.3; mechanism not confirmed on the run)
+**File:** `skills/kicad/scripts/project_config.py:65` (`auto_diff` default, read by no code); `skills/kicad/SKILL.md:338`, `:422` (scan the project directory for `*review*.md`); `skills/kicad/scripts/diff_analysis.py:411-436` (`--analysis-dir` takes `list_runs()[0]` / `[1]`, newest by folder name, `analysis_cache.py:952-968`; no check of the manifest's `current` pointer or `project`), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** the soak runs diffed against a sibling run directory instead of the previous run of the same project. The run dirs were not accessible to the harness, so which path the agent took is not confirmed.
+**Fix direction:** resolve "previous" from the manifest (`current` pointer, same `project`) and say in SKILL.md "the previous run in this project's `analysis/` folder".
+**Gate budget (when fixed):** none (docs / CLI).
+
+- **Closed:** fixed; product c31c39a7 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `diff_analysis.py:406-416` (`_current_and_previous`) takes "previous" from the manifest's `current` pointer, not the newest folder name; `auto_diff` documented as instructions only; SKILL.md :338 / :422 say to use this project's `analysis/` folder.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1116: `fab_release_gate.py` has no `--analysis-dir`, and SKILL.md does not document the gate
+
+**Severity:** LOW (v3.0.3; docs / CLI)
+**File:** `skills/kicad/scripts/fab_release_gate.py:655-673` (argparse: no `--analysis-dir`, rc 2 "unrecognized arguments"); `skills/kicad/SKILL.md:303-306` ("all analyzers take `--analysis-dir`"; the gate is named only in ARCHITECTURE.md:75), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** a soak agent passed `--analysis-dir` and was refused. The reported `--gerber` vs `--gerbers` trouble is refuted: argparse prefix matching accepts `--gerber` (probe got past parsing).
+**Fix direction:** add `--analysis-dir` (read the run folder's schematic / pcb / gerber outputs), or document the gate's own flags in SKILL.md.
+**Gate budget (when fixed):** none.
+
+- **Closed:** fixed; product b83528ed (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): docs route, as the issue allowed: SKILL.md:306 lists the gate's own flags and says it takes no `--analysis-dir`.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1064: two product tests leave files open (`ResourceWarning`)
+
+**Severity:** LOW (test hygiene; noise under `-X dev` / `-W error`)
+**File:** `tools/tests/test_spice_workdir.py:46` (`json.load(open(_analysis(tmp), …))`), `tools/tests/test_lifecycle_cli_exit.py:29` (`open(SCRIPT, …).read()`)
+**Discovered:** 2026-11-08, harness, v3.0.2 Wave 11b-2 gate (from the product handoff slug `KH-new-test-resourcewarnings`)
+
+**Symptom:** `python3 -X dev -W always::ResourceWarning -m unittest` on both files (export of `6138b126`): one "unclosed file <_io.TextIOWrapper …>" at each line, tests OK. These are the only two `open()` calls without a context manager in `tools/tests`. No socket warning appears in these files (the slug says "file/socket").
+
+**Fix direction:** `with open(...)`. No output change.
+
+- **Closed:** fixed; product 32b5ed70 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): both `open()` calls use `with` (`test_spice_workdir.py:46`, `test_lifecycle_cli_exit.py:29`).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-872: a `--force-all` refresh that verifies as a different part replaces a good `ok` entry and deletes its PDF
+
+**Severity:** LOW
+**File:** `skills/datasheets/distributor_core/sync.py:56-57` (`_outage_entry`: any `ok` result replaces the entry), `:165-176` (`_replaced_file`), `:191-218` (`_record` removes the old PDF); verdict from `distributor_core/verify.py:243-269` (`"verification": "wrong"` keeps `"status": "ok"`)
+**Discovered:** 2026-11-03, product 3.0.x Wave 8c (slug KH-new-force-all-wrong-part-ok); verified harness-side at `0efc012` (code reading; at `647bc85` `_outage_entry` already replaced the entry, but no PDF was removed)
+
+**Symptom:** a refresh whose PDF fails identity verification (`verification: wrong`) still counts as `ok`, so it overwrites a verified entry; since KH-813 the previous PDF is also deleted when the new file name differs. The handoff says this predates the wave: the entry replacement does, the deletion is new in 8c.
+
+**Fix direction / budget:** treat an `ok` with `verification: wrong` like an outage when the previous entry is `ok` and its file exists (keep entry and PDF, report the result). Distributor-offline lane only if a fixture covers it. Post-3.0.
+
+**Addendum 2026-11-06 (v3.0.2 Wave 11a, candidate `5510006a`, partly fixed):**
+- **Fixed:** product v3.0.x-dev 355afcfb fix(datasheets): a refresh that verifies as a different part keeps the previous datasheet (v3.0.2 Wave 11a Task 25, unreleased; local and unpushed at the handoff).
+- **Verification:** harness re-read at `5510006a`: `skills/datasheets/distributor_core/sync.py:58-68` handles an `ok` refresh with `verification: wrong` over a verified `ok` entry whose file exists under a different name. The run keeps the previous entry and PDF and reports `failed`, and `_record` removes the new wrong file instead (`:201`).
+- **Left open:** the same-name case. The refreshed file has already overwritten the good PDF, so the code leaves it alone (comment at `:64`).
+
+- **Closed:** fixed; product f68f2030 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): a refresh of a verified `ok` entry downloads into a staging folder (`sync.py` `_sync_part` / `_keeps_ok`) and replaces the old file only once stored; product test `test_force_all_wrong_part_with_the_same_name_keeps_the_ok_entry` passes (67/67).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-824: the Mouser provider's `DEFAULT_DELAY = 1.0` allows ~60 calls a minute, above the documented free-tier quota
+
+**Severity:** LOW (free-tier 429s on large BOMs; retried since KH-615)
+**File:** `skills/mouser/scripts/provider_mouser.py:22` (`DEFAULT_DELAY = 1.0`); consumer `skills/datasheets/distributor_core/sync.py:197`
+**Discovered:** 2026-11-01, product 3.0.x Wave 6 docs surveys (schema survey P6, ruling W6-22); filed by the harness at the Wave 6 gate
+
+**Symptom:** one serial worker makes up to about 60 calls a minute and `--parallel N` multiplies that; the previously documented quota was 30 calls a minute. The docs no longer claim the default stays under a quota and tell the user to set `--delay` / `--parallel` (`skills/mouser/SKILL.md:216-219`, product `d762249`). Verified harness-side at `c0a8a62` (code line; KH-642 cited `:21`, now `:22`). The quota itself was not re-checked (no network).
+
+**Fix direction / budget:** confirm Mouser's current quota, then set the default from it (2.0 s for 30/min). Changes `--help` "default: 1.0" (text oracle `help__sync_datasheets_mouser`) and sync timing; distributor-offline transcripts unaffected.
+
+- **Closed:** fixed; product 3ee4e73e (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `provider_mouser.py:22` `DEFAULT_DELAY = 2.0`; help reads "default: 2.0" (text oracle `help__sync_datasheets_mouser` line 29, declared). The lifecycle audit's own Mouser rate is KH-1186.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1107: LC-004 cannot tell "no distributor answered" from "answered, no match"
+**Severity:** LOW (v3.0.3)
+**File:** `skills/kicad/scripts/lifecycle_engine.py:757-760` (a falsy source result is dropped, never recorded), `:1038` (`creds` hint keyed on `data.get('sources')` being empty), at 206403e8
+**Discovered:** 2026-11-13, product CHANGELOG accuracy pass for v3.0.2 Wave 11d (handoff), re-read by the harness at `206403e8`
+**Symptom:** a distributor that answers with no match and one that never answered (no credentials, network error) both leave `sources` empty, so the "check ... the distributor credentials" hint rides on nearly every LC-004.
+**Fix direction:** record per source whether it answered (matched / no match / no answer) and give the credentials hint only when no source answered.
+**Gate budget (when fixed):** LC-004 recommendation text (lifecycle lane; offline corpus runs see no distributor).
+
+**Addendum 2026-11-15 (SacMap rev2 soak runs 12 + 13, v3.0.2 `2c645996`, code read at `365aea94`):** the same run shows the LC-ACT wording half too: in `--only lcsc` mode every row says "LCSC returns no lifecycle status" whether or not LCSC answered. Trust / evidence half: KH-1113.
+
+- **Closed:** fixed; product 89e410a1, 648da0b9 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): each source records whether it answered: an LC-004 answered but unmatched drops the credentials hint; with no answer the hint stays; `--only lcsc` LC-ACT text "LCSC returns no lifecycle status" -> "LCSC did not answer".
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1113: a lifecycle run where no distributor answered reads as a trusted audit (`api_lookup`, deterministic, `trust_level` high, every row counted as an issue)
+
+**Severity:** MEDIUM (v3.0.3; an offline run looks trustworthy)
+**File:** `skills/kicad/scripts/lifecycle_engine.py:490-497` (`query_lifecycle_lcsc` returns `None` on `URLError`, the same as no match), `:1041-1057` (rows built with `confidence: 'deterministic'`, `evidence_source: 'api_lookup'` whether or not a source answered), `:1214` / `:1277` (`"lifecycle_issues": len(lifecycle_findings)` counts LC-ACT info rows); `skills/kicad/scripts/finding_schema.py:356-366` (trust from confidence), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** the soak's `--only lcsc` run with no network: `trust_level` high, `api_lookup` x20, `lifecycle_issues` 20, `sources_available` [], and every summary says "LCSC returns no lifecycle status". The lookup never ran and nothing in the output says so.
+**Related:** KH-896 (empty `sources_available`, no per-source failure record) and KH-1107 (LC-004 no-answer vs no-match) cover the source bookkeeping; this entry is the trust / evidence / count half they do not.
+**Fix direction:** record per source matched / no match / no answer (KH-1107); mark rows nothing answered as heuristic / unknown confidence with a `diagnostics` note; count only non-LC-ACT rows in `lifecycle_issues`.
+**Gate budget (when fixed):** lifecycle envelope text and trust fields only (lifecycle lane).
+
+- **Closed:** fixed; product 89e410a1 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): offline `--only lcsc`: `trust_level` high -> low, rows deterministic / `api_lookup` -> heuristic / `heuristic_rule`, `lifecycle_issues` 3 -> 0. The no-answer note is on stderr and in the row text (no envelope `diagnostics` entry; see KH-896).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1110: an MPN field with two or more alternatives drops its distributor part numbers, so the PN-first lifecycle lookup never runs
+
+**Severity:** LOW (v3.0.3; residue of KH-970)
+**File:** `skills/kicad/scripts/lifecycle_engine.py:266-287` (`_audit_mpn_field`: the multi-alternative loop calls `audit_component(alt, sources, project_dir, delay)` without `part_numbers`; caller `:957` passes `pn_map.get(mpn)`), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** BT1 `1012, 1012C` with a DigiKey PN falls back to the MPN keyword search and reads LC-004 unknown. KH-970's verification note already said the PN path covers single-MPN fields only.
+**Fix direction:** pass `part_numbers` to each alternative's lookup; `_pn_hit` already rejects a hit whose MPN is not that alternative.
+**Gate budget (when fixed):** lifecycle lane only (LC-004 -> LC-ACT on multi-MPN fields with a PN); the offline corpus does not move.
+
+- **Closed:** fixed; product f268eb1c (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): BT1 `1012, 1012C` with DigiKey PN `36-1012C-ND`: LC-004 -> LC-ACT.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1109: lifecycle `_pn_hit` stderr names a rejected search hit's part number as the queried PN
+
+**Severity:** LOW (v3.0.3; stderr only, new in v3.0.2)
+**File:** `skills/kicad/scripts/lifecycle_engine.py:391` and `:395` (`_pn_hit`), `skills/datasheets/scripts/distributor_core/verify.py:92-97` (`other_part(..., by_pn=True)` returns the first DigiKey number of a different hit), at `365aea94`
+**Discovered:** 2026-11-15, SacMap rev2 soak runs 12 (Claude Opus 5.5) + 13 (Codex) at the v3.0.2 release (`2c645996`, analyzer code = `365aea94`; product report), verified by code read at `365aea94`
+**Symptom:** a PN-first lookup that walks past a sibling hit prints `PN 311-820KCRCT-ND is 311-8.20KCRTR-ND, not RC0805FR-07820KL; PN ignored`: the message says the queried PN *is* the sibling's PN. It prints for every rejected hit, even when a later hit in the same loop matches and is returned, so the JSON is correct while the log reads as a failed lookup (the soak reviewer spent ~15k tokens on it).
+**Fix direction:** word it as `search hit {other} for PN {pn} is not {mpn}; skipped`, and print it only when no hit matches.
+**Gate budget (when fixed):** none (stderr).
+
+- **Closed:** fixed; product f268eb1c (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `_pn_hit` (`lifecycle_engine.py:428-430`) prints `search hit {other} for PN {pn} is not {mpn}; skipped` only when no hit matched; the base's "PN 311-820KCRCT-ND is 311-8.20KCRTR-ND … PN ignored" line beside a later match is gone.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-793: `capability_mode.py` writes `analysis/capability_mode.json` relative to the cwd and lists a cwd-relative `datasheets/extracted`
+
+**Severity:** LOW
+**File:** `skills/kicad/scripts/capability_mode.py` (output path; `:80` `datasheets/extracted` listing)
+**Discovered:** 2026-10-31, product 3.0.x Wave 5 handoff follow-up 3 (a stray `analysis/capability_mode.json` appeared in the product worktree root during the wave); not verified harness-side
+
+**Symptom:** the sidecar lands in the cwd's `analysis/`, not the project's or the run's, and datasheet coverage counts the cwd's extractions.
+
+**Fix direction / budget:** write beside the analyzer output (or into `--analysis-dir`) and list the project's own cache. Harness: runners already treat `capability_mode.json` as a sidecar (TH-050 / TH-089); check the corpus output trees for strays when it lands.
+
+**Addendum 2026-11-06 (v3.0.2 survey):** visible in the corpus: every `capability_mode.json` sidecar under `results/outputs/` reads `datasheet_extraction: partial` (3,000 / 3,000 sampled), because the batch runners and the gate inherit the harness cwd, which holds `datasheets/extracted`. Gate scope (checked): the sidecar sits in each unit's private dir beside `snap.json`; the strict and budgeted comparators read `snap.json` only (`field_compare.iter_units` / `_compare_unit`), and the envelope carries only `capability_mode_ref` (source + run_id, volatile-masked); only the informational raw mode sees the sidecar. Both gate sides see the same cwd, so the verdict is unaffected; a fix that changes what the analyzer does under `partial` is output-changing for the corpus.
+
+- **Closed:** fixed; the stdout-run sidecar accepted as documented (ruling); product e14d7bcc, 68003406 (with 354e412e earlier) (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): coverage reads the project's own `datasheets/extracted` (cwd holding a `datasheets/extracted`: `partial` -> `unavailable`); the `-o` / `--analysis-dir` location came earlier. A stdout run with neither flag still writes `<cwd>/analysis/capability_mode.json`, now documented (`config-reference.md:146`, `analysis.output_dir`): product ruling 2026-11-16 (user): accepted as documented, close. `-o /dev/stdout` is KH-1184.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-448: `analyze_schematic.py` in hierarchy mode peaks at ~3 GB RSS on `BerkeleyLab/Marble` (25 sheets, 1,041 components) — a 32-way corpus run exceeds 62 GB
+
+**Severity:** LOW (correct output, byte-identical across 6a91aaa and 9465206; a resource footprint, not a defect — but it sizes every hierarchy-profile corpus run)
+**File:** `skills/kicad/scripts/analyze_schematic.py` → `schematic/` package at 9465206 (hot spot not profiled; every sub-sheet unit redirects to the 25-sheet root and re-parses the whole project)
+**Discovered:** 2026-10-16, v3 round-4 hierarchy-profile gate (`results/v3_round4_gate_aux/hier_attempt1_jobs32/`): 32 workers on Marble sub-sheets held ~2.2 GB RSS each (in flight) and the box sat at 60 of 62 GB; measured in isolation with `resource.getrusage(RUSAGE_CHILDREN)`:
+
+| tree | unit | peak RSS | wall |
+|---|---|---|---|
+| 6a91aaa | `design/PMOD.kicad_sch` (redirect → `Marble.kicad_sch`) | 3,077 MB | 10.3 s |
+| 9465206 | same | 3,050 MB | 11.1 s |
+
+Outputs byte-identical; 1,041 components / 1,380 nets / 539 findings. Pre-existing
+(both sides equal), so not a round-4 regression. The standard profile is unaffected
+(`--no-hierarchy` never takes the redirect).
+
+**Fix direction:** profile the hierarchy build on Marble (sheet-instance expansion is
+the suspect, as in KH-447); cache the root parse across sub-sheet redirects, or stream
+sheets instead of holding every parsed sheet plus the merged net map at once.
+Harness side the gate runs the hierarchy profile at 10 jobs until this moves (TH-071).
+
+- **Closed:** fixed; product 0c457019 (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): `--output` is written by streaming instead of building the whole text first. Harness re-measure at `f254cb23` vs `365aea94` (`memrun.py`, RUSAGE_CHILDREN, alone, `ulimit -v` 20 GB), `design/PMOD.kicad_sch` (redirect to the 25-sheet root), `--output`: peak RSS 3,031 MB -> 370 MB, wall 11.4 s -> 12.2 s; outputs identical (1,041 components / 377 findings; only the per-run `run_id` differs from a stdout run). A stdout run (no `--output`) still peaks at ~3.0 GB on both; the corpus gates and runners always pass `--output`. Records `results/v303_w12a_gate_aux/kh448/`.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1163: EMC stderr prints the finding count from the pre-filter list
+
+**Severity:** LOW
+**File:** `skills/emc/scripts/analyze_emc.py:632`
+**Discovered:** 2026-10-24, v3 round-9b handoff §7 items 11/16 (review B); split from KH-495 item (EMC count) on 2026-11-15 (tracker edit approved by the user 2026-11-15; product v3.0.3 survey at `6b9767e1`)
+**Symptom:** the stderr finding count is `len(findings)` from before `apply_output_filters`; `result['findings']` is rebuilt at `:590-606`.
+**Fix direction:** count `result['findings']` (output-neutral).
+**Status at `6b9767e1`:** code read confirms.
+
+- **Closed:** fixed before the range; product c7c5be46 (2026-11-05, before the range: an ancestor of `365aea94`) (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): fixed before the issue was split out: since c7c5be46 `--compact` filters `findings` before `result['findings']` is built and `apply_output_filters` only marks. Probe at the BASELINE on the MCS19 PCB: stderr 59 / 54 findings (plain / `--compact`) = JSON 59 / 54. The entry's "Status at `6b9767e1`: code read confirms" line was wrong.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-332: Tier B `diode` and `mcu` extractor agents emit prose preamble on long page lists
+
+**Severity:** LOW
+**File:** `skills/datasheets/agents/diode.md`, `skills/datasheets/agents/mcu.md` (vs `regulator.md`)
+**Discovered:** 2026-05-19 (SacMap rev2 — 2 of 9 extractor agents tripped)
+
+**Symptom:** 2 of 9 Tier B extractor invocations emitted prose preamble
+despite the prompt's "no prose, no fences" instruction. Tier B
+regulator at similar page count was clean.
+
+**Likely fix:** Diff `regulator.md` vs `diode.md` vs `mcu.md` and apply
+whatever suppression pattern `regulator.md` uses to the other two.
+Downstream consumers handle preamble defensively (see KH-328 spec item
+"strip prose preamble"), but upstream cleanliness reduces wrap_result
+fragility.
+
+**Not tag-blocking** — extraction outputs still validate after
+preamble stripping.
+
+- **Closed:** not reproduced; product none (not reproduced) (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Verification:** harness at `08879e2d` (base `365aea94`): the product re-ran 7 fresh extractions with the current prompts and the original parts / tasks / page lists (USBLC6-2SC6 diode ×3, ESP32-S3-WROOM-1-N4 mcu ×3, TPS61023DRLR regulator ×1): 7/7 raw replies start with `{`, end with `}` and parse as JSON (raw replies: product `w12a/scratch-exec-15/raw/`). The prompts are unchanged in substance since filing (`112c17fe` wording only) and all three already carry "No prose, no fences", so the filed hypothesis (copy regulator.md's suppression) does not hold. Caveats: the re-run model is not recorded and 3 runs per prompt cannot rule out a rare preamble; downstream stripping already handles one.
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1176: Mouser error reply (`Errors`, `SearchResults: null`) crashed lifecycle `audit_component` and `find_alternatives`
+
+**Severity:** LOW (fixed on filing)
+**File:** `skills/kicad/scripts/lifecycle_engine.py` (base `:468`, `:479`, `:820`; candidate `:472-473`, `:504`, `:515`, `:863`)
+**Discovered:** 2026-11-16, product v3.0.3 Wave 12a handoff (product verified); re-verified by the harness at `08879e2d`
+**Symptom (baseline `365aea94`):** base reads `.get("SearchResults", {}).get(...)` and its `except` (`:772-773`) does not catch AttributeError: a fake reply `{"Errors": […], "SearchResults": null}` raises `AttributeError: 'NoneType'…` in both functions.
+
+- **Fixed:** 89e410a1: a reply carrying `Errors` reads as no answer, `(data.get("SearchResults") or {})`. Probe at the candidate: status unknown and `[]`. (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1177: `audit_bom --suggest-alternatives` crashed with ≥ 2 suggestions and dropped the multi-MPN "(checked as …)" text (`alts` overwritten)
+
+**Severity:** LOW (fixed on filing)
+**File:** `skills/kicad/scripts/lifecycle_engine.py` (base `:989`, `:1022-1023`, `:1036-1037`; candidate `:1039-1041`)
+**Discovered:** 2026-11-16, product v3.0.3 Wave 12a handoff (product verified); re-verified by the harness at `08879e2d`
+**Symptom (baseline `365aea94`):** base `:989` rebinds `alts` to a list of dicts, then `', '.join(alts)` raises TypeError for a non-active part with ≥ 2 suggestions; a multi-MPN field with 0 or 1 suggestion lost its "(checked as …)" text.
+
+- **Fixed:** eafdd12c (`suggested = …` kept apart from `alts`). (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1178: ML-001 paired a switching inductor with itself when it also sat in an RF chain
+
+**Severity:** LOW (fixed on filing)
+**File:** `skills/emc/scripts/emc_rules.py:4700-4708` (sensitive refs from RF chains), `:4726-4727` (candidate self-skip)
+**Discovered:** 2026-11-16, product v3.0.3 Wave 12a handoff (product verified); re-verified by the harness at `08879e2d`
+**Symptom (baseline `365aea94`):** an inductor that is both a switching inductor and an RF-chain member was paired with itself at 0 mm. Corpus reach 0 (product measurement, not re-measured).
+
+- **Fixed:** f6b962c9 adds the `sens['ref'] == ind['ref']` skip. (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
+## 2026-11-16 — KH-1193: regression inside the range, never released: a Value name ending in three or more digits refused an MPN that continues with digits (`TLV755` → `TLV75533PDBVR`), so the datasheet fetch exited 2
+
+**Severity:** MEDIUM (fixed on filing; user-visible: the fetch refused the right datasheet)
+**File:** `skills/datasheets/distributor_core/verify.py:74-79` at `08879e2d` (`same_part`: the non-digit-boundary rule added by 166125df, the KH-808 Value-name fix)
+**Discovered:** 2026-11-16, product v3.0.3 Wave 12a handoff (product verified); re-verified by the harness at `08879e2d`
+**Symptom (`08879e2d`):** refused at `08879e2d`, accepted at the baseline: TLV755 → TLV75533PDBVR, TLV703 → TLV70333DBVR, TPS799 → TPS79933DDCR, LP2985 → LP298533DBVR, MCP1700 → MCP17003302E; `fetch_mismatch('TLV755', 'TLV75533PDBVR')` went `''` → the hit's number and `refuse_fetch_hit` exited 2 (`fetch_datasheet_* --search TLV755`). Found by the harness at the Wave 12a interim verdict (the handoff had asked to note it on KH-808 as a "3-digit-family class").
+
+- **Fixed:** f254cb23 reverts 166125df (`verify.py` byte-identical to `6b9767e1`). Harness probe `same_part(…, allow_family=True)` at `f254cb23`: TLV755 / LP2985 / TPS799 / MCP1700 pairs and LM1117 → LM1117-3.3 True (False at `08879e2d` for the four). No product test pins the four pairs at `f254cb23` (the revert removes 166125df's test rows only). LM358 → LM3580 is back with KH-808. (v3.0.3 Wave 12a, `6b9767e1..f254cb23`, unreleased).
+- **Gate:** v3.0.3 Wave 12a gate `6b9767e1..f254cb23` vs `product_365aea9` (ledger `365aea9.json` + 4 kiwrap empty-file refusals; `CLAUDECODE=1`), 2026-11-16: standard 160,384 compared units + full-chain 22,028 strict-field identical at `08879e2d` (GATE PASS both, 0 candidate failures; discrete-nes `ram` / `row_group` still time out on the candidate at 32 jobs, ledgered); spice-offline 8,677 identical; gerber `--full` A/B 0 / 5,875 moved; hierarchy lane (discrete-nes alone, 16 GB per-unit ceiling) = the declared W6 move: the 9 `boards/ram` units go timeout (300 s) -> MemoryError at 16 GB (KH-1027), `ram-prototype` 7 / 7 identical; at `f254cb23` (08879e2d + revert of 166125df, no analyzer path): text oracle exactly the 9 declared artefacts both ways (0 vs `08879e2d`), fixture JSON 0, `--schema` x6 `config_hash` description only, distributor-offline 67 runs / 310 / 0 differing, tiers 3,804 / 0 / 8 / 3 (records `results/v303_w12a_gate{,_fc,_hier,_aux,_do,_do_f254}/`).
+
+---
+
 ## 2026-11-15 — TH-117: `validate_candidates.py` counted footprints only on two-space-indented KiCad 6/7 boards
 
 **Severity:** LOW (informational field; `total_footprints` feeds neither the quality score nor the classification)

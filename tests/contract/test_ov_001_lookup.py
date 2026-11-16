@@ -38,6 +38,8 @@ def _build_facts(rec_specs, power_domain="VDD", pin_name="VDD"):
 
     fake_facts = MagicMock()
     fake_facts.base = fake_base
+    fake_facts.quality = 90  # facts_trusted(): scored >= 60 and not stale
+    fake_facts.stale = False
     return fake_facts
 
 
@@ -153,10 +155,10 @@ def _vdd_ic_and_ctx(net_name, tmp_path):
     return ctx
 
 
-def test_ov_001_stale_cache_still_fires(tmp_path):
-    """Detector does NOT branch on facts.stale — same warning emitted as for
-    a fresh cache. Per-detector half of the A3.3 staleness/trust-gating
-    orthogonality lock."""
+def test_ov_001_stale_cache_does_not_fire(tmp_path):
+    """A stale extraction (source PDF missing or changed) is skipped by the
+    lookup checks since product v3.0.3: no OV-001 from facts that would fire
+    when current."""
     from datasheet_types import SpecValue, Evidence
     import lookup_detectors
 
@@ -171,7 +173,7 @@ def test_ov_001_stale_cache_still_fires(tmp_path):
             ctx, rail_voltages={"V1V8": 1.8})
 
     ov = [f for f in findings if f.get("rule_id") == "OV-001"]
-    assert ov, "stale cache must NOT suppress OV-001 — orthogonality lock"
+    assert ov == [], f"stale cache must suppress OV-001, got {ov}"
 
 
 def test_ov_001_low_confidence_recommended_no_finding(tmp_path):

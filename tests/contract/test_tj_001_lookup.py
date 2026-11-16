@@ -16,6 +16,8 @@ def _build_facts(theta_ja_specs=None, tj_max_specs=None, tj_max_key="TJ"):
     fake_base.absolute_max = {tj_max_key: tj_max_specs} if tj_max_specs else {}
     fake_facts = MagicMock()
     fake_facts.base = fake_base
+    fake_facts.quality = 90  # facts_trusted(): scored >= 60 and not stale
+    fake_facts.stale = False
     return fake_facts
 
 
@@ -129,10 +131,10 @@ def _fires_assessment():
     }]
 
 
-def test_tj_001_stale_cache_still_fires(tmp_path):
-    """Detector does NOT branch on facts.stale — TJ-001 fires identically
-    whether the cache is fresh or stale. Per-detector half of the A3.3
-    staleness ↔ trust-gating orthogonality lock."""
+def test_tj_001_stale_cache_does_not_fire(tmp_path):
+    """A stale extraction (source PDF missing or changed) is skipped by the
+    lookup checks since product v3.0.3: no TJ-001 from facts that would fire
+    when current."""
     from datasheet_types import SpecValue, Evidence
     import lookup_detectors
 
@@ -147,7 +149,7 @@ def test_tj_001_stale_cache_still_fires(tmp_path):
             _fires_assessment(), source="thermal", cache_dir=tmp_path)
 
     tj = [f for f in findings if f.get("rule_id") == "TJ-001"]
-    assert tj, "stale cache must NOT suppress TJ-001 — orthogonality lock"
+    assert tj == [], f"stale cache must suppress TJ-001, got {tj}"
 
 
 def test_tj_001_low_confidence_theta_ja_no_finding(tmp_path):

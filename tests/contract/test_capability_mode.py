@@ -11,9 +11,10 @@ sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "kicad" / "scripts"))
 import pytest
 
 
-def test_get_or_create_writes_file_when_absent(tmp_path):
+def test_get_or_create_writes_file_when_absent(tmp_path, monkeypatch):
     from capability_mode import get_or_create_capability_mode
 
+    monkeypatch.setenv("CLAUDECODE", "1")
     record = get_or_create_capability_mode(tmp_path)
     cm_path = tmp_path / "capability_mode.json"
     assert cm_path.exists()
@@ -23,6 +24,14 @@ def test_get_or_create_writes_file_when_absent(tmp_path):
     assert record["llm_review"] == "disabled"  # default
     assert "schema_versions" in record
     assert record["platform"] == "claude-code"
+
+
+def test_platform_unknown_outside_claude_code(tmp_path, monkeypatch):
+    """platform names claude-code only when CLAUDECODE=1 is set."""
+    from capability_mode import get_or_create_capability_mode
+
+    monkeypatch.delenv("CLAUDECODE", raising=False)
+    assert get_or_create_capability_mode(tmp_path)["platform"] == "unknown"
 
 
 def test_get_or_create_returns_existing_run_id(tmp_path):

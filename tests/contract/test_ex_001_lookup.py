@@ -27,6 +27,8 @@ def _build_facts(cin_min=None, cout_min=None, inductor_range=None):
     fake_reg.inductor_range = inductor_range
     fake_facts = MagicMock()
     fake_facts.regulator = fake_reg
+    fake_facts.quality = 90  # facts_trusted(): scored >= 60 and not stale
+    fake_facts.stale = False
     return fake_facts
 
 
@@ -152,10 +154,10 @@ def _reg_ctx_no_caps(input_rail, output_rail, tmp_path):
     return ctx
 
 
-def test_ex_001_stale_cache_still_fires(tmp_path):
-    """Detector does NOT branch on facts.stale — EX-001 fires identically
-    whether the cache is fresh or stale. Per-detector half of the A3.3
-    staleness ↔ trust-gating orthogonality lock."""
+def test_ex_001_stale_cache_does_not_fire(tmp_path):
+    """A stale extraction (source PDF missing or changed) is skipped by the
+    lookup checks since product v3.0.3: no EX-001 from facts that would fire
+    when current."""
     from datasheet_types import SpecValue, Evidence
     import lookup_detectors
 
@@ -173,7 +175,7 @@ def test_ex_001_stale_cache_still_fires(tmp_path):
             ctx, power_regulators=[reg])
 
     ex = [f for f in findings if f.get("rule_id") == "EX-001"]
-    assert ex, "stale cache must NOT suppress EX-001 — orthogonality lock"
+    assert ex == [], f"stale cache must suppress EX-001, got {ex}"
 
 
 def test_ex_001_low_confidence_cin_no_finding(tmp_path):
@@ -239,6 +241,8 @@ def test_ex_001_null_regulator_extension_skips(tmp_path):
     reg = {"reference": "U1", "value": "X", "mpn": "M",
             "input_rail": "VIN", "output_rail": "V5V"}
     fake_facts = MagicMock()
+    fake_facts.quality = 90  # trusted, so the detector reaches the guard
+    fake_facts.stale = False
     fake_facts.regulator = None  # extension absent
 
     ctx = _reg_ctx_no_caps("VIN", "V5V", tmp_path)

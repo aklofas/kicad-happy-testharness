@@ -42,6 +42,8 @@ def _build_facts(pins):
     fake_base.pinout = fake_pinout
     fake_facts = MagicMock()
     fake_facts.base = fake_base
+    fake_facts.quality = 90  # facts_trusted(): scored >= 60 and not stale
+    fake_facts.stale = False
     return fake_facts
 
 
@@ -152,10 +154,10 @@ def _uart_ic_and_ctx(net_name, tmp_path):
     return ctx
 
 
-def test_pm_001_stale_cache_still_fires(tmp_path):
-    """Detector does NOT branch on facts.stale — PM-001 fires identically
-    whether the cache is fresh or stale. Per-detector half of the A3.3
-    staleness ↔ trust-gating orthogonality lock."""
+def test_pm_001_stale_cache_does_not_fire(tmp_path):
+    """A stale extraction (source PDF missing or changed) is skipped by the
+    lookup checks since product v3.0.3: no PM-001 from facts that would fire
+    when current."""
     import lookup_detectors
 
     pin = _build_pin("PA0", "10", alt_functions=[
@@ -169,7 +171,7 @@ def test_pm_001_stale_cache_still_fires(tmp_path):
         findings = lookup_detectors.detect_wrong_signal_type(ctx)
 
     pm = [f for f in findings if f.get("rule_id") == "PM-001"]
-    assert pm, "stale cache must NOT suppress PM-001 — orthogonality lock"
+    assert pm == [], f"stale cache must suppress PM-001, got {pm}"
 
 
 def test_pm_001_match_via_alt_function_name_when_peripheral_empty(tmp_path):
