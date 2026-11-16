@@ -135,29 +135,23 @@ def _run_one(analyzer, file_path, outfile, errfile, extra_args=None, timeout=Non
     return res.exit_code, outfile, res.elapsed_s, res.status, res.output_sha256
 
 
-def _print_detector_aggregate(sch_output_dir):
-    """Print per-detector hit summary after a schematic batch run."""
+def _print_detector_aggregate(outfiles):
+    """Print a per-detector hit summary over the schematic outputs a batch run wrote."""
     detector_files = defaultdict(int)
     detector_items = defaultdict(int)
-    for owner_dir in sorted(sch_output_dir.iterdir()):
-        if not owner_dir.is_dir():
+    for f in outfiles:
+        try:
+            data = json.loads(Path(f).read_text(encoding="utf-8"))
+        except Exception:
             continue
-        for repo_dir in owner_dir.iterdir():
-            if not repo_dir.is_dir():
-                continue
-            for f in repo_dir.glob("*.json"):
-                try:
-                    data = json.loads(f.read_text(encoding="utf-8"))
-                    grouped = {}
-                    for finding in data.get("findings", []):
-                        det = finding.get("detector", "")
-                        if det:
-                            grouped.setdefault(det, []).append(finding)
-                    for det, items in grouped.items():
-                        detector_files[det] += 1
-                        detector_items[det] += len(items)
-                except Exception:
-                    continue
+        grouped = {}
+        for finding in data.get("findings", []):
+            det = finding.get("detector", "")
+            if det:
+                grouped.setdefault(det, []).append(finding)
+        for det, items in grouped.items():
+            detector_files[det] += 1
+            detector_items[det] += len(items)
     if detector_files:
         print(f"\n=== Detector Summary ===")
         for det in sorted(detector_files, key=lambda d: -detector_files[d]):
@@ -338,6 +332,7 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
 
     cap = settings.timeout
     status_totals = Counter()
+    written = []   # outputs this run wrote (the detector summary reads only these)
     if jobs <= 1:
         for i, file_path in enumerate(files, 1):
             relpath, outfile, errfile = _prepare(file_path)
@@ -351,6 +346,7 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
             _record(file_path, returncode, elapsed, status, out_sha)
             status_totals[status] += 1
             timings.append((relpath, elapsed))
+            written.append(outfile)
             passed, failed = (passed + 1, failed) if ok else (passed, failed + 1)
             print(msg)
     else:
@@ -372,6 +368,7 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
                 _record(file_path, returncode, elapsed, status, out_sha)
                 status_totals[status] += 1
                 timings.append((relpath, elapsed))
+                written.append(outfile)
                 passed, failed = (passed + 1, failed) if ok else (passed, failed + 1)
                 print(msg)
 
@@ -411,7 +408,7 @@ def run_batch(config, settings, paths, *, repo_list, selection_source, argv):
 
     # Detector aggregate for schematic runs
     if output_subdir == "schematic":
-        _print_detector_aggregate(paths.outputs_dir / output_subdir)
+        _print_detector_aggregate(written)
 
     # JSON summary line (for machine consumption by run_corpus.py)
     if settings.json:

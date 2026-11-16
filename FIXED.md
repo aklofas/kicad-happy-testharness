@@ -11,6 +11,15 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-15 — TH-115: every schematic batch run re-read the whole corpus output tree for its detector summary
+
+**Severity:** LOW (performance; ~100 s of CPU per `run_schematic.py --repo` call)
+**File:** `harnesslib/batch.py` (`_print_detector_aggregate`, `run_batch`)
+**Discovered:** 2026-11-15, v3.0.3 Track H first corpus batch: `add_repos.py` pipelines sat at ~97 % CPU in the runner parent for 1-2 min per repo with no analyzer running.
+**Root cause:** after a schematic batch, `run_batch` called `_print_detector_aggregate(outputs/schematic)`, which globbed and JSON-parsed every schematic output under `results/outputs/schematic/` (45,219 files) whatever the selection was. cProfile of `run_schematic.py --repo n3rd-bugs/kiwrap`: 101 of 107 s in that function, 75 s in `json.loads`.
+**Fix:** `run_batch` collects the outputs it wrote and the summary reads only those (`written`); `_print_detector_aggregate` takes the file list.
+**Verification:** `tests/test_batch_detector_aggregate.py` (counts only the given outputs, skips unreadable ones); `tests/test_harnesslib_batch.py` green.
+
 ## 2026-11-15 — KH-674: Wave 3 follow-up notes (umbrella)
 
 **Severity:** LOW (each item small; split out when picked up)
