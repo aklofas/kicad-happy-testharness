@@ -1883,6 +1883,8 @@ It then takes `min(board, max(area, max fill))`. VS-001 (`:1547-1550`) reads the
 
 **Addendum 2026-11-06 (v3.0.2 survey):** reaches 28.9 M pins in 24 k outputs.
 
+**Addendum 2026-11-15 (v3.0.3 Track H synthetic upgrade lane, kicad-cli 10.0.8 over quick_200, record `results/v303_refresh/REPORT.md` §3e):** KiCad 10 itself writes an empty pin name as `""` (≤ 9 wrote `~`), so the same design re-saved by KiCad 10 already reads `""`. On units whose connectivity KiCad's own netlist shows unchanged, OA-DET loses 1,817 detections in 365 units when the op-amp output pin name goes `~` → `""` (verified dragonlock2/kicadboards `6wire/guard.kicad_sch` U6 MAX4238, pin 1), with RC-DET +874 / 147 units as the cascade, and NT-001 / EP-AUD / PU-001 / LR-001 / PP-001 / SJ-DET findings rename 1:1 (NT-001 14,401 in 757 units). The ruling R13 normalization (`~` → `""` everywhere) would move the OA-DET loss onto every pre-10 file too unless the op-amp detector stops depending on a non-empty output pin name; land both together and use the lane as the check (findings identical between a file and its KiCad 10 re-save).
+
 ### KH-689: KiCad's mixed vector ↔ group sheet-pin mapping is not modelled
 
 **Severity:** LOW (an ERC-error construct)
