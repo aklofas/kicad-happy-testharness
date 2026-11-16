@@ -3666,6 +3666,18 @@ Corpus prevalence over 4,415 Edge.Cuts files and 8,636 drl files: modal-axis edg
 **Discovered:** 2026-10-24, v3 round-9b handoff §7 items 11/16 (review B); split from KH-495 item (rider 10) on 2026-11-15 (tracker edit approved by the user 2026-11-15; product v3.0.3 survey at `6b9767e1`)
 **Symptom:** the `datasheet_verify` flag message (maintainer's list; no detail recorded).
 
+### KH-1175: a `V<number>` rail name with a rail word glued on (`V12PWR`, `V5SYS`, `V3LDO`, `V5MAIN`, `V5BUS`, `V12CORE`) reads as a signal by name
+
+**Severity:** LOW (generalization gap; corpus reach measured 0 for the named words)
+**File:** `skills/kicad/scripts/kicad_core/netnames.py:108-151` (`_V_NUMBER_RAIL_WORDS = {V, REG, SW, USB, BAT, SB, AUX}`, `_V_NUMBER_VOLTAGE_SUFFIXES`, `_is_v_number_rail`), reached from `is_power_net_name` `:221`
+**Discovered:** 2026-11-16, maintainer question on the v3.0.2 release notes' `V24.RX` example; measured by the product agent at `6b9767e1` (v3.0.2 code) over the regen-2 outputs
+**Symptom:** since v3.0.2, a word glued directly onto `V<number>` makes the name a rail only when the word is on a short list. `is_power_net_name` returns False for `V12PWR`, `V5SYS`, `V3LDO`, `V5MAIN`, `V5BUS`, `V12CORE`, `V33LDO`, `V12PDC`, `V5N` (single digit + `N`), while the separated forms (`V5_MAIN`, `V5_SYS`, `V12_PWR`) and `V5REG` / `V33IO` read as rails. A net a power symbol names is unaffected (the `power_rails` set wins); the miss is on rails built from plain labels, and on name-only callers. Effect: fewer rail-source, decoupling and trace-width checks on such a rail (missed checks, not false findings).
+**Measured reach** (regen-2 schematic outputs, 39,146 files, mtime >= 2026-11-13; grep of the pcb and emc outputs for the words):
+- 370 unique (repo, net) `V<number><letters…>` names read as signals, in 25 repos; almost all are channel or electrode names and correctly signals (`V1COL0`, `V1PAL1`, `V1FREQ1`, `V1AMP1`, `V1ANODE` / `V1GRID` / `V1CATHODE`, `V1OUT`, `V10FB`).
+- Glued `PWR|POWER|SYS|MAIN|BUS|LDO|CORE|SUPPLY|RAIL|PLUS`: **0 nets** in schematic, pcb or emc outputs (`V33LDO` / `V12CORE` occur only as IC pin names in `SdtElectronics/crispy`).
+- Nets with power evidence that read as signals by name: `jdbrinton/uberclock` `V5N` (7 power_in pins, 4 caps; a power symbol names it, so rail through the set), `jonathan-tooley/903` `V1H+`…`V8H-` (16 valve-heater nets named after the tube refs, 1-2 power_in pins each; arguably not rails), `Tecnologic/unimoc_jacobi` `/logic/controller/analog/V12PDC` (3 pins, 1 cap; unclear).
+**Fix direction / budget:** add the common rail words (`PWR`, `POWER`, `SYS`, `MAIN`, `BUS`, `LDO`, `CORE`, `SUPPLY`, `RAIL`) to `_V_NUMBER_RAIL_WORDS`, with unit tests for each and over-reach guards for the channel names above. Measured corpus reach 0 → output-neutral (verify with the same scan at the fix commit). `V5N` / `V12PDC` / the valve-heater nets are a separate call (they would move corpus output); leave them out of the neutral fix.
+
 ### KH-494: core minors from the review-period bug hunt (review A) — NaN/non-numeric coordinates traceback, `--no-hierarchy` still merges top-level sheets, `--text` drops `--output`, no PCB duplicate-reference check, and eight unverified items
 
 **Severity:** LOW
