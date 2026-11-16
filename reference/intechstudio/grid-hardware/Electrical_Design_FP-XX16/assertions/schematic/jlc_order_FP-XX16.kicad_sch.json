@@ -1,0 +1,55 @@
+{
+  "file_pattern": "jlc_order_FP-XX16.kicad_sch",
+  "analyzer_type": "schematic",
+  "generated_by": "seed.py",
+  "evidence_source": "auto_seeded",
+  "assertions": [
+    {
+      "id": "SEED-00000001",
+      "description": "Component count ~34 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_components",
+        "op": "range",
+        "min": 30,
+        "max": 38
+      }
+    },
+    {
+      "id": "SEED-00000002",
+      "description": "Net count ~1 (tolerance 10%)",
+      "check": {
+        "path": "statistics.total_nets",
+        "op": "range",
+        "min": 0,
+        "max": 2
+      }
+    },
+    {
+      "id": "SEED-00000003",
+      "description": "Findings section exists",
+      "check": {
+        "path": "findings",
+        "op": "exists"
+      }
+    },
+    {
+      "id": "SEED-00000004",
+      "description": "1 audit_lifecycle_skipped detected",
+      "check": {
+        "path": "findings",
+        "detector_filter": "audit_lifecycle_skipped",
+        "op": "min_count",
+        "value": 1
+      }
+    },
+    {
+      "id": "SEED-00000005",
+      "description": "Has 34 mounting_hole(s)",
+      "check": {
+        "path": "statistics.component_types.mounting_hole",
+        "op": "min_count",
+        "value": 25
+      }
+    }
+  ]
+}

@@ -123,6 +123,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/red-scorp/RP2040-PicoProbe @ 4d71c14ad735895840794901cd0e34351cd92c3d
 - https://github.com/soypat/piaa @ 867d1eb792ae198a01d6a4f1fc378a2bbe709d98
 - https://github.com/shishir-dey/pcb-custom-simm-40-rp2040 @ cbfd3580b3aaaccd0da38104f4cc1457c3c7816b
+- https://github.com/shishir-dey/pcb-custom-simm-40-rp2040 @ 2857b712f8bd8e0e3dd1d2573f348859bea8996c (as shishir-dey/pcb-custom-simm-40-rp2040@2857b71)
 - https://github.com/asukiaaa/RaspiCherryMXKeysHat @ 75dd458a7e785c9c8051a1c718660bbaa64adf0b
 - https://github.com/asukiaaa/SideBBForRaspberryPi @ 8ea4d9da139ad0f3689754c894da84b96ba4c2ba
 - https://github.com/aleko-khomasuridze/LabNode-Nexus @ 93414b882751986f77bd75300c81b99bd28cf345
@@ -231,6 +232,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/gundy/aa_pihat @ 0db2be5a73e869a88a64776f599f29d1de630265
 - https://github.com/guidodehek/InterfaceS88GleisboxRPi @ 32479d2de13514b69f1779454060386285de76e2
 - https://github.com/Jin-Neuron/Turtle-Pico @ c71c2f513786e0fed624e4e7cab179e6a70130ed
+- https://github.com/Jin-Neuron/Turtle-Pico @ 3db2895633fb33532b6a73755d87121566b304b1 (as Jin-Neuron/Turtle-Pico@3db2895)
 - https://github.com/juthomas/Raspberry_pi_modular_hat_in_out @ 348d5d0c5154447def2cd1077819b7c076f33eff
 
 ## ESP32
@@ -422,6 +424,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/Arne-Berner/RoboMausV2 @ 4f5770b976ed375a5ae2b0cf871b938e2ca7b4d5
 - https://github.com/arnaudhe/quadcopter @ d7ae4778cb6a07f8a7d8e7fa0a59ccb948ae3bda
 - https://github.com/atoomnetmarc/LED-Strip-clock @ c49c258616071a5556de824cf4f846e9d91cb5a7
+- https://github.com/atoomnetmarc/LED-Strip-clock @ adb32d7861579929e738cf4d0cb15c6fcc8002d0 (as atoomnetmarc/LED-Strip-clock@adb32d7)
 - https://github.com/bellolongart/google-home-esp @ 76b42d5cddc1d4d3e680be2b55050cdc09012b1f
 - https://github.com/benceharomi/smart-projector-remote @ 681d3a5614db11da63cf9c3cfd647414cabe2e88
 - https://github.com/Binary12Spy/esp32-s3-reference @ 672acbace64d7f9acdeeaef67d1859fdba794514
@@ -446,6 +449,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/chof747/esp32-s3-dev-board @ 27e51dff1d7a6d8ef106c4bc559762c078997b18
 - https://github.com/choicebuilds/Automatic-Storage-Unit @ 638b04f8e8967c76ff3a580d9b80b383da6d6839
 - https://github.com/cjheath/esp32lcd @ e7ee5f016b3adf1c1e45a543f00dfbb65b07a5de
+- https://github.com/cjheath/esp32lcd @ 5ce9dfc25319629438859853f260ad655b3972db (as cjheath/esp32lcd@5ce9dfc)
 - https://github.com/cmdline/esp32.narc @ cfb8befa395c96261274621634c9ed1321784c5b
 - https://github.com/cnlohr/esp8266lighthouse @ 5f6c5308d3de56aefa8ac9905f6f3af0282752c6
 - https://github.com/cnlohr/espusb @ 0a60b983234908e9cc68529544c259ca47c99b27
@@ -492,6 +496,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/graysam/PeRci @ ca5c23ca12fb464239f6856b344ec1f5ed76bc7e
 - https://github.com/hanvith6/iot-network-monitoring-system @ 063b9d0251864883161b718cb448900ee04f43ed
 - https://github.com/harsha-2-006/134khz_Rfid_Reader @ 611a630dfd9a5b674390910a78aca49004c48521
+- https://github.com/harsha-2-006/134khz_Rfid_Reader @ 7492cf82dc3e9e7e162e2d15b03efdd901626d20 (as harsha-2-006/134khz_Rfid_Reader@7492cf8)
 - https://github.com/harshitha124000/Esp32-As5600-Sensor-Interface @ 8fa5c5aa62d48a54f2a634809130aee3b328ad37
 - https://github.com/HarveyBates/esp32-clover @ 16a16d8deb856115a00f1eed2c7e63429a846cea
 - https://github.com/hatlabs/SH-ESP32-hardware @ 167981ac8c3e1a7a0104c20cf9b487b4d722fc60
@@ -523,6 +528,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/jwidess/ESP-Arduino-TFT-Weather @ 309add5c28f8f9161b6959ffc3ede523a4e5eecc
 - https://github.com/kamilix2003/esp-home-sensor @ c2500092f58695e7ab242a3702e624af5dc5c40a
 - https://github.com/adamm/starman @ b9c56f441c1f81a49b3f45b258ca1be469e3ba00
+- https://github.com/adamm/starman @ 9ed17e8bce0e6e2cf8c8383e3a45d271ca9972ed (as adamm/starman@9ed17e8)
 - https://github.com/Bouni/WifiPowerbutton @ d0bcb513d040f82974c64c4c2471a971d4fecaf0
 - https://github.com/Atomicbeast101/smart-doorbell @ 85c086a761826be505ceb8ebbb569cb0e56e943c
 - https://github.com/NurikNG/ESP12E-simple-board @ c5c5767a375638916b5209792a447adc2f453789
@@ -533,6 +539,8 @@ Format: `- URL @ commit_hash`
 - https://github.com/gcormier/esptemp8c @ 34abcb1a2a354147479bdeee4e1887441b1d8e90
 - https://github.com/Gregovate/hydroponic-veggie-garden @ 1f461ada5c0940646e0c2732b84303b848aacad1
 - https://github.com/kardasis/duster-esp8622-kicad @ f67a0623a391bb6af675cd09cdece23f98d1dc74
+- https://github.com/thermseekr/eumesmo-io-24v16ch @ b769ce8a5ae5125a7bf825338223c55b48c9bd9a
+- https://github.com/AnmolS-EE/ESP32-IOT-PCB @ 1141dbd850f835eaa9a6ed4a5dadc2d35df131ac
 
 ## STM32
 
@@ -600,6 +608,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/mohamedboubaker/Custom-STM32-PCB-With-KiCad @ ddec5e1edd1e2f1e587f68cf78c1b96fe7925c1c
 - https://github.com/rhaamo/OtterCalc-HW @ a4b10d076018e2201f277ffec91899bb70f24907
 - https://github.com/shishir-dey/pcb-rf-4g-ublox @ fa72c2fbb14fd24457fdf6b8caf7d9d4d6897272
+- https://github.com/shishir-dey/pcb-rf-4g-ublox @ b6c3bb28dd9bbafc2a9814b81253b270e07b8576 (as shishir-dey/pcb-rf-4g-ublox@b6c3bb2)
 - https://github.com/Solartraveler/UniversalboxArm @ 119ab9479022e3513bfaef3f9c86a504cb2c153c
 - https://github.com/timkoval/madEEG @ 14c6eee0621e7c7d835e3adeb50f8c7597485a60
 - https://github.com/svenssonjoel/Mattie @ 7ca4c7b32bd6cc416ba7c9c53f99e7aba51d3262
@@ -716,6 +725,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/KabelitzJ/stm32G0_mcu @ c2450eaad202809784ca2a9f4fb41bca545aec2f
 - https://github.com/HexRx/STM8S001J3_tiny_board @ 6aec13c86b59a3f519551001f5a8d393912b3bfa
 - https://github.com/YamanSeyravan/UnderControl_Hardware_Design @ c4b0c1bc6501e70c4eb75b86d64e7e451139a476
+- https://github.com/halbritt/fome-mc @ 4f70e47d082684d798d4530439cd8288476c7c41
 
 ## Arduino recreations
 
@@ -898,6 +908,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/bayrepo/elm327_arduino_monitor @ 373706a3bf6056f1aa95bafc434efd8e87bccf72
 - https://github.com/belimawr/ESP-01-Programmer @ 44dadc11c6f6dd5c3bcf2d865435f0efd1d85130
 - https://github.com/benanderman/spork-8 @ de7ed9eb43884c0ad57884aee9d90cd06c88c943
+- https://github.com/benanderman/spork-8 @ da2f8d4705991733f61d6b8a7fcc1442f45c24f4 (as benanderman/spork-8@da2f8d4)
 - https://github.com/benoit-lacroix/server-case-fan-regulator @ 0c62fbd47525a410afce624855365f8d36730519
 - https://github.com/BerkeleyLab/Obsidian @ 5247401e7e2497b96607668d630e36f379f96e75
 - https://github.com/bill-chamal/Vault-Security-System @ 589c3cebd33a0db0298e7978e2826c4724095382
@@ -1016,6 +1027,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/jmpinit/isp-header-breakout @ 269b6a76411a1d076dc1a63f4861ce98eba5a2b0
 - https://github.com/JonRackler/Scale_Project_AVR @ 29bc1c2a7c0db8f3487bc92f933adcc21559d8fb
 - https://github.com/Hanqaqa/Easyduino @ b492c1aac6bf5279e923ce47782ccd371bdd0fe3
+- https://github.com/scottypres/Arduino-Paragliding-Varios @ 22c4536d39e54c332d668626b4621668359b8099
 
 ## Motor controllers / robotics
 
@@ -1070,6 +1082,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/supermileage/motor-controller-kicad-circuits @ 93c581bb29da861b1513b99194594176235e79ef
 - https://github.com/Twisted-Fields/acorn-robot-electronics @ ff52cafe59ae0856a2f3dfb782a64a45a7852526
 - https://github.com/VinnyCordeiro/BT_DC_motor_board @ 28bd19b8a32ca419741680c13888606102426380
+- https://github.com/VinnyCordeiro/BT_DC_motor_board @ b8736f8c4bbb32d2542e4236d1fa0126703e25d7 (as VinnyCordeiro/BT_DC_motor_board@b8736f8)
 - https://github.com/kbumsik/WolfieMouse @ 1fc1053c20261bdbe2bb2a9c781c14dc135a1002
 - https://github.com/artfulbytes/nsumo_hardware @ 4ed17819480d61c4b71980c695a0770774c9d91b
 - https://github.com/brenocq/bldc-motor @ b74fb1d7a4637e437ef5a33e78a36db7c28fac7e
@@ -1125,6 +1138,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/banyanshade-software/train_ctl_hw @ 76c3cdcac186733a5c0304ea47baf4b084b352c9
 - https://github.com/bask185/general_schematics @ 5855dc7dd5c0851ae5cf42bd856395dce6b5c0bb
 - https://github.com/basicallysource/sorter-v2 @ 1bae18d5a9cffe58c371cfbb9abe8bb40bada337
+- https://github.com/basicallysource/sorter-v2 @ 548abe91a57249c6277e8d7226a39df489d2efa2 (as basicallysource/sorter-v2@548abe9)
 - https://github.com/bask185/pwmController @ 6d1430347a7b384480e1aff25680fed603428ea8
 - https://github.com/BenderInou/Repositorio-de-benderito- @ 9081b339e3c49a20f6545565b5b8865add2bcfdd
 - https://github.com/Bergi84/GrowOMatic @ cf25bd2bb99c81850041e4f24e05fc9155ab92be
@@ -1245,6 +1259,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/BoltzRnD/NYSM2_Open_Stepper_Standard @ 6194ae1c0c24930d32f857c5123f97f783669400
 - https://github.com/brandonbraun653/Ichnaea @ 48d02a4c0a25408ed8c4dbf560dd785d16059b0e
 - https://github.com/brandonbraun653/OrbitESC @ 97e78086f9ae999f61135e120cee45329e7a6fba
+- https://github.com/brandonbraun653/OrbitESC @ 02413c6f7fd3e3614ac904142e0adc7518d91376 (as brandonbraun653/OrbitESC@02413c6)
 - https://github.com/brico-labs/Raptor @ c6aff4a3eb1fb8c2db6e3d57da1c99f8dea44302
 - https://github.com/bullestock/ballclock @ 1bb6fb0e05f7cc83df29351b8f7a05d887f33675
 - https://github.com/C-yue28/Plant-Monitor @ 09c8dd1a768e616929c49831f8507b394b30a7a0
@@ -1258,6 +1273,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/ChipCE/juice-plus-pcb @ 875cda7722da3f996a396b084fadef8a050645bd
 - https://github.com/Choccy-vr/BeanBike @ dc3790dd949a997f48cdd90324ace223c0c1c376
 - https://github.com/ClemensElflein/xESC @ ea34fbd417b3af261171ace42db07f249e917a75
+- https://github.com/ClemensElflein/xESC @ 09d183c1e4c1a6615d529db469284021d1371d67 (as ClemensElflein/xESC@09d183c)
 - https://github.com/CodonNine/foc @ 4ee5576f3c22159961de505ef6a304861be1d050
 - https://github.com/condevtion/i2c-pps-hw @ 32bb5b11f59e59bc602c225589869220208b4a78
 - https://github.com/crespum/Line-following-PID-robot @ 956258345ed59293bfff1e6621435f5196f01e53
@@ -1572,6 +1588,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/squaresolid/benjolin_gorga @ 0c5f68ca06629f0cb29d4bd8734164ea2b7623e7
 - https://github.com/strangeparts/niubi-headphones @ d8f4b49683f791032072101c1a101beb0e74e940
 - https://github.com/trieck/audio-amp @ 9f76a7e6bc30582b481faac8777076ea383f4b12
+- https://github.com/trieck/audio-amp @ 18891c7fc9d8f4e947090fd1726bb332a25eaea8 (as trieck/audio-amp@18891c7)
 - https://github.com/TuDo-Makerspace/KiCAD-MIDI-Templates @ 05f508632cbb3587e6dc1da77d363472b042d56c
 - https://github.com/WimOliphant/tb303_vcf_kicad_project_gerbers @ e9518aaff2be4458e4213d8f100e0ae53dbc5b79
 - https://github.com/wntrblm/Big_Honking_Button @ 7fcb5bfe59996ccf9d37cae66efb78874a3a6ba8
@@ -1819,11 +1836,13 @@ Format: `- URL @ commit_hash`
 - https://github.com/craig-garvin/PPF-Demo @ 83438aa720dac88ff0c3c17ce18f87cb49dc73f3
 - https://github.com/cracked-machine/BassStationSequencerMidiController @ 9091d8fa52bbfd5cc3aeb581c6c6899e050eff0b
 - https://github.com/dakata1337/open-esl @ 395b8058f61d876d770dba465368a4a6036a1d5a
+- https://github.com/dakata1337/open-esl @ 1e43d2fcf73d2436dbfd493791056eba594b8b2d (as dakata1337/open-esl@1e43d2f)
 - https://github.com/dani-carbonell/LM386-toy-hardware @ bc4f966c1e6f1b583c2f10a071642b851b2c841a
 - https://github.com/DanNivHul/TeensyMonoSynth @ 826d6b5cd8623ab067e33871180df9483b673a0d
 - https://github.com/DavidBuchanan314/ipod-toslink-mod @ c992ca70edefeeefdf5b967dec47f90b8b445cbb
 - https://github.com/db4um/PA_13cm_2W @ 8bdb4f4c9de68ad596827bd009a4115cced74a16
 - https://github.com/DeMarco/DMH-Mixer @ c5a7661758493497412f956f880ad96694c58aac
+- https://github.com/DeMarco/DMH-Mixer @ f76358a2b44470a8ba7a21d6bc6bb6489e2fe883 (as DeMarco/DMH-Mixer@f76358a)
 - https://github.com/DeMarco/DMH-Morpher @ f5bc851ade082054855402b434d02d68d15cca4e
 - https://github.com/Despairon/kicad_mic_amp @ afa3850bd8c3a9a435985a83817b9c2be093b15b
 - https://github.com/dgudenius/guitar_pedals @ b479796b34e6f7ee4f44b463a740b6cff4009f10
@@ -1872,6 +1891,8 @@ Format: `- URL @ commit_hash`
 - https://github.com/kadenmcguffie/PCB @ 923f4c98a2dd64a62acb2e64bc382eed95e4834a
 - https://github.com/kanengomibako/EffectsPedals @ 5973f01db8bed3fcc1828f4100140a0fec4b51a1
 - https://github.com/kanengomibako/Sodium @ 31dc6931601d645b90e2c316b62bdc9025c2292e
+- https://github.com/whatnick/Tph_Synth_Featherwing @ 29bbb2fbb97a90fcfc4bc07b9993cd2f3f67ed1d
+- https://github.com/Desval27/FormantKO @ 2f5ea8055a61e55ac6d48c7f7558765fdb21d740
 
 ## Test equipment / debug tools
 
@@ -2016,6 +2037,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/bytesizedengineering/PCB-tile-based-game @ 005283e31c322492fc264863e2bd5417964bab99
 - https://github.com/CalSol/calsol-hw-libs @ 2073f48c86498085ee4e0099d1434b377a04b64e
 - https://github.com/candykingdom/firefly2 @ c24e8274846fbca8d5e916804a97e0d79af2e8aa
+- https://github.com/candykingdom/firefly2 @ 081164e215fafeaeeb1c9364423157a2d4ded886 (as candykingdom/firefly2@081164e)
 - https://github.com/CDFER/Auckland-LED-Train-Map @ aa3e97c73228fdfd82d684f032d61f4bee3793ee
 - https://github.com/cherry-embedded/HSLink-hardware @ c315927df32c9de4cd2d5447a6e171fc19618024
 - https://github.com/Churrosoft/Dashdash @ 2c95164ba54e551a0ebdd4993dc421fca9e1a355
@@ -2200,6 +2222,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/eyallampel1/remote_control_lcd @ 77ff8c8ad76141b79dc5dabe7b5086e3c1181860
 - https://github.com/fakefred/live-caption-badge @ e020bc7ff532df38eca917440033c85d36365bb4
 - https://github.com/Fish-in-a-Barrel/Nixie @ 79d0179a1087756773ca26399a4576b19c794d4d
+- https://github.com/Fish-in-a-Barrel/Nixie @ 6fdcce2fccc9be06241609ff0a7f10197a0e86ee (as Fish-in-a-Barrel/Nixie@6fdcce2)
 - https://github.com/flavian112/internet_clock_hardware @ ef3f6f635fb4d4edc13e36b476b0e762ff61b452
 - https://github.com/floresacton/led-display @ cdf3e2a0eff0cc25fb4260162c1a33b8e8828f1f
 - https://github.com/Fredovsky/B13B-Nixie-clock @ f577d54c6bf997684eb6ae6ee837c1c3e856da64
@@ -2217,6 +2240,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/Herasium/e-ink @ a4aebf026d4b354d22f7ec1b8d1949c49f51c815
 - https://github.com/hitriy/fliipper-rgb-hardware @ 21b858f7b2396c768a5cf0f3020a4d9d7de03fc2
 - https://github.com/hitomi2500/wasca @ 2e8b577728a5e7dd648b611a951e22c510d3a043
+- https://github.com/hitomi2500/wasca @ ed5dcbd20ee6a86ade1898e46040f18ac43a4284 (as hitomi2500/wasca@ed5dcbd)
 - https://github.com/ice458/VFD-Clock @ 643732fae59e0263c5018349f52840002f357b46
 - https://github.com/ikatkov/flame-lamp-led-driver @ 6d07c6f289be5b67bfb09e42d58aa92935986b83
 - https://github.com/Ineb01/digitalphoenix_toolstick_hardware @ d72acf633660bb1ee27fd45ee035287b72bd4ab0
@@ -2285,10 +2309,12 @@ Format: `- URL @ commit_hash`
 - https://github.com/F6ITU/Alexiares_LPF @ 2ea2d0dc76d6e03081a1157957737d76ea65f95b
 - https://github.com/micro-henry/tallytime-hardware @ 31e8794abc12e8fc7b8152a420ed52449ce1a3de
 - https://github.com/F6ITU/Alexandrie @ 8ece8f8fa91fed21d51d76e2c7499f2f56a744c3
+- https://github.com/F6ITU/Alexandrie @ fe3dab1ad17cf5e4059f8df3a06a5db050c6ab46 (as F6ITU/Alexandrie@fe3dab1)
 - https://github.com/F6ITU/Alexiares_HPF @ f3f2ac06d5e3810ee7b4ef4bc04c4fd25b4172f0
 - https://github.com/fadushin/nicerf-lora @ 3ad2d2140e6173f43084b85316c0a36656d74493
 - https://github.com/F6ITU/Themis @ 0bfc6d74990cb1f0e904d065646ef7ffde359b86
 - https://github.com/F6ITU/Mentor @ a843c5c8d22fbb96090d2d62fae0a6158d49bb14
+- https://github.com/F6ITU/Mentor @ 089658d0cbbfeed7c048d86d22b5dae1a9df39e4 (as F6ITU/Mentor@089658d)
 - https://github.com/sclmoss/MiniSolarMesh @ 006dd4af33a82b4b5496b10b95cded80f468671a
 - https://github.com/vlad-ivanov-name/mini-whip @ 067a9d549edcda7e80ec7c145691e1ac533cb688
 - https://github.com/Unicamp-Odhin/colubris @ f99330875ffe9bbc8b5375131dced604032ea8b9
@@ -2348,6 +2374,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/butterstick-fpga/butterstick-hardware @ 0694ddfa9824a07f0c6c6981186e45f80187659c
 - https://github.com/cdg66/GMA1-2_SOM @ 2024ec02a400008175464cd20133dea2c8f4c620
 - https://github.com/cristobalcuevas/Kicad @ b655c5bc8e4a1d77e8266afcfa3a36ebd71657cf
+- https://github.com/cristobalcuevas/Kicad @ be9ed64dc490d7d67ac4f90c746a45e8ecdbd02d (as cristobalcuevas/Kicad@be9ed64)
 - https://github.com/CU-High-Altitude-Research/Flight-Computer-IREC25 @ a03abf8994beb4eda3c85f16710e511cc96fd64d
 - https://github.com/daheehee/ballin-balloon-bayload @ 0d9b564eb0f2fbb052ebbd85a4b90fa022511d4e
 - https://github.com/deepin-community/hackrf @ 74ed665bc540e25647cabad6011f6173d0f606f7
@@ -2396,6 +2423,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/jrv/MBED-LPC-1768 @ 078cf968338d5a4bd16306708320b58e4dfefd0f
 - https://github.com/Junaidk11/kicad_pcbs @ 4c8b6e574379adac5ede6fffdcdc812ae92e1da4
 - https://github.com/karmakrafts/EtherKraken @ d9acdf77ddd5d5d99bf388b9b45e4246777ab304
+- https://github.com/karmakrafts/EtherKraken @ e4b26c1a6ff5f55719537718233b885f7e9387cf (as karmakrafts/EtherKraken@e4b26c1)
 - https://github.com/mbouyer/canbus_autopilot @ f024a7aa6e4436d68accbea09088dacfaac54095
 - https://github.com/paoloach/ZLight_CC2652 @ 8fd90c42979c8d48d9129cbd452a89c111e2e79f
 - https://github.com/siderakb/nrf51-module @ c01cec7167a95cb3131e95586c0b7d324129346f
@@ -2446,6 +2474,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/dabit20/ExpressLRS-SX1280-module @ 131ccfcfce0897acab93e7c2f4812f119fb6d8e8
 - https://github.com/danchouzhou/canShield @ 544afc08cef79e6ce144b76855fcf358dd8514c4
 - https://github.com/demik/quack @ c8c78c0200167bdffbf16e4ae8d897eb2edaf1cb
+- https://github.com/demik/quack @ 58f70c68ebb1b0f8ab3fc559f81cc228013e6458 (as demik/quack@58f70c6)
 - https://github.com/DomRicho/loratracker_hardware @ 0c8d7a09f697168990768398f923f03d49665b89
 - https://github.com/douglaslyon/pentester @ dd4b5456a8e548475f6d00a9fcf1b03a61c26bb9
 - https://github.com/dtatum7/HackRF-UHF-Front-End @ d5822015d473098dfdbf3f698cd30dba666bebff
@@ -2548,6 +2577,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/JakubKajzer/Trugbild @ 048bdcf5cc174e3e0fff366d86bfa99e8971117f
 - https://github.com/AAWO/CPArti-FPGA-Development-Board @ 67110ed708920872165c690dfe4bbd9827f5bd88
 - https://github.com/AbdulAjadi1/FPGA-Board @ 8a968c9e82677a7a3c903851f07ebf0f8aea13bf
+- https://github.com/AbdulAjadi1/FPGA-Board @ 35f5aaad5dec8ed0b7cdd13e4d30162594afda10 (as AbdulAjadi1/FPGA-Board@35f5aaa)
 - https://github.com/alpha-137-036/RV523 @ 5766e08f9423504adcf3af24bbfe8ef1ef05c759
 - https://github.com/antmicro/dc-scm-rot-jumper-card @ c9ae62e1924d879fc68ec40821711d3e858a50e0
 - https://github.com/asinghani/ice40-wearable @ a5ebbbfb4da2ebca5125c1ba2912a209df8e7e46
@@ -2588,10 +2618,12 @@ Format: `- URL @ commit_hash`
 - https://github.com/gildobjanschi/ECP5_BGA381_FT2232HQ_FIFO @ b0c83ca28d882e49dbaa25e22ab68122957f7bf5
 - https://github.com/Heimvik/TFE4141_Digital_systems_design @ 1519f535df434eb4456fe5f154c8685ca8891c08
 - https://github.com/Ironsuper1/zynq_board @ 4332c65c03d839624c3f2343fcb2026675ed58c8
+- https://github.com/andykarpov/karabas-megabuzz @ b3a026f15f440507760da5281632fed66bef03fe
 
 ## Retro computing
 
 - https://codeberg.org/hkzlab/AppleII_SCSI_RevC_schematics @ 20fd57380bd340a7fbdcfa1a782fb69b2644d06d
+- https://codeberg.org/hkzlab/AppleII_SCSI_RevC_schematics @ 06dc9bc19d13637de8cf256f5a42a2ffaefdaa5f (as hkzlab/AppleII_SCSI_RevC_schematics@06dc9bc)
 - https://codeberg.org/hkzlab/PS1_DatelCheatCart_Clone @ 6fb0b7bb07cfffacfa9541ccb07db9485b4fac33
 - https://codeberg.org/jbnd/BlueSCSI-v2 @ 483175255bd2bb76065971fee9121496a9538910
 - https://github.com/bbogush/nand_programmer @ 4d840b7afff7c1a1c02eacce3a72761cd0f58c93
@@ -2618,6 +2650,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/SukkoPera/Raemixx500 @ 3325e2f6120c39396f54e96e46a8faa5edbd4a73
 - https://github.com/tmarhguy/8bit-discrete-transistor-alu @ 5545c67f7027008068e7385954e8dc7d158062fc
 - https://github.com/transistorfet/retroverse @ fe8d59b017e0b59f12db10164bd0d09dd1f550a1
+- https://github.com/transistorfet/retroverse @ 699c16ae461b6ed3b46e2489b46a037b8fb8a186 (as transistorfet/retroverse@699c16a)
 - https://gitlab.com/DarthKitten2130/RPi-Z80_Controller @ 35ba9fc499b389af3068304b3d7591f9c3d4db9e
 - https://gitlab.com/sixxie/dragon64 @ 36425078b2b64878e3003b8119d48a38e90f89cd
 - https://gitlab.com/vurpo/soundblaster-pcb @ ad609dcc185afb9dd256c470fa6c18389369d98e
@@ -2678,18 +2711,23 @@ Format: `- URL @ commit_hash`
 - https://github.com/ytmytm/c128-u3-replacement @ 228734b2a7dcf4f984fdc993e9262b4f332fe76c
 - https://github.com/git4dcc/RTB_C13 @ 731f7d53c9d30c1811da7abf7a2dbee91a61214f
 - https://github.com/git4dcc/RTB_D20 @ 5c195c71934f52e6cb05d8053fbe56d82da266d7
+- https://github.com/git4dcc/RTB_D20 @ 71c2315babb9757786f13b16502ad0ca4dede206 (as git4dcc/RTB_D20@71c2315)
 - https://github.com/git4dcc/RTB_D21 @ dba6a552c02a585f869573a25c12961547dec8c8
+- https://github.com/git4dcc/RTB_D21 @ e8a819b19ac8bfa910fdd7e37cf3478d0273afe8 (as git4dcc/RTB_D21@e8a819b)
 - https://github.com/git4dcc/RTB_D98 @ e12b3df55a6e1eef68c4d4f86f61b1a176ded829
 - https://github.com/74hc595/Amethyst @ adf516a1329cd3dcfe483e4410ea5a5b1041a52a
 - https://github.com/dennowiggle/FLEADiP @ cd4aa67a098afc879737545ea0e2f230b6b43cc0
 - https://github.com/dpicken/atari-hw @ a9bb891104fcc0834318b2d0ea2308c40846d6b1
 - https://github.com/git4dcc/RTB_D12 @ 888c8a648383306b286552b5234e0e2c46c8fc87
+- https://github.com/git4dcc/RTB_D12 @ 9c6ade2802d618c51f983d4c2a52f174e94625dc (as git4dcc/RTB_D12@9c6ade2)
 - https://github.com/git4dcc/RTB_C12 @ 86ec3ad6687f68b30b3efd5c941cf4e65baf1564
 - https://github.com/git4dcc/RTB_D15 @ f847bc361b4a1071d978d8215b46911512df8b42
 - https://github.com/git4dcc/RTB_D13 @ d5e475c56e4affa664b2bc28ffa531afaa2da88b
 - https://github.com/git4dcc/RTB_D22 @ ba52c04eb4903e1a966d887439e4ff57ea2a125c
+- https://github.com/git4dcc/RTB_D22 @ ba372a566a13cff8463a612bf652ec1f093b5230 (as git4dcc/RTB_D22@ba372a5)
 - https://github.com/git4dcc/RTB_E10 @ 8e88d14325487ab30570561c6541ba04eb2c9a20
 - https://github.com/git4dcc/RTB_D23 @ f56b369abf29d0c2d69b412995053e516e64038b
+- https://github.com/git4dcc/RTB_D23 @ b4d3404121a97041c4368e39592e5da1170256be (as git4dcc/RTB_D23@b4d3404)
 - https://github.com/git4dcc/RTB_E13 @ 18bac8a6fef461df68a8c96f4d3f91db76eddd4d
 - https://github.com/git4dcc/RTB_E15 @ a727b82cab6191a61e795d5d57c06f0c7537a7b4
 - https://github.com/git4dcc/RTB_P21 @ e5eccb5b152020704c29aab50ced41baac07c26b
@@ -2706,6 +2744,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/stonedDiscord/MegaDrive @ 937baed38afead19407dc8f1615980fc572b6962
 - https://github.com/tebl/RC1802-Cosmac-ELF @ 0acd6058ac122cf1a93aaaa8b5c1998dab47a538
 - https://github.com/hkzlab/CGA_Schematics @ 7e17588837f84a6f4de5fde5f322d201725dac3e
+- https://github.com/hkzlab/CGA_Schematics @ 94148cb6345f16d018f5ddb02dc71d31d6048726 (as hkzlab/CGA_Schematics@94148cb)
 - https://github.com/jeffqchen/Saturn8DINMod @ 454e52fb6719a514f154a3c5246c0c5bedd16639
 - https://github.com/tebl/Apple2-Prototyping-Card @ 91ed325a28d3013bd6c6971858b9d634d92732c9
 - https://github.com/nterry/n64-kicad @ f05435e5e2294b18e32f63cd06fbe7de2d3bc6a5
@@ -2807,6 +2846,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/HandHeldLegend/HHL-GameCube-Parts @ 2100e591c207cc9033ff08e32924df8ca8de2de4
 - https://github.com/hkzlab/NoCIC @ 35c19f35bd7affa025bb1cfe5f67937bbc43a1b1
 - https://github.com/humanHardDrive/Gamecube-Controller-Wireless-Adapter @ 2b63a21d9125733dfec45f23d06e50b84e8f3bec
+- https://github.com/humanHardDrive/Gamecube-Controller-Wireless-Adapter @ 357fb2cde28349d358db9b56dbf46900bc15a634 (as humanHardDrive/Gamecube-Controller-Wireless-Adapter@357fb2c)
 - https://github.com/ibaldachini/C64NIKI2 @ eea2d3c304f88fa47f10b7b11f9d3d4d82721a5e
 - https://github.com/ifilot/sap-smd @ c7d25511b9d4da231f3ea45f070992f05c98a8c0
 - https://github.com/ikorb/tapecart @ b876b07a3d44f2ac4b6da44d77eaf85ab695c580
@@ -2974,6 +3014,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/hibiyasleep/cornelike @ fd9c1add4aed725dcb458d42632651b507fa806e
 - https://github.com/niw/mfk60 @ 9b48f0ad7491d3c423d02cf9daf7dcd99cde7e2a
 - https://github.com/Ckath/k8split @ 9fadd3d36dabd327323b5f7123bf9b76a858cac4
+- https://github.com/Ckath/k8split @ 5e26e3b4943ad7129684078a5910b34777c5167e (as Ckath/k8split@5e26e3b)
 - https://github.com/taciturnaxolotl/thyme @ 63afdd958988b95783ea1f6343d1d27b47c3144a
 - https://github.com/swiftrax/Nodu @ 25b91ebf92f34fac5eec7fd5c856269d1ae0d668
 - https://github.com/EvvL/Alchemy49 @ a55210fdfa377851557a8c4674439cf2234ba682
@@ -3159,6 +3200,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/Jallerton00/USB-to-Serial-to-HID @ 164a3a6ca86ae5cc10fae2fdb28e330eda346a5d
 - https://github.com/jaylin0131/Module-keyboard @ 6f6efbc87b2efd807169ef3a90ba8f97ee1a4336
 - https://github.com/jehhalli/keyboards @ eba2d26df5de48e68d11e1c7245cc88e3a4e8edc
+- https://github.com/jehhalli/keyboards @ 63d0dca7030ebf6e8625f67f4698ae8fedde3533 (as jehhalli/keyboards@63d0dca)
 - https://github.com/jenneva-li/qmk_keyboard @ b0ca6279f6c0978d5c7e18bd36a6255c87008dc1
 - https://github.com/JeremyJStarcher/retro-keys @ 4455356f733ecab8965a7a63f2c58d5a99c92a83
 - https://github.com/JesusFreke/lalboard @ eddf521062c8e6eb5e67b05d071c60f093652c0a
@@ -3281,6 +3323,8 @@ Format: `- URL @ commit_hash`
 - https://github.com/joelspadin/marten_numpad @ 49553c160f291878def765249ef9ee1d7a030304
 - https://github.com/junyali/KawaiiPad @ e07509146bce2035f55e2a9571a97ac4970217bc
 - https://github.com/KaedeAsatsuki/Nirvana @ 6d7933c6a5e676584cc80ba7fdc630567160d51a
+- https://github.com/floookay/olice @ 37d52b46c0509873a232b3a2739adc34d5f61c52
+- https://github.com/buu342/BuuKeeb @ 3a206f51fc16ee51d8717216adc4cb7521ac55de
 
 ## SparkFun boards
 
@@ -3750,6 +3794,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/RCMgames/BSED @ 55183a21deea2a73e7dece1b4197a86ffe8dee94
 - https://github.com/sourcebox/74hc165-breakout @ 0dbf879fc4a3fc06f136d511bc8613c73e85120a
 - https://github.com/UWST-Robotics/VEXBridge-PCB @ 3880a37553e41fd4ff20e61828ba41fd1cd53331
+- https://github.com/UWST-Robotics/VEXBridge-PCB @ 3d7789b7af0726b7e62792007b16ef0ed10e70d8 (as UWST-Robotics/VEXBridge-PCB@3d7789b)
 - https://github.com/asukiaaa/AD5254Breakout @ 6c12cc863110472c495e1a8c41ab8f6facbed251
 - https://github.com/asukiaaa/SIT2001B-breakout @ 660e2a17339e558715ea1869beba8e8eb098fdbc
 - https://github.com/atoomnetmarc/FT2232HL-development-board-adapters @ 13e88af84d7607a2124efea9d44fd5daa78fd935
@@ -4004,6 +4049,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/ForestHubAI/boardsmith @ ef480bc6b4f6b4a16277a1d93f508d298205ef87
 - https://github.com/HaHaSDP-UCSC/hahardware @ 475d2386e170fc4f5ba67a8b8f0cf23efae7b3a0
 - https://github.com/hstarmans/firestarter @ 54d0668fbfb3d02c593f04fb5cc3f11ee5841ff9
+- https://github.com/hstarmans/firestarter @ 5e89fabaec5cd0ea9dbd3316e65c0c6672ef5409 (as hstarmans/firestarter@5e89fab)
 - https://github.com/INTI-CMNB/KiDiff @ 4a2730b4e354e9c63d1244328b097cab14562d76
 - https://github.com/ISSUIUC/ISS-PCB @ 03d39c6107bbafe7bc389fa061beb7c9c3b309ac
 - https://github.com/jgraichen/railway-signals @ 99a9a637db1af2bd080c75a3458a1295195bec4a
@@ -4167,6 +4213,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/Jana-Marie/Otter-Iron @ 30869804de5b9dcf258fdd8d01b7f5dc086b3656
 - https://github.com/Jana-Marie/OtterPill @ f0e7371ea88523a160302d86425b684c089768ad
 - https://github.com/Jana-Marie/PD-Injector @ 57c8f844c3cad615b486bb5db4f459de4877f4a6
+- https://github.com/Jana-Marie/PD-Injector @ 75ef2f62ee7a599e46f87801d2b0e0298f0b728d (as Jana-Marie/PD-Injector@75ef2f6)
 - https://github.com/Jana-Marie/philphoc-luma @ 41ad26f5cc93f7606febe3249a5c46db488dbed2
 - https://github.com/Jana-Marie/transpOtterNG @ baa6c7097678b69c6e73098e2a80f3fd3b744882
 - https://github.com/jenschr/FeatherWing @ 00c120a87aacd118bb2f6e3b5ad83fa80e51ee00
@@ -4552,6 +4599,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/dwhitters/KiCad-HealthHub @ 94ab0b9fdea92a882bc13e1f69d7f8f671e72f22
 - https://github.com/edsammy/kicad-bom @ d9bbb89cd61d16271c65bd089bf8ea150325de20
 - https://github.com/ellisgl/analog-multiplexer-8x8 @ fc6d2a21c28302640926bd01389e584ac21d54ff
+- https://github.com/ellisgl/analog-multiplexer-8x8 @ e5fad86134b3ca9063fe530b12889ab3208a60d7 (as ellisgl/analog-multiplexer-8x8@e5fad86)
 - https://github.com/Emraldoddball100/KiCad @ 09a24fdd98012bd16555e4472400c574c780091d
 - https://github.com/fabrataz/boards @ 154d80dd027e5a0d520b49fae0bcbc6bf290ef65
 - https://github.com/GadgetReboot/GR_IO_Board @ 3271af7510038aae5c55a8f8885c97bb62d3d538
@@ -4571,6 +4619,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/jstodberg/Hardware-done-with-kicad @ 55594fd75cc9637ee14f18d28fcbe698bb4d8639
 - https://github.com/kaderud/KiCad-LarsonScanner @ 3172ef78628534824f815c25eeac0a5b5ceda00b
 - https://github.com/klein0r/pcb-knx-distributor @ 9678f2e48c42e9f100ef7c88b0b034fe30460ee7
+- https://github.com/klein0r/pcb-knx-distributor @ 0457e8e292a7038574c1ffa547711d0f6cb56066 (as klein0r/pcb-knx-distributor@0457e8e)
 - https://github.com/konspyre/electroscope @ 1ad84881ab23dadcbc5e5c8a4d4491cbc37fa0e1
 - https://github.com/konspyre/electroscope-through @ ae8fde82e9589068ea1884ae368b677deb61f9ba
 - https://github.com/Kibabalu/pwm_generator @ 9c410bc8bdc1667b04e9663b207e56c06ed4ebcc
@@ -4604,6 +4653,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/samjkent/encoder-i2c @ 1a8c9de77bce096cf6ff51bc7a94f3fdd7b8ac51
 - https://github.com/seanlano/AC-LED @ 1cd6de98adca0d4209bd119a22a1572bd843a7f4
 - https://github.com/shishir-dey/pcb-dev-dsPIC30F6010A @ cc9bc802ff585450205bb8391c391dde37aaee06
+- https://github.com/shishir-dey/pcb-dev-dsPIC30F6010A @ 81506dab696df5c8501000fda539c302d2aa7499 (as shishir-dey/pcb-dev-dsPIC30F6010A@81506da)
 - https://github.com/siyka-au/picoscope-24v-logic-analyser @ 9a11447782ea083b12ab19da8541dd1ae40f6ae3
 - https://github.com/snegovick/kicad_stackup_editor @ 9c39b075a8c90d6e95bef9cf824b804e78ea7aab
 - https://github.com/sporniket/protoboard @ 17bea3e14366d794531e1e7906fae5daf3477abb
@@ -4636,6 +4686,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/74th/ch32v-dev-boards @ 65a657e58217e584206a4e032ccaa81dfa16310d
 - https://github.com/89Mods/sorcerer-schematics @ 271721574ae3d361e1ee6cc70245b6ab10d5b609
 - https://github.com/9551-Dev/OpenQCW @ b62642e7645b3b802557bab73e4619cad1982d69
+- https://github.com/9551-Dev/OpenQCW @ a38a04ce4974168f9b2ba7155d4a362e34b13819 (as 9551-Dev/OpenQCW@a38a04c)
 - https://github.com/9Akshit1/FixPad-Akshit @ c8fa59fe98cb051602d97cb6d31cd3092f3856ce
 - https://github.com/A-Bertelsen/WilCo-C3_PCB @ 2613216a7f9657c57dffc055c66a2e01077004f1
 - https://github.com/A-G-O/Orbcitos @ 80cf31b1b298f4676d1aadded21f765c95db6aed
@@ -4745,6 +4796,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/alvaroalea/QL_4_floppy_addon @ be62578804306248cfe3d660e932c039fddcd984
 - https://github.com/alvaroalea/QL_Rom_Cartridge @ 096301ad034cfc7f08d6a0438f59adbf3126f767
 - https://github.com/alvarop/hp5x21_mods @ dae3953e101f1599b8a99bc982f06f536e172a99
+- https://github.com/alvarop/hp5x21_mods @ 3536f0e0c73ac8e3bca1b296295b951f5e928a89 (as alvarop/hp5x21_mods@3536f0e)
 - https://github.com/alvarop/debugotron @ 45d2a20c12693876ac24e1a4a6770e95fde100ab
 - https://github.com/alvarop/kicad @ af0aaf9a0cbf02d7cc1d1ad57272d5b8d77d0ec0
 - https://github.com/AM1NOM/ImageRecognitionGlasses @ a496aa93d87b71eb273a6d3d12664ee5d1053aa7
@@ -4911,6 +4963,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/BodhiDavis/reef_runners_circuitry @ ca4312ee3785d9c13f5a757643a067d6116714de
 - https://github.com/bohlebots/soccer @ 2789cb3f94c45d900612c17f7094e45f171a50a4
 - https://github.com/Board-Folk/NeoGeoAES-3.5 @ 028b37fa723b27c69af7a60396b8bc8de29cc0b4
+- https://github.com/Board-Folk/NeoGeoAES-3.5 @ 75ef9665d5fc884c22607987b42478e3580d8f86 (as Board-Folk/NeoGeoAES-3.5@75ef966)
 - https://github.com/boreq/vivarium @ 941a44bc1a3ae6ed354a81e8682cd89f842668e7
 - https://github.com/BoomBoomMushroom/RealLifeTuringMachine @ 79e8c22b1599a56fc8cf5b4d1b42d9e6e26aa11e
 - https://github.com/BoySanic/sanic-cpu-32 @ 9564bb52ff293fe4fc88aca481c039b5b85d80dd
@@ -5250,6 +5303,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/EgemenBaykan/FilterDesigner @ f8ffc42b4293fa1c625bb211c53211c01d62e4dd
 - https://github.com/eggsampler/12v-2x6-Current-Monitor @ bb987cc810898cbdb292ecb2b976856ae3aab16f
 - https://github.com/Ehryk/ehryk.github.com @ c9491cfcab4e50380b9579cdec4cd056e4538232
+- https://github.com/Ehryk/ehryk.github.com @ fd848c3b0eb4c8bb643803c5352b1f0173451078 (as Ehryk/ehryk.github.com@fd848c3)
 - https://github.com/eldanb/THM32 @ e5f9ba8f665fd983335a0c3e0289e8ec7d74691a
 - https://github.com/el-bart/mini @ 69f5487f48f511582c74d1e6d3352d19d0280f7f
 - https://github.com/Eldorado8/PCB-design @ 543b70ecae0067cdba59ffeec305e9252f8f4057
@@ -5272,6 +5326,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/enlijoe/KiCadLib @ e0faea8cca3aa501a5f751d63105653a59dfa1ee
 - https://github.com/enph253-2025-team5/line-following-pcb @ 237019dafa1a610f3285f944eb97abc3796db971
 - https://github.com/EnyoYoen/PCB-P2I @ 4b8eb391747078c2cbe3b07f83ba13f4d9095b9a
+- https://github.com/EnyoYoen/PCB-P2I @ 713e4c415e20d5fb2bd810b58b7f6e5180e88cbe (as EnyoYoen/PCB-P2I@713e4c4)
 - https://github.com/EPFLRocketTeam/Hostboard_Socket @ 47da51288a6cede343142ae6d688f8bfa630f24b
 - https://github.com/epietrowicz/particle-somduino @ 8a20a3078bb55df212cbb95177b1b28dfbe87e7b
 - https://github.com/ep-infosec/50_google_myelin-acorn-electron-hardware @ b5f6225b6ee97fc91aab006448777db65584990c
@@ -5367,6 +5422,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/Flint2082/QCM_temp_comp @ 363209e16d4ebc583d31b664af4bb104e8274bc8
 - https://github.com/flo-ride/KibotTest @ 938c8cdf548c4b0bde5fcb19ecab0ae34d8320e2
 - https://github.com/flisboac/mixlib-kicad @ 2f1769fbd0414a0080a9dcf99f94dd9290365bdb
+- https://github.com/flisboac/mixlib-kicad @ 84b095309b6ff07ae61baac48ba4bed318fcbf65 (as flisboac/mixlib-kicad@84b0953)
 - https://github.com/florentdenis/Crimpdeq-Alt @ ecd67426a0a7c90f5d04fd5b7d48273de8607576
 - https://github.com/floresacton/tactile-sensing @ 9beb876d8bf911e1954d6ef5883fe0805fea0ac1
 - https://github.com/flora495/Sherie @ 0666be68f79ff78e8e341d249ed2af53f3772bd9
@@ -5465,6 +5521,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/GhanmiIyed/Beehive-Monitoring @ 74fb2bc03aa86c26bfae8d70d2603b95cb139ad3
 - https://github.com/George5683/GatorGrid-Mesh @ a646d153d7c1ba2b5b794e8e333004acb932a8c0
 - https://github.com/Gherkin/netdaq @ 0142a59bae2224301a22bd6083d38317010eb355
+- https://github.com/Gherkin/netdaq @ 0146e09e8d44c680096eb0292131c38afd8ced8e (as Gherkin/netdaq@0146e09)
 - https://github.com/Gigahawk/reprapdiscount_smart_controller @ 0ca094cb59c311a015bf8299fe552eda16086cab
 - https://github.com/Gherkin/logix-core @ 2da7d46117ea833ce0894d68ade64a805ea4d94a
 - https://github.com/gildobjanschi/ECP5_BGA381_FT2232HQ_FIFO_EXT @ 81403f7487a9eded36c6500b8c8b6c12a6705f81
@@ -5607,6 +5664,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/hlord2000/PCA20073_Tiny_Board @ 5924cac7c464e1507be1ac7db92747397a088b7c
 - https://github.com/hobbymachinist/els @ 03cfc7efa513142ef48f77a85858262047a75a55
 - https://github.com/hkzlab/CGA_Redux @ 7de4c81dc1ceb90fc55c72288f9114ce27a3869b
+- https://github.com/hkzlab/CGA_Redux @ 2b4bcb510b31d126e3c7729c90a74e5a4d7945c6 (as hkzlab/CGA_Redux@2b4bcb5)
 - https://github.com/hoellwerth/FrameworkDock @ 5f7ff93cef4e493401e0c6927b6c97d0213a6c6e
 - https://github.com/holingher/vumeter_IN13 @ 94efb2b15e112aaf3da8d65f9197c7f96a171d3f
 - https://github.com/hoeken/yarrboard-hardware @ fed99b28b649b0bd7de3d91873e0a660faa2a0b7
@@ -5790,6 +5848,7 @@ Format: `- URL @ commit_hash`
 - https://github.com/JITx-Inc/quickstart-by-phase @ c47cce2f62d03986a7e3ccfe41d2d693c05e4f25
 - https://github.com/jj2806/DALI-Control @ 216a6cb877d7ac4719cfdf6b34f908934f3fe11e
 - https://github.com/jj5/kicad-bench @ ccf106855f2637ca90f58aa675a617f15c5b54cc
+- https://github.com/jj5/kicad-bench @ a9196a702404533b0e26775442aaf5c9e1e9f005 (as jj5/kicad-bench@a9196a7)
 - https://github.com/jjagani/ECE49022_hardware @ 3b94247e6cd9024f873666871103f3247b534ce4
 - https://github.com/jjgarrid/vco_module @ 706e42db457888700776f475f3696b4cd7988635
 - https://github.com/jkelleyrtp/rwm-fa2020 @ 3e4033ce2f9d5a773b98f342146e1385886c4d54
@@ -5899,3 +5958,94 @@ Format: `- URL @ commit_hash`
 - https://github.com/Karethoth/MeshNode @ 18c45162a2e7303ee4dc20cc10e70c86302292d1
 - https://github.com/karima-idouderb/Capture-FabLab @ fbe1e427b6e3100112439081d7d0e3c716d433ba
 - https://github.com/Kargo/MechBoard @ cf192bcd99831b25ed0bbf82936456e9a84da80f
+- https://github.com/oihdesigns/Micro-DMM @ 0ae01c91cccb5e3c555bd22d9463909caf7139c3
+- https://github.com/Amronos/pcbbench @ bfe1adda3caf98e53d76bc4cee6de002c6ac2d34
+- https://github.com/n3rd-bugs/kiwrap @ 57c40d30cf7fedb9f574e2e90cd65967c839233c
+- https://github.com/gabrielfbdiniz/BMS-5S-L99BM114 @ 4d0f2155c705493a8b959b6814a776308274b55e
+- https://github.com/Andresse2020/NovaDrone-Hardware @ c7687818f5768766f7938bdf49fee3cabfb8b00d
+- https://github.com/EpicTromboneKid/emg @ 410a0faacf2b3800720a1652eafe6b24c671f73d
+- https://github.com/nikhilsudhir/midi2BLE @ 828022a631e1a2f599a2ab681054ea52b46bc2a9
+- https://github.com/KavEn06/Anachron @ e39da6dded75bcf0366014ba17640a7fe5cb82e0
+- https://github.com/natagoh/EE372B @ f2b53e74659ee45247f65d1514ee99e648d75bf4
+- https://github.com/oresat/oresat-c3-hardware @ 738a430a2270f489b3ff0aad043578f60fcf075e
+- https://github.com/blafr103/pico-numpad @ 9ab9b57acd4a646f9aad160d9a86175d338721d3
+- https://github.com/stanford-ssi/Satellite-Avionics @ 8d4f964a5d56876eba6e12c99d0da15a95073b63
+- https://github.com/rcls/gpsfreak @ 320ad6579801088951092ac08bfa70045a609530
+- https://github.com/ajisrawi/polarization-crpa @ 11d4ee9c7254acd65caf877e8f8d6de8ce3d3c87
+- https://github.com/ThroatyMumbo/GameConsoleV2 @ 9ff43f84ee4ca94d6f56f9e053167725d98d4255
+- https://github.com/commaai/PCBGolf @ d0fd5a71087e3e10a49610f8c3e89912b4d20d77
+- https://github.com/BlueJayRacing/23xt_kicad @ 8227fdc4f3944897506e985d32818f64520e75cc
+- https://github.com/dcuccia/digital-handbell @ 1f03364c8aa3c274efaa7cd18fe8571744eff184
+- https://github.com/philipparndt/opentherm-wolf-cwl @ ca0b79d0fe18c875669a64548fb72c6293699169
+- https://github.com/intechstudio/grid-hardware @ bf7d4e1a8dd6b8c80edfadb632617ec68cb43080
+- https://github.com/spartacus-hf/spartacus_PCB_REV1 @ 1c4ef30bff11212f219257a1451f94199cf86671
+- https://github.com/Simonhajd/Triton-Float @ 433ed248a272f9ef8e8b35ba03d28072ae64b753
+- https://github.com/MissouriMRDT/Science_Board_Hardware @ a630d47f5263e0149d3bfbd0b434ddea89bf86fe
+- https://github.com/remus4444/CAD @ 6f3b0190395ed46405f4faa0c41276686a372347
+- https://github.com/stash-s/synth-modules @ 1cb9ee8a83b085471935c4dc5b12b25c83f0567f
+- https://github.com/stefanVanadium/Automatica-UNITBV @ 1372410cfb779a583b55ffe1b9eeeaaa11aaeaf9
+- https://github.com/dev1virtuoso/CAD @ 06dcc54bf505ed5a70a3ec82e2351be0e91c77db
+- https://github.com/manvalan/DigiRadio @ 4a3d3986fc58063c7e0c3142121258e7f62eb42a
+- https://github.com/Haxintosh/8bit @ 30b4b2ca6457b0c60ed268d4b5d212003e71b90c
+- https://github.com/Simon-VDVelde/ESC-with-FOC-and-Ethercat @ 4bfff0290df1d7404b64ed720c75ca222185229e
+- https://github.com/mitchins/esp-hvac-controller @ a9ff752bf0f04e8160fe456740af8e72d1017415
+- https://github.com/jsanpe/c2c-64 @ a22c28a1d0cbe6d09777bfaa18ec926540366fab
+- https://github.com/oats-center/avena-rs @ a143855101bd77b50b6e687f6364cda6d44304db
+- https://github.com/usern4mehere9/LVPSU @ 9c4792c1d2233edb97ffe73daf6f8c38d3d797d7
+- https://github.com/Yodahl/Robot_trace_V1 @ 1a36d8d5ad15df346ba6aa0b108ee2d93c3f8d15
+- https://github.com/MadsRudolph/personal-projects @ da01eb3c989f73310127650a4aaf1f8d136869df
+- https://github.com/AnotherMike-exe/KiCadBlocks @ 7111c8099c3ea9d93cad28528bbfe02e7fbe8df8
+- https://github.com/ben5049/cm-carrier-hardware @ 005c03a45eb5ff4cd845ae25e8570e96136e3d74
+- https://github.com/futureshocked/KLP-5e-Vol1-Projects @ 888feace9b22e0b01952b5112ec593829049f7cd
+- https://github.com/Phunkafizer/OT-Thing @ 051bd59e3afcc06ecafb7a69b31ea33a26207551
+- https://github.com/ZGQ-inc/3.98-epd @ c3eb096dc28e1fd6620aad5b4bc4ba3563b8941a
+- https://github.com/Sarkis-S/Embedded-Systems @ 2c7a482c40e6a7d568d96561f238d6aac89b7b38
+- https://github.com/Mark-RT/BrainRing_Wireless @ 6257bc4ac377771cf873e9d8ede4c1a92e3e26ea
+- https://github.com/ciborg971/KISSE-1 @ ef975e1fee147a21e35c95bb5370ec0b405b8d50
+- https://github.com/m-scasserra/TrabajoFinal_MIoT @ 3828e2edeafef6f52d12bcc2d2fdfd60fedbe0d1
+- https://github.com/versioduo/control @ 08d4a4383d81d94c8cab6d33eb88e798ed435f08
+- https://github.com/sfines/slf_eater_digital_clock @ f99adfd944a2d795cd32ec66fcf7720bf69689f6
+- https://github.com/m4rkw/l0destar @ 1329cfb2e9b75a1a4f4cf045fd1d92b5d225c80b
+- https://github.com/NexusGPT/openring @ d5b035c0746bce519675a3909723e3e0e7206703
+- https://github.com/samvandenabeele/wurtelvin @ a19bcb58cea74ad423f37a72f75516518f941bd3
+- https://github.com/WalkEEG/WalkEEG @ 01b65c0b800db9e12a9d33cc68c1d9c6950b266b
+- https://github.com/SheinbergLab/dserv @ a8a08b0e92fb1f8bdcd507e79d0922d3c645d02b
+- https://github.com/ZigEmbeddedGroup/gauntlet @ 5ce70a133f532ec355769e9c24245215b49d0dfb
+- https://github.com/adam-dev-hub/eausure-v1 @ f567a36e002e5a6cabbbb08800c23bb06bca7a5b
+- https://github.com/hringdrifi/bifrost @ d7d5ac993dd01c895fdb84f70cc9e956a320e64e
+- https://github.com/pacman314159/OISP-Drone-Research @ 727aefe2ff1572aa588d58ec6c1a71bf6e6dd629
+- https://github.com/BarbourSmith/Maslow-Mini-Control-Board @ d85b96a8af835b8081abe763852699356f568b97
+- https://github.com/AMLing2/MAS500_Drone_Arena @ 1ce4f9fe7d87c3eb29bc36aea5d093d3b0398da3
+- https://github.com/zmcginty/OpenTMS @ b1ea3c20d678378b254a658fec46384776858265
+- https://github.com/Lucas-Poulos/rtk-gps-module @ 25c47bc177aac5f290e6c0b08383dc0a3a98a2a5
+- https://github.com/dmitry131131/PumpSystem @ 91a4f37d6343f979168cb9770373ecb00093af9d
+- https://github.com/Oscyloskop444/RGB-LED-matrix @ ec81d08f79435a26f56711952e53f909c35197b2
+- https://github.com/embeddedos-org/www.embeddedos.org @ ebf7328c9c0911ab91ecad892fa07b2bb3318d4f
+- https://github.com/bsikar/ra8p1-ereader-kicad @ e10afaa280601c85c811121ba53743a059ce7dc2
+- https://github.com/JavQuiroga/Spectrometer-Design-by-Artificial-intelligence @ 6cdf581bc16019a52234f986c74cb724c3805529
+- https://github.com/rh1tech/frank-lab @ 36d562121fc0d5406e727e8e0912bfff0b1d3ba4
+- https://github.com/o7-machinehum/Blackpants @ 4404e9e6011ff9cf264867d9a15d7771f5c5687d
+- https://github.com/alocsong/6502-board @ 081549166a326ee6aaf5bf982b03ad1425b2afbc
+- https://github.com/sneakylizard123-4/Dreamscape-ESC35A @ 4291b146141eebd00bce7af94b4257aca86eaf97
+- https://github.com/dkuaegis/aegis-hack-the-badge @ cb25c329fca3a6933e55acc3a2ea0afbf6bee246
+- https://github.com/jumper385/motor-driver-g431 @ b62e11e802c7727b25ef69ebdd8b1e2e979cd88c
+- https://github.com/T3nk4I/Minisumo @ 74a289c8fa93d4b573aea976fbebce7329720d83
+- https://github.com/pioterekkarolina/stacja-pogodowa @ 3ea5fbbfe05015f946bca0b81d96622df2bdadaa
+- https://github.com/elixpo/elixpo_chapter @ 10ca390bb6e70ddc07b90173bd7bc795b097229a
+- https://github.com/AGH-Logic-Unit/PCB_EDU @ f1405442bacfc77fab6088ddbd3e1991e1eea403
+- https://github.com/Tecnologic/unimoc_jacobi @ 8e1a0e96465b06a7adfcea1b5e068a378d5072a7
+- https://github.com/IslamHUFE/CanSat @ 000b6c26e335a953a657a703ba88d5667d880e97
+- https://github.com/Rxiaoudy/Bioz_KICAD_Group_Work @ 49790809c807e221c71f6d43bc37ea3192adf4d5
+- https://github.com/Benjamin-girard-1/magnetometer-node-old @ 1ff5bfe3e38ac8281b79b2670957f6723f567aa1
+- https://github.com/Anthilla/AnthC @ e123f339e36dd42c7e4ccec27813b0dd504a98d2
+- https://github.com/atuleu/aristeus @ 3f97eb60d67bcfe5b4b6e38bd759e20651e2c911
+- https://github.com/EmilEmilchen/chess-board @ 9d8aa629a827ac8a1bee4764b38b77ae57478cd1
+- https://github.com/dyu134/ESP-HI-PLUS @ 4cf4f7a20f4edd6d4cbf75629d9fc79ae4e32d82
+- https://github.com/AlexUg/kicad-libs @ 30b90903ccdabed794f24323a9e7b1f6bbd172cf
+- https://github.com/maxime-leblan/Projet-VigiZone-E3-2026-ESIEE-Paris @ 4121b07486e4c3ccedc4720605b602d66fdfa796
+- https://github.com/mahmoud-elghamry/thermocouple @ 0040c2ea0edb03d125a6229fcf68391e2d2ed60e
+- https://github.com/VuLinh011218/Auto_Switch @ 3ce6113017f64f5c6af2ede1143828a7b8aaa905
+- https://github.com/JoppeJoppinger/Inkterface_GabeEdition @ 47ac0aeb2c8b25fc28cf106de8cfe1b02d89ccc1
+- https://github.com/Lightiam/tapeout_07 @ 953bd7ca2f6434aed7f61f1d216ecf58fafe45e0
+- https://github.com/keneth-urbizagastegui/S3G4-LAB @ e4cd0b337aeb982b16a56422a4ef8bde6b222a6b
+- https://github.com/jeffmc6767/Blare-clock @ 37e7455dc08385536c42a0346f6e9ec80c93f50b
