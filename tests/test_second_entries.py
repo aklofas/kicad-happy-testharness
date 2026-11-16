@@ -55,7 +55,7 @@ def test_filter_and_check_updates_use_the_entry_name(tmp_path, monkeypatch, caps
     entries = checkout.parse_repos_md(md)
     assert [checkout.entry_name(e) for e in checkout._filter_repos(entries, "acme/board@*")] == ["acme/board@bbbbbbb"]
     monkeypatch.setattr(checkout, "REPOS_MD", md)
-    monkeypatch.setattr(checkout, "get_remote_head", lambda url: "c" * 40)
+    monkeypatch.setattr(checkout, "ls_remote_head", lambda url: ("c" * 40, None))
     checkout.check_updates(entries[:2], do_fetch=False, do_pin=True, as_json=True, jobs=1)
     rows = json.loads(capsys.readouterr().out)["repos"]
     assert [(r["name"], r["status"]) for r in rows] == [("acme/board", "update-available"),

@@ -13,6 +13,7 @@ Usage:
     python3 checkout.py --check-updates --pin
     python3 checkout.py --check-updates --fetch
     python3 checkout.py --check-updates --json
+    python3 checkout.py --check-updates --github-api
     python3 checkout.py --check-updates --filter "Open*"
 """
 
@@ -23,6 +24,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -198,18 +200,89 @@ def get_head_hash(repo_dir: Path) -> str:
     return result.stdout.strip()
 
 
-def get_remote_head(url: str) -> str | None:
-    """Get the HEAD commit hash from a remote repo without cloning."""
+def ls_remote_head(url: str) -> tuple[str | None, str | None]:
+    """(HEAD hash, None) or (None, reason) from an anonymous ls-remote.
+
+    GitHub answers a deleted, private or throttled repo the same way (it asks for a
+    username), so `denied-or-missing` cannot tell them apart; only --github-api can.
+    """
     try:
         result = subprocess.run(
             ["git", "ls-remote", "--quiet", url, "HEAD"],
             capture_output=True, text=True, timeout=30,
+            env={**os.environ, "GIT_TERMINAL_PROMPT": "0"},
         )
-        if result.returncode == 0 and result.stdout.strip():
-            return result.stdout.strip().split()[0]
-    except (subprocess.TimeoutExpired, Exception):
-        pass
-    return None
+    except subprocess.TimeoutExpired:
+        return None, "timeout"
+    except OSError:
+        return None, "unreachable"
+    if result.returncode == 0:
+        out = result.stdout.strip()
+        return (out.split()[0], None) if out else (None, "empty")
+    err = result.stderr.lower()
+    if "could not read username" in err or "not found" in err:
+        return None, "denied-or-missing"
+    return None, "unreachable"
+
+
+def get_remote_head(url: str) -> str | None:
+    """Get the HEAD commit hash from a remote repo without cloning."""
+    return ls_remote_head(url)[0]
+
+
+_GITHUB_RE = re.compile(r"^https://github\.com/([^/]+)/([^/]+?)(?:\.git)?/?$")
+GRAPHQL_BATCH = 50
+GRAPHQL_JOBS = 4
+
+
+def _graphql_batch(batch):
+    """One `gh api graphql` call for up to GRAPHQL_BATCH (url, (owner, repo)); None if unusable."""
+    query = "query { " + " ".join(
+        f"r{n}: repository(owner: {json.dumps(o)}, name: {json.dumps(r)}) "
+        "{ defaultBranchRef { target { oid } } }"
+        for n, (_, (o, r)) in enumerate(batch)) + " }"
+    try:
+        p = subprocess.run(["gh", "api", "graphql", "-f", f"query={query}"],
+                           capture_output=True, text=True, timeout=120)
+        reply = json.loads(p.stdout or "{}")
+    except (OSError, subprocess.TimeoutExpired, json.JSONDecodeError):
+        return None
+    data = reply.get("data")
+    if not data:
+        return None
+    not_found = {e["path"][0] for e in reply.get("errors") or []
+                 if e.get("type") == "NOT_FOUND" and e.get("path")}
+    heads = {}
+    for n, (url, _) in enumerate(batch):
+        node = data.get(f"r{n}")
+        if node is not None:
+            oid = ((node.get("defaultBranchRef") or {}).get("target") or {}).get("oid")
+            heads[url] = (oid, None) if oid else (None, "empty")
+        elif f"r{n}" in not_found:
+            heads[url] = (None, "gone")
+    return heads
+
+
+def github_heads(urls) -> dict:
+    """Default-branch tips of GitHub repos via authenticated `gh api graphql`.
+
+    Returns {url: (hash, None)} or {url: (None, "gone")} for a repo GitHub reports as not
+    found. URLs it could not resolve (gh missing or logged out, other errors) are left out
+    so the caller falls back to ls-remote.
+    """
+    pairs = [(u, m.groups()) for u in urls if (m := _GITHUB_RE.match(u))]
+    batches = [pairs[i:i + GRAPHQL_BATCH] for i in range(0, len(pairs), GRAPHQL_BATCH)]
+    heads, failed = {}, 0
+    with ThreadPoolExecutor(max_workers=GRAPHQL_JOBS) as pool:
+        for got in pool.map(_graphql_batch, batches):
+            if got is None:
+                failed += 1
+            else:
+                heads.update(got)
+    if failed:
+        print(f"warning: {failed} gh api graphql batches failed; those repos fall back to "
+              "ls-remote", file=sys.stderr)
+    return heads
 
 
 def fetch_local(repo_dir: Path) -> bool:
@@ -302,8 +375,20 @@ def clone_repos(repos, limit):
     return failed
 
 
-def _check_one_repo(repo, do_fetch):
-    """Check one repo for updates. Returns result dict."""
+def _status(pinned_hash, remote_hash):
+    if not pinned_hash:
+        return "not-pinned"
+    if (remote_hash.startswith(pinned_hash)
+            or pinned_hash.startswith(remote_hash[:len(pinned_hash)])):
+        return "up-to-date"
+    return "update-available"
+
+
+def _check_one_repo(repo, do_fetch, known=None):
+    """Check one repo for updates. Returns result dict.
+
+    `known` is a (hash, reason) already resolved for this URL (--github-api).
+    """
     url = repo["url"]
     repo_name = entry_name(repo)
     pinned_hash = repo.get("hash")
@@ -317,23 +402,29 @@ def _check_one_repo(repo, do_fetch):
     if do_fetch and repo_dir.exists():
         fetch_local(repo_dir)
 
-    remote_hash = get_remote_head(url)
+    remote_hash, reason = known or ls_remote_head(url)
     entry["remote"] = remote_hash
-
-    if remote_hash is None:
-        entry["status"] = "error"
-    elif not pinned_hash:
-        entry["status"] = "not-pinned"
-    elif (remote_hash.startswith(pinned_hash)
-          or pinned_hash.startswith(remote_hash[:len(pinned_hash)])):
-        entry["status"] = "up-to-date"
+    if remote_hash:
+        entry["status"] = _status(pinned_hash, remote_hash)
+    elif reason == "gone":
+        entry["status"] = "gone"
     else:
-        entry["status"] = "update-available"
-
+        entry.update(status="error", reason=reason)
     return entry
 
 
-def check_updates(repos, do_fetch, do_pin, as_json, jobs=8):
+# One slow second pass over failed lookups: GitHub throttles anonymous ls-remote under load,
+# and a throttled repo reads exactly like a deleted one.
+RETRY_DELAY_S = 2
+RETRY_JOBS = 2
+
+
+def _retry(repo):
+    time.sleep(RETRY_DELAY_S)
+    return _check_one_repo(repo, do_fetch=False)   # the first pass already fetched
+
+
+def check_updates(repos, do_fetch, do_pin, as_json, jobs=8, github_api=False):
     """Check if tracked repos have upstream updates."""
     results = []
     updated = 0
@@ -344,10 +435,13 @@ def check_updates(repos, do_fetch, do_pin, as_json, jobs=8):
         print(f"Checking {total} repos for upstream updates "
               f"({jobs} parallel workers)...\n")
 
+    known = (github_heads([r["url"] for r in repos if not r.get("name")])
+             if github_api else {})
+
     # Parallel check
     done = 0
     with ThreadPoolExecutor(max_workers=jobs) as pool:
-        futures = {pool.submit(_check_one_repo, repo, do_fetch): repo
+        futures = {pool.submit(_check_one_repo, repo, do_fetch, known.get(repo["url"])): repo
                    for repo in repos}
         for future in as_completed(futures):
             entry = future.result()
@@ -357,6 +451,15 @@ def check_updates(repos, do_fetch, do_pin, as_json, jobs=8):
             # Progress every 100 repos
             if not as_json and done % 100 == 0:
                 print(f"  [{done}/{total}] checked...", flush=True)
+
+    failed = {e["name"] for e in results if e["status"] == "error"}
+    if failed:
+        if not as_json:
+            print(f"  retrying {len(failed)} failed lookups ({RETRY_JOBS} workers)...", flush=True)
+        retry = [r for r in repos if entry_name(r) in failed]
+        with ThreadPoolExecutor(max_workers=RETRY_JOBS) as pool:
+            again = {e["name"]: e for e in pool.map(_retry, retry)}
+        results = [again.get(e["name"], e) for e in results]
 
     # Sort results back to original order
     name_order = {entry_name(r): i for i, r in enumerate(repos)}
@@ -374,11 +477,19 @@ def check_updates(repos, do_fetch, do_pin, as_json, jobs=8):
         elif entry["status"] == "error":
             errors += 1
 
+    gone = sum(1 for r in results if r["status"] == "gone")
+    reasons = {}
+    for r in results:
+        if r["status"] == "error":
+            reasons[r["reason"]] = reasons.get(r["reason"], 0) + 1
+
     if as_json:
         print(json.dumps({
             "total": len(results),
             "updates_available": updated,
+            "gone": gone,
             "errors": errors,
+            "error_reasons": reasons,
             "repos": results,
         }, indent=2))
     else:
@@ -391,8 +502,14 @@ def check_updates(repos, do_fetch, do_pin, as_json, jobs=8):
         print(f"Updates available:  {updated}")
         if not_pinned:
             print(f"Not pinned:        {not_pinned}")
+        if gone:
+            print(f"Gone (GitHub):     {gone}")
         if errors:
-            print(f"Errors:            {errors}")
+            print(f"Errors:            {errors} "
+                  f"({', '.join(f'{k} {v}' for k, v in sorted(reasons.items()))})")
+            if reasons.get("denied-or-missing") and not github_api:
+                print("  denied-or-missing may be GitHub throttling anonymous ls-remote; "
+                      "re-run with --github-api")
 
         if updated and not do_pin:
             print(f"\nRepos with updates:")
@@ -423,6 +540,9 @@ def main():
                         help="Output as JSON (with --check-updates)")
     parser.add_argument("--jobs", "-j", type=int, default=8,
                         help="Parallel workers for --check-updates (default: 8)")
+    parser.add_argument("--github-api", action="store_true",
+                        help="Resolve GitHub repos through authenticated `gh api graphql` "
+                             "(with --check-updates); tells deleted repos from throttling")
     parser.add_argument("--best-effort", action="store_true",
                         help="Exit 0 despite clone or pin failures (clone mode)")
     args = parser.parse_args()
@@ -435,7 +555,7 @@ def main():
     repos = _filter_repos(repos, args.filter)
 
     if args.check_updates:
-        check_updates(repos, args.fetch, args.pin, args.json, args.jobs)
+        check_updates(repos, args.fetch, args.pin, args.json, args.jobs, args.github_api)
     else:
         failed = clone_repos(repos, args.limit)
         if failed and not args.best_effort:

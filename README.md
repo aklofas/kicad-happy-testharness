@@ -413,6 +413,7 @@ All repos must have a pinned 40-char commit hash. All clones are shallow.
 ```bash
 python3 checkout.py                              # clone new repos
 python3 checkout.py --check-updates --jobs 16    # check for upstream updates (parallel)
+python3 checkout.py --check-updates --github-api # GitHub via authenticated gh GraphQL (no throttling; deleted repos = gone)
 python3 checkout.py --check-updates --pin        # update hashes in repos.md
 python3 tools/generate_catalog.py                 # rebuild metadata catalog
 ```

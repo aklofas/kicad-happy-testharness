@@ -11,6 +11,15 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-15 — TH-114: `checkout.py --check-updates` reported a throttled `ls-remote` as `error`, indistinguishable from a deleted repo
+
+**Severity:** LOW (a corpus update scan could not tell deleted repos from GitHub throttling)
+**File:** `checkout.py` (`get_remote_head`, `_check_one_repo`, `check_updates`)
+**Discovered:** 2026-11-15, v3.0.3 Track H corpus refresh (read-only update scan, `--jobs 16`): 2,353 of 5,821 entries came back `error`; re-resolved by hand only 105 were gone.
+**Root cause:** `get_remote_head` swallowed stderr and returned `None` for every failure, with no retry. GitHub answers a throttled anonymous `ls-remote` exactly like a deleted repo (`could not read Username`), so once it started refusing the box partway through the run, live repos read as errors.
+**Fix:** `ls_remote_head` returns `(hash, reason)` (`denied-or-missing` / `unreachable` / `timeout` / `empty`; prompts off) and each `error` row carries `reason`; failed lookups get one second pass at 2 workers with a delay; `--github-api` resolves GitHub entries through authenticated `gh api graphql` (batches of 50, 4 at a time) and marks a NOT_FOUND repo `gone`, falling back to `ls-remote` for anything it can't resolve. JSON adds `gone` and `error_reasons`; text mode suggests `--github-api` when `denied-or-missing` shows up. `get_remote_head` keeps its signature for `add_repos.py`.
+**Verification:** `tests/test_check_updates_reasons.py` (11: stderr classes, timeout, GraphQL batching / NOT_FOUND vs other errors / gh unusable, retry, API path); `tests/test_second_entries.py` green. Live, read-only, whole corpus with `--github-api`: 5,971 entries → 5,007 up to date, 805 updates available, 105 gone, 50 second entries, 4 errors (3 `denied-or-missing` + 1 `unreachable`, all non-GitHub), matching the hand resolution of the refresh scan; 2 min 5 s (9 min with serial batches).
+
 ## 2026-11-15 — TH-116: `add_repos.py` without `--resume` crashed on the first result (`KeyError: 'stats'`) and recorded nothing
 
 **Severity:** MEDIUM (a fresh expansion run recorded no results and skipped every purge)
