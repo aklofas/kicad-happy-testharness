@@ -62,6 +62,7 @@ def _load_categories():
     repos.md is organized with '## Category' headers followed by repo URLs.
     Each repo inherits the category of its section.
     """
+    from checkout import _AS_RE
     cats = {}
     current_category = "Uncategorized"
     try:
@@ -76,21 +77,19 @@ def _load_categories():
             url = line.strip()[2:].split(" @")[0].split(" (")[0].strip()
             parts = url.rstrip("/").removesuffix(".git").split("/")
             if len(parts) >= 2:
-                repo_name = f"{parts[-2]}/{parts[-1]}"
+                m = _AS_RE.search(line)   # a second entry is keyed by its own name
+                repo_name = m.group(1) if m else f"{parts[-2]}/{parts[-1]}"
                 cats[repo_name] = current_category
     return cats
 
 
 def _load_repo_urls():
     """Parse repos.md to build {repo_name: {url, hash}} mapping."""
-    from checkout import parse_repos_md
+    from checkout import parse_repos_md, entry_name
     repos = parse_repos_md(REPOS_MD)
     mapping = {}
     for r in repos:
-        url = r["url"]
-        parts = url.rstrip("/").removesuffix(".git").split("/")
-        name = f"{parts[-2]}/{parts[-1]}"
-        mapping[name] = {"url": url, "hash": r.get("hash", "")}
+        mapping[entry_name(r)] = {"url": r["url"], "hash": r.get("hash", "")}
     return mapping
 
 

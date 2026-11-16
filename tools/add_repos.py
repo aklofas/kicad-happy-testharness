@@ -32,7 +32,7 @@ from pathlib import Path
 
 HARNESS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HARNESS_DIR))
-from checkout import parse_repos_md, _repo_name_from_url, get_remote_head
+from checkout import parse_repos_md, _repo_name_from_url, get_remote_head, _AS_RE
 from utils import (REPOS_DIR, DATA_DIR, MANIFESTS_DIR, DEFAULT_JOBS, MISC_CATEGORY,
                    run_pipeline_step, atomic_write_text)
 
@@ -119,16 +119,27 @@ def _find_category_insert_point(lines, category):
     return len(lines)
 
 
-def append_to_repos_md(url, commit_hash, category):
+def append_to_repos_md(url, commit_hash, category, name=None):
     """Append a repo entry under the correct ## category in repos.md.
 
     If the category doesn't exist, falls back to 'Miscellaneous KiCad projects'.
+    A second entry (`name` = owner/repo@sha7) goes directly under its pinned entry and
+    takes that entry's category; returns the category used.
     """
     lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
     new_line = f"- {url} @ {commit_hash}"
-    insert_at = _find_category_insert_point(lines, category)
+    if name:
+        new_line += f" (as {name})"
+        pinned = [i for i, l in enumerate(lines) if line_url(l) == url and not _AS_RE.search(l)]
+        if len(pinned) != 1:
+            raise ValueError(f"second entry {name}: expected one pinned entry for {url}, found {len(pinned)}")
+        insert_at = pinned[0] + 1
+        category = next((l[3:].strip() for l in reversed(lines[:insert_at]) if l.startswith("## ")), category)
+    else:
+        insert_at = _find_category_insert_point(lines, category)
     lines.insert(insert_at, new_line)
     atomic_write_text(REPOS_MD, "\n".join(lines) + "\n")
+    return category
 
 
 def line_url(line):
@@ -137,11 +148,17 @@ def line_url(line):
     return parts[1] if len(parts) >= 2 and parts[0] == "-" else None
 
 
-def remove_from_repos_md(url):
+def _line_name(line):
+    m = _AS_RE.search(line)
+    return m.group(1) if m else None
+
+
+def remove_from_repos_md(url, name=None):
     """Remove a repo entry from repos.md by its exact URL (a substring would also remove
-    a prefix peer such as owner/OtterPill-CAN-Adapter for owner/OtterPill)."""
+    a prefix peer such as owner/OtterPill-CAN-Adapter for owner/OtterPill) and entry name:
+    removing a second entry leaves the pinned entry of the same URL, and vice versa."""
     lines = REPOS_MD.read_text(encoding="utf-8").splitlines()
-    filtered = [line for line in lines if line_url(line) != url]
+    filtered = [line for line in lines if not (line_url(line) == url and _line_name(line) == name)]
     atomic_write_text(REPOS_MD, "\n".join(filtered) + "\n")
 
 
@@ -150,21 +167,25 @@ def _pre_add_repo(candidate):
 
     Returns (repo_name, url, commit_hash, category) or None on failure.
     """
-    owner = candidate["owner"]
-    repo = candidate["repo"]
-    repo_name = f"{owner}/{repo}"
+    repo_name = candidate_name(candidate)
     url = candidate["url"]
     category = candidate.get("suggested_category", MISC_CATEGORY)
 
     print(f"  {repo_name} ...", end="", flush=True)
-    commit_hash = get_remote_head(url)
+    # a second entry (upgrade pair) is pinned by its candidate, not by today's HEAD
+    commit_hash = candidate.get("commit") or get_remote_head(url)
     if not commit_hash:
         print(" FAILED (unreachable)")
         return None
     print(f" {commit_hash[:12]}")
 
-    append_to_repos_md(url, commit_hash, category)
+    category = append_to_repos_md(url, commit_hash, category, name=candidate.get("name"))
     return (repo_name, url, commit_hash, category)
+
+
+def candidate_name(candidate):
+    """repos/ dir name: `name` for a second entry (owner/repo@sha7), else owner/repo."""
+    return candidate.get("name") or f"{candidate['owner']}/{candidate['repo']}"
 
 
 def _pipeline_one_repo(repo_name, skip_spice, skip_emc):
@@ -264,9 +285,7 @@ def process_one_repo(candidate, skip_spice, skip_emc, dry_run):
 
     Returns result dict with status and details.
     """
-    owner = candidate["owner"]
-    repo = candidate["repo"]
-    repo_name = f"{owner}/{repo}"
+    repo_name = candidate_name(candidate)
     url = candidate["url"]
     category = candidate.get("suggested_category", MISC_CATEGORY)
 
@@ -299,7 +318,7 @@ def process_one_repo(candidate, skip_spice, skip_emc, dry_run):
 
     # Post-process: remove from repos.md if purged or clone failed
     if pipe_result.get("purge"):
-        remove_from_repos_md(url)
+        remove_from_repos_md(url, name=candidate.get("name"))
 
     return result
 
@@ -420,7 +439,7 @@ def _run_parallel(pending, progress, args):
 
             # Post-process: remove from repos.md if purged or clone failed
             if result.get("purge"):
-                remove_from_repos_md(url)
+                remove_from_repos_md(url, name=None if repo_name == _repo_name_from_url(url) else repo_name)
 
             _update_progress(progress, result)
             batch_count += 1
@@ -470,7 +489,7 @@ def main():
     completed_set = set(progress["completed"] + progress["purged"]
                         + [f["repo"] for f in progress["failed"]])
     pending = [c for c in candidates
-               if f"{c['owner']}/{c['repo']}" not in completed_set]
+               if candidate_name(c) not in completed_set]
 
     print(f"=== Corpus Expansion ===")
     print(f"Total candidates: {len(candidates)}")

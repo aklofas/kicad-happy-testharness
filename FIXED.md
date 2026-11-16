@@ -11,6 +11,130 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-15 — KH-674: Wave 3 follow-up notes (umbrella)
+
+**Severity:** LOW (each item small; split out when picked up)
+**Closed:** Split into KH-1138..KH-1150 (tracker edit approved by the user 2026-11-15; product v3.0.3 survey at `6b9767e1`).
+
+- **Evidence:** items (a)-(l) and (r) are now their own rows; (f)'s `/Analog/-5V` half is fixed (a0c24476, `netnames.py:41-61` reads the leaf), its remainder stays open in its row.
+
+## 2026-11-15 — KH-710: Wave 3b Part B follow-up notes (umbrella)
+
+**Severity:** LOW
+**Closed:** Split into KH-1151..KH-1162 (tracker edit approved by the user 2026-11-15; product v3.0.3 survey at `6b9767e1`).
+
+- **Evidence:** items (a)-(c), (e)-(j) and the 2026-10-29 close-triage riders are now their own rows; (d) was fixed by 24d60d4f (Wave 4 Part B). Per the product survey (e) and (f) are unreachable on the corpus; they stay open as real defects.
+
+## 2026-11-15 — KH-495: periphery minors from the review-period bug hunt (review B) — SPICE top-level JSON list traceback, generic values pass `is_real_mpn`, EMC stderr count pre-`--compact`, and ten unverified items
+
+**Severity:** LOW
+**Closed:** Split into KH-1163..KH-1174 (tracker edit approved by the user 2026-11-15; product v3.0.3 survey at `6b9767e1`).
+
+- **Evidence:** the SPICE top-level JSON-list traceback is fixed (8a4665c7, Wave 11a); the EMC stderr count, the `is_real_mpn` item and the ten riders are now their own rows (riders still unverified unless the row says so).
+
+## 2026-11-15 — KH-364: connectivity graph never joins tracks to zone fill (and ignores arc tracks) (audit KHPA-005 subset)
+
+**Severity:** MEDIUM
+**Closed:** Merged into KH-751 (item (c)) (product v3.0.3 survey at `6b9767e1`; tracker edit approved by the user 2026-11-15).
+
+- **Evidence:** the open residue (fill-only zone nodes) is KH-751 item (c); arcs / track-track (6f99b5cb) and track-in-zone (1c71826e, f38aceb7) were fixed in Waves 3 / 4B.
+
+## 2026-11-15 — KH-915: EP-AUD and EG-001 list NC-type connector pins as unprotected signal nets
+
+**Severity:** LOW (info-level EP-AUD lists and EG-001 `unprotected_nets` text)
+**Closed:** Already fixed (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** eca70eb2 (`domain_detectors.py:2460-2463` `_nc_pins_only`; `cross_analysis.py:405`), shipped in v3.0.2.
+- **Note:** the legacy `unconnected` NC spelling stays open as KH-1016.
+
+## 2026-11-15 — KH-906: `analysis_cache.load_manifest` still opens `analysis/manifest.json` following links and unbounded
+
+**Severity:** LOW
+**Closed:** Already fixed (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** fa16a325 + 5c8c73ef (`analysis_cache.py:189` `MAX_MANIFEST_BYTES`, `:213-215` capped read, `:188-208` link / FIFO refused), shipped in v3.0.2.
+
+## 2026-11-15 — KH-981: `.kicad-happy.json` `analysis.output_dir` accepts absolute and `../` paths, so `capability_mode.json` (and the cache dir derived from it) can be written outside the project
+
+**Severity:** LOW
+**Closed:** Already fixed (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** fa16a325 (`project_config.py:373-377` refuses an absolute or `..` `analysis.output_dir`), shipped in v3.0.2.
+- **Note:** the cwd-relative half is KH-793 (open).
+
+## 2026-11-15 — KH-1071: `detect_transistor_circuits` reports none of the five BUZ11 MOSFETs on Strandjungs although their pins are named G / D / S
+
+**Severity:** MEDIUM (a driven MOSFET stage is invisible to the transistor-circuit findings and to everything that reads them, e.g. flyback-diode pairing)
+**Closed:** Not a bug (user ruling 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** the five BUZ11 on Strandjungs are reported as LD-DET (`enrich_transistor_led_drivers`, `signal_detectors.py:3822-3890`, `has_flyback_diode` true), each with its own flyback diode.
+- **Note:** lock FND-00001593-AST-03 re-anchored from `detect_transistor_circuits` to `detect_led_drivers` and graduated (D7 once; `incorrect_review` recorded); run_checks on the repo 100 %.
+
+## 2026-11-15 — KH-437: `trust_summary.provenance_coverage_pct` 0.0 / `trust_level: low` on pcb / emc / thermal / lifecycle while every finding is `deterministic` (Aug B13, still open)
+
+**Severity:** LOW-MEDIUM (trust rollup contradicts the findings it summarises; consumers keyed on `trust_level` down-rank deterministic output)
+**Closed:** Not a bug (user ruling 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** `provenance_coverage_pct` 0.0 matches its documented contract.
+
+## 2026-11-15 — KH-634: `search_lcsc` overwrites a JLCPCB stock of 0 with LCSC warehouse stock after filtering and sorting, so displayed stock disagrees with `--in-stock` / `--sort stock`
+
+**Severity:** MEDIUM (LCSC search CLI; not the sync path)
+**Closed:** Fixed except by-design residue (user ruling 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** 317f5224 enriches unknown keyword stock before `--in-stock` / `--sort stock` when `--details` is given; without `--details` unknown stock still filters as 0, by design.
+- **Note:** the product adds a one-line SKILL / help note in Wave 12a.
+
+## 2026-11-15 — KH-328: `wrap_result.py` helper missing from datasheets skill
+
+**Severity:** LOW
+**Closed:** Moved to the roadmap (plan approved by the user 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** a new `wrap_result` helper, not a defect.
+
+## 2026-11-15 — KH-855: detector-family move deferred — signal / domain / validation detectors stay in their current modules
+
+**Severity:** LOW (architecture, deferred by ruling; no behaviour change)
+**Closed:** Moved to the roadmap (plan approved by the user 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** detector-family move (architecture), not a defect.
+
+## 2026-11-15 — KH-856: `what_if` engine extraction deferred until KH-826 / 827 / 828 and the sweep / corner vectors land
+
+**Severity:** LOW (architecture, deferred by ruling)
+**Closed:** Moved to the roadmap (plan approved by the user 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** what_if extraction (architecture), not a defect.
+
+## 2026-11-15 — KH-857: distributor vendor-client extraction deferred until recorded SPICE request/response fixtures exist
+
+**Severity:** LOW (architecture, deferred by ruling)
+**Closed:** Moved to the roadmap (plan approved by the user 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** vendor-client extraction (architecture), not a defect.
+
+## 2026-11-15 — KH-859: SPICE subcircuit kinds have no single registry
+
+**Severity:** LOW (architecture, deferred by ruling)
+**Closed:** Moved to the roadmap (plan approved by the user 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** SPICE kind registry (architecture), not a defect.
+
+## 2026-11-15 — KH-860: the Action entrypoint has no Python runner
+
+**Severity:** LOW (architecture, deferred by ruling; harness-coupled)
+**Closed:** Moved to the roadmap (plan approved by the user 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** Action Python runner, not a defect.
+
+## 2026-11-15 — KH-861: `build_connectivity_graph` stays in `pcb.presentation` — moving it needs two harness patch targets moved first
+
+**Severity:** LOW (architecture, deferred by ruling; harness-coordinated)
+**Closed:** Moved to the roadmap (plan approved by the user 2026-11-15) (product v3.0.3 survey at `6b9767e1`; record `.superpowers/sdd/2026-11-15-v3.0.3-planning/` (survey/, RULINGS-v3.0.3.md) in the product repo).
+
+- **Evidence:** `build_connectivity_graph` location (architecture), not a defect.
+- **Note:** harness checkpoint done 2026-11-15: `tests/test_kh_v22x_pcb.py` patches the function in whichever of `pcb.presentation` / `pcb.pipeline` binds it, so the move needs no harness change; `tests/test_api_migration.py:427-438` scans a synthetic file and is location-independent; the product API inventory re-keys at the next re-baseline.
+
 ## 2026-11-13 — TH-113: `generate_validation_md.py` read KH-1000 and up as three-digit ids
 
 **Severity:** MEDIUM (wrong issue counts in a release document)

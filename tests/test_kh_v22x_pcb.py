@@ -7,6 +7,7 @@ populated inside that function before any CLI/envelope wrapping.
 
 TIER = "unit"
 
+import contextlib
 import os
 import sys
 from pathlib import Path
@@ -24,6 +25,21 @@ import schematic.pipeline as asch
 # by name, so patches must land on the owning modules (spec §13).
 import pcb.reader as pcb_reader
 import pcb.presentation as pcb_presentation
+
+
+@contextlib.contextmanager
+def _patch_connectivity_graph(**kw):
+    """Patch build_connectivity_graph wherever the PCB pipeline binds it: presentation
+    today, pipeline once the product moves it (KH-861)."""
+    in_pres = hasattr(pcb_presentation, "build_connectivity_graph")
+    in_pipe = hasattr(ap, "build_connectivity_graph")
+    assert in_pres or in_pipe, "build_connectivity_graph is in neither pcb.presentation nor pcb.pipeline"
+    with contextlib.ExitStack() as stack:
+        if in_pres:
+            stack.enter_context(patch.object(pcb_presentation, "build_connectivity_graph", **kw))
+        if in_pipe:
+            stack.enter_context(patch.object(ap, "build_connectivity_graph", **kw))
+        yield
 
 _SIMPLE_SCH_FIXTURE = _HARNESS / "tests" / "fixtures" / "simple-project" / "simple.kicad_sch"
 
@@ -170,8 +186,7 @@ def test_connectivity_graph_failure_surfaces_error_note(tmp_path):
     pcb = tmp_path / "vp001.kicad_pcb"
     pcb.write_text(_vp001_board())
 
-    with patch.object(pcb_presentation, "build_connectivity_graph",
-                       side_effect=RuntimeError("boom")):
+    with _patch_connectivity_graph(side_effect=RuntimeError("boom")):
         result = ap.analyze_pcb(str(pcb), include_trace_segments=True)
 
     assert "connectivity_graph" not in result

@@ -87,6 +87,21 @@ def _count_footprints_pcb(path):
         return 0
 
 
+def _format_version(path):
+    """The `(version N)` token near the top of a .kicad_sch / .kicad_pcb, or None."""
+    try:
+        with open(path, "rb") as f:
+            m = re.search(rb"\(version (\d+)\)", f.read(4096))
+        return int(m.group(1)) if m else None
+    except OSError:
+        return None
+
+
+def _max_version(current, path):
+    v = _format_version(path)
+    return v if current is None or (v is not None and v > current) else current
+
+
 CLONE_TIMEOUT_S = 180   # a ~200 MB packed repo needs ~80 s on a home connection (TH-038)
 
 
@@ -117,6 +132,8 @@ def _scan_repo(repo_dir):
         "total_footprints": 0,
         "max_components_per_file": 0,
         "schematic_files": [],  # (path, component_count) tuples
+        "max_sch_version": None,  # newest .kicad_sch / .kicad_pcb format seen
+        "max_pcb_version": None,
     }
 
     for root, dirs, files in os.walk(repo_dir):
@@ -133,6 +150,7 @@ def _scan_repo(repo_dir):
                 result["total_components"] += count
                 result["max_components_per_file"] = max(result["max_components_per_file"], count)
                 result["schematic_files"].append((str(fpath.relative_to(repo_dir)), count))
+                result["max_sch_version"] = _max_version(result["max_sch_version"], fpath)
 
             elif suffix in LEGACY_SCH_EXTS:
                 if _is_kicad_legacy_sch(fpath):
@@ -146,6 +164,7 @@ def _scan_repo(repo_dir):
                 fp_count = _count_footprints_pcb(fpath)
                 result["kicad_pcb_files"] += 1
                 result["total_footprints"] += fp_count
+                result["max_pcb_version"] = _max_version(result["max_pcb_version"], fpath)
 
             elif suffix in GERBER_EXTS:
                 result["has_gerbers"] = True
@@ -366,6 +385,8 @@ def main():
                 "kicad_pcb_files": scan["kicad_pcb_files"],
                 "has_gerbers": scan["has_gerbers"],
                 "quality_score": scan["quality_score"],
+                "max_sch_version": scan["max_sch_version"],
+                "max_pcb_version": scan["max_pcb_version"],
             }
             passed.append(cand_out)
 

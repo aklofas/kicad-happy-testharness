@@ -20,6 +20,7 @@ import argparse
 import fnmatch
 import json
 import os
+import re
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -38,7 +39,10 @@ def parse_repos_md(path: Path) -> list[dict]:
         - https://github.com/user/repo (shallow)
         - https://github.com/user/repo @ abc123
         - https://github.com/user/repo
+        - https://github.com/user/repo @ <full sha> (as user/repo@<sha7>)
 
+    The last form is a second entry of the same upstream (an upgrade pair): its own
+    repos/ dir, reference/ tree and outputs, named `<url name>@<sha prefix>`.
     Lines starting with # are category headers. Everything else is ignored.
     """
     repos = []
@@ -58,6 +62,12 @@ def parse_repos_md(path: Path) -> list[dict]:
 
         text = stripped[2:].strip()  # remove "- "
 
+        name = None
+        m = _AS_RE.search(text)
+        if m:
+            name = m.group(1)
+            text = (text[:m.start()] + text[m.end():]).strip()
+
         # Extract (shallow) flag
         shallow = "(shallow)" in text
         text = text.replace("(shallow)", "").strip()
@@ -72,12 +82,11 @@ def parse_repos_md(path: Path) -> list[dict]:
             url = text.strip()
 
         if url.startswith("http"):
-            repos.append({
-                "url": url,
-                "hash": commit_hash,
-                "shallow": shallow,
-                "category": category,
-            })
+            entry = {"url": url, "hash": commit_hash, "shallow": shallow, "category": category}
+            if name is not None:
+                _check_second_entry(name, url, commit_hash)
+                entry["name"] = name
+            repos.append(entry)
 
     return repos
 
@@ -86,6 +95,23 @@ def _repo_name_from_url(url: str) -> str:
     """Extract owner/repo name from URL."""
     parts = url.rstrip("/").removesuffix(".git").split("/")
     return f"{parts[-2]}/{parts[-1]}"
+
+
+_AS_RE = re.compile(r"\(as ([^()\s]+)\)")
+
+
+def _check_second_entry(name, url, commit_hash):
+    """A second entry is named `<url name>@<prefix of its own pin>` (>= 7 hex chars)."""
+    base, _, sha = name.partition("@")
+    if (base != _repo_name_from_url(url) or not re.fullmatch(r"[0-9a-f]{7,40}", sha)
+            or not commit_hash or not commit_hash.startswith(sha)):
+        raise ValueError(f"repos.md second entry {name!r} must be "
+                         f"'{_repo_name_from_url(url)}@<prefix of {commit_hash}>'")
+
+
+def entry_name(entry) -> str:
+    """repos/ dir name of a repos.md entry: its `(as ...)` name, else owner/repo of the URL."""
+    return entry.get("name") or _repo_name_from_url(entry["url"])
 
 
 def pin_hash_in_repos_md(url: str, full_hash: str):
@@ -104,7 +130,8 @@ def pin_hash_in_repos_md(url: str, full_hash: str):
         # Extract URL (strip existing hash if present)
         line_url = clean.split(" @ ")[0].strip() if " @ " in clean else clean
 
-        if line_url != url:
+        # a second entry's pin is its identity: never re-pinned
+        if line_url != url or _AS_RE.search(clean):
             continue
 
         new_line = f"- {line_url} @ {full_hash}"
@@ -203,7 +230,7 @@ def _filter_repos(repos, filter_str):
         return repos
     patterns = [p.strip() for p in filter_str.split(",")]
     return [r for r in repos
-            if any(fnmatch.fnmatch(_repo_name_from_url(r["url"]), p)
+            if any(fnmatch.fnmatch(entry_name(r), p)
                    for p in patterns)]
 
 
@@ -221,7 +248,7 @@ def clone_repos(repos, limit):
 
     for repo in repos:
         url = repo["url"]
-        repo_name = _repo_name_from_url(url)
+        repo_name = entry_name(repo)
         dest = CLONE_DIR / repo_name
 
         if dest.exists():
@@ -278,11 +305,14 @@ def clone_repos(repos, limit):
 def _check_one_repo(repo, do_fetch):
     """Check one repo for updates. Returns result dict."""
     url = repo["url"]
-    repo_name = _repo_name_from_url(url)
+    repo_name = entry_name(repo)
     pinned_hash = repo.get("hash")
     repo_dir = CLONE_DIR / repo_name
 
     entry = {"name": repo_name, "url": url, "pinned": pinned_hash}
+    if repo.get("name"):
+        entry.update(remote=None, status="second-entry")   # pinned by design; no ls-remote
+        return entry
 
     if do_fetch and repo_dir.exists():
         fetch_local(repo_dir)
@@ -329,7 +359,7 @@ def check_updates(repos, do_fetch, do_pin, as_json, jobs=8):
                 print(f"  [{done}/{total}] checked...", flush=True)
 
     # Sort results back to original order
-    name_order = {_repo_name_from_url(r["url"]): i for i, r in enumerate(repos)}
+    name_order = {entry_name(r): i for i, r in enumerate(repos)}
     results.sort(key=lambda e: name_order.get(e["name"], 0))
 
     # Pin hashes (must be sequential — writes to same file)

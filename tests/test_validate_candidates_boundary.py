@@ -54,3 +54,26 @@ def test_clone_timeout_default_and_flag_reach_the_clone(monkeypatch, tmp_path):
     vc.validate_one(OK, str(tmp_path), 10)
     vc.validate_one(OK, str(tmp_path), 10, clone_timeout=300)
     assert seen == [180, 300]
+
+
+def test_scan_records_max_format_versions(tmp_path):
+    (tmp_path / "a.kicad_sch").write_text('(kicad_sch\n\t(version 20260306)\n\t(lib_id "x")\n)\n')
+    (tmp_path / "b.kicad_sch").write_text('(kicad_sch (version 20211123) (lib_id "y"))\n')
+    (tmp_path / "c.kicad_pcb").write_text('(kicad_pcb\n\t(version 20260206)\n)\n')
+    scan = vc._scan_repo(tmp_path)
+    assert scan["max_sch_version"] == 20260306
+    assert scan["max_pcb_version"] == 20260206
+    assert vc._scan_repo(tmp_path / "nothing")["max_sch_version"] is None
+
+
+def test_validated_record_carries_format_versions(tmp_path, monkeypatch):
+    scan = {**vc._scan_repo(tmp_path), "total_components": 9, "kicad_sch_files": 1,
+            "max_sch_version": 20260306, "quality_score": 50}
+    monkeypatch.setattr(vc, "validate_one", lambda c, *a: (c, scan, "pass"))
+    cands, out = tmp_path / "c.json", tmp_path / "v.json"
+    cands.write_text('[{"owner": "acme", "repo": "board", "url": "https://github.com/acme/board"}]')
+    monkeypatch.setattr(sys, "argv", ["validate_candidates.py", "--input", str(cands), "--output", str(out), "--jobs", "1"])
+    vc.main()
+    import json
+    rec = json.loads(out.read_text())[0]["validation"]
+    assert rec["max_sch_version"] == 20260306 and rec["max_pcb_version"] is None
