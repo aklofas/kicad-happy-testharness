@@ -255,13 +255,15 @@ def _make_candidate(full_name, repo_data, source, has_kicad_files=True):
     }
 
 
-def search_code(existing):
+def search_code(existing, terms=""):
     """Strategy A: Code search for extension:kicad_sch and extension:kicad_pcb.
 
-    Date-sharded to bypass the 1,000-result limit per query.
+    `terms` are extra code-search terms (e.g. '"generator_version" "10.0"').
+    Size-sharded to bypass the 1,000-result limit per query.
     Returns candidate dicts for repos NOT in existing set.
     """
-    print("=== Code search (extension:kicad_sch + kicad_pcb) ===")
+    print(f"=== Code search ({terms + ' ' if terms else ''}extension:kicad_sch + kicad_pcb) ===")
+    prefix = urllib.parse.quote_plus(terms) + "+" if terms else ""
 
     # Collect unique repo full_names from code search
     seen_repos = {}  # full_name_lower -> repo_data from code search
@@ -269,7 +271,7 @@ def search_code(existing):
 
     for ext in ["kicad_sch", "kicad_pcb"]:
         for lo, hi in CODE_SEARCH_SHARDS:
-            query = f"extension:{ext}+size:{lo}..{hi}"
+            query = f"{prefix}extension:{ext}+size:{lo}..{hi}"
             print(f"  {ext} size:{lo}..{hi}", end="", flush=True)
 
             items = _search_paginated(
@@ -717,6 +719,10 @@ def main():
                         help="Limit output to top N candidates (by stars)")
     parser.add_argument("--json", action="store_true",
                         help="Print full JSON to stdout")
+    parser.add_argument("--query", default="",
+                        help="Extra code-search terms for the code strategy")
+    parser.add_argument("--out", type=Path, default=CANDIDATES_FILE,
+                        help=f"Candidates file (default {CANDIDATES_FILE})")
     args = parser.parse_args()
 
     # Determine what to run
@@ -741,7 +747,7 @@ def main():
 
     if run_github:
         if args.all or args.strategy == "code" or args.source in ("github", "all"):
-            all_candidates.extend(search_code(existing))
+            all_candidates.extend(search_code(existing, args.query))
         if args.all or args.strategy == "topic" or args.source in ("github", "all"):
             all_candidates.extend(search_topics(existing))
         if args.all or args.strategy == "keyword" or args.source in ("github", "all"):
@@ -769,9 +775,9 @@ def main():
     print_summary(candidates)
 
     # Write output
-    CANDIDATES_FILE.parent.mkdir(parents=True, exist_ok=True)
-    CANDIDATES_FILE.write_text(json.dumps(candidates, indent=2) + "\n", encoding="utf-8")
-    print(f"\nWrote {len(candidates)} candidates to {CANDIDATES_FILE}")
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(candidates, indent=2) + "\n", encoding="utf-8")
+    print(f"\nWrote {len(candidates)} candidates to {args.out}")
 
     if args.json:
         json.dump(candidates, sys.stdout, indent=2)
