@@ -77,3 +77,27 @@ def test_validated_record_carries_format_versions(tmp_path, monkeypatch):
     import json
     rec = json.loads(out.read_text())[0]["validation"]
     assert rec["max_sch_version"] == 20260306 and rec["max_pcb_version"] is None
+
+
+FP = '(footprint "R:R_0603" (layer "F.Cu") (property "Reference" "R1") (pad "1" smd rect))'
+
+
+@pytest.mark.parametrize("board, expected", [
+    # KiCad 8+ writes tabs
+    (f'(kicad_pcb\n\t(version 20240108)\n\t{FP}\n\t{FP}\n)\n', 2),
+    # KiCad 6/7 write two spaces
+    (f'(kicad_pcb (version 20221018)\n  {FP}\n  {FP}\n  {FP}\n)\n', 3),
+    # KiCad 5 says (module
+    ('(kicad_pcb (version 20171130)\n  (module R_0603 (layer F.Cu) (fp_text reference R1))\n)\n', 1),
+    # generated boards: no indent, deep indent, everything on one line
+    (f'(kicad_pcb (version 20240108)\n{FP}\n            {FP}\n)\n', 2),
+    (f'(kicad_pcb (version 20240108) {FP} {FP} {FP} {FP})', 4),
+    ('(\n  kicad_pcb\n  (\n    footprint\n    "A"\n  )\n  (\n    module\n    B\n  )\n)\n', 2),
+    # a footprint name inside a string, and a (footprint property nested in a footprint, are not counted
+    ('(kicad_pcb (version 20240108)\n\t(gr_text "(footprint x" (at 0 0))\n'
+     '\t(footprint "A" (layer "F.Cu") (footprint "nested"))\n)\n', 1),
+])
+def test_footprint_count_is_depth_based(tmp_path, board, expected):
+    p = tmp_path / "b.kicad_pcb"
+    p.write_text(board)
+    assert vc._count_footprints_pcb(p) == expected

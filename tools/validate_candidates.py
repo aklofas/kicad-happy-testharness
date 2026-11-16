@@ -78,13 +78,30 @@ def _count_components_legacy_sch(path):
         return 0
 
 
+_PCB_TOKEN = re.compile(r'"(?:\\.|[^"\\])*"|\(\s*(?:footprint|module)(?=[\s)])|[()]')
+
+
 def _count_footprints_pcb(path):
-    """Count footprint instances in a .kicad_pcb file."""
+    """Count footprint instances in a .kicad_pcb file.
+
+    Counts `(footprint` (KiCad 5: `(module`) directly under `(kicad_pcb`, by paren depth
+    with strings skipped: KiCad indents with tabs or spaces by version, and generated
+    boards are indented any way (or one token per line).
+    """
     try:
         text = path.read_text(errors="ignore", encoding="utf-8")
-        return len(re.findall(r"^\s{2}\(footprint ", text, re.MULTILINE))
     except (OSError, IOError):
         return 0
+    depth = count = 0
+    for m in _PCB_TOKEN.finditer(text):
+        tok = m.group()
+        if tok == ")":
+            depth -= 1
+        elif tok[0] == "(":
+            depth += 1
+            if depth == 2 and len(tok) > 1:
+                count += 1
+    return count
 
 
 def _format_version(path):

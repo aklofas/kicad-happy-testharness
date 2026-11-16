@@ -11,6 +11,15 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-15 — TH-117: `validate_candidates.py` counted footprints only on two-space-indented KiCad 6/7 boards
+
+**Severity:** LOW (informational field; `total_footprints` feeds neither the quality score nor the classification)
+**File:** `tools/validate_candidates.py` (`_count_footprints_pcb`)
+**Discovered:** 2026-11-15, v3.0.3 Track H corpus refresh, reading the validator while adding the format-version fields.
+**Root cause:** the counter was the regex `^\s{2}\(footprint `, which only fits the KiCad 6/7 writer. KiCad 8+ indents with one tab, KiCad 5 writes `(module`, and generated boards (ergogen, scripts) use no indent, deep indents or one token per line. On a 1,500-board random corpus sample the old count matched the analyzer's footprint count on 581 (KiCad 5: 55 / 456; KiCad 8+: 105 / 615), so every candidate's recorded `total_footprints` was mostly an undercount.
+**Fix:** count `(footprint` / `(module` directly under `(kicad_pcb` by paren depth, with strings skipped and whitespace allowed after the paren.
+**Verification:** `tests/test_validate_candidates_boundary.py::test_footprint_count_is_depth_based` (7 cases: tab, two-space, `(module`, unindented / deep, one line, one token per line, footprint text in a string and a nested `(footprint` not counted); the same 1,500 boards now match the analyzer on 1,500 (slowest 0.49 s for a 27.8 MB board). The batch-1 `validated600.json` footprint numbers are the old undercount; nothing read them.
+
 ## 2026-11-15 — TH-114: `checkout.py --check-updates` reported a throttled `ls-remote` as `error`, indistinguishable from a deleted repo
 
 **Severity:** LOW (a corpus update scan could not tell deleted repos from GitHub throttling)
