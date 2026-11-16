@@ -11,6 +11,15 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-15 — TH-116: `add_repos.py` without `--resume` crashed on the first result (`KeyError: 'stats'`) and recorded nothing
+
+**Severity:** MEDIUM (a fresh expansion run recorded no results and skipped every purge)
+**File:** `tools/add_repos.py` (`main`, `_update_progress`)
+**Discovered:** 2026-11-15, v3.0.3 Track H first corpus batch (100 new repos)
+**Root cause:** `main` built the progress tracker as `{"completed": [], "purged": [], "failed": []}` when `--resume` was not given, without the `stats` block that `_update_progress` increments, so the first finished repo raised `KeyError`. The `ProcessPoolExecutor` context then waited for every queued pipeline, so all 100 ran to completion with no result recorded, no progress file and no post-run purge of repos without KiCad files.
+**Fix:** `fresh_progress()` returns the full empty tracker; `load_progress()` and the no-resume path both use it.
+**Verification:** `tests/test_corpus_expansion.py::test_a_fresh_run_records_results`; the batch was audited from disk (`results/v303_refresh/batch1/audit.py`): 99 of 100 complete, 1 (luskyle/kicad-mcp) stopped at the PCB stage and was then dropped from the batch; the replacement and the 50-pair run went through the fixed tool with every result recorded.
+
 ## 2026-11-15 — TH-115: every schematic batch run re-read the whole corpus output tree for its detector summary
 
 **Severity:** LOW (performance; ~100 s of CPU per `run_schematic.py --repo` call)

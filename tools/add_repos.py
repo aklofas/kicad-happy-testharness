@@ -53,6 +53,11 @@ def load_progress():
     """Load progress tracker from disk."""
     if PROGRESS_FILE.exists():
         return json.loads(PROGRESS_FILE.read_text(encoding="utf-8"))
+    return fresh_progress()
+
+
+def fresh_progress():
+    """An empty progress tracker (a run without --resume starts from this)."""
     return {
         "completed": [],
         "failed": [],
@@ -483,7 +488,7 @@ def main():
         sys.exit(1)
 
     candidates = load_candidates(args.input, args.limit)
-    progress = load_progress() if args.resume else {"completed": [], "purged": [], "failed": []}
+    progress = load_progress() if args.resume else fresh_progress()
 
     # Filter out already-completed repos
     completed_set = set(progress["completed"] + progress["purged"]

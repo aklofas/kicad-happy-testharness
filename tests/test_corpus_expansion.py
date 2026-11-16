@@ -54,3 +54,12 @@ def test_pipeline_stops_at_a_failed_required_stage(tmp_path, monkeypatch):
     res = add_repos._pipeline_one_repo("o/r", skip_spice=True, skip_emc=True)
     assert res["status"] == "failed" and res["error"] == "schematic failed"
     assert calls == ["Clone", "Discover", "Schematic analysis"]   # no PCB/gerber in the repo
+
+
+def test_a_fresh_run_records_results(tmp_path, monkeypatch):
+    """TH-116: without --resume the progress dict had no `stats`, so the first result raised KeyError."""
+    monkeypatch.setattr(add_repos, "PROGRESS_FILE", tmp_path / "p.json")
+    progress = add_repos.fresh_progress()
+    add_repos._update_progress(progress, {"repo": "o/r", "status": "failed", "error": "x"})
+    add_repos._update_progress(progress, {"repo": "o/s", "status": "ok"})
+    assert progress["stats"]["total_failed"] == 1 and progress["stats"]["total_succeeded"] == 1
