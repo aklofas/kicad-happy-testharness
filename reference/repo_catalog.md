@@ -1,46 +1,46 @@
 # Repo Catalog
 
-6008 repos | Generated 2026-11-15
+6180 repos | Generated 2026-11-16
 
 ## KiCad Generations
 
 | Generation | Count |
 |-----------|------:|
-| kicad10 | 105 |
+| kicad10 | 202 |
 | kicad5 | 619 |
 | kicad6 | 627 |
 | kicad7 | 712 |
 | kicad8 | 6 |
 | kicad9 | 29 |
-| mixed | 3888 |
+| mixed | 3963 |
 | unknown | 22 |
 
 ## Categories
 
 | Category | Count |
 |----------|------:|
-| Miscellaneous KiCad projects | 1914 |
-| Keyboards | 453 |
-| Synthesizers / audio | 329 |
-| Motor controllers / robotics | 319 |
-| LED / display | 307 |
-| ESP32 | 300 |
-| Arduino recreations | 297 |
-| Networking / radio / SDR | 259 |
-| Sensor boards / IoT | 250 |
-| Retro computing | 244 |
-| USB / interface adapters | 215 |
-| Power / battery | 207 |
-| RP2040 / Raspberry Pi | 194 |
-| STM32 | 181 |
+| Miscellaneous KiCad projects | 2024 |
+| Keyboards | 461 |
+| Synthesizers / audio | 335 |
+| Motor controllers / robotics | 321 |
+| LED / display | 312 |
+| ESP32 | 312 |
+| Arduino recreations | 301 |
+| Networking / radio / SDR | 264 |
+| Sensor boards / IoT | 254 |
+| Retro computing | 246 |
+| USB / interface adapters | 216 |
+| Power / battery | 209 |
+| RP2040 / Raspberry Pi | 199 |
+| STM32 | 183 |
 | ADC / DAC / measurement | 110 |
-| RISC-V / FPGA | 92 |
+| RISC-V / FPGA | 94 |
 | Uncategorized | 66 |
 | SparkFun boards | 58 |
 | Test equipment / debug tools | 56 |
-| General collections | 41 |
+| General collections | 42 |
 | CubeSat / aerospace | 39 |
-| SBCs / carrier boards | 33 |
+| SBCs / carrier boards | 34 |
 | Well-known hardware projects | 26 |
 | Smartwatches / wearables | 16 |
 | Misc quality projects | 2 |
@@ -49,41 +49,42 @@
 
 | Tag | Count |
 |-----|------:|
-| has_pcb | 5851 |
-| has_emc | 5830 |
-| has_spice | 4866 |
-| mixed | 3888 |
-| 2_layer | 3719 |
-| hierarchical | 3521 |
-| medium | 3245 |
-| power | 3119 |
-| has_gerbers | 2267 |
-| large | 1308 |
-| small | 1191 |
-| 4_layer | 1113 |
-| analog | 770 |
+| has_pcb | 6023 |
+| has_emc | 6001 |
+| has_spice | 5024 |
+| mixed | 3963 |
+| 2_layer | 3793 |
+| hierarchical | 3674 |
+| medium | 3307 |
+| power | 3253 |
+| has_gerbers | 2336 |
+| large | 1379 |
+| small | 1197 |
+| 4_layer | 1175 |
+| analog | 813 |
 | kicad7 | 712 |
+| digital_interfaces | 652 |
 | kicad6 | 627 |
 | kicad5 | 619 |
 | legacy_schematic | 619 |
-| digital_interfaces | 613 |
-| keyboard | 433 |
-| rf | 345 |
-| xlarge | 264 |
-| 1_layer | 231 |
-| motor_driver | 147 |
-| 6_layer | 119 |
-| kicad10 | 105 |
-| 3_layer | 51 |
+| keyboard | 446 |
+| rf | 366 |
+| xlarge | 297 |
+| 1_layer | 232 |
+| kicad10 | 202 |
+| motor_driver | 155 |
+| 6_layer | 129 |
+| 3_layer | 53 |
 | kicad9 | 29 |
-| 5_layer | 27 |
-| 8_layer | 25 |
+| 5_layer | 29 |
+| 8_layer | 28 |
 | unknown | 22 |
-| 10_layer | 6 |
+| 10_layer | 9 |
 | kicad8 | 6 |
 | 12_layer | 4 |
 | 7_layer | 3 |
 | 16_layer | 1 |
+| 14_layer | 1 |
 
 ## Repos
 
@@ -104,6 +105,7 @@
 | 0x0c/nrskb_rev_1 | Keyboards | mixed | 166 | 2 | 28 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | 0x23/MicroManipulatorStepper | Motor controllers /  | mixed | 38 | 2 | 21 | 40 | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | 0x544D/kuro65 | Keyboards | mixed | 901 | 2 | 18 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| 0x9ONU/BOREALIS | Miscellaneous KiCad  | mixed | 143 | 2 | 4 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | 0xca01/qmmister-sd-relocate | Miscellaneous KiCad  | mixed | 6 | 2 | 44 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | 0xCB-dev/0xCB-micro | Keyboards | kicad6 | 37 | 4 | 46 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | 0xCB-dev/0xCB-Pluto | Arduino recreations | kicad6 | 26 | 2 | 57 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -128,6 +130,7 @@
 | 1bitsquared/1b2-adapter-collection | USB / interface adap | mixed | 42 | 2 | 31 | - | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | 1r3n33/diypgs | Arduino recreations | kicad6 | 16 | 1 | 20 | 40 | 98 | 1_layer, has_emc, has_pcb, kicad6 |
 | 1sand0s/Solder_Reflow_Oven_2.0 | STM32 | mixed | 46 | 2 | 76 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
+| 1vers1on/ht | Miscellaneous KiCad  | kicad10 | 2498 | - | 0 | 40 | 100 | analog, has_emc, has_pcb, has_spice |
 | 2008wbbv/esp32thing | ESP32 | mixed | 12 | - | 0 | 40 | 100 | has_pcb, has_spice, mixed, rf |
 | 21km43/UART-RS485 | USB / interface adap | mixed | 4 | 2 | 12 | 40 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | 22060/2025 | LED / display | mixed | 654 | 4 | 36 | 40 | 97 | 4_layer, has_emc, has_pcb, has_spice |
@@ -191,6 +194,7 @@
 | A-G-O/Orbcitos | Miscellaneous KiCad  | mixed | 13 | 2 | 17 | 40 | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | a-little-wifi/Cintiq-Companion-3 | Miscellaneous KiCad  | mixed | 170 | 2 | 7 | 40 | 79 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | A-Potion/split-keyboard | Keyboards | mixed | 117 | - | 1 | 40 | 100 | has_emc, has_pcb, has_spice, hierarchical |
+| A-Potion/split-keyboard@d9490ab | Keyboards | kicad10 | 171 | - | 14 | 40 | 10 | has_emc, has_pcb, has_spice, hierarchical |
 | a-tk/parts-files | Miscellaneous KiCad  | kicad7 | 115 | 2 | 23 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | a-v-s/wireless_ac_power_switch | Miscellaneous KiCad  | mixed | 70 | 2 | 20 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_gerbers |
 | A4091/A4092 | Miscellaneous KiCad  | mixed | 223 | 4 | 8 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -301,6 +305,7 @@
 | adli-syauqi/dagozilla-robocup-ssl-pcb | Motor controllers /  | mixed | 34 | 2 | 18 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | AdmiralAki99/R.I.O | Smartwatches / weara | kicad7 | 35 | 2 | 19 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | Adnanosman9/Smart-Gloves | ESP32 | mixed | 17 | 2 | 24 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| Adnanosman9/Smart-Gloves@490b010 | ESP32 | kicad10 | 16 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_pcb, kicad10 |
 | adnksharp/aks-arduino-module-sensors-shield | Arduino recreations | mixed | 41 | 2 | 9 | 40 | 95 | 2_layer, has_emc, has_pcb, has_spice |
 | adoble/modular-audio | Synthesizers / audio | mixed | 169 | 2 | 26 | 38 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | adoble/rusty-radio | Networking / radio / | mixed | 57 | 2 | 12 | 24 | 80 | 2_layer, has_emc, has_pcb, has_spice |
@@ -321,6 +326,7 @@
 | aeonSolutions/AeonLabs-LDAD-Essentials-For-I2C-Sensors | Arduino recreations | kicad6 | 25 | 2 | 27 | 40 | 100 | 2_layer, has_emc, has_pcb, kicad6 |
 | aeonSolutions/AeonLabs-pcb-template-esp32-s3 | ESP32 | kicad7 | 33 | 2 | 98 | - | 98 | 2_layer, has_emc, has_pcb, kicad7 |
 | aeremin/firefly_zephyr | Networking / radio / | mixed | 204 | 4 | 48 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| aerogull/arctic-video | RISC-V / FPGA | kicad10 | 530 | 8 | 9 | 48 | 100 | 8_layer, digital_interfaces, has_emc, has_pcb |
 | AerospaceNU/bms-pcb-design | Power / battery | kicad7 | 803 | 6 | 10 | 100 | 56 | 6_layer, digital_interfaces, has_emc, has_gerbers |
 | AerospaceVillage/avBadge_2022 | LED / display | mixed | 107 | 2 | 22 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
 | aesirkth/euroc24_electronics | Miscellaneous KiCad  | kicad7 | 7 | 2 | 18 | - | 100 | 2_layer, has_emc, has_pcb, kicad7 |
@@ -393,9 +399,11 @@
 | AjayPawar77/ClassD_Amplifier-kiacad | Synthesizers / audio | kicad9 | 18 | - | 0 | 40 | - | has_spice, kicad9, small |
 | ajisrawi/polarization-crpa | Miscellaneous KiCad  | mixed | 313 | 2 | 0 | 1 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ajm27pdx/ece411-group10 | Miscellaneous KiCad  | kicad6 | 20 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| ajsb85/freerouting-cli-kotlin | Miscellaneous KiCad  | mixed | 716 | 4 | 15 | 43 | 60 | 4_layer, analog, digital_interfaces, has_emc |
 | ak66666/ThumbsUp | Keyboards | mixed | 69 | 2 | 52 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | akaFunk/EMI-Test-Reciever-ESAI-Repair | Miscellaneous KiCad  | kicad5 | 12 | 1 | 14 | - | 100 | 1_layer, has_emc, has_gerbers, has_pcb |
 | akashvyom/Water-level-controller | Miscellaneous KiCad  | kicad5 | 20 | 2 | 39 | 9 | 93 | 2_layer, has_emc, has_pcb, has_spice |
+| akaStanley/HTML_Accelerator | Miscellaneous KiCad  | kicad10 | 347 | 4 | 9 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | akawaiga/InTENS | Miscellaneous KiCad  | mixed | 240 | 4 | 22 | 38 | 97 | 4_layer, analog, has_emc, has_gerbers |
 | AkBKukU/ATX2PCjr | Miscellaneous KiCad  | mixed | 6 | 2 | 12 | - | 91 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Akerasoft/AS-NROM-368 | Miscellaneous KiCad  | kicad7 | 19 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -514,6 +522,7 @@
 | AllenNeuralDynamics/harp.device.quad-dac | ADC / DAC / measurem | mixed | 510 | 4 | 11 | 40 | 98 | 4_layer, analog, has_emc, has_gerbers |
 | allisonmb/game-gear | Miscellaneous KiCad  | mixed | 243 | 4 | 30 | 13 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | allogic/FuseBox | LED / display | mixed | 331 | - | 2 | 72 | 100 | analog, has_emc, has_pcb, has_spice |
+| allogic/SIGMAGE | Miscellaneous KiCad  | kicad10 | 1450 | 6 | 10 | 65 | 92 | 6_layer, analog, has_emc, has_gerbers |
 | Allorx/PCB-Design | Keyboards | kicad6 | 262 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | AllStarLink/Voter | Networking / radio / | kicad6 | 418 | - | 0 | 38 | - | analog, digital_interfaces, has_spice, hierarchical |
 | alltheworld/tp4056 | Power / battery | mixed | 40 | 1 | 45 | 40 | 100 | 1_layer, has_emc, has_pcb, has_spice |
@@ -542,6 +551,8 @@
 | alvarop/ostur | Sensor boards / IoT | mixed | 89 | 4 | 31 | 70 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | alx-alexpark/AmogusRP2040 | RP2040 / Raspberry P | mixed | 42 | 2 | 62 | 40 | 97 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | ALXCO-Hardware/squareboi | Miscellaneous KiCad  | mixed | 178 | 2 | 31 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| alxgmpr/moisture-sensor | Miscellaneous KiCad  | kicad10 | 337 | 4 | 54 | 100 | 53 | 4_layer, has_emc, has_pcb, has_spice |
+| alxgmpr/sierra-to-usb | RP2040 / Raspberry P | kicad10 | 1538 | - | 2 | 100 | 56 | digital_interfaces, has_emc, has_pcb, has_spice |
 | am-a3/audio_development_board | Synthesizers / audio | mixed | 179 | 4 | 10 | 40 | 100 | 4_layer, analog, has_emc, has_pcb |
 | am009/3key-ble-v2 | Keyboards | kicad6 | 8 | 2 | 34 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | AM1NOM/ImageRecognitionGlasses | Miscellaneous KiCad  | mixed | 7 | 2 | 14 | - | 100 | 2_layer, has_emc, has_pcb, mixed |
@@ -604,6 +615,7 @@
 | AndreasFMueller/Tracker | Motor controllers /  | kicad5 | 16 | 2 | 33 | 0 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | andreigerashchenko/ENGS129-Pulse-Oximeter | Miscellaneous KiCad  | mixed | 50 | - | 0 | 40 | 100 | analog, has_emc, has_pcb, has_spice |
 | andreisperid/E-TKT | Motor controllers /  | unknown | 0 | - | - | - | - | small, unknown |
+| AndreiVladescu/LibrePLC32 | Miscellaneous KiCad  | kicad10 | 577 | 4 | 12 | 97 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | andres-garcia-alves/electronics-speaker-upgrade | Synthesizers / audio | mixed | 36 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | andres-perez0/MCU-Datalogger-with-512K-EEPROM-and-Clock | Arduino recreations | mixed | 29 | 2 | 22 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | andreschaparro/udemy-learn-kicad-v6-and-stm32-hardware-design | STM32 | mixed | 32 | 4 | 24 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
@@ -639,6 +651,7 @@
 | ankurlearner1/tech-diya | Miscellaneous KiCad  | mixed | 9 | 2 | 0 | 40 | 100 | 2_layer, has_gerbers, has_pcb, mixed |
 | anlumo/ESP6288-RS232 | ESP32 | kicad5 | 18 | 2 | 14 | 0 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | AnmolS-EE/ESP32-IOT-PCB | ESP32 | kicad10 | 100 | 2 | 4 | 40 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
+| annegautham/IEEE_TechnicalProgram_2026 | Miscellaneous KiCad  | mixed | 1118 | 10 | - | 59 | 82 | 10_layer, analog, has_pcb, hierarchical |
 | anneosaur/paper-sunshine-clock | Miscellaneous KiCad  | mixed | 131 | 2 | 24 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | anno73/IoT-Universal-Socket-Strip | ESP32 | mixed | 22 | 2 | 29 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | anobli/pandora-hw | Networking / radio / | mixed | 151 | 4 | 14 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -650,6 +663,7 @@
 | Ansel84/BMW-E30-Gauge-Cluster-Early-Model | Miscellaneous KiCad  | mixed | 160 | 2 | 33 | 38 | 84 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ansemjo/luftctl | ESP32 | kicad6 | 41 | 2 | 30 | 52 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | anshitmishra/breadboard_power_supply_kicad | Power / battery | mixed | 17 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| Anteater-Electric-Racing/electrical-pcbs | Miscellaneous KiCad  | mixed | 2159 | 4 | 16 | 78 | 98 | 4_layer, has_emc, has_gerbers, has_pcb |
 | Antebios/keyboards | Keyboards | kicad7 | 667 | 2 | 33 | 40 | 99 | 2_layer, has_emc, has_pcb, hierarchical |
 | AnterCreeper/pdaltmode | LED / display | mixed | 174 | 4 | 16 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | Anthilla/AnthC | Miscellaneous KiCad  | kicad10 | 239 | 4 | 37 | 100 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
@@ -689,6 +703,7 @@
 | AnuskarSenapati/gesture-controlled-transmitter | Arduino recreations | mixed | 35 | 1 | 30 | 40 | 79 | 1_layer, has_emc, has_pcb, has_spice |
 | Anyelina-01/Anyelina_Nu-ez_Micro_2025_C2 | Miscellaneous KiCad  | mixed | 79 | 2 | 7 | 40 | 78 | 2_layer, has_emc, has_gerbers, has_pcb |
 | anyshake/explorer | LED / display | mixed | 515 | 2 | 24 | 40 | 100 | 2_layer, analog, digital_interfaces, has_emc |
+| anyshake/explorer@fbdd2c4 | LED / display | kicad10 | 511 | 2 | 24 | 40 | 100 | 2_layer, analog, digital_interfaces, has_emc |
 | aoi2010/Aoishik-s-Hackpad | LED / display | mixed | 9 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | aosodoev/esp8266-doorphone | ESP32 | mixed | 94 | 2 | 28 | 40 | 96 | 2_layer, has_emc, has_pcb, has_spice |
 | AoToS/Adacus | ADC / DAC / measurem | mixed | 320 | 4 | 2 | 40 | 99 | 4_layer, analog, has_emc, has_pcb |
@@ -810,12 +825,15 @@
 | Aryaman22102002/PCB_Design_LSA | Miscellaneous KiCad  | kicad6 | 18 | 2 | 24 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | Aryan-Prakhar/demo-repo | Miscellaneous KiCad  | mixed | 81 | 2 | 14 | 40 | 90 | 2_layer, analog, has_emc, has_pcb |
 | AryanRai/CarCanCant | Miscellaneous KiCad  | mixed | 2 | - | 14 | 0 | 100 | has_emc, has_pcb, mixed, small |
+| aryanthomare/SmartKnob | Miscellaneous KiCad  | mixed | 138 | 4 | 8 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | AryeIs/DMM_Module | Miscellaneous KiCad  | mixed | 241 | 4 | 12 | 40 | 100 | 4_layer, analog, has_emc, has_pcb |
 | asanza/keithley_199 | Test equipment / deb | kicad5 | 108 | 3 | 27 | 38 | 30 | 3_layer, has_emc, has_gerbers, has_pcb |
 | Asapgiri/kbb-keyboard | Keyboards | kicad7 | 1463 | 2 | 21 | 40 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
 | asciiscry3r/brainmachine | Networking / radio / | mixed | 476 | - | 1 | 18 | 100 | analog, has_emc, has_pcb, has_spice |
+| asciiscry3r/brainmachine@8e7c985 | Networking / radio / | mixed | 523 | - | 1 | 17 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | ASDosjani/FPVBeepR_PCB | Power / battery | mixed | 34 | 3 | 39 | 40 | 100 | 3_layer, has_emc, has_pcb, has_spice |
 | aserebryakov/arduino-fun | Arduino recreations | mixed | 21 | 1 | 8 | 40 | 96 | 1_layer, has_emc, has_pcb, hierarchical |
+| ash6502/az030 | Miscellaneous KiCad  | kicad10 | 205 | 2 | 6 | 40 | 90 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ashen1queter/bRick_bReak | Keyboards | mixed | 21 | - | 20 | 40 | 68 | has_emc, has_pcb, keyboard, medium |
 | ashep/cronus | Miscellaneous KiCad  | mixed | 11 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ashep1337/KiCad_Projects | Miscellaneous KiCad  | mixed | 27 | 2 | 2 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -844,6 +862,7 @@
 | astorguy/kicad2spice | Miscellaneous KiCad  | kicad7 | 102 | - | 0 | 0 | - | analog, has_spice, hierarchical, kicad7 |
 | astralhardik/ESP32-C3-IoT-Development-Board-4-Layer- | ESP32 | mixed | 185 | 4 | 12 | 40 | 99 | 4_layer, analog, digital_interfaces, has_emc |
 | AstraOperatingSystem/hardware | Keyboards | mixed | 123 | 2 | 33 | 47 | 99 | 2_layer, analog, has_emc, has_pcb |
+| AstraOperatingSystem/hardware@8d2a358 | Keyboards | kicad10 | 163 | 4 | 54 | 50 | 99 | 4_layer, has_emc, has_pcb, has_spice |
 | ASTRO7605/schemas_cablage | LED / display | kicad7 | 114 | - | 0 | 0 | - | hierarchical, kicad7, medium |
 | AstroPlant/astroplant-hardware | Networking / radio / | kicad7 | 260 | 2 | 9 | 80 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | astuder/dAISy | Miscellaneous KiCad  | mixed | 56 | 2 | 39 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -871,10 +890,12 @@
 | AtlasFPGA/MULTICORE-ESdUDO-ROJO | STM32 | mixed | 94 | 2 | 58 | - | 99 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | AtlasFPGA/PIPICO_RELOCATOR_V03 | Synthesizers / audio | kicad6 | 22 | 2 | 100 | 40 | 98 | 2_layer, has_emc, has_pcb, kicad6 |
 | Atmelfan/pcb-adr1399-vref | Miscellaneous KiCad  | kicad6 | 17 | 2 | 30 | 70 | 100 | 2_layer, analog, has_emc, has_pcb |
+| atom-dispencer/SolenoidEngine4 | Miscellaneous KiCad  | kicad10 | 214 | 4 | 13 | 92 | 98 | 4_layer, has_emc, has_pcb, has_spice |
 | atomic14/esp32-zxspectrum-hardware | ESP32 | mixed | 121 | 4 | 46 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | Atomicbeast101/esp-breadboard-expander | ESP32 | kicad7 | 18 | 4 | 20 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | Atomicbeast101/smart-doorbell | ESP32 | mixed | 26 | 4 | 54 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | AtomicCali/ElectroTactileDigitalBrailleReader | Miscellaneous KiCad  | mixed | 33 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| atomicra1n/wifi-geiger-counter | Miscellaneous KiCad  | kicad10 | 64 | 2 | 82 | 85 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | atonizzo/seatalk_wifi | Networking / radio / | kicad7 | 40 | 2 | 32 | 100 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | atoomnetmarc/16db-speaker-attenuator | Synthesizers / audio | mixed | 11 | 2 | 32 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | atoomnetmarc/Arduino-as-ISP-shield | Arduino recreations | mixed | 17 | 2 | 38 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -930,12 +951,14 @@
 | AVSRAVITEJA/escDesign | Motor controllers /  | mixed | 32 | 2 | 33 | 40 | 96 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Avy-Dawgs/receiver-pcb | ADC / DAC / measurem | mixed | 145 | 4 | 10 | 40 | 100 | 4_layer, analog, has_emc, has_gerbers |
 | awesomesiddhu/PCB_design_files | Miscellaneous KiCad  | kicad7 | 201 | 2 | 22 | 34 | 99 | 2_layer, analog, has_emc, has_gerbers |
+| awong-dev/pager | Miscellaneous KiCad  | kicad10 | 190 | 2 | 20 | 100 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | aws/iot-expresslink | Sensor boards / IoT | kicad6 | 74 | 2 | 40 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | AX344/Metal-PCB-Business-cards | Miscellaneous KiCad  | mixed | 9 | 1 | 28 | 40 | 100 | 1_layer, has_emc, has_pcb, has_spice |
 | axello/kicad | Networking / radio / | mixed | 1603 | 4 | 20 | 40 | 97 | 4_layer, analog, has_emc, has_gerbers |
 | AxelVoitier/keebs | LED / display | mixed | 346 | 4 | 20 | 91 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | axiopaladin/BC660K-LTE-Breakout | USB / interface adap | kicad6 | 57 | - | 4 | 0 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | axoulc/hwboard-bike-computer | Miscellaneous KiCad  | mixed | 82 | 2 | 6 | 70 | 98 | 2_layer, digital_interfaces, has_emc, has_pcb |
+| axoulc/hwboard-bike-computer@ac9e0e8 | Miscellaneous KiCad  | mixed | 106 | 2 | 8 | 78 | 96 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | axpaul/Avionic-Mastodonte | Motor controllers /  | mixed | 203 | 4 | 17 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | axpaul/Avionic-Sirius | Motor controllers /  | mixed | 242 | 4 | 10 | 55 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | ayaangrover/obsidian-one | Motor controllers /  | mixed | 281 | 4 | 58 | 57 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -944,6 +967,7 @@
 | aydenvis/Ortho-Minidox-Choch-Switches | Keyboards | mixed | 141 | 2 | 22 | 40 | 85 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ayham-1/cassandra | Networking / radio / | mixed | 87 | 4 | 12 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | Aylo6061/PCBHotplate | USB / interface adap | mixed | 155 | 4 | 8 | 97 | 95 | 4_layer, analog, has_emc, has_gerbers |
+| Aylo6061/PCBHotplate@45ef3c3 | USB / interface adap | mixed | 171 | 4 | 10 | 92 | 99 | 4_layer, analog, has_emc, has_pcb |
 | ayoy/kicad-projects | Power / battery | kicad5 | 196 | 2 | 42 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | Az154za/MPB | Power / battery | mixed | 32 | - | 38 | 40 | 32 | has_emc, has_pcb, has_spice, medium |
 | Az154za/NFC_Key_chain_pcb | Miscellaneous KiCad  | mixed | 5 | 2 | 12 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -961,6 +985,7 @@
 | b1jam14/Projet-temps-reel | Miscellaneous KiCad  | mixed | 154 | 2 | 20 | 40 | 80 | 2_layer, has_emc, has_gerbers, has_pcb |
 | B1QUAD/spaceInvaderPCBBadge | LED / display | mixed | 17 | 2 | 28 | 100 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | b1u3-22/LPED | Miscellaneous KiCad  | mixed | 95 | 4 | 13 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| B44ken/ria | Miscellaneous KiCad  | kicad10 | 131 | 4 | 48 | - | 34 | 4_layer, has_emc, has_pcb, hierarchical |
 | BAbhiraman/Qynth | Miscellaneous KiCad  | mixed | 15 | - | 20 | 40 | 88 | has_emc, has_pcb, mixed, small |
 | bad-alloc-heavy-industries/SPIFlashProgrammer | Test equipment / deb | kicad6 | 128 | 4 | 13 | 100 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | Badbird5907/PDSU | USB / interface adap | mixed | 175 | - | 1 | 40 | 100 | digital_interfaces, has_emc, has_pcb, has_spice |
@@ -1171,6 +1196,7 @@
 | BishoutaBunny/UVA | Miscellaneous KiCad  | mixed | 22 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | bismarx-v1/PRTGN | Miscellaneous KiCad  | mixed | 137 | 2 | 8 | 60 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | bismarx-v1/SPGA | Synthesizers / audio | mixed | 554 | - | 2 | 13 | 84 | has_emc, has_pcb, has_spice, hierarchical |
+| bismarx-v1/Sumec-MiniSumo-HW | Miscellaneous KiCad  | mixed | 916 | 4 | 11 | 51 | 96 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | bit4man/temperature-display | LED / display | mixed | 32 | 1 | 12 | 40 | 100 | 1_layer, has_emc, has_gerbers, has_pcb |
 | bitaxeorg/bitaxeBonanza | Miscellaneous KiCad  | mixed | 228 | 6 | 8 | 74 | 99 | 6_layer, has_emc, has_gerbers, has_pcb |
 | bitaxeorg/bitaxeGamma | Miscellaneous KiCad  | mixed | 268 | 5 | 16 | 92 | 99 | 5_layer, has_emc, has_gerbers, has_pcb |
@@ -1230,6 +1256,7 @@
 | blueOkiris/ps-ktc | Keyboards | mixed | 24 | 2 | 32 | 80 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | bluepylons/A-Thinkpad-USB-keyboard | Keyboards | kicad7 | 106 | 2 | 24 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_gerbers |
 | bluerobotics/ping-dev-kit | Networking / radio / | mixed | 1795 | 8 | 4 | 40 | 100 | 8_layer, analog, digital_interfaces, has_emc |
+| bluerobotics/ping-dev-kit@a95dde0 | Networking / radio / | mixed | 1833 | 8 | 4 | 40 | 100 | 8_layer, analog, digital_interfaces, has_emc |
 | bluesatunsw/owr-502 | Motor controllers /  | mixed | 2326 | 6 | 13 | 40 | 99 | 6_layer, analog, digital_interfaces, has_emc |
 | bluesatunsw/rocketry-datasat | CubeSat / aerospace | kicad6 | 92 | 2 | 15 | 40 | 91 | 2_layer, has_emc, has_gerbers, has_pcb |
 | bluesatunsw/satellite | CubeSat / aerospace | mixed | 56 | 2 | 23 | 40 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -1322,6 +1349,7 @@
 | bravokeyl/stm32f407vgt6 | STM32 | kicad5 | 7 | - | 1 | 0 | 100 | has_emc, has_pcb, hierarchical, kicad5 |
 | Brawn1/Speedometer | Arduino recreations | mixed | 20 | - | 14 | 40 | 65 | has_emc, has_pcb, has_spice, medium |
 | bread-modular/bread-modular | Synthesizers / audio | mixed | 1584 | 4 | 31 | 40 | 100 | 4_layer, analog, digital_interfaces, has_emc |
+| bread-modular/bread-modular@b47ff0a | Synthesizers / audio | mixed | 1954 | 4 | 32 | 50 | 98 | 4_layer, analog, digital_interfaces, has_emc |
 | breadboardbasics/Lucid | Miscellaneous KiCad  | kicad5 | 41 | 2 | 69 | 6 | 100 | 2_layer, analog, has_emc, has_pcb |
 | Breezedude/breezedudeWindSensor | Sensor boards / IoT | mixed | 50 | 2 | 50 | 40 | 93 | 2_layer, has_emc, has_pcb, has_spice |
 | brendose/lora_radio_lp | Networking / radio / | mixed | 297 | - | 1 | 40 | 100 | digital_interfaces, has_emc, has_pcb, has_spice |
@@ -1334,6 +1362,7 @@
 | BrettHallen/Atari | Retro computing | mixed | 31 | 2 | 13 | - | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | BrettHallen/Conversion_Boards | Miscellaneous KiCad  | mixed | 78 | 2 | 23 | 40 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
 | BrettHallen/Sinclair | Keyboards | mixed | 411 | 2 | 21 | 46 | 89 | 2_layer, has_emc, has_pcb, has_spice |
+| BrettZolstick/MicroKey8 | Miscellaneous KiCad  | kicad10 | 26 | 2 | 22 | 40 | 27 | 2_layer, has_emc, has_gerbers, has_pcb |
 | BrianLeishman/jrgbwww24 | ESP32 | mixed | 31 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | BrianPeek/EPROMEmu | Arduino recreations | mixed | 12 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | BrianSidebotham/android-dash | Miscellaneous KiCad  | kicad5 | 8 | - | 14 | 0 | 100 | has_emc, has_pcb, kicad5, legacy_schematic |
@@ -1342,17 +1371,21 @@
 | brico-labs/Raptor | Motor controllers /  | kicad5 | 25 | 2 | 24 | 40 | 71 | 2_layer, has_emc, has_gerbers, has_pcb |
 | brightcloudy/kicad-pcbs | Miscellaneous KiCad  | kicad5 | 76 | 4 | 12 | 40 | 97 | 4_layer, analog, has_emc, has_gerbers |
 | brimgit/MacroPad-Serial-To-Macros-GUI | LED / display | mixed | 65 | 2 | 24 | 40 | 100 | 2_layer, has_emc, has_pcb, keyboard |
+| briskspirit/Sisu_SSE-9 | Miscellaneous KiCad  | kicad10 | 573 | 6 | 16 | 43 | 100 | 6_layer, has_emc, has_gerbers, has_pcb |
 | Broitsliterallyme/Omni | Miscellaneous KiCad  | mixed | 15 | 1 | 20 | 40 | 96 | 1_layer, has_emc, has_pcb, hierarchical |
 | broncoracing/cell-tap-pcb | Miscellaneous KiCad  | kicad7 | 205 | 4 | 11 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | BroncoSpace-Lab/CADENCE | CubeSat / aerospace | mixed | 299 | 4 | 13 | 40 | 100 | 4_layer, analog, digital_interfaces, has_emc |
 | Broosky/7Driver | Arduino recreations | mixed | 28 | - | 2 | 16 | 100 | has_emc, has_pcb, medium, mixed |
+| Broosky/7Driver@c7e30b8 | Arduino recreations | mixed | 28 | - | 2 | 16 | 100 | has_emc, has_pcb, medium, mixed |
 | Broosky/Patchworks | Arduino recreations | mixed | 63 | - | 2 | 7 | 100 | has_emc, has_pcb, has_spice, medium |
 | Broosky/Pulse | Synthesizers / audio | mixed | 22 | - | 2 | - | 100 | has_emc, has_pcb, has_spice, medium |
 | Broosky/Snubby | Miscellaneous KiCad  | mixed | 89 | - | 2 | - | 100 | has_emc, has_pcb, has_spice, hierarchical |
+| Broosky/Snubby@9630724 | Miscellaneous KiCad  | mixed | 89 | - | 2 | - | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | Broosky/Softy | Synthesizers / audio | mixed | 38 | - | 2 | 0 | 100 | has_emc, has_pcb, has_spice, medium |
 | Broosky/Soney | Synthesizers / audio | mixed | 22 | - | 2 | 0 | 100 | has_emc, has_pcb, has_spice, medium |
 | Broosky/Squarely | LED / display | mixed | 64 | - | 2 | 16 | 100 | has_emc, has_pcb, has_spice, medium |
 | Broosky/Sunny | Power / battery | mixed | 11 | - | 3 | 0 | 100 | has_emc, has_pcb, mixed, power |
+| Broosky/Sunny@b7f6044 | Power / battery | mixed | 11 | - | 3 | 0 | 100 | has_emc, has_pcb, mixed, power |
 | Broosky/Triggy | Arduino recreations | mixed | 14 | - | 2 | 40 | 100 | has_emc, has_pcb, has_spice, mixed |
 | Broosky/Wattson | Power / battery | mixed | 16 | - | 2 | 0 | 100 | has_emc, has_pcb, mixed, power |
 | brown-studios/minuet | Miscellaneous KiCad  | mixed | 294 | 2 | 18 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -1384,6 +1417,7 @@
 | bsidesorlando/2023-badge | LED / display | kicad7 | 8 | 1 | 14 | - | 100 | 1_layer, has_emc, has_pcb, kicad7 |
 | bsikar/ra8p1-ereader-kicad | Miscellaneous KiCad  | mixed | 1559 | - | 1 | 57 | 100 | analog, has_emc, has_pcb, has_spice |
 | bson/stm32simh | STM32 | mixed | 192 | 4 | 11 | 76 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
+| bson/stm32simh@cf1fb50 | STM32 | kicad10 | 192 | 4 | 10 | 76 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | btb/80ColumnCard | Retro computing | kicad6 | 77 | 2 | 15 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | btb/DiskII | Miscellaneous KiCad  | kicad7 | 36 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | btb/Telcon-Ambassador | Miscellaneous KiCad  | mixed | 628 | 2 | 8 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
@@ -1615,6 +1649,7 @@
 | cheshirenoir/X4020Expander | Miscellaneous KiCad  | kicad6 | 396 | - | 0 | 0 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | cheyao/icepi-sbc | SBCs / carrier board | mixed | 559 | 4 | 9 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | cheyao/icepi-zero | General collections | mixed | 1115 | 4 | 11 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
+| cheyao/icepi-zero@46f2b32 | General collections | mixed | 1420 | 4 | 11 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | cheyao/Open555 | Miscellaneous KiCad  | mixed | 45 | 2 | 18 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | cheyao/xchain | Miscellaneous KiCad  | mixed | 11 | 2 | 22 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | chicagoedt/IGVC_Electrical | Miscellaneous KiCad  | kicad5 | 82 | 2 | 22 | 40 | 95 | 2_layer, has_emc, has_pcb, has_spice |
@@ -1624,6 +1659,7 @@
 | chickadee-tech/polystack | Miscellaneous KiCad  | kicad5 | 18 | 2 | 16 | 20 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | chikaskas/solder3 | Miscellaneous KiCad  | mixed | 12 | 2 | 14 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | chili-chip/vgc-zero-hardware | Miscellaneous KiCad  | mixed | 22 | 2 | 28 | 40 | 100 | 2_layer, has_emc, has_pcb, medium |
+| chili-chip/vgc-zero-hardware@b3bdce6 | Miscellaneous KiCad  | kicad10 | 9 | 2 | 44 | 40 | 100 | 2_layer, has_emc, has_pcb, kicad10 |
 | chinatsu/keyboards | Keyboards | mixed | 405 | 2 | 26 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | chindynamics/Delta-Assistance | Miscellaneous KiCad  | kicad7 | 23 | 2 | 33 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | chinesejacklee/3dprintPCB | Synthesizers / audio | mixed | 408 | 2 | 25 | 40 | 97 | 2_layer, has_emc, has_pcb, has_spice |
@@ -1635,6 +1671,7 @@
 | chiplet/petstation | Miscellaneous KiCad  | mixed | 38 | 1 | 20 | - | 100 | 1_layer, has_emc, has_pcb, has_spice |
 | CHIRAGWADKAR/STM32_Dev_Board | STM32 | mixed | 64 | 2 | 27 | 40 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
 | chirimen-oh/accessories | Miscellaneous KiCad  | mixed | 118 | 2 | 28 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| chithigun23/CustomMechanicalKeyboard | Keyboards | kicad10 | 196 | 4 | 37 | 40 | 14 | 4_layer, has_emc, has_pcb, has_spice |
 | chivoma/ledChaser | Miscellaneous KiCad  | kicad7 | 7 | 2 | 18 | 40 | 100 | 2_layer, has_emc, has_pcb, kicad7 |
 | chl33/Dough133 | Arduino recreations | mixed | 79 | 4 | 19 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | chl33/Garage133 | ESP32 | kicad7 | 68 | 4 | 18 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -1771,6 +1808,7 @@
 | coffee-and-telesense/PicoAPRS | Synthesizers / audio | mixed | 389 | 2 | 38 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | coffeego/CoffeeRoaster | General collections | mixed | 164 | 2 | 0 | 33 | 100 | 2_layer, has_pcb, has_spice, hierarchical |
 | CogniPilot/spinali_mcxn_t1_hub | Sensor boards / IoT | mixed | 416 | 6 | 8 | 100 | 100 | 6_layer, has_emc, has_pcb, has_spice |
+| cognitivegears/PiCoCo | Miscellaneous KiCad  | mixed | 75 | 2 | 30 | 100 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Coilchain/Coilchain-Hardware | Power / battery | mixed | 176 | 2 | 10 | 86 | 88 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ColareCo/FreeCAD_streaming | Miscellaneous KiCad  | kicad9 | 32 | - | 0 | 40 | - | has_spice, kicad9, medium |
 | colebarach/crt_xy_monitor | Miscellaneous KiCad  | kicad6 | 48 | - | 1 | 40 | 100 | analog, has_emc, has_pcb, has_spice |
@@ -1809,6 +1847,7 @@
 | ContextualElectronics/GettingToBlinky | Miscellaneous KiCad  | kicad5 | 7 | 2 | 12 | 0 | 100 | 2_layer, has_emc, has_pcb, kicad5 |
 | contrarian-computing/pinky-8 | Retro computing | mixed | 38 | 2 | 46 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | controlpaths/hackbat | Networking / radio / | kicad7 | 174 | 4 | 9 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
+| cookiemonsternz/drone | Miscellaneous KiCad  | kicad10 | 340 | 6 | 29 | 40 | 100 | 6_layer, digital_interfaces, has_emc, has_pcb |
 | coolbassnik/canhacker | Miscellaneous KiCad  | mixed | 45 | 2 | 28 | 70 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | cooligula/DIJOUS_4_PORTES | Miscellaneous KiCad  | kicad7 | 124 | 2 | 19 | 40 | 97 | 2_layer, has_emc, has_pcb, has_spice |
 | CoolNamesAllTaken/slip-ring | Miscellaneous KiCad  | mixed | 12 | 2 | 19 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -1847,6 +1886,7 @@
 | Crate3D/stm32f412rxt-stamp | STM32 | mixed | 46 | 4 | 87 | 52 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | CREATE-ROCKET/Avi_89J_Pitot_log | Sensor boards / IoT | mixed | 59 | 8 | 57 | 40 | 87 | 8_layer, has_emc, has_pcb, has_spice |
 | CreateRemoteThread/glitcher | Miscellaneous KiCad  | kicad6 | 191 | 6 | 20 | 40 | 100 | 6_layer, has_emc, has_gerbers, has_pcb |
+| Creative-Difficulty/mSCKee | RP2040 / Raspberry P | kicad10 | 273 | 4 | 16 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | crehmann/TPS42 | Keyboards | kicad6 | 94 | 2 | 65 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Crem2y/rp2040_test_board | RP2040 / Raspberry P | mixed | 58 | 2 | 44 | 40 | 98 | 2_layer, digital_interfaces, has_emc, has_gerbers |
 | crespum/Line-following-PID-robot | Motor controllers /  | kicad5 | 23 | 2 | 17 | 40 | 95 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -1865,6 +1905,7 @@
 | CRM-UAM/CRMaze32 | Motor controllers /  | kicad5 | 71 | 1 | 2 | 17 | 100 | 1_layer, has_emc, has_pcb, has_spice |
 | crmaykish/mackerel-68k | Retro computing | mixed | 751 | 4 | 11 | 40 | 93 | 4_layer, has_emc, has_pcb, has_spice |
 | crodar33/CommandPoint | ESP32 | mixed | 82 | - | 33 | 42 | 43 | has_emc, has_pcb, has_spice, hierarchical |
+| Croip3/MK4-Prototype | ESP32 | kicad10 | 1331 | 4 | 12 | 40 | 65 | 4_layer, has_emc, has_gerbers, has_pcb |
 | crsknr/hw_udsp-card | Sensor boards / IoT | mixed | 375 | 6 | 14 | 100 | 100 | 6_layer, has_emc, has_pcb, has_spice |
 | CRTified/kicad-hierarchical-blocks | Miscellaneous KiCad  | kicad6 | 59 | - | 0 | 40 | - | has_spice, hierarchical, kicad6, medium |
 | Cryochasm/Wii-Sensor | USB / interface adap | mixed | 70 | 2 | 10 | 100 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -1956,6 +1997,7 @@
 | Dachtire/fercus | Keyboards | mixed | 650 | 3 | 53 | 40 | 99 | 3_layer, has_emc, has_pcb, has_spice |
 | DADDesign-Projects/Asynchronous-SPDIF-Mixer | STM32 | mixed | 292 | 2 | 15 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | DADDesign-Projects/OSCAR_AUDIO_01 | Synthesizers / audio | mixed | 257 | 2 | 17 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
+| DADDesign-Projects/OSCAR_AUDIO_01@6a6d1b3 | Synthesizers / audio | kicad10 | 261 | 2 | 16 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | DADDesign-Projects/PENDA-Hardware | Synthesizers / audio | mixed | 44 | 2 | 57 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | Dade3e/Flipper_Esp32 | ESP32 | kicad7 | 61 | 2 | 30 | 40 | 89 | 2_layer, has_emc, has_gerbers, has_pcb |
 | daedalus-ind/icarus-hardware | Sensor boards / IoT | mixed | 204 | 4 | 8 | 100 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
@@ -2017,6 +2059,7 @@
 | danielstebbings/318-Slam-Dunk-Your-Junk | Miscellaneous KiCad  | mixed | 68 | 4 | 14 | 40 | 92 | 4_layer, has_emc, has_pcb, has_spice |
 | danielstebbings/lil-flight-hardware | Sensor boards / IoT | kicad7 | 93 | 4 | 10 | 40 | 98 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | danielstebbings/tiny-cam | ESP32 | mixed | 69 | - | 6 | 40 | 81 | has_emc, has_pcb, has_spice, hierarchical |
+| danieltyukov/owltunes | ESP32 | kicad10 | 258 | 4 | 7 | 100 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | danielwilczak101/EasyDrift | Miscellaneous KiCad  | mixed | 732 | 2 | 17 | 40 | 85 | 2_layer, has_emc, has_gerbers, has_pcb |
 | daniestevez/ADF4158_PCB | Miscellaneous KiCad  | mixed | 166 | 4 | 10 | 40 | 100 | 4_layer, analog, has_emc, has_pcb |
 | DaniMzT/MonitoringSensorsAutomaticDoor | ADC / DAC / measurem | mixed | 43 | 2 | 48 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
@@ -2028,6 +2071,7 @@
 | dannyandreev/TheLittleRascal-Electrical | LED / display | mixed | 813 | 2 | 7 | 73 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
 | danstiner/embedded | Miscellaneous KiCad  | mixed | 324 | 4 | 23 | 78 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | danwerner21/TI99_22-mark2 | Miscellaneous KiCad  | mixed | 703 | 2 | 13 | 40 | 83 | 2_layer, analog, has_emc, has_gerbers |
+| daokoa/SoleSense2026 | Miscellaneous KiCad  | kicad10 | 70 | - | 0 | 40 | 100 | has_emc, has_pcb, hierarchical, kicad10 |
 | Darbyshire64/EndevourDMX | ESP32 | mixed | 17 | 2 | 58 | 40 | 87 | 2_layer, has_emc, has_pcb, has_spice |
 | Darbyshire64/LightCycle | LED / display | mixed | 57 | - | 0 | 40 | 100 | has_emc, has_pcb, hierarchical, medium |
 | Darbyshire64/MultiPad | Miscellaneous KiCad  | mixed | 20 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -2065,6 +2109,7 @@
 | davidMadueke/Simple-DAW-Transport-Controller | Miscellaneous KiCad  | mixed | 84 | - | 0 | 20 | 100 | has_emc, has_pcb, hierarchical, medium |
 | DavidMFlynn/Rocket-Servo | Motor controllers /  | mixed | 224 | 2 | 44 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | DavidMFlynn/SerialMRRC | Miscellaneous KiCad  | mixed | 168 | 2 | 25 | 40 | 83 | 2_layer, has_emc, has_gerbers, has_pcb |
+| DavidMFlynn/SerialMRRC@180751e | Miscellaneous KiCad  | mixed | 734 | 2 | 28 | 40 | 91 | 2_layer, analog, has_emc, has_gerbers |
 | DavidMFlynn/SimpleServoCtrl16 | Motor controllers /  | mixed | 153 | 2 | 24 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
 | DavidMFlynn/SM_Ctrl_RC_Servo | Motor controllers /  | mixed | 330 | 2 | 18 | 33 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | DavidMFlynn/VideoSelector | Miscellaneous KiCad  | mixed | 117 | 2 | 44 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -2076,6 +2121,7 @@
 | davidphilipbarr/holy32 | Keyboards | mixed | 46 | 2 | 40 | 40 | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | davidphilipbarr/hypergolic | Keyboards | mixed | 184 | 2 | 13 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | DavidRajchman/SmartMPPTSolarCharger | Power / battery | mixed | 187 | 4 | 14 | 60 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| davidrihtarsic/davidrihtarsic.github.io | Miscellaneous KiCad  | mixed | 349 | 3 | 2 | 27 | 99 | 3_layer, analog, has_emc, has_pcb |
 | Davidspilde/homemade_bluetooth_headset | ESP32 | mixed | 72 | - | 4 | 35 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | davidstalnaker/stm32-analog | STM32 | kicad7 | 296 | 4 | 11 | 40 | 100 | 4_layer, analog, has_emc, has_pcb |
 | DavidUzunov/DIY-ARDUINO | Arduino recreations | mixed | 50 | - | 1 | 40 | 100 | has_emc, has_pcb, has_spice, hierarchical |
@@ -2103,6 +2149,7 @@
 | dcmini-org/dcmini-hw | Miscellaneous KiCad  | mixed | 450 | 2 | 14 | 99 | 63 | 2_layer, analog, has_emc, has_pcb |
 | dcpedit/dissatisfaction30 | Miscellaneous KiCad  | kicad6 | 57 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | dcuccia/digital-handbell | Miscellaneous KiCad  | kicad10 | 1316 | 6 | 56 | 68 | 62 | 6_layer, digital_interfaces, has_emc, has_pcb |
+| dddrrreee/cs240lx-26spr | Miscellaneous KiCad  | mixed | 57 | 2 | 22 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ddowling/BidirectionalSupply | Power / battery | mixed | 393 | 4 | 20 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | ddunajsky/SMAQ | Miscellaneous KiCad  | mixed | 81 | - | 9 | 40 | 100 | digital_interfaces, has_emc, has_pcb, has_spice |
 | DeadBranches/esp8266-television-IR-controller | ESP32 | kicad6 | 4 | - | 2 | 0 | 100 | has_emc, has_pcb, has_spice, kicad6 |
@@ -2136,6 +2183,7 @@
 | DeMarco/DMH-Mixer | Synthesizers / audio | mixed | 164 | 2 | 6 | 32 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | DeMarco/DMH-Mixer@f76358a | Synthesizers / audio | mixed | 185 | 2 | 6 | 32 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | DeMarco/DMH-Morpher | Synthesizers / audio | mixed | 128 | 2 | 3 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| DeMarco/DMH-Morpher@795750c | Synthesizers / audio | mixed | 128 | 2 | 3 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | DeMarco/DMH-Transistor-VCA | Miscellaneous KiCad  | mixed | 261 | 2 | 7 | 34 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | DeMarco/DMH-Tripple-VCA | Miscellaneous KiCad  | mixed | 322 | 2 | 6 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | DeMarco/DMH-VCF-Diode-Ladder | Miscellaneous KiCad  | mixed | 320 | 2 | 9 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
@@ -2160,6 +2208,7 @@
 | Dephrilibrium/FE-FEAR16v2-PCB-GridReg | Miscellaneous KiCad  | mixed | 142 | 4 | 10 | 40 | 96 | 4_layer, analog, has_emc, has_pcb |
 | der-kollege/My_kicad_hardware | General collections | mixed | 2120 | 4 | 2 | 40 | 99 | 4_layer, has_emc, has_gerbers, has_pcb |
 | der-pw/hm_stm32_2ch_dimmer | STM32 | mixed | 37 | 2 | 60 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_gerbers |
+| derdalaba/leucht-ohrringe | Miscellaneous KiCad  | kicad10 | 88 | 2 | 23 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | derekfountain/zx-spectrum-diagnostics | Retro computing | kicad6 | 50 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | derflob/KiCad-espmobe32 | ESP32 | kicad6 | 114 | 2 | 10 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | DerSchweigefuchs/uC_Agri-PV | Miscellaneous KiCad  | mixed | 496 | 4 | 11 | 74 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -2171,6 +2220,7 @@
 | Desval27/FormantKO | Synthesizers / audio | kicad10 | 6895 | 3 | 13 | 41 | 94 | 3_layer, analog, has_emc, has_pcb |
 | deuteros76/co2-detector | Miscellaneous KiCad  | mixed | 10 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | deutzfahrer-luki/RobotikKicad | Motor controllers /  | mixed | 180 | 4 | 10 | 36 | 73 | 4_layer, has_emc, has_pcb, has_spice |
+| dev-campusfab/chessLab | Miscellaneous KiCad  | mixed | 465 | 2 | 15 | 87 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | dev1virtuoso/CAD | Miscellaneous KiCad  | mixed | 56 | 2 | 44 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
 | devan0404/Pcb-Design | Miscellaneous KiCad  | mixed | 21 | 1 | 48 | 40 | 100 | 1_layer, has_emc, has_pcb, has_spice |
 | devbisme/KiField | LED / display | mixed | 386 | 3 | 1 | 73 | 100 | 3_layer, analog, has_emc, has_pcb |
@@ -2199,10 +2249,12 @@
 | dgoodlad/esp8266-mitsubishi-aircon | ESP32 | mixed | 56 | 2 | 20 | 70 | 79 | 2_layer, has_emc, has_pcb, has_spice |
 | dgudenius/guitar_pedals | Synthesizers / audio | mixed | 50 | - | 8 | - | 37 | has_emc, has_pcb, has_spice, hierarchical |
 | Dguto9/modular-amp | Synthesizers / audio | kicad7 | 185 | 2 | 21 | 40 | 86 | 2_layer, has_emc, has_pcb, has_spice |
+| Dh-Van/Theremin | Miscellaneous KiCad  | kicad10 | 186 | 2 | 10 | 40 | 76 | 2_layer, has_emc, has_pcb, has_spice |
 | dh1tw/power-supply-control-pcb-dps460 | Power / battery | kicad6 | 9 | 1 | 14 | - | 100 | 1_layer, has_emc, has_pcb, kicad6 |
 | dh2pp/ardubell | Arduino recreations | mixed | 63 | 2 | 8 | 70 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | DhanyaP123/PCB-DESIGN-FOR-A-AC-TO-DC-CONVERTOR-CIRCUIT | Miscellaneous KiCad  | mixed | 10 | 1 | 26 | - | 20 | 1_layer, has_emc, has_pcb, has_spice |
 | dheeraj25-git/Hardware-Design | Synthesizers / audio | mixed | 48 | 4 | 21 | 40 | 98 | 4_layer, has_emc, has_pcb, has_spice |
+| dhruv1859/CARVanta | Miscellaneous KiCad  | mixed | 444 | 6 | 15 | 40 | 92 | 6_layer, digital_interfaces, has_emc, has_gerbers |
 | DhruvaG2000/RP2040_Dev_Board | RP2040 / Raspberry P | mixed | 20 | 4 | 15 | 40 | 73 | 4_layer, has_emc, has_pcb, hierarchical |
 | dhupee/dhupee-fall-detection-thingy-thesis | Miscellaneous KiCad  | kicad7 | 24 | 1 | 51 | 40 | 98 | 1_layer, has_emc, has_pcb, has_spice |
 | Diabltica/AudioInterface | Synthesizers / audio | mixed | 266 | 2 | 7 | 88 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -2255,6 +2307,7 @@
 | dizcza/rv3032-kicad | Miscellaneous KiCad  | mixed | 7 | 2 | 16 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | dizcza/sim66md_kicad | Miscellaneous KiCad  | mixed | 10 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | dizcza/skytraq_px1125r_kicad | Sensor boards / IoT | mixed | 60 | 4 | 36 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| dizcza/skytraq_px1125r_kicad@b8d0374 | Sensor boards / IoT | kicad10 | 60 | 4 | 36 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | DizzyRobot/DirectServo | Motor controllers /  | kicad5 | 44 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | dj1encore/PLC_Connector | Miscellaneous KiCad  | kicad7 | 812 | 2 | 12 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | DJ2RF/AIoT_BookV1-5 | ESP32 | mixed | 88 | 2 | 6 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -2319,6 +2372,7 @@
 | Dominik-Workshop/lap-timer | Power / battery | mixed | 133 | 2 | 10 | 52 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | DominoTree/ST_to_HDMI | Retro computing | kicad6 | 42 | - | 2 | 40 | 100 | digital_interfaces, has_emc, has_pcb, has_spice |
 | Domochip/WPalaControl | Miscellaneous KiCad  | mixed | 18 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| Domochip/WPalaControl@e5cdcb9 | Miscellaneous KiCad  | kicad10 | 18 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | domokos/LRChanger | Miscellaneous KiCad  | mixed | 71 | 2 | 50 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
 | DomRicho/loratracker_hardware | Networking / radio / | mixed | 147 | 4 | 9 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | Donatussss/Final_year_project_undergrad | Miscellaneous KiCad  | mixed | 175 | 2 | 9 | 32 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -2343,6 +2397,7 @@
 | dpapavas/orb-trackball | Miscellaneous KiCad  | mixed | 84 | 2 | 60 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | dpayno/hw-wps | RP2040 / Raspberry P | mixed | 11 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | dperezmavro/helldivers-controller | Miscellaneous KiCad  | mixed | 9 | 2 | 44 | 40 | 95 | 2_layer, has_emc, has_gerbers, has_pcb |
+| dperezmavro/helldivers-controller@60e35bd | Miscellaneous KiCad  | mixed | 9 | 2 | 44 | 40 | 55 | 2_layer, has_emc, has_gerbers, has_pcb |
 | dpicken/atari-hw | Retro computing | mixed | 216 | 4 | 20 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | DPIclimate/ag-node | Sensor boards / IoT | mixed | 79 | 2 | 78 | 66 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | dpkoch/rosflight_matrice | USB / interface adap | mixed | 41 | 2 | 16 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -2364,6 +2419,7 @@
 | DreaM117er/Explorer-Keyboard-Blank | Keyboards | mixed | 551 | 2 | 18 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | DreaM117er/Paicorea | Keyboards | kicad7 | 182 | 2 | 25 | 40 | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | DreaM117er/Prime52 | Keyboards | kicad7 | 218 | 2 | 24 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| Dreamy-Jy/slack | Keyboards | kicad10 | 762 | 4 | 14 | 80 | 61 | 4_layer, has_emc, has_pcb, has_spice |
 | dremeier/Kicad-Bluetooth-Feasycom-projekt-library | Synthesizers / audio | kicad7 | 54 | - | 28 | 40 | 35 | has_emc, has_pcb, has_spice, kicad7 |
 | dresco/grblpanel_main_board | Keyboards | kicad7 | 284 | 4 | 7 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | drewsum/Nixie_Clock | LED / display | mixed | 2804 | 4 | 2 | 40 | 100 | 4_layer, analog, has_emc, has_gerbers |
@@ -2401,6 +2457,7 @@
 | dteal/zeitgeist | Motor controllers /  | mixed | 8 | 1 | 7 | - | 100 | 1_layer, has_emc, has_gerbers, has_pcb |
 | dtnking/PCB-STM32F401CCT6_Development_Board | STM32 | kicad5 | 43 | 2 | 72 | 27 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | dtpisanty/dmx2motion | LED / display | mixed | 107 | 2 | 16 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
+| dubnubdubnub/Giris | Keyboards | kicad10 | 581 | 4 | 13 | 62 | 58 | 4_layer, has_emc, has_gerbers, has_pcb |
 | Dubzy08/techmice | Miscellaneous KiCad  | mixed | 322 | 1 | 6 | 37 | 44 | 1_layer, digital_interfaces, has_emc, has_pcb |
 | Duckle29/Keyboard-board | Keyboards | kicad5 | 65 | 2 | 17 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Duckle29/testboardio | Keyboards | mixed | 33 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -2465,6 +2522,7 @@
 | eccnil/radiofm | Synthesizers / audio | mixed | 39 | 1 | 34 | 40 | 100 | 1_layer, has_emc, has_pcb, has_spice |
 | ECE411T5/Practicum | Motor controllers /  | kicad6 | 483 | 2 | 21 | 32 | 70 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ECE445L/ECE445L-Hardware-Libraries | LED / display | mixed | 219 | 2 | 21 | 56 | 87 | 2_layer, has_emc, has_pcb, has_spice |
+| ECE445L/ECE445L-Hardware-Libraries@8cb6978 | LED / display | mixed | 383 | 2 | 22 | 50 | 81 | 2_layer, has_emc, has_pcb, has_spice |
 | ece477-sp2023/daughterboard | Miscellaneous KiCad  | kicad7 | 152 | 6 | 12 | 40 | 97 | 6_layer, has_emc, has_pcb, has_spice |
 | ece477-sp2023/motherboard | Miscellaneous KiCad  | kicad7 | 100 | 2 | 9 | 40 | 98 | 2_layer, has_emc, has_pcb, hierarchical |
 | ECE477-trumpet-melody/hardware | Synthesizers / audio | kicad7 | 77 | 2 | 94 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -2492,6 +2550,7 @@
 | eduardo-ufmg/2DoFSBP | Miscellaneous KiCad  | mixed | 38 | 1 | 21 | 40 | 78 | 1_layer, has_emc, has_pcb, has_spice |
 | eduardo-yuji/Desenho-Tecnico | Miscellaneous KiCad  | kicad6 | 22 | 1 | 8 | - | 95 | 1_layer, has_emc, has_pcb, hierarchical |
 | Edward-benjamin/Edward_de_la_Cruz_Electiva_2025_C2 | Miscellaneous KiCad  | mixed | 304 | 4 | 4 | 39 | 98 | 4_layer, has_emc, has_pcb, has_spice |
+| EdwardNatasaputra/powerBoard | Miscellaneous KiCad  | kicad10 | 778 | 2 | 9 | 56 | 99 | 2_layer, analog, has_emc, has_pcb |
 | edwin-oetelaar/CP70_preamp | Synthesizers / audio | kicad9 | 250 | 2 | 22 | 36 | 92 | 2_layer, analog, has_emc, has_gerbers |
 | edwindertien/foundscape | Networking / radio / | mixed | 568 | 4 | 20 | 49 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | eegan/albatross_fee | Miscellaneous KiCad  | kicad7 | 474 | 4 | 12 | 100 | 100 | 4_layer, analog, has_emc, has_pcb |
@@ -2506,6 +2565,7 @@
 | eflocon/waflocon | Miscellaneous KiCad  | kicad6 | 19 | - | 26 | 40 | 87 | has_emc, has_pcb, has_spice, kicad6 |
 | eflukx/Matrox-LFH60-TV-out | Miscellaneous KiCad  | mixed | 8 | - | 34 | - | 0 | has_emc, has_pcb, mixed, small |
 | efogtech/endgame-trackball-hardware | LED / display | mixed | 285 | 6 | 54 | 40 | 100 | 6_layer, has_emc, has_pcb, has_spice |
+| efogtech/endgame-trackball-hardware@3bdcb82 | LED / display | mixed | 239 | 6 | 44 | 42 | 100 | 6_layer, has_emc, has_pcb, has_spice |
 | efryters/RGB_Breakout_KiCAD | USB / interface adap | mixed | 3 | 2 | 22 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ege-saygili/bldc-tester-hardware | Motor controllers /  | mixed | 164 | 2 | 7 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | ege-turan/smart-plant-pot | Synthesizers / audio | mixed | 66 | - | 1 | 40 | 100 | has_emc, has_pcb, has_spice, hierarchical |
@@ -2538,6 +2598,7 @@
 | electricui/electricui-arena | Miscellaneous KiCad  | mixed | 316 | 4 | 8 | 87 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | electrified/rc2014-82c55-ide | Retro computing | mixed | 22 | 2 | 34 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | electrified/rc2014-ym2149 | Retro computing | mixed | 32 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| electrified/rc2014-ym2149@bcb2623 | Retro computing | kicad10 | 32 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | electrified/rc2014-ym2151 | Retro computing | mixed | 27 | 2 | 26 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
 | Electrium-Mobility/RC-W25 | Miscellaneous KiCad  | mixed | 198 | 2 | 16 | 85 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | electrodonkey/angst | Miscellaneous KiCad  | mixed | 86 | 2 | 45 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
@@ -2668,6 +2729,7 @@
 | EpicKiwiProCoder/Mechanical-Keyboard-Pcb | Keyboards | kicad6 | 124 | 2 | 26 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | EpicTromboneKid/emg | Miscellaneous KiCad  | kicad10 | 49 | 2 | 22 | 40 | 71 | 2_layer, has_emc, has_pcb, has_spice |
 | epietrowicz/particle-somduino | Miscellaneous KiCad  | mixed | 26 | 2 | 72 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
+| EPSILON0-dev/Raven1106 | RP2040 / Raspberry P | kicad10 | 818 | 4 | 16 | 40 | 98 | 4_layer, has_emc, has_pcb, has_spice |
 | equipeantares/AvionicaAuroraIII | Miscellaneous KiCad  | mixed | 224 | 2 | 14 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | equipeantares/TelemetriaAuroraIII | Sensor boards / IoT | mixed | 9 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | eranknafo2001/stepper-motor-controller | Motor controllers /  | mixed | 67 | 2 | 20 | 40 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -2863,6 +2925,7 @@
 | farfalleflickan/nack | Keyboards | mixed | 476 | 2 | 51 | 52 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | farmerbriantee/Ace | Motor controllers /  | mixed | 298 | 2 | 48 | 40 | 92 | 2_layer, analog, has_emc, has_gerbers |
 | FarrenMartinus/EMG | Miscellaneous KiCad  | mixed | 324 | 2 | 7 | 40 | 32 | 2_layer, analog, has_emc, has_gerbers |
+| fastjack/OmegaFloppy | Miscellaneous KiCad  | kicad10 | 25 | 2 | 62 | 100 | 23 | 2_layer, has_emc, has_pcb, has_spice |
 | Fat-Zer/kicad-opAmp-test | Miscellaneous KiCad  | kicad5 | 7 | - | 0 | 0 | - | kicad5, legacy_schematic, small |
 | Fausto123f/Fausto_Jimenez_Electiva_2025_C2 | Miscellaneous KiCad  | mixed | 322 | 4 | 3 | 38 | 95 | 4_layer, has_emc, has_pcb, has_spice |
 | fbradasc/G7e | Miscellaneous KiCad  | kicad7 | 26 | - | 0 | 0 | 100 | has_emc, has_pcb, has_spice, hierarchical |
@@ -2872,6 +2935,7 @@
 | FEASTorg/KiCad-Master-Lib | Miscellaneous KiCad  | mixed | 453 | - | 0 | 38 | - | has_emc, has_spice, hierarchical, large |
 | FEASTorg/KiCad-Simulation-Examples | Miscellaneous KiCad  | mixed | 282 | - | 0 | 11 | 100 | analog, has_emc, has_pcb, has_spice |
 | FEASTorg/Slice_DCMT | Motor controllers /  | mixed | 183 | 2 | 53 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| FEASTorg/Slice_DCMT@e22d915 | Motor controllers /  | mixed | 154 | 2 | 52 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | FeatureNAB/smart-sensor-battery-pack | Motor controllers /  | mixed | 51 | 2 | 20 | 40 | 97 | 2_layer, has_emc, has_pcb, has_spice |
 | Febriyandi12/Desain_PCB | Miscellaneous KiCad  | mixed | 458 | - | 4 | 40 | 86 | has_emc, has_pcb, has_spice, hierarchical |
 | fedeboco/current-feedback-amplifier | Synthesizers / audio | mixed | 81 | 2 | 48 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
@@ -3008,6 +3072,7 @@
 | forGGe/hw_trials | Miscellaneous KiCad  | kicad5 | 28 | 2 | 60 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | formesean/x86-Assembly | Miscellaneous KiCad  | mixed | 49 | - | 0 | 40 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | formicidae-tracker/hardware | Sensor boards / IoT | mixed | 1964 | 2 | 12 | 96 | 86 | 2_layer, digital_interfaces, has_emc, has_gerbers |
+| formicidae-tracker/hardware@5b95920 | Sensor boards / IoT | mixed | 1966 | 2 | 12 | 96 | 86 | 2_layer, digital_interfaces, has_emc, has_gerbers |
 | formix/RetroZ | Retro computing | mixed | 89 | 2 | 26 | 43 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | formulaslug/fs-2-schematics | Power / battery | mixed | 1000 | 2 | 15 | 39 | 89 | 2_layer, analog, has_emc, has_pcb |
 | formulaslug/fs-3-intro-projects | Miscellaneous KiCad  | mixed | 235 | 2 | 8 | 40 | 93 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -3026,6 +3091,7 @@
 | fpga-theremin/theremin | RISC-V / FPGA | mixed | 822 | 2 | 33 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
 | FPGAbot/HandAssemble_Pmod | RISC-V / FPGA | mixed | 202 | 2 | 36 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
 | FPGAwars/icezum | RISC-V / FPGA | mixed | 422 | 4 | 14 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
+| fpp3/TeoriaDeCircuitos2 | Miscellaneous KiCad  | kicad10 | 107 | 2 | 15 | 34 | 100 | 2_layer, analog, has_emc, has_pcb |
 | fr0st61te/safety-sensor | Sensor boards / IoT | kicad6 | 30 | 1 | 22 | 40 | 97 | 1_layer, has_emc, has_pcb, has_spice |
 | franc0r/francor_electronics | Motor controllers /  | mixed | 22 | 2 | 30 | - | 74 | 2_layer, has_emc, has_pcb, hierarchical |
 | franc0r/universal_can_board | Miscellaneous KiCad  | kicad5 | 77 | 2 | 42 | 40 | 76 | 2_layer, has_emc, has_pcb, has_spice |
@@ -3090,6 +3156,7 @@
 | fullyautomated/ferret | USB / interface adap | mixed | 377 | 4 | 18 | 75 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | fullyautomated/luminiaire | Miscellaneous KiCad  | mixed | 22 | 2 | 26 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | fullyautomated/tinypol | Power / battery | mixed | 32 | 2 | 4 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| FunDeckHermit/KINK-box | ESP32 | kicad10 | 219 | 3 | 51 | 64 | 99 | 3_layer, has_emc, has_gerbers, has_pcb |
 | funkeleinhorn/sc14cvmdect-devboard | Miscellaneous KiCad  | mixed | 60 | 4 | 29 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | furbrain/Cyclops | Sensor boards / IoT | mixed | 107 | 4 | 23 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | furukawa1020/kicad-pcb-control-logic | Miscellaneous KiCad  | mixed | 321 | 2 | 14 | 40 | 84 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -3120,6 +3187,7 @@
 | GadgetReboot/GR_IO_Board | Miscellaneous KiCad  | mixed | 37 | 2 | 28 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | gagbo/dactyl_wiring | Keyboards | kicad5 | 160 | - | 0 | 0 | 94 | has_pcb, hierarchical, keyboard, kicad5 |
 | galaxyeden/USB-power-board | Miscellaneous KiCad  | mixed | 4 | 1 | 21 | - | 83 | 1_layer, has_emc, has_pcb, mixed |
+| GalaxyGamingBoy/portable-lora | Miscellaneous KiCad  | kicad10 | 182 | 2 | 6 | 50 | 42 | 2_layer, has_emc, has_pcb, has_spice |
 | galile0-designs/glyphkbd | Keyboards | kicad7 | 310 | 2 | 4 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | GalloGGMC/PCB_pond | Miscellaneous KiCad  | mixed | 6 | - | 26 | 40 | 91 | has_emc, has_pcb, has_spice, mixed |
 | galopago/adapter-boards | USB / interface adap | kicad6 | 7 | 2 | 20 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -3225,6 +3293,7 @@
 | Gherkin/stm32mp2-core | STM32 | mixed | 175 | - | 3 | 40 | 80 | has_emc, has_pcb, has_spice, hierarchical |
 | GiacoBot/ESP32MP3 | ESP32 | mixed | 242 | 2 | 9 | 100 | 96 | 2_layer, has_emc, has_pcb, has_spice |
 | gianluca-rainis/Z80DevBoard | RP2040 / Raspberry P | mixed | 170 | 4 | 100 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
+| gianluca-rainis/Z80DevBoard@0b01d40 | RP2040 / Raspberry P | kicad10 | 179 | 4 | 100 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | gianlucarenzi/stalker | STM32 | mixed | 90 | 2 | 46 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | giannawong/IEEE-Macropad | Keyboards | mixed | 48 | 2 | 28 | 40 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
 | gideonmaina/arduino_clone | Arduino recreations | kicad6 | 21 | 2 | 38 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
@@ -3252,7 +3321,9 @@
 | Git-Narii/Arduino-UNO-R4-Minima-Extension-Board | Arduino recreations | mixed | 13 | - | 20 | 40 | 70 | has_emc, has_pcb, mixed, small |
 | git4dcc/RTB_C02 | Retro computing | mixed | 132 | 4 | 13 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | git4dcc/RTB_C11 | Miscellaneous KiCad  | mixed | 261 | 2 | 9 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| git4dcc/RTB_C11@f5cca03 | Miscellaneous KiCad  | kicad10 | 265 | 2 | 9 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | git4dcc/RTB_C12 | Retro computing | mixed | 178 | 4 | 10 | 40 | 100 | 4_layer, analog, has_emc, has_pcb |
+| git4dcc/RTB_C12@40755e6 | Retro computing | kicad10 | 190 | 4 | 10 | 40 | 100 | 4_layer, analog, has_emc, has_pcb |
 | git4dcc/RTB_C13 | Retro computing | mixed | 238 | 2 | 10 | 43 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | git4dcc/RTB_D12 | Retro computing | mixed | 144 | 4 | 5 | 80 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | git4dcc/RTB_D12@9c6ade2 | Retro computing | kicad10 | 144 | 4 | 8 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -3319,6 +3390,7 @@
 | gongminmin/Railgun | Miscellaneous KiCad  | kicad6 | 121 | 2 | 9 | 4 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | GonzaStd/classrooms-temperatures | Miscellaneous KiCad  | kicad6 | 12 | 1 | 14 | 33 | 89 | 1_layer, has_emc, has_pcb, hierarchical |
 | GoodEarthWeather/myKicadProjects | Synthesizers / audio | mixed | 5375 | 5 | 11 | 48 | 100 | 5_layer, analog, has_emc, has_gerbers |
+| GoodEarthWeather/myKicadProjects@e5c5bb2 | Synthesizers / audio | mixed | 9630 | 5 | 11 | 45 | 100 | 5_layer, analog, has_emc, has_gerbers |
 | goodoldchap345/summit_scourer | Miscellaneous KiCad  | mixed | 269 | 4 | 19 | 40 | 93 | 4_layer, has_emc, has_gerbers, has_pcb |
 | goodrobotics/wifistepper | Motor controllers /  | mixed | 112 | 4 | 58 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | google/flight-lab | Keyboards | kicad5 | 164 | 2 | 30 | 30 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -3380,8 +3452,10 @@
 | gregdavill/syzygy-pods | Miscellaneous KiCad  | mixed | 274 | 4 | 24 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | gregdavill/xmas-led | LED / display | mixed | 19 | 1 | 20 | - | 100 | 1_layer, has_emc, has_pcb, mixed |
 | Gregification/BeeMS | Power / battery | mixed | 2465 | 2 | 19 | 41 | 94 | 2_layer, analog, digital_interfaces, has_emc |
+| Gregification/BeeMS@020894b | Power / battery | mixed | 2882 | 2 | 19 | 42 | 94 | 2_layer, analog, digital_interfaces, has_emc |
 | gregoryw3/payload-pcb-test | CubeSat / aerospace | mixed | 36 | 2 | 1 | 57 | 93 | 2_layer, has_emc, has_pcb, has_spice |
 | Gregovate/hydroponic-veggie-garden | ESP32 | mixed | 27 | - | 2 | 9 | 100 | has_emc, has_pcb, medium, mixed |
+| Gregovate/hydroponic-veggie-garden@fc1f7aa | ESP32 | mixed | 28 | - | 2 | 7 | 100 | has_emc, has_pcb, medium, mixed |
 | Gregox273/Magic-Mirror | Miscellaneous KiCad  | kicad5 | 10 | 2 | 46 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | GReX-Telescope/FrontendModule | Networking / radio / | mixed | 497 | 4 | 6 | 69 | 100 | 4_layer, analog, has_emc, has_pcb |
 | greyeey/PE-Keyboard | Keyboards | kicad7 | 68 | - | 0 | 40 | 100 | digital_interfaces, has_emc, has_pcb, has_spice |
@@ -3392,6 +3466,7 @@
 | Gripsou/probable-chemical-burns | Miscellaneous KiCad  | mixed | 62 | - | 4 | 100 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | Groboards/giant-board-design-files | Miscellaneous KiCad  | mixed | 344 | 4 | 68 | 70 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | grodansparadis/can4vscp-frankfurt-eth | Networking / radio / | mixed | 256 | 2 | 23 | 40 | 99 | 2_layer, digital_interfaces, has_emc, has_gerbers |
+| grodansparadis/can4vscp-frankfurt-eth@cbaa9d3 | Networking / radio / | mixed | 316 | 4 | 16 | 40 | 99 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | grodansparadis/can4vscp-newyork-lcd-display-controller | LED / display | mixed | 30 | 2 | 30 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | GRodler/guido_rodler | Miscellaneous KiCad  | mixed | 34 | 2 | 12 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | grokicad/grokicad | Power / battery | mixed | 657 | 4 | 4 | 63 | 100 | 4_layer, analog, digital_interfaces, has_emc |
@@ -3422,6 +3497,7 @@
 | GuitarML/GuitarPedalPCBs | Synthesizers / audio | mixed | 105 | 2 | 34 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
 | gujian0302/single-switch--pcb | Miscellaneous KiCad  | mixed | 10 | 2 | 16 | - | 44 | 2_layer, has_emc, has_pcb, mixed |
 | Gumball2415/squeeki-kleen-Audio-FC | Synthesizers / audio | mixed | 36 | 2 | 8 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
+| Gumball2415/squeeki-kleen-Audio-FC@ecc6fcb | Synthesizers / audio | mixed | 38 | 2 | 10 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
 | gunaltay-havacilik/valkyrie-v3-pcb | Miscellaneous KiCad  | mixed | 250 | 4 | 6 | 40 | 99 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | gundy/aa_pihat | RP2040 / Raspberry P | kicad6 | 30 | 4 | 36 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | Gunethra/ecg | Miscellaneous KiCad  | mixed | 37 | 4 | 81 | 40 | 99 | 4_layer, analog, has_emc, has_gerbers |
@@ -3439,7 +3515,9 @@
 | h-ALO/h-ALO-kicad-libs | LED / display | mixed | 737 | 4 | 14 | 40 | 89 | 4_layer, analog, has_emc, has_gerbers |
 | h0lad/SolarLoRaBox | Networking / radio / | mixed | 57 | 4 | 48 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | h0lad/SolarMeshtasticNode | ESP32 | mixed | 45 | 4 | 20 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| h0lad/SolarMeshtasticNode@84a856f | ESP32 | kicad10 | 49 | 4 | 32 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | h0lad/SolarMeshtasticNodeMini | ESP32 | mixed | 33 | 4 | 22 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| h0lad/SolarMeshtasticNodeMini@7cf3fbb | ESP32 | kicad10 | 36 | 4 | 22 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | H1mJT/CIT-Kokrajhar-ECE-PCB-badge | LED / display | kicad6 | 17 | 2 | 10 | - | 100 | 2_layer, has_emc, has_pcb, kicad6 |
 | h3430/Matarael | Miscellaneous KiCad  | mixed | 339 | 4 | 13 | 41 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | h4ck3rb0x/HackerBox0089 | Miscellaneous KiCad  | kicad6 | 12 | 2 | 16 | - | 100 | 2_layer, has_emc, has_pcb, hierarchical |
@@ -3549,6 +3627,7 @@
 | hasecilu/VGA | RISC-V / FPGA | mixed | 16 | 2 | 32 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Hasnat4763/CommiePad | Miscellaneous KiCad  | mixed | 15 | 2 | 27 | 40 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | hatlabs/HALPI2-hardware | SBCs / carrier board | mixed | 1735 | 6 | 3 | 43 | 100 | 6_layer, analog, digital_interfaces, has_emc |
+| hatlabs/HALPI2-hardware@7718d3a | SBCs / carrier board | mixed | 1811 | 6 | 3 | 43 | 100 | 6_layer, analog, digital_interfaces, has_emc |
 | hatlabs/HALPI2-HDMI-FPC | SBCs / carrier board | mixed | 26 | 2 | 45 | - | 100 | 2_layer, has_emc, has_pcb, medium |
 | hatlabs/HALSPA-hardware | Miscellaneous KiCad  | mixed | 922 | 4 | 2 | 39 | 100 | 4_layer, analog, has_emc, has_pcb |
 | hatlabs/SH-ESP32-hardware | ESP32 | mixed | 474 | 4 | 6 | 40 | 67 | 4_layer, has_emc, has_pcb, has_spice |
@@ -3619,10 +3698,12 @@
 | hightide-error/BackRowPad | Keyboards | kicad6 | 42 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | hildebkg/pcb-ruler | Miscellaneous KiCad  | mixed | 8 | 2 | 16 | 0 | 100 | 2_layer, analog, has_emc, has_pcb |
 | hildogjr/KiCost | Miscellaneous KiCad  | kicad5 | 9 | - | 0 | - | - | kicad5, legacy_schematic, small |
+| himanshu40304/PCB_automation | Miscellaneous KiCad  | mixed | 129 | 4 | 27 | 40 | 88 | 4_layer, analog, has_emc, has_gerbers |
 | Himanshukohale22/Controller-Drone | Arduino recreations | kicad7 | 63 | 2 | 39 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | HimaSava/udimm_ddr5_tester | Test equipment / deb | kicad7 | 1028 | 12 | 4 | 100 | 100 | 12_layer, digital_interfaces, has_emc, has_gerbers |
 | hina18201716/Solar-Radio-Telescope | Networking / radio / | mixed | 42 | 2 | 36 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | hirakuni45/RX | Networking / radio / | mixed | 844 | 2 | 3 | 33 | 80 | 2_layer, analog, digital_interfaces, has_emc |
+| hirakuni45/RX@00a4aa0 | Networking / radio / | mixed | 870 | 2 | 3 | 33 | 76 | 2_layer, analog, digital_interfaces, has_emc |
 | hiramrodriguez14/Wind-Turbine-Control-System-Hardware | Miscellaneous KiCad  | mixed | 195 | - | 0 | 32 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | hirata0517masato/RX621-CMouse | Miscellaneous KiCad  | mixed | 152 | 2 | 28 | 100 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | HisarCS/VariablePitchPropeller | Miscellaneous KiCad  | mixed | 8 | 1 | 22 | - | 100 | 1_layer, has_emc, has_pcb, mixed |
@@ -3677,8 +3758,10 @@
 | honeyvig/CANtact | Miscellaneous KiCad  | kicad5 | 37 | 2 | 50 | 100 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | HongoMCC/ch552t_board | Miscellaneous KiCad  | kicad7 | 10 | 2 | 50 | 40 | 78 | 2_layer, has_emc, has_pcb, hierarchical |
 | HongoMCC/ch552t_tinypad | Keyboards | kicad7 | 22 | 2 | 48 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| hookprobe/hookprobe | Miscellaneous KiCad  | kicad10 | 1874 | - | 2 | 40 | 52 | digital_interfaces, has_emc, has_pcb, has_spice |
 | Hooligan-0/smd-adapter-tqfp32 | USB / interface adap | kicad7 | 37 | 2 | 8 | - | 100 | 2_layer, has_emc, has_pcb, kicad7 |
 | horatioPistachio/WashingLineMonitor-P0001 | Miscellaneous KiCad  | mixed | 153 | 2 | 3 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
+| horatioPistachio/WashingLineMonitor-P0001@5e79df3 | Miscellaneous KiCad  | mixed | 193 | 2 | 6 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | horazont/hint | Networking / radio / | kicad5 | 137 | 2 | 19 | 40 | 84 | 2_layer, analog, digital_interfaces, has_emc |
 | Horticulture-project/Horticulture-PCB | Miscellaneous KiCad  | mixed | 65 | 2 | 27 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | horvathgergo/esp8266-for-uppatvind | ESP32 | kicad6 | 27 | 3 | 45 | 40 | 100 | 3_layer, has_emc, has_pcb, has_spice |
@@ -3815,6 +3898,7 @@
 | ihsankrpz/TP_Sys_uC_3DN | Miscellaneous KiCad  | kicad7 | 27 | 2 | 27 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | IhsanSA/Line-Follower-Analog-Kicad-Design | Miscellaneous KiCad  | mixed | 39 | 2 | 56 | 40 | 90 | 2_layer, analog, has_emc, has_pcb |
 | Ihysol/nrf_rgb_clock | Miscellaneous KiCad  | mixed | 343 | 4 | 12 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| IImon1293/CMFD-LMSE | Miscellaneous KiCad  | kicad10 | 205 | 4 | 11 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | ijager/FerrmRidder | Motor controllers /  | mixed | 3 | 2 | 14 | - | 57 | 2_layer, has_emc, has_pcb, mixed |
 | ijnekenamay/Euro_Scoppy | RP2040 / Raspberry P | kicad6 | 78 | 2 | 0 | 40 | 100 | 2_layer, analog, has_gerbers, has_pcb |
 | ijnekenamay/HAGIWOs_Module | Synthesizers / audio | mixed | 488 | 2 | 28 | 45 | 97 | 2_layer, analog, has_emc, has_gerbers |
@@ -3838,6 +3922,7 @@
 | ilBuso/Orione | RP2040 / Raspberry P | mixed | 251 | 2 | 15 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | IleanaAldama/TT | Motor controllers /  | kicad5 | 48 | 1 | 26 | 40 | 100 | 1_layer, has_emc, has_gerbers, has_pcb |
 | iley/kamaji | Arduino recreations | mixed | 197 | 2 | 31 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
+| iley/kamaji@c02e962 | Arduino recreations | mixed | 197 | 2 | 31 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | ilkercosar/Hardware-Desing | Miscellaneous KiCad  | mixed | 171 | 4 | 10 | 40 | 93 | 4_layer, has_emc, has_pcb, has_spice |
 | illdefined/phq-u | Miscellaneous KiCad  | kicad6 | 216 | 4 | 16 | 45 | 85 | 4_layer, has_emc, has_pcb, has_spice |
 | Illuminux/Schrankbeleuchtung-KiCad | Miscellaneous KiCad  | mixed | 33 | 2 | 34 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -3895,6 +3980,7 @@
 | INTI-CMNB/Curso-KiCad-Intro | Miscellaneous KiCad  | mixed | 370 | 4 | 12 | 59 | 96 | 4_layer, has_emc, has_gerbers, has_pcb |
 | INTI-CMNB/kibot-examples-1 | Miscellaneous KiCad  | kicad6 | 24 | - | 0 | - | - | hierarchical, kicad6, medium |
 | INTI-CMNB/kibot_variants_arduprog | Miscellaneous KiCad  | mixed | 48 | 4 | 56 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| INTI-CMNB/kibot_variants_arduprog@59db1db | Miscellaneous KiCad  | kicad10 | 48 | 4 | 56 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | INTI-CMNB/KiDiff | General collections | mixed | 200 | 4 | 10 | 29 | 99 | 4_layer, has_emc, has_pcb, has_spice |
 | INTI-CMNB/Practicas-Curso-Kicad | Miscellaneous KiCad  | kicad5 | 534 | 2 | 10 | 39 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
 | INTI-CMNB/spora | Power / battery | kicad5 | 158 | 6 | 42 | 100 | 100 | 6_layer, has_emc, has_pcb, has_spice |
@@ -3952,6 +4038,7 @@
 | j-hoppe/uTracer11 | Test equipment / deb | mixed | 229 | 4 | 11 | 40 | 75 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | j0ono0/handheld_game_console_prototype_01 | Arduino recreations | mixed | 21 | 2 | 30 | 40 | 74 | 2_layer, has_emc, has_gerbers, has_pcb |
 | J1DDERY/data_sampling | Miscellaneous KiCad  | mixed | 2727 | 6 | 4 | 41 | 89 | 6_layer, analog, has_emc, has_gerbers |
+| J1DDERY/data_sampling@950c2cd | Miscellaneous KiCad  | mixed | 1532 | 6 | 3 | 41 | 98 | 6_layer, analog, has_emc, has_gerbers |
 | j4nkr/pimpmysolarcells | Power / battery | kicad5 | 288 | - | 0 | 30 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | ja1umi/MUTIF09Project | SBCs / carrier board | kicad5 | 267 | 2 | 52 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | jabadiagm/MSXproto_tn9k | Retro computing | kicad6 | 21 | 2 | 56 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -3967,6 +4054,7 @@
 | jackshisd/EoC-Lab | ESP32 | mixed | 165 | 4 | 26 | 40 | 96 | 4_layer, analog, has_emc, has_gerbers |
 | jacksterb1234/Mouse-Micro | Miscellaneous KiCad  | mixed | 19 | 2 | 26 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | jacksterb1234/Portable_Charger | Power / battery | mixed | 80 | 2 | 19 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| jackw01/scanlight | Miscellaneous KiCad  | mixed | 1530 | 4 | 19 | 99 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | JacobParent7/Eurorack-PSU | Synthesizers / audio | kicad7 | 21 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | JacobParent7/FSAE_ELECTRONICS | Miscellaneous KiCad  | mixed | 346 | 2 | 20 | 36 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | jadeaffenjaeger/dachboden_badge | LED / display | mixed | 29 | 2 | 26 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -4182,6 +4270,7 @@
 | jgraichen/railway-signals | General collections | mixed | 137 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | jgrip/commodorelcd | Retro computing | kicad6 | 231 | - | 2 | 4 | 100 | analog, has_emc, has_pcb, has_spice |
 | jguillen-lab/BFS9000 | RP2040 / Raspberry P | mixed | 646 | 4 | 3 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| jguillen-lab/BFS9000@9a839d9 | RP2040 / Raspberry P | kicad10 | 447 | 2 | 9 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | JHay0112/apricity | Miscellaneous KiCad  | kicad6 | 62 | 2 | 28 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | jhbruhn/butns | Miscellaneous KiCad  | mixed | 530 | 2 | 9 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | jherkenhoff/STM | Motor controllers /  | mixed | 728 | 2 | 17 | 40 | 90 | 2_layer, analog, has_emc, has_gerbers |
@@ -4266,6 +4355,7 @@
 | JoaoNilo/HW--DGT-02 | Miscellaneous KiCad  | kicad7 | 89 | 4 | 33 | 40 | 99 | 4_layer, has_emc, has_pcb, has_spice |
 | JoaoNilo/HW-CTB-02 | Miscellaneous KiCad  | kicad7 | 68 | 4 | 39 | 40 | 99 | 4_layer, analog, has_emc, has_gerbers |
 | Jochen0x90h/LedControl | LED / display | mixed | 119 | 2 | 44 | 40 | 96 | 2_layer, has_emc, has_pcb, has_spice |
+| Jochen0x90h/LedControl@f45dccc | LED / display | mixed | 119 | 2 | 44 | 40 | 96 | 2_layer, has_emc, has_pcb, has_spice |
 | JochiSt/ESP32_GRBL_SUBD | ESP32 | mixed | 94 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | JochiSt/OpenFlowMeter | STM32 | mixed | 251 | 4 | 7 | 45 | 100 | 4_layer, analog, digital_interfaces, has_emc |
 | JochiSt/Strandjungs_ReactionGame | Miscellaneous KiCad  | kicad6 | 73 | 2 | 22 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -4325,6 +4415,7 @@
 | jondurrant/RPIPicoVideoTurntableMk1 | RP2040 / Raspberry P | kicad6 | 33 | 2 | 40 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | jonelay/ssd_blinky | Miscellaneous KiCad  | kicad5 | 12 | - | 0 | 20 | - | has_spice, kicad5, legacy_schematic, small |
 | jonkster/biot | Sensor boards / IoT | kicad5 | 99 | 2 | 27 | 36 | 75 | 2_layer, has_emc, has_pcb, has_spice |
+| jonnor/projects | Miscellaneous KiCad  | mixed | 361 | 2 | 16 | 32 | 83 | 2_layer, analog, has_emc, has_gerbers |
 | Jonny999999/throttle-tune | Miscellaneous KiCad  | mixed | 51 | 2 | 21 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | jonnydyer/rocket_ejection | Sensor boards / IoT | kicad5 | 106 | 4 | 28 | 98 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | jonnyh64/palrvs | Miscellaneous KiCad  | kicad7 | 10 | 2 | 44 | 40 | 100 | 2_layer, has_emc, has_pcb, kicad7 |
@@ -4347,6 +4438,7 @@
 | JordanAceto/rust_ribbon_controller | STM32 | kicad7 | 148 | 4 | 7 | 40 | 100 | 4_layer, analog, has_emc, has_pcb |
 | JordanAceto/VCF_plug_in_boards | Synthesizers / audio | mixed | 1583 | 4 | 9 | 40 | 97 | 4_layer, analog, has_emc, has_gerbers |
 | jorisplusplus/pcdock | RISC-V / FPGA | mixed | 2061 | 8 | 10 | 40 | 80 | 8_layer, digital_interfaces, has_emc, has_gerbers |
+| josearistidesbail/FE_UFPR_4_0 | Miscellaneous KiCad  | kicad10 | 728 | 4 | 12 | 40 | 99 | 4_layer, analog, has_emc, has_gerbers |
 | josebc025/Jose_Bonilla_Micro_2025_C2 | Miscellaneous KiCad  | mixed | 155 | 2 | 3 | 32 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | JoseCuretti/PIC16F887EV | Miscellaneous KiCad  | kicad7 | 126 | 2 | 32 | 40 | 84 | 2_layer, has_emc, has_pcb, has_spice |
 | josefadamcik/RoomMonitorPcb | Miscellaneous KiCad  | mixed | 62 | 2 | 22 | 40 | 75 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -4364,6 +4456,7 @@
 | joshbredbenner/cooler-master | Miscellaneous KiCad  | mixed | 386 | - | 14 | 40 | 18 | analog, has_emc, has_pcb, has_spice |
 | JoshCrouch/HELIOS | Networking / radio / | mixed | 2225 | 4 | 10 | 39 | 96 | 4_layer, analog, has_emc, has_gerbers |
 | joshnuss/attiny48 | Arduino recreations | mixed | 11 | 2 | 54 | 40 | 94 | 2_layer, has_emc, has_pcb, has_spice |
+| Joshua-Systems/Earendel-000 | Miscellaneous KiCad  | kicad10 | 121 | 2 | 31 | 40 | 92 | 2_layer, has_emc, has_pcb, hierarchical |
 | joshuawalker3/Var_Speed_Fan_With_LED_Strip | ESP32 | mixed | 40 | 2 | 28 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Josnell09/Josnell_Tejeda_Electiva_2025_C2 | Miscellaneous KiCad  | mixed | 594 | 4 | 7 | 39 | 93 | 4_layer, has_emc, has_pcb, has_spice |
 | Josue-ismael-suriel/Josue--ismael-suriel--paulino--PLC4UNI | Miscellaneous KiCad  | mixed | 291 | 2 | 2 | 40 | 95 | 2_layer, has_emc, has_pcb, has_spice |
@@ -4410,8 +4503,10 @@
 | jspspike/balance | Miscellaneous KiCad  | mixed | 42 | 2 | 23 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | jstodberg/Hardware-done-with-kicad | Miscellaneous KiCad  | kicad5 | 13 | 2 | 28 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | jtljac/hmis-rfid-lock | Miscellaneous KiCad  | mixed | 26 | 2 | 38 | 40 | 94 | 2_layer, has_emc, has_pcb, has_spice |
+| jtljac/person-keyboard | Keyboards | kicad10 | 688 | 2 | 12 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | jtommi/mmsb | Synthesizers / audio | mixed | 177 | 2 | 5 | 18 | 88 | 2_layer, analog, has_emc, has_gerbers |
 | jtragtenberg/agbau | Miscellaneous KiCad  | mixed | 59 | 2 | 14 | - | 100 | 2_layer, has_emc, has_pcb, medium |
+| jtsuka/NTC-1A-Control | Miscellaneous KiCad  | mixed | 386 | 2 | 13 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | juanalbapraska/Robot_Velocista | Motor controllers /  | mixed | 39 | 2 | 24 | 40 | 80 | 2_layer, has_emc, has_pcb, hierarchical |
 | JuanJoToAl/Espacio-inmersivo | Retro computing | mixed | 5 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | juansala/TARC-Altimeter | Sensor boards / IoT | mixed | 20 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -4426,6 +4521,7 @@
 | juliannevillecorrea/juliannevillecorrea.github.io | Miscellaneous KiCad  | mixed | 10 | - | 7 | 20 | 100 | analog, has_emc, has_pcb, hierarchical |
 | julianobst/arm-jtag-20-10-plus | Test equipment / deb | mixed | 6 | 2 | 36 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | julianschuler/esp-led-dimmer | LED / display | mixed | 14 | 2 | 34 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| JulianStremel/its-g5-receiver | Miscellaneous KiCad  | kicad10 | 283 | 4 | 11 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | JulianVolodia/voltastream0-kicad | Synthesizers / audio | kicad5 | 259 | 4 | 10 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | JuliCai/SmarterWatch | Smartwatches / weara | mixed | 216 | 4 | 3 | 42 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | julien8/PoEPi-hardware | RP2040 / Raspberry P | kicad5 | 246 | 2 | 33 | 40 | 98 | 2_layer, digital_interfaces, has_emc, has_pcb |
@@ -4531,6 +4627,7 @@
 | KarlZeilhofer/WolkenThermometer-kicad | ADC / DAC / measurem | kicad5 | 59 | 2 | 39 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | karmakrafts/EtherKraken | Networking / radio / | kicad10 | 56 | 2 | 81 | 57 | 96 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | karmakrafts/EtherKraken@e4b26c1 | Networking / radio / | kicad10 | 84 | 2 | 94 | 55 | 98 | 2_layer, digital_interfaces, has_emc, has_pcb |
+| kashishkebab9/echo | Miscellaneous KiCad  | kicad10 | 56 | 4 | 12 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | kattaliraees/DA14531MOD-Breakout | USB / interface adap | kicad7 | 3 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | KavEn06/Anachron | Miscellaneous KiCad  | kicad10 | 134 | 4 | 13 | 52 | 99 | 4_layer, has_emc, has_pcb, has_spice |
 | kbumsik/WolfieMouse | Motor controllers /  | kicad5 | 158 | 2 | 17 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -4609,6 +4706,8 @@
 | KiCad/RN-42-Breakout | Uncategorized | kicad5 | 3 | 1 | 32 | 40 | 100 | 1_layer, has_emc, has_pcb, kicad5 |
 | kicad/rpishield | Uncategorized | kicad5 | 15 | 2 | 45 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | kiibohd/pcb | Keyboards | mixed | 2507 | 2 | 18 | 36 | 100 | 2_layer, analog, has_emc, has_gerbers |
+| kimballa/breakout-boards | Miscellaneous KiCad  | mixed | 44 | 2 | 36 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
+| kinggh0stee/WellD | ESP32 | kicad10 | 538 | 2 | 8 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | klein0r/pcb-knx-distributor | Miscellaneous KiCad  | mixed | 16 | 2 | 14 | - | 100 | 2_layer, has_emc, has_pcb, mixed |
 | klein0r/pcb-knx-distributor@0457e8e | Miscellaneous KiCad  | kicad10 | 18 | 2 | 14 | - | 100 | 2_layer, has_emc, has_pcb, kicad10 |
 | kliment/catws | Miscellaneous KiCad  | mixed | 50 | 2 | 36 | 40 | 99 | 2_layer, has_emc, has_pcb, hierarchical |
@@ -4617,6 +4716,7 @@
 | kmahabeer/Project-2537_5b7a_0023-Led-driver | Networking / radio / | kicad7 | 348 | 2 | 14 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | Knektium/PCB_MotorECU | Motor controllers /  | mixed | 27 | 2 | 74 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | Knifa/ws28xx-led-driver | LED / display | mixed | 71 | 2 | 63 | 64 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| knonyks/onyks-iot-zigbee-panel-sterujacy-z-wyswietlaczem | Miscellaneous KiCad  | kicad10 | 61 | 2 | 13 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | knud/SuperProbe-simulations | Networking / radio / | kicad7 | 39 | - | 2 | - | 100 | has_emc, has_pcb, has_spice, kicad7 |
 | koalo/KiCad_PCBmerge | Miscellaneous KiCad  | kicad5 | 9 | 1 | 15 | 40 | 100 | 1_layer, has_emc, has_pcb, hierarchical |
 | koczadly/xmas-led-controller | Miscellaneous KiCad  | mixed | 51 | 1 | 44 | 40 | 100 | 1_layer, has_emc, has_pcb, has_spice |
@@ -4640,7 +4740,9 @@
 | ktauchathuranga/esp32-s3-testboard | ESP32 | mixed | 42 | 4 | 40 | 40 | 97 | 4_layer, has_emc, has_pcb, has_spice |
 | kuellenberg/Dew-Controller | Sensor boards / IoT | mixed | 113 | 2 | 23 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | kulp/soylent | Arduino recreations | mixed | 46 | 2 | 1 | 40 | 95 | 2_layer, analog, has_emc, has_pcb |
+| KungfuPancake/longboi | Miscellaneous KiCad  | mixed | 438 | 4 | 5 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | KunYi/rv1106g_evb1 | Synthesizers / audio | kicad9 | 1149 | - | 0 | 40 | - | has_emc, has_spice, hierarchical, kicad9 |
+| KXR-UCF/mdfc | Miscellaneous KiCad  | kicad10 | 107 | 4 | 19 | 62 | 89 | 4_layer, has_emc, has_pcb, has_spice |
 | kylemanna/sniffer | Miscellaneous KiCad  | mixed | 22 | 2 | 34 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | kylemanna/teensy-toslink-receiver | USB / interface adap | mixed | 17 | 2 | 34 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_gerbers |
 | labecoufsc/Power-PCB | Power / battery | kicad7 | 141 | 4 | 62 | 40 | 100 | 4_layer, analog, has_emc, has_gerbers |
@@ -4666,6 +4768,7 @@
 | leacog/PLL-ultrasonic-driver | Miscellaneous KiCad  | kicad5 | 35 | 2 | 63 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | LEDs-by-glowingkitty/KiCad-PCB-design-workshop | Power / battery | kicad6 | 93 | - | 1 | 40 | - | has_emc, has_spice, hierarchical, kicad6 |
 | lendres/KiCad-Schematics | Power / battery | kicad5 | 48 | - | 2 | 40 | 100 | has_emc, has_pcb, has_spice, hierarchical |
+| lennartquerter/euro-rack-synth | Synthesizers / audio | mixed | 7938 | 4 | 11 | 40 | 72 | 4_layer, analog, has_emc, has_gerbers |
 | LeoDJ/SHMod24 | Arduino recreations | mixed | 73 | 2 | 70 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | leoheck/mangoh-red | Sensor boards / IoT | mixed | 1205 | - | 5 | 96 | 0 | has_emc, has_pcb, has_spice, hierarchical |
 | leomanangka/esp32-4-channel-relays | ESP32 | kicad7 | 63 | 2 | 66 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -4691,14 +4794,17 @@
 | LibreSolar/uext-lora | Motor controllers /  | mixed | 6 | 2 | 18 | 100 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | LifeOnAFarm/SAO-PCB-Art | Miscellaneous KiCad  | kicad5 | 11 | 1 | 26 | - | 100 | 1_layer, has_emc, has_gerbers, has_pcb |
 | Lightiam/tapeout_07 | Miscellaneous KiCad  | mixed | 35 | 12 | 27 | 75 | 80 | 12_layer, has_emc, has_gerbers, has_pcb |
+| lightningspore/shieldsigner-dev | Miscellaneous KiCad  | mixed | 424 | 4 | 8 | 67 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | lightside-instruments/ice4pi | Miscellaneous KiCad  | kicad6 | 52 | 4 | 21 | 40 | 97 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | likeablob/miniDenko | ESP32 | mixed | 14 | 2 | 44 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | likeablob/shihen | ESP32 | mixed | 51 | 2 | 66 | 80 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| LimesKey/parsnip-node | ESP32 | kicad10 | 3549 | 4 | 9 | 100 | 17 | 4_layer, has_emc, has_gerbers, has_pcb |
 | linguini1/pygmy | Sensor boards / IoT | mixed | 169 | 4 | 14 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | linhvu97vn/19R01-Tm4c123KiCad | Miscellaneous KiCad  | mixed | 104 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | linlun/HW-ESP8266_Roomba | ESP32 | kicad5 | 68 | 2 | 54 | 40 | 50 | 2_layer, has_emc, has_gerbers, has_pcb |
 | listofoptions/ind-sense | Keyboards | mixed | 58 | - | 12 | 40 | 6 | has_emc, has_pcb, has_spice, hierarchical |
 | little-red-rover/lrr-hardware | Sensor boards / IoT | kicad7 | 130 | 2 | 33 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
+| lk-ek/esphome-unni-co2-sniffer | ESP32 | kicad10 | 328 | 4 | 12 | 100 | 48 | 4_layer, has_emc, has_gerbers, has_pcb |
 | llange/openinverter-hw-mainboard-mini | Power / battery | kicad6 | 102 | 2 | 24 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | llegoff/bobuino | Arduino recreations | kicad5 | 362 | 2 | 30 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | llegoff/MySensorsPiGw | RP2040 / Raspberry P | kicad5 | 26 | 2 | 75 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -4707,6 +4813,7 @@
 | llegoff/USB_Hub | USB / interface adap | kicad5 | 34 | 2 | 76 | 40 | 93 | 2_layer, has_emc, has_pcb, has_spice |
 | llegoff/VGA_Zero | RP2040 / Raspberry P | mixed | 32 | 2 | 45 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | lmdsp/midibox | Miscellaneous KiCad  | mixed | 21 | 2 | 44 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| Lnotti/5-Channel-High-Current-Li-po-Discharger | Miscellaneous KiCad  | kicad10 | 150 | 2 | 22 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | lnsru/melexisToFcamera4layer | Miscellaneous KiCad  | mixed | 212 | - | 14 | 40 | 4 | has_emc, has_pcb, has_spice, hierarchical |
 | Lodigolden/kicad-schematic-lib | Miscellaneous KiCad  | kicad9 | 6 | - | 0 | 40 | - | has_spice, hierarchical, kicad9, power |
 | logitiles/HEXBERRY-V-20Q100-0.91 | RISC-V / FPGA | mixed | 386 | 4 | 12 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
@@ -4741,6 +4848,7 @@
 | MackPI/UProgrammer-Hardware | Test equipment / deb | kicad5 | 73 | 2 | 66 | 33 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | macmade/Electronics-Tutorials | Miscellaneous KiCad  | kicad7 | 115 | 2 | 20 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | macmade/PWR | Power / battery | kicad7 | 17 | 1 | 26 | 40 | 100 | 1_layer, has_emc, has_pcb, has_spice |
+| MadsRudolph/curtain-drive | Miscellaneous KiCad  | kicad10 | 146 | 1 | 33 | 40 | 100 | 1_layer, has_emc, has_gerbers, has_pcb |
 | MadsRudolph/personal-projects | Miscellaneous KiCad  | mixed | 523 | 2 | 12 | 21 | 68 | 2_layer, analog, digital_interfaces, has_emc |
 | madworx/raspi-ic-tester | RP2040 / Raspberry P | mixed | 16 | 2 | 38 | 100 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | madworx/tms5220-atmega | Arduino recreations | mixed | 32 | 2 | 56 | 50 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -4756,6 +4864,7 @@
 | MAKERSUN99/MAUS | LED / display | kicad7 | 14 | 2 | 42 | 100 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | makinbacon21/mipi-mapper | Miscellaneous KiCad  | mixed | 32 | 2 | 49 | 40 | 88 | 2_layer, has_emc, has_pcb, has_spice |
 | MalphasWats/hawk | Retro computing | mixed | 13 | 1 | 32 | 40 | 100 | 1_layer, has_emc, has_gerbers, has_pcb |
+| mamba2410/picowalker-hardware | Miscellaneous KiCad  | mixed | 711 | 4 | 4 | 67 | 97 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | maniekx86/isa_8bit_protoboard | Retro computing | mixed | 12 | 2 | 12 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | maniekx86/M8SBC-486 | Retro computing | mixed | 250 | 4 | 6 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | ManlishPotato/KiCad_DRC | Motor controllers /  | unknown | 0 | - | - | - | - | small, unknown |
@@ -4775,6 +4884,7 @@
 | marcoster/zephyr-watch-hardware | Sensor boards / IoT | kicad5 | 1 | - | 2 | 40 | 100 | has_emc, has_pcb, kicad5, legacy_schematic |
 | marcuslechner/PCBA_Business_Card | Miscellaneous KiCad  | mixed | 6 | 2 | 12 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | MarginallyClever/fourDigitSevenSegmentDisplay | LED / display | kicad5 | 23 | 2 | 24 | 32 | 94 | 2_layer, has_emc, has_pcb, hierarchical |
+| mariella-dejong/compact64 | Miscellaneous KiCad  | kicad10 | 1182 | 2 | 6 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | Mark-RT/BrainRing_Wireless | Miscellaneous KiCad  | kicad10 | 126 | 2 | 28 | 49 | 96 | 2_layer, has_emc, has_pcb, has_spice |
 | markentier/labs | Arduino recreations | mixed | 19 | 2 | 27 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | markh-de/KiVar | LED / display | mixed | 132 | - | 2 | 60 | 49 | has_emc, has_pcb, has_spice, hierarchical |
@@ -4782,6 +4892,7 @@
 | markstory/ursa-minor-keyboard | Keyboards | mixed | 705 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | markus-k/led-controller-hardware | LED / display | kicad5 | 176 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | MaroMetelski/quadcopter-hw | Power / battery | kicad6 | 185 | 4 | 8 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| marsairforce/breakout_boards | Miscellaneous KiCad  | kicad10 | 212 | 4 | 21 | 40 | 67 | 4_layer, has_emc, has_pcb, has_spice |
 | Martin1995/4-Transistor-Solar-Light | Power / battery | kicad5 | 48 | 2 | 21 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | martinberlin/Sharp-LV | Power / battery | kicad7 | 119 | 4 | 68 | 47 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | martinch14/tecsci_spincoater_hardware_kicad | Miscellaneous KiCad  | mixed | 321 | 4 | 12 | 40 | 99 | 4_layer, analog, has_emc, has_pcb |
@@ -4836,6 +4947,7 @@
 | mengstr/PCIeTestPCB | Miscellaneous KiCad  | kicad7 | 22 | 2 | 42 | - | 34 | 2_layer, has_emc, has_pcb, kicad7 |
 | mentalDetector/Quansheng_UV-K5_PCB_R51-V1.4_PCB_Reversing_Rev._0.9 | Miscellaneous KiCad  | kicad7 | 515 | 4 | 52 | 40 | 98 | 4_layer, has_emc, has_pcb, has_spice |
 | meowmeowahr/KevinbotV3-KiCAD | LED / display | mixed | 396 | 4 | 10 | 100 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| meowmeowahr/KevinbotV3-KiCAD@47a891c | LED / display | kicad10 | 396 | 4 | 10 | 100 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | meowmeowahr/KevinbotV3-MotionControlHardware | Motor controllers /  | mixed | 316 | 2 | 16 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | Meshinger/3rdparty | Uncategorized | unknown | 0 | - | - | - | - | small, unknown |
 | Meshinger/CAD | Uncategorized | unknown | 0 | - | - | - | - | small, unknown |
@@ -4854,6 +4966,7 @@
 | Miceuz/rs485-moist-sensor | Sensor boards / IoT | mixed | 151 | 4 | 22 | 85 | 80 | 4_layer, has_emc, has_gerbers, has_pcb |
 | michaelkamprath/breadboard-led-bar-graph | LED / display | mixed | 56 | 2 | 20 | - | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | michaelwro/hummingbird-fcu-pcb | Motor controllers /  | mixed | 37 | 2 | 66 | 40 | 96 | 2_layer, has_emc, has_pcb, has_spice |
+| michelkeijzers/fraxis | Miscellaneous KiCad  | mixed | 663 | 14 | 16 | 40 | 95 | 14_layer, has_emc, has_pcb, has_spice |
 | MichMich/555MonoStableRelay | Miscellaneous KiCad  | mixed | 13 | 2 | 22 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | michpro/Arduino_LMeter_shield | Sensor boards / IoT | mixed | 33 | 2 | 24 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
 | michpro/Arduino_Pro_Mini_Dx | Arduino recreations | mixed | 26 | 2 | 24 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -4952,12 +5065,18 @@
 | MohamedELOSROUTI/Programmable-RLC-impedance | ADC / DAC / measurem | mixed | 40 | 2 | 44 | 100 | 97 | 2_layer, analog, has_emc, has_pcb |
 | mohamedyanis/STM32L0-ESP32-Breakout-Board | ESP32 | kicad6 | 35 | 4 | 27 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | mohammedari/thumbsplit58-hardware | Keyboards | mixed | 88 | 2 | 39 | - | 100 | 2_layer, has_emc, has_pcb, hierarchical |
+| moonseongmu/sig_gen_hardware | Miscellaneous KiCad  | kicad10 | 438 | 4 | 6 | 40 | 100 | 4_layer, analog, has_emc, has_gerbers |
+| MootSeeker/BekantX | Miscellaneous KiCad  | kicad10 | 306 | 2 | 5 | 92 | 96 | 2_layer, digital_interfaces, has_emc, has_pcb |
+| moritzheinzle/atlas-electronics | Miscellaneous KiCad  | kicad10 | 1132 | - | 1 | 40 | 25 | has_emc, has_pcb, has_spice, hierarchical |
 | mort13/mutable_eurorack_kicad | Synthesizers / audio | mixed | 6435 | 2 | 6 | 20 | 99 | 2_layer, analog, has_emc, has_pcb |
 | MOSH-Insa-Toulouse/2023-2024_4GP_NGO-TRAN | Arduino recreations | kicad7 | 19 | 2 | 46 | 40 | 97 | 2_layer, has_emc, has_pcb, has_spice |
 | MostlyBuilds/microphone-activator | Miscellaneous KiCad  | kicad7 | 12 | 1 | 22 | - | 90 | 1_layer, has_emc, has_pcb, has_spice |
 | mostlydiyrf/UDVBM-1 | Networking / radio / | kicad6 | 105 | 2 | 55 | 40 | 74 | 2_layer, has_emc, has_pcb, has_spice |
 | motivemachine/APRS_Transciever | Arduino recreations | kicad5 | 33 | - | 32 | 40 | 42 | has_emc, has_pcb, has_spice, kicad5 |
 | mountaindog65/Mechaduino-DR | Motor controllers /  | kicad5 | 73 | 2 | 82 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| mpinnuck/GarageDoorController | Miscellaneous KiCad  | kicad10 | 49 | 2 | 17 | 40 | 56 | 2_layer, has_emc, has_gerbers, has_pcb |
+| mpinnuck/GarageDoorSensor | Miscellaneous KiCad  | mixed | 28 | 2 | 8 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| mpinnuck/PiDjiRc2KmzSync | Miscellaneous KiCad  | kicad10 | 58 | - | 0 | - | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | mprosk/mtg_life_counter | Arduino recreations | mixed | 98 | 2 | 58 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | MR-DOS/MWGEN-G1 | Networking / radio / | kicad6 | 802 | 4 | 20 | 40 | 28 | 4_layer, analog, has_emc, has_pcb |
 | mrieker/hode | Miscellaneous KiCad  | kicad5 | 468 | 5 | 17 | 40 | 94 | 5_layer, has_emc, has_pcb, has_spice |
@@ -4981,6 +5100,7 @@
 | mwrnd/PCIe_x8_Breakout | USB / interface adap | kicad7 | 42 | 4 | 30 | - | 100 | 4_layer, has_emc, has_pcb, kicad7 |
 | mwrnd/QSFP_Breakout | USB / interface adap | kicad7 | 54 | 4 | 34 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | mwrnd/SFP_Plug_Breakout | USB / interface adap | kicad7 | 16 | 4 | 14 | - | 100 | 4_layer, has_emc, has_pcb, kicad7 |
+| mx3353672833-debug/moto-gps-waveshare | ESP32 | mixed | 896 | 4 | 50 | 78 | 92 | 4_layer, has_emc, has_gerbers, has_pcb |
 | mygnu/opilio-pcb | Miscellaneous KiCad  | mixed | 167 | 4 | 11 | 40 | 96 | 4_layer, has_emc, has_pcb, has_spice |
 | myk-src/custom-ergo-keyboard | Keyboards | kicad7 | 98 | 2 | 51 | 40 | 100 | 2_layer, has_emc, has_pcb, keyboard |
 | myles-parfeniuk/biltong_board | STM32 | kicad7 | 125 | 2 | 10 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -5045,10 +5165,13 @@
 | nnarain/icarus | Motor controllers /  | mixed | 89 | 4 | 32 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | nnarain/kratos-pdb | Miscellaneous KiCad  | mixed | 61 | 4 | 28 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | northernpaws/catalina | Synthesizers / audio | mixed | 363 | 8 | 42 | 59 | 91 | 8_layer, digital_interfaces, has_emc, has_pcb |
+| NorthernWidget/Project-Margay | Miscellaneous KiCad  | kicad10 | 168 | 2 | 24 | 100 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | nradulovic/hw_minima | Synthesizers / audio | mixed | 110 | 2 | 22 | 40 | 86 | 2_layer, has_emc, has_pcb, has_spice |
 | nrth3rnlb/battery-tester | Power / battery | kicad5 | 17 | 2 | 40 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| nrwiersma/sentinel | Miscellaneous KiCad  | kicad10 | 129 | 4 | 13 | 100 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | nterry/n64-kicad | Retro computing | mixed | 44 | 2 | 39 | 31 | 97 | 2_layer, has_emc, has_pcb, has_spice |
 | nuess0r/ctrl-M | Miscellaneous KiCad  | mixed | 35 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| nunosousa/AudioAmplifier | Miscellaneous KiCad  | mixed | 626 | - | 2 | 83 | 100 | analog, digital_interfaces, has_emc, has_pcb |
 | Nurgak/Internet-of-Things-Power-Meter | Arduino recreations | kicad5 | 9 | 2 | 30 | 40 | 87 | 2_layer, has_emc, has_pcb, kicad5 |
 | NurikNG/ESP12E-simple-board | ESP32 | mixed | 24 | 2 | 57 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | nushackers/hsp-pcb-intro | CubeSat / aerospace | mixed | 6 | 2 | 12 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5143,11 +5266,15 @@
 | OpenElectronicsLab/kicadSchematicPosToPCB | Miscellaneous KiCad  | kicad5 | 12 | - | 0 | - | - | kicad5, legacy_schematic, small |
 | openhwgroup/core-v-mcu-devkit | Well-known hardware  | kicad7 | 332 | 4 | 9 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | OpenLightingProject/rp2040-dmxsun | RP2040 / Raspberry P | mixed | 289 | 2 | 56 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
+| OpenLogicEFI/Hardware | Miscellaneous KiCad  | mixed | 5728 | 4 | 11 | 46 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | openscopeproject/Keithley1950 | Motor controllers /  | mixed | 91 | 2 | 69 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | OpenShock/Hardware | ESP32 | mixed | 92 | 3 | 59 | 40 | 97 | 3_layer, has_emc, has_gerbers, has_pcb |
 | openwch/ch334 | Miscellaneous KiCad  | kicad7 | 28 | 2 | 60 | 40 | 97 | 2_layer, has_emc, has_pcb, has_spice |
 | opticsfoundry/Kicad-Library-Optics | Power / battery | mixed | 55 | 2 | 12 | - | 67 | 2_layer, has_emc, has_pcb, hierarchical |
+| oresat/oresat-backplane | Miscellaneous KiCad  | mixed | 1093 | 4 | 3 | 7 | 96 | 4_layer, has_emc, has_pcb, has_spice |
 | oresat/oresat-c3-hardware | Miscellaneous KiCad  | kicad10 | 989 | 4 | 9 | 100 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| oresat/oresat-solar-hardware | Miscellaneous KiCad  | mixed | 1255 | 4 | 16 | 94 | 97 | 4_layer, has_emc, has_gerbers, has_pcb |
+| orri93/electronics | Miscellaneous KiCad  | mixed | 1045 | 2 | 13 | 28 | 95 | 2_layer, analog, has_emc, has_pcb |
 | Oscyloskop444/RGB-LED-matrix | Miscellaneous KiCad  | kicad10 | 613 | 4 | 17 | 40 | 98 | 4_layer, has_emc, has_pcb, has_spice |
 | oshwcom/BLDC_STC15W401 | Motor controllers /  | kicad5 | 61 | 2 | 90 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | Ottercast/OtterCastAudioV2 | Well-known hardware  | mixed | 417 | 4 | 19 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
@@ -5156,6 +5283,7 @@
 | overscore-media/luxigrid | Miscellaneous KiCad  | mixed | 15 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | overset/trackball | Miscellaneous KiCad  | mixed | 14 | 2 | 46 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | OWON-LILLIPUT/scopefun-hardware | Miscellaneous KiCad  | kicad5 | 1159 | 6 | 7 | 40 | 100 | 6_layer, analog, has_emc, has_gerbers |
+| OxeBots/ssl_electronics | Miscellaneous KiCad  | mixed | 347 | 2 | 34 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | p0ryae/RadianceX-PCB | Miscellaneous KiCad  | kicad6 | 30 | 1 | 39 | 40 | 43 | 1_layer, has_emc, has_pcb, kicad6 |
 | pablov55/Beginner-s-Guide-to-KiCad | Miscellaneous KiCad  | mixed | 6 | 2 | 20 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Pacheco55/KICADex | Miscellaneous KiCad  | mixed | 23 | 2 | 20 | 40 | 56 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5188,6 +5316,7 @@
 | pdaehne/SNES-Userport-Adapter | Retro computing | kicad7 | 6 | 2 | 28 | - | 100 | 2_layer, has_emc, has_pcb, kicad7 |
 | pdp7/art | Miscellaneous KiCad  | mixed | 2 | 2 | 12 | - | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | pdp7/rotary-encoder-breakout | USB / interface adap | kicad5 | 6 | 2 | 12 | - | 100 | 2_layer, has_emc, has_pcb, kicad5 |
+| pedrohqr/ra5_2022_m | Miscellaneous KiCad  | kicad10 | 414 | 2 | 15 | 100 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | peej/bicycle-keyboard | Keyboards | kicad5 | 64 | 2 | 38 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | peej/for-idle-hands-keyboard | Keyboards | kicad5 | 31 | 2 | 45 | 40 | 92 | 2_layer, has_emc, has_pcb, keyboard |
 | peej/for-split-keyboard | Keyboards | kicad5 | 70 | 2 | 44 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5197,6 +5326,7 @@
 | pesevic/Mechaduino-Hardware-KiCad | Motor controllers /  | mixed | 131 | 2 | 19 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | pfabo/XSPICE-KiCad-Jupyter | Miscellaneous KiCad  | mixed | 62 | - | 1 | - | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | pfork/hardware | Power / battery | kicad5 | 149 | 2 | 87 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
+| Phantom-243/handheld-gaming-console | Miscellaneous KiCad  | kicad10 | 476 | - | 10 | 40 | 40 | digital_interfaces, has_emc, has_pcb, has_spice |
 | philipparndt/opentherm-wolf-cwl | Miscellaneous KiCad  | kicad10 | 117 | 2 | 19 | 40 | 88 | 2_layer, has_emc, has_pcb, has_spice |
 | philpem/M68KSnifferProbe | Test equipment / deb | mixed | 5 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | phiwan-dev/phiboard | Keyboards | mixed | 48 | 2 | 70 | 40 | 89 | 2_layer, has_emc, has_pcb, has_spice |
@@ -5233,11 +5363,13 @@
 | pjschinske/TI83x | Power / battery | mixed | 194 | 4 | 16 | 40 | 98 | 4_layer, analog, has_emc, has_gerbers |
 | plan44/p44ttngw-hardware | Networking / radio / | kicad5 | 50 | 2 | 76 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | plan44/pixelboard-hardware | LED / display | kicad5 | 90 | 2 | 46 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| plane-watch/hardware | RISC-V / FPGA | kicad10 | 351 | 4 | 4 | 98 | 100 | 4_layer, analog, has_emc, has_pcb |
 | PlummersSoftwareLLC/PongPCB | Miscellaneous KiCad  | kicad6 | 26 | 2 | 45 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | PlumPot55/KiCad-Circuits | Power / battery | kicad5 | 156 | - | 0 | 41 | - | has_spice, hierarchical, kicad5, legacy_schematic |
 | plushugh/hallpico | Keyboards | mixed | 20 | 2 | 40 | 40 | 100 | 2_layer, has_emc, has_pcb, medium |
 | plut0nium/0x42 | Keyboards | mixed | 374 | 2 | 17 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | plut0nium/0x60 | Keyboards | mixed | 311 | 2 | 31 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| pmnlla/neokey | Miscellaneous KiCad  | mixed | 26 | 2 | 36 | 40 | 36 | 2_layer, has_emc, has_gerbers, has_pcb |
 | pms67/HadesFCS | STM32 | mixed | 688 | 4 | 20 | 58 | 95 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | pms67/STM32F4-Reference-PCB | STM32 | mixed | 50 | 4 | 24 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | pmusgrave/cleanduino | Arduino recreations | kicad5 | 107 | - | 1 | 73 | 100 | analog, has_emc, has_pcb, has_spice |
@@ -5270,6 +5402,7 @@
 | probablythomas/greenhouse_hw | Miscellaneous KiCad  | kicad5 | 11 | 2 | 39 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | productize/kicad-automation-scripts | Sensor boards / IoT | mixed | 9 | 1 | 10 | 0 | 83 | 1_layer, has_emc, has_pcb, hierarchical |
 | profdc9/SuperProbe | Test equipment / deb | kicad5 | 74 | 2 | 30 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| ProfeRimoldi/Proyecto_CanSAT | Miscellaneous KiCad  | kicad10 | 152 | 2 | 20 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | programmable-logic-tools/terasic-usb-blaster | RISC-V / FPGA | kicad5 | 25 | - | 0 | 16 | - | kicad5, legacy_schematic, medium, power |
 | promesoft/KicadJE_LFO_1 | Synthesizers / audio | mixed | 857 | 2 | 13 | 40 | 98 | 2_layer, analog, has_emc, has_gerbers |
 | protaskin/AVRThermostat | Arduino recreations | kicad5 | 31 | 2 | 39 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -5358,6 +5491,7 @@
 | reinauer/Paula-Int-Adapter | Retro computing | mixed | 6 | 2 | 32 | 40 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | RemiFM/ACDC_TUNS700F | Miscellaneous KiCad  | mixed | 38 | 2 | 44 | 40 | 80 | 2_layer, has_emc, has_pcb, has_spice |
 | RemiFM/RF-to-USB | STM32 | mixed | 52 | 4 | 72 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| ReMured/PEP | Miscellaneous KiCad  | kicad10 | 298 | 2 | 4 | 38 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | remus4444/CAD | Miscellaneous KiCad  | mixed | 315 | 4 | 24 | 42 | 98 | 4_layer, has_emc, has_gerbers, has_pcb |
 | Rerouter/Multislope-ADC-PCB | ADC / DAC / measurem | mixed | 225 | 2 | 51 | 68 | 100 | 2_layer, analog, has_emc, has_pcb |
 | RespiraWorks/Ventilator | ADC / DAC / measurem | mixed | 1588 | 4 | 3 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -5400,6 +5534,7 @@
 | rnanosaur/nanosaur-exp-board | Miscellaneous KiCad  | mixed | 10 | 2 | 30 | - | 100 | 2_layer, has_emc, has_pcb, mixed |
 | rnanosaur/nanosaur-NX-shield | Miscellaneous KiCad  | kicad6 | 29 | - | 16 | 40 | 50 | has_emc, has_pcb, has_spice, kicad6 |
 | rniwase/tsuraraGB | Miscellaneous KiCad  | kicad7 | 135 | 2 | 39 | 40 | 98 | 2_layer, digital_interfaces, has_emc, has_pcb |
+| robbertvdzon/pepernotenmachine | Miscellaneous KiCad  | kicad10 | 278 | 2 | 17 | 40 | 84 | 2_layer, has_emc, has_gerbers, has_pcb |
 | robertcalvert/f.60 | Keyboards | kicad5 | 125 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | RobertGawron/IonizationChamber | ADC / DAC / measurem | mixed | 180 | 2 | 9 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
 | RobertGawron/PlantWateringDevice | Miscellaneous KiCad  | kicad10 | 118 | 4 | 9 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -5414,6 +5549,7 @@
 | RobsyRocket/Lawo-14x16-Flip-Dot-Matrix | LED / display | kicad5 | 6 | - | 0 | 40 | - | has_spice, kicad5, legacy_schematic, small |
 | RobsyRocket/Lawo-28x16-Flip-Dot-Matrix-with-LED | LED / display | kicad5 | 10 | - | 0 | 40 | - | has_spice, kicad5, legacy_schematic, small |
 | rocketman768/HF10WAmp | Synthesizers / audio | kicad5 | 44 | - | 0 | 0 | - | has_spice, kicad5, legacy_schematic, medium |
+| RockSat-at-VT/RSXVT2027 | Miscellaneous KiCad  | kicad10 | 1427 | 2 | 1 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | rolypolytoy/lightning-in-a-bottle | Synthesizers / audio | mixed | 20 | 4 | 16 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | RoMadrigal/GuitarAmplifier-PCB-IE0308 | Synthesizers / audio | mixed | 41 | 4 | 45 | 80 | 100 | 4_layer, analog, has_emc, has_gerbers |
 | RoMadrigal/ProtoboardSource-PCB | Miscellaneous KiCad  | mixed | 8 | 2 | 3 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5425,6 +5561,7 @@
 | ronaldsieber/ESP32SmartBoard_PCB | ESP32 | mixed | 32 | 2 | 38 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | RonMcKay/capacitive-soil-moisture-sensor | Arduino recreations | kicad6 | 18 | 2 | 57 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | root670/dance-pad | LED / display | mixed | 54 | 2 | 29 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| rosalyntg/ultrasound | Miscellaneous KiCad  | kicad10 | 1118 | 5 | 7 | 98 | 99 | 5_layer, analog, has_emc, has_pcb |
 | rossuthoff/intraoral_led_driver | LED / display | kicad5 | 32 | 2 | 24 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | roybaer/gb_cartridge | Retro computing | kicad5 | 46 | 2 | 51 | 40 | 97 | 2_layer, has_emc, has_pcb, has_spice |
 | roybaer/sduino_mb | Arduino recreations | kicad5 | 48 | 2 | 54 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
@@ -5451,9 +5588,12 @@
 | ry/ws2812-2020-breakout | LED / display | mixed | 6 | 2 | 30 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ryanfobel/ItsyBitsy-M4-Express-clone.kicad | Miscellaneous KiCad  | kicad5 | 26 | 2 | 96 | 100 | 98 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | ryanromeodev/hsb-amcd-sose2025-5 | Miscellaneous KiCad  | mixed | 17 | 2 | 18 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
+| s-katada/kobu | Miscellaneous KiCad  | mixed | 224 | 2 | 25 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | s-light/Mega1284RFM69_PCB | Arduino recreations | kicad5 | 44 | - | 14 | 40 | 100 | has_emc, has_pcb, has_spice, kicad5 |
 | sabogalc/KiCad-Arduino-Boards | Arduino recreations | mixed | 1058 | 4 | 22 | 40 | 100 | 4_layer, analog, has_emc, has_pcb |
 | sabogalc/MIG-Flash-PCBs | Miscellaneous KiCad  | mixed | 183 | 4 | 17 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| Sadcatt/Flight-Computer | Miscellaneous KiCad  | mixed | 92 | 4 | 15 | 40 | 96 | 4_layer, digital_interfaces, has_emc, has_pcb |
+| Sadrita404/Split-Keyboard | Keyboards | kicad10 | 202 | 2 | 8 | 40 | 100 | 2_layer, has_emc, has_pcb, hierarchical |
 | Sadteeto/BuhSat-v0 | Arduino recreations | kicad7 | 32 | 2 | 48 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | sahasss/PCB-Motor-Speed-and-Direction-controller | Motor controllers /  | mixed | 12 | 2 | 48 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | saianonymous/KiCad-Lappy | Miscellaneous KiCad  | kicad6 | 9 | 1 | 10 | 40 | 94 | 1_layer, analog, has_emc, has_gerbers |
@@ -5465,6 +5605,7 @@
 | SamuraiCrow/MiniMig-KiCAD | ADC / DAC / measurem | kicad5 | 439 | - | 0 | 0 | - | analog, digital_interfaces, has_emc, hierarchical |
 | samvandenabeele/wurtelvin | Miscellaneous KiCad  | kicad10 | 150 | 4 | 8 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | Sandeep1203tech/Project2-STM32F4-Breakout | STM32 | kicad6 | 44 | 4 | 33 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
+| SantiBarrios2002/mtp-f26-teamc | Miscellaneous KiCad  | kicad10 | 424 | 2 | 11 | 100 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | SarahAlroe/IV-6-Clock | Arduino recreations | mixed | 84 | 2 | 53 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | saravanadinesh/sanjaya | Retro computing | mixed | 145 | 2 | 13 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Sarbf1/Gas-sens_Rs-485 | Sensor boards / IoT | kicad7 | 282 | 2 | 13 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
@@ -5475,6 +5616,8 @@
 | sayanee/belle | Arduino recreations | kicad5 | 24 | 2 | 28 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | SayCV/ebomgen | Sensor boards / IoT | mixed | 15 | 1 | 28 | 40 | 100 | 1_layer, has_emc, has_pcb, has_spice |
 | SBC-Collaboration/SBC-ElectronicsBoxes | SBCs / carrier board | mixed | 803 | 2 | 3 | 19 | 100 | 2_layer, analog, has_emc, has_gerbers |
+| sbeddes/Agduino | Arduino recreations | mixed | 77 | 2 | 20 | 40 | 87 | 2_layer, has_emc, has_gerbers, has_pcb |
+| SCFormulaElectric/USC-Electrical-Systems | Miscellaneous KiCad  | mixed | 6674 | 6 | 16 | 27 | 97 | 6_layer, analog, has_emc, has_gerbers |
 | schnitzeltony/rpi-cool-hat | RP2040 / Raspberry P | mixed | 3 | 2 | 14 | - | 100 | 2_layer, has_emc, has_pcb, mixed |
 | sclmoss/MiniSolarMesh | Networking / radio / | mixed | 47 | 4 | 51 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | Scottapotamas/displayport-switch | LED / display | mixed | 43 | 4 | 36 | 100 | 100 | 4_layer, has_emc, has_pcb, medium |
@@ -5504,6 +5647,7 @@
 | sh123/arduino_uno_pet_puller | Arduino recreations | kicad6 | 20 | 2 | 46 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | shabaz123/sfp-experimenter | Miscellaneous KiCad  | mixed | 56 | 4 | 32 | 100 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | Shawky-MAHa/Minesweeper | Keyboards | kicad7 | 48 | 2 | 34 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| shb-png/ece-362-project | Miscellaneous KiCad  | kicad10 | 142 | 4 | 10 | 80 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | SheinbergLab/dserv | Miscellaneous KiCad  | mixed | 60 | 2 | 25 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | shino-hinaduki/chisel-nes | RISC-V / FPGA | kicad6 | 111 | 2 | 48 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | shinyblink/ledstream | RISC-V / FPGA | mixed | 59 | 2 | 37 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
@@ -5568,6 +5712,7 @@
 | snaraender0937n/Kicad-Hardware-SMD | Miscellaneous KiCad  | mixed | 22 | 2 | 30 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | snaraender0937n/Kicad-Hardware-USB | Miscellaneous KiCad  | mixed | 12 | 2 | 42 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | sneakylizard123-4/Dreamscape-ESC35A | Miscellaneous KiCad  | kicad10 | 274 | 6 | 30 | 40 | 35 | 6_layer, has_emc, has_pcb, has_spice |
+| sneakylizard123-4/STM32H743 | STM32 | kicad10 | 1019 | 6 | 6 | 40 | 99 | 6_layer, digital_interfaces, has_emc, has_pcb |
 | snegovick/kicad_stackup_editor | Miscellaneous KiCad  | mixed | 10 | 4 | 18 | - | 100 | 4_layer, has_emc, has_pcb, hierarchical |
 | snhobbs/kicad-parts-placer | Miscellaneous KiCad  | kicad6 | 21 | - | 14 | - | 0 | has_emc, has_pcb, kicad6, medium |
 | snsten/Klein | Keyboards | kicad6 | 159 | 2 | 42 | 40 | 100 | 2_layer, has_emc, has_pcb, hierarchical |
@@ -5667,6 +5812,7 @@
 | stahta01/BBB-cape-basic | SBCs / carrier board | kicad6 | 7 | 2 | 10 | 40 | 91 | 2_layer, has_emc, has_pcb, kicad6 |
 | stan23/HM-LC-Bl1-FM-DC | Motor controllers /  | kicad5 | 36 | 2 | 30 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | stanford-ssi/Aerolotl_KiCAD | Sensor boards / IoT | mixed | 363 | - | 4 | 40 | 87 | has_emc, has_pcb, has_spice, hierarchical |
+| stanford-ssi/Aerolotl_KiCAD@26980fb | Sensor boards / IoT | mixed | 1216 | 2 | 4 | 43 | 77 | 2_layer, analog, has_emc, has_pcb |
 | stanford-ssi/Satellite-Avionics | Miscellaneous KiCad  | mixed | 398 | 2 | 1 | 71 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | stanleyondrus/reTerminalEM | USB / interface adap | kicad6 | 131 | 2 | 71 | 85 | 66 | 2_layer, has_emc, has_pcb, has_spice |
 | StarGate01/Handbrake | USB / interface adap | kicad5 | 12 | 1 | 24 | 40 | 91 | 1_layer, has_emc, has_pcb, has_spice |
@@ -5688,6 +5834,7 @@
 | SteffMUC/openDTU_wDisplay2 | Networking / radio / | kicad6 | 4 | 2 | 20 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | stephendade/AP-HAT | RP2040 / Raspberry P | mixed | 166 | 2 | 49 | 97 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
 | stephendpmurphy/embedded-debug | Arduino recreations | mixed | 23 | 2 | 54 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| Steve-Teko/Diplomarbeit-2026 | Miscellaneous KiCad  | kicad10 | 354 | 2 | 15 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | stffrdhrn/adc_preamp | Synthesizers / audio | kicad5 | 17 | - | 0 | 40 | - | has_spice, kicad5, legacy_schematic, small |
 | stffrdhrn/kicad-spice-demo | Miscellaneous KiCad  | kicad5 | 7 | 2 | 30 | 40 | 100 | 2_layer, has_emc, has_pcb, kicad5 |
 | stockton-stem/stockton-stem-badge | LED / display | kicad5 | 17 | 2 | 12 | 100 | 92 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5701,6 +5848,7 @@
 | StrawberryTurtle/AnothaOne | Keyboards | mixed | 9 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_pcb, mixed |
 | strayer/taira-keyboard | Keyboards | mixed | 128 | 2 | 24 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | strongwong/BL706_UNO | Arduino recreations | mixed | 39 | 2 | 42 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| StuartF303/vandaemon | Miscellaneous KiCad  | mixed | 238 | 2 | 18 | 90 | 85 | 2_layer, has_emc, has_pcb, has_spice |
 | Stulinaz/STM32F103RB_USB_to_UART_SPI_I2C | STM32 | mixed | 83 | 2 | 63 | 40 | 99 | 2_layer, digital_interfaces, has_emc, has_gerbers |
 | Stustup/C-Audio-BHOA | Synthesizers / audio | mixed | 187 | 4 | 13 | 40 | 100 | 4_layer, analog, has_emc, has_gerbers |
 | Styann/Anesidora | Keyboards | mixed | 201 | 2 | 39 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
@@ -5717,6 +5865,7 @@
 | Supermanuu/BatterySwitcher | Keyboards | mixed | 5 | 2 | 16 | - | 100 | 2_layer, has_emc, has_pcb, mixed |
 | supermileage/motor-controller-kicad-circuits | Motor controllers /  | mixed | 42 | - | 2 | 30 | 100 | has_emc, has_pcb, has_spice, medium |
 | supermileage/UrbanMotorControllerPCB | Motor controllers /  | mixed | 73 | 4 | 52 | 40 | 99 | 4_layer, has_emc, has_pcb, has_spice |
+| supermileage/UrbanMotorControllerPCB@cba25d4 | Motor controllers /  | kicad10 | 184 | 4 | 37 | 36 | 84 | 4_layer, analog, has_emc, has_pcb |
 | Surya97/Esim_pspice_to_KiCad_parser | Miscellaneous KiCad  | kicad5 | 3054 | - | 0 | 0 | - | analog, hierarchical, kicad5, legacy_schematic |
 | Sussex-Neuroscience/odour-stimulator | Miscellaneous KiCad  | mixed | 54 | 2 | 28 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | SvenHaedrich/kicad_dali_usb_lpc | USB / interface adap | mixed | 196 | 4 | 12 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
@@ -5764,31 +5913,38 @@
 | techn0man1ac/LumiTimeV2 | Arduino recreations | mixed | 60 | 2 | 42 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | techn0man1ac/SimpleBLDC | Arduino recreations | mixed | 82 | 2 | 40 | 40 | 98 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Tecnologic/unimoc_jacobi | Miscellaneous KiCad  | kicad10 | 762 | 4 | 3 | 94 | 25 | 4_layer, has_emc, has_gerbers, has_pcb |
+| Tecnun-eRacing/TeR_ECU | Miscellaneous KiCad  | mixed | 349 | 4 | 3 | 43 | 99 | 4_layer, analog, digital_interfaces, has_emc |
 | TeddyDo915K/Nett-Sixty-PCB | Keyboards | mixed | 314 | 2 | 18 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | Tedfs3/104LH_v3.3 | Keyboards | mixed | 433 | 2 | 18 | - | 70 | 2_layer, has_emc, has_pcb, hierarchical |
 | TeknoTrek/7805-Voltage-Regulator | Power / battery | mixed | 5 | 2 | 26 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | TeknoTrek/DIY-AM-FM-Radio-Receiver-with-CXA1019S | Arduino recreations | mixed | 51 | 1 | 38 | 27 | 100 | 1_layer, has_emc, has_pcb, has_spice |
 | tengigabytes/MokyaLora | Networking / radio / | mixed | 1001 | 6 | 4 | 94 | 100 | 6_layer, has_emc, has_gerbers, has_pcb |
+| TensorFleet/koyomi-lvds-hat | Miscellaneous KiCad  | mixed | 310 | 4 | 53 | 40 | 36 | 4_layer, has_emc, has_gerbers, has_pcb |
 | terjeio/PCBLaserSchematics | Motor controllers /  | kicad5 | 57 | 1 | 30 | 40 | 99 | 1_layer, has_emc, has_pcb, has_spice |
 | Tesla-Cooler/tesla-cooler-electrical | Miscellaneous KiCad  | kicad5 | 4 | - | 2 | 0 | 100 | has_emc, has_pcb, has_spice, kicad5 |
 | tessel/protoboard-module | Miscellaneous KiCad  | kicad5 | 42 | 2 | 31 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | tessel/reach-wg | Miscellaneous KiCad  | kicad5 | 10 | - | 2 | 0 | 100 | digital_interfaces, has_emc, has_pcb, kicad5 |
 | tessel/t2-hardware | Networking / radio / | kicad5 | 619 | 4 | 10 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
+| tetraethylmethane/NIDAR-RescueSwarm | Miscellaneous KiCad  | mixed | 2022 | 8 | 14 | 88 | 89 | 8_layer, has_emc, has_pcb, has_spice |
 | TG9541/nrf24stm8l | STM32 | mixed | 11 | 2 | 13 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | TG9541/rs485-ch340e | USB / interface adap | mixed | 17 | 2 | 38 | 40 | 93 | 2_layer, has_emc, has_pcb, has_spice |
 | TG9541/stm8s001rs485 | USB / interface adap | mixed | 21 | 2 | 21 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | The-Invent0r/8-bit-Computer-PCB | Retro computing | mixed | 612 | 2 | 6 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | the-snowwhite/socfpga-kicad | RISC-V / FPGA | mixed | 81 | 2 | 14 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | theacodes/kicanvas | Miscellaneous KiCad  | mixed | 211 | 4 | 2 | 55 | 100 | 4_layer, analog, digital_interfaces, has_emc |
+| theatrus/notchdeck | Miscellaneous KiCad  | kicad10 | 430 | 4 | 6 | 100 | 15 | 4_layer, has_emc, has_pcb, has_spice |
 | theBrutzler/IndiaNavi_PCB | Sensor boards / IoT | kicad6 | 102 | 4 | 46 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | thedeveco/devOSH | Miscellaneous KiCad  | mixed | 79 | 2 | 42 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | TheGreenAutomation/Huertomato_MainHW | Miscellaneous KiCad  | kicad5 | 23 | - | 0 | 20 | - | kicad5, legacy_schematic, medium |
+| TheJoboReal/self_watering_pot | Miscellaneous KiCad  | kicad10 | 68 | 2 | 30 | 40 | 67 | 2_layer, has_emc, has_gerbers, has_pcb |
 | themainframe/5g-m2-usb3-interface-pcb | USB / interface adap | mixed | 55 | 4 | 63 | 100 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
+| theMessiestProgrammerThatsEverLived/keyboard | Keyboards | kicad10 | 114 | 2 | 9 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | theopensourcerer/esp8266-external-temp-sensor | ESP32 | kicad5 | 14 | 2 | 24 | 40 | 91 | 2_layer, has_emc, has_pcb, has_spice |
 | theopensourcerer/esp8266_envmonitor | ESP32 | kicad5 | 14 | 2 | 36 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | therealprof/MCUmeter-hardware | Miscellaneous KiCad  | mixed | 31 | 2 | 54 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | thermitebegiants/CH32V_macropad | General collections | mixed | 75 | - | 1 | 40 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | thermseekr/eumesmo-io-24v16ch | ESP32 | mixed | 2844 | 4 | 13 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
+| thesh4dows/kraky-v2 | Miscellaneous KiCad  | kicad10 | 254 | 2 | 1 | 46 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | thestumbler/vectorscope-kicad | Keyboards | kicad7 | 76 | 2 | 24 | 40 | 33 | 2_layer, analog, has_emc, has_pcb |
 | thgerner/kicadtohal | Motor controllers /  | kicad7 | 16 | - | 0 | - | - | kicad7, small |
 | thingler/esp32-pico-module | ESP32 | mixed | 9 | 2 | 39 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5799,6 +5955,7 @@
 | thpoll83/PolyKybd | Keyboards | mixed | 2427 | 4 | 19 | 74 | 61 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | ThroatyMumbo/GameConsoleV2 | Miscellaneous KiCad  | kicad10 | 85 | 4 | 25 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | ThunderFly-aerospace/TFRPM01 | Networking / radio / | kicad7 | 28 | 2 | 9 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| ThyFriendlyFox/via | Miscellaneous KiCad  | mixed | 1263 | 10 | 36 | 40 | 99 | 10_layer, digital_interfaces, has_emc, has_pcb |
 | tiacsys/ecad-coffeecaller | Sensor boards / IoT | mixed | 130 | 2 | 29 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
 | Ticotac/Segula_PCB_Kicad_TR | Miscellaneous KiCad  | mixed | 430 | 4 | 7 | 52 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | timbitss/esp32-smartwatch-pcb | ESP32 | mixed | 53 | 4 | 26 | 48 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
@@ -5806,6 +5963,7 @@
 | TingliangZhang/STM32G031K8T6PCB | STM32 | mixed | 27 | 2 | 39 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | tinysoul/matrix_v3s-hardware | Sensor boards / IoT | mixed | 239 | 2 | 94 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | tinyvision-ai-inc/pico-ice | RISC-V / FPGA | mixed | 741 | 4 | 58 | 70 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
+| TJ71PL/Precision-Clock | Miscellaneous KiCad  | mixed | 595 | 4 | 8 | 40 | 92 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | tjhorner/bizcard | LED / display | kicad6 | 45 | 2 | 54 | 40 | 92 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | tjhorner/upsy-desky | Sensor boards / IoT | mixed | 44 | 2 | 60 | 100 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | tjko/brickpico | RP2040 / Raspberry P | kicad7 | 159 | 4 | 15 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
@@ -5887,6 +6045,7 @@
 | tuengominh/esp32-dragon | Arduino recreations | mixed | 77 | 1 | 30 | 40 | 100 | 1_layer, has_emc, has_pcb, has_spice |
 | Turbosavski/balthazarPSU | Synthesizers / audio | mixed | 88 | 2 | 68 | 40 | 98 | 2_layer, has_emc, has_pcb, has_spice |
 | tushroy/NodePilot | Networking / radio / | mixed | 38 | - | 2 | 40 | 100 | has_emc, has_pcb, has_spice, medium |
+| tushroy/NodePilot@3dc6193 | Networking / radio / | kicad10 | 45 | 2 | 34 | 30 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | tux2603/watch | Smartwatches / weara | kicad6 | 27 | 2 | 21 | 40 | 100 | 2_layer, has_emc, has_pcb, kicad6 |
 | TweetyDaBird/DaNumPad | Arduino recreations | mixed | 548 | 2 | 18 | 92 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | TweetyDaBird/Little-Big-Scroll | Arduino recreations | mixed | 300 | 2 | 20 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5937,11 +6096,14 @@
 | vd-rd/sbc_allwinner_a13 | SBCs / carrier board | mixed | 357 | 4 | 20 | 40 | 63 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | vd-rd/sbc_allwinner_F1C200s | Miscellaneous KiCad  | mixed | 225 | 4 | 13 | 40 | 53 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | vd-rd/sbc_allwinner_v3s | LED / display | mixed | 376 | 4 | 7 | 40 | 33 | 4_layer, has_emc, has_pcb, has_spice |
+| vd-rd/sbc_at91sam9g10 | Miscellaneous KiCad  | mixed | 232 | 4 | 12 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_pcb |
 | VeeKiraRay/mahjong_arcade___pcbs | Miscellaneous KiCad  | kicad6 | 103 | 2 | 15 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | venice1200/MiSTer_SNAC2IEC | RISC-V / FPGA | mixed | 71 | 2 | 32 | 40 | 94 | 2_layer, has_emc, has_pcb, has_spice |
 | Venky474/STM32_RF_Demo_PCB | STM32 | mixed | 48 | 4 | 6 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | versioduo/control | Miscellaneous KiCad  | mixed | 98 | 4 | 10 | 40 | 100 | 4_layer, has_emc, has_pcb, has_spice |
 | versusentropy/clockdiv | Synthesizers / audio | mixed | 154 | 2 | 10 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| victorstoica114/ESP32-C3_Radio | ESP32 | kicad10 | 355 | 2 | 3 | 40 | 99 | 2_layer, has_emc, has_pcb, has_spice |
+| vindognz/project-luminescence | Miscellaneous KiCad  | kicad10 | 16 | 2 | 33 | 40 | 36 | 2_layer, has_emc, has_gerbers, has_pcb |
 | VinnyCordeiro/BT_DC_motor_board | Motor controllers /  | mixed | 39 | 4 | 36 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | VinnyCordeiro/BT_DC_motor_board@b8736f8 | Motor controllers /  | kicad10 | 38 | 4 | 36 | 40 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | vinthewrench/GardenIrrigation | RP2040 / Raspberry P | mixed | 62 | 2 | 38 | 70 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5954,19 +6116,24 @@
 | vlad-ivanov-name/mini-whip | Networking / radio / | kicad5 | 26 | 2 | 35 | - | 78 | 2_layer, has_emc, has_pcb, has_spice |
 | vmarzlin/ValTronix-VTM0001-EnergyMonitor | Arduino recreations | mixed | 229 | 2 | 24 | 40 | 92 | 2_layer, has_emc, has_gerbers, has_pcb |
 | VoronDesign/Voron-Hardware | Well-known hardware  | mixed | 1173 | 4 | 22 | 44 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
+| vortexntnu/vortex-nautilus-PCBs | Miscellaneous KiCad  | kicad10 | 285 | 2 | 9 | 77 | 78 | 2_layer, analog, has_emc, has_gerbers |
 | vrillusions/audio-attenuator-pcb | Synthesizers / audio | mixed | 6 | 2 | 20 | - | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | VuLinh011218/Auto_Switch | Miscellaneous KiCad  | kicad10 | 208 | 2 | 14 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | vurpo/soundblaster-pcb | Retro computing | mixed | 17 | 2 | 44 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | Vyom88/Mechanical-Keyboard-PCBs | Keyboards | kicad6 | 343 | 2 | 30 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | w4b-zero/ESP32_mini_8Port_WLED | ESP32 | mixed | 25 | 2 | 33 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
+| wafer-space/chip-on-board-wire-bonded-pcbs | Miscellaneous KiCad  | mixed | 121 | 4 | 22 | 40 | 57 | 4_layer, has_emc, has_pcb, has_spice |
 | waffle87/pseusplit | Keyboards | mixed | 146 | 2 | 46 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | wal99d/NEOM_0 | Miscellaneous KiCad  | kicad5 | 74 | 4 | 12 | 46 | 100 | 4_layer, has_emc, has_gerbers, has_pcb |
 | WalkEEG/WalkEEG | Miscellaneous KiCad  | kicad10 | 206 | 2 | 12 | 40 | 45 | 2_layer, has_emc, has_pcb, has_spice |
 | wanesty/keeb-x3 | Keyboards | kicad7 | 263 | 2 | 33 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_pcb |
 | wangyeee/OpenHardware | Networking / radio / | mixed | 1321 | 4 | 11 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
+| WannaBAcoder/ArenaTimer | Miscellaneous KiCad  | mixed | 471 | 2 | 14 | 45 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | WardBenjamin/QMix | Synthesizers / audio | mixed | 114 | 2 | 26 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
 | wasv/wz80 | RISC-V / FPGA | kicad5 | 43 | - | 27 | 40 | 8 | has_emc, has_pcb, has_spice, hierarchical |
 | waterloo-rocketry/daq | ADC / DAC / measurem | mixed | 396 | 4 | 15 | 36 | 100 | 4_layer, analog, has_emc, has_gerbers |
+| wavenumber-eng/kicad_monkey | Miscellaneous KiCad  | mixed | 3720 | 10 | 8 | 98 | 100 | 10_layer, analog, digital_interfaces, has_emc |
+| wayri/kicad-webview | Miscellaneous KiCad  | mixed | 204 | 2 | 11 | 18 | 81 | 2_layer, analog, has_emc, has_gerbers |
 | wb1016/NRFBlueSlime-Tracker-HW | Networking / radio / | mixed | 70 | - | 93 | 33 | 49 | has_emc, has_pcb, has_spice, medium |
 | webbbn/KiCad_Schematics | Sensor boards / IoT | mixed | 152 | 4 | 24 | 49 | 89 | 4_layer, has_emc, has_pcb, has_spice |
 | weirdgyn/Driverino | Arduino recreations | mixed | 146 | 2 | 20 | 100 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -5980,6 +6147,7 @@
 | whatnick/din_power_atm90e26 | Power / battery | mixed | 124 | 2 | 49 | 94 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | whatnick/IotaWatt_Kicad | Sensor boards / IoT | kicad5 | 102 | - | 14 | 40 | 100 | has_emc, has_pcb, kicad5, legacy_schematic |
 | whatnick/Tph_Synth_Featherwing | Synthesizers / audio | kicad10 | 111 | 2 | 9 | 100 | 100 | 2_layer, analog, has_emc, has_gerbers |
+| whbCool/HolyGrail | Miscellaneous KiCad  | kicad10 | 1715 | 6 | 9 | 100 | 100 | 6_layer, digital_interfaces, has_emc, has_gerbers |
 | WHCS-UCF/WHCS-Base-Station | Miscellaneous KiCad  | kicad5 | 27 | 2 | 46 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | wiciu15/motoHUDsch | Miscellaneous KiCad  | mixed | 121 | 2 | 82 | 40 | 100 | 2_layer, digital_interfaces, has_emc, has_gerbers |
 | Wii-Mini-Hacking/miniRGBii | Miscellaneous KiCad  | kicad6 | 28 | 2 | 18 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
@@ -6024,6 +6192,7 @@
 | wuard/Wuard-core-v1-pcb | RP2040 / Raspberry P | mixed | 45 | 2 | 48 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
 | wujique/KicadSchModule | Miscellaneous KiCad  | kicad5 | 100 | - | 0 | 40 | 100 | has_emc, has_pcb, has_spice, hierarchical |
 | WunschUnreif/WU-MSNS6101HT | Miscellaneous KiCad  | mixed | 40 | 2 | 10 | 30 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| wZuck/YAKB | Miscellaneous KiCad  | mixed | 111 | 4 | 31 | 40 | 100 | 4_layer, analog, has_emc, has_gerbers |
 | XavierBerger/RotaryEncoderDebounced | Miscellaneous KiCad  | mixed | 16 | 2 | 27 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | xboxoneresearch/ASPECT2-PCB | USB / interface adap | mixed | 271 | 4 | 8 | 40 | 100 | 4_layer, has_emc, has_pcb, hierarchical |
 | xboxoneresearch/Spider-eMMC | Miscellaneous KiCad  | kicad7 | 40 | 2 | 40 | 40 | 96 | 2_layer, has_emc, has_pcb, has_spice |
@@ -6065,6 +6234,7 @@
 | ZeniteSolar/MSWI19 | Miscellaneous KiCad  | mixed | 428 | 2 | 9 | 40 | 100 | 2_layer, analog, has_emc, has_gerbers |
 | ZeniteSolar/MT19 | Arduino recreations | mixed | 259 | 2 | 5 | 40 | 50 | 2_layer, analog, has_emc, has_gerbers |
 | ZeniteSolar/ZCS18 | Arduino recreations | mixed | 222 | 2 | 5 | 40 | 99 | 2_layer, analog, has_emc, has_gerbers |
+| zephris/project_A | Miscellaneous KiCad  | mixed | 438 | 4 | 11 | 78 | 98 | 4_layer, digital_interfaces, has_emc, has_gerbers |
 | ZeroPhone/BreakoutPCBMockups | Power / battery | kicad5 | 12 | - | 22 | 40 | 0 | has_emc, has_pcb, kicad5, legacy_schematic |
 | zeus86/hexagon-dna-pcb | Miscellaneous KiCad  | mixed | 21 | 2 | 21 | - | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | ZGQ-inc/3.98-epd | Miscellaneous KiCad  | mixed | 270 | 4 | 93 | 40 | 100 | 4_layer, digital_interfaces, has_emc, has_gerbers |
@@ -6085,9 +6255,12 @@
 | ZoidTechnology/PCIce | Miscellaneous KiCad  | kicad6 | 19 | 2 | 27 | 40 | 100 | 2_layer, has_emc, has_pcb, kicad6 |
 | zosko/NoahESC | Motor controllers /  | mixed | 50 | 2 | 48 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | zosko/NoahFC | Arduino recreations | mixed | 45 | 2 | 54 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
+| zosko/NoahFC@658c098 | Arduino recreations | kicad10 | 46 | 2 | 54 | 40 | 100 | 2_layer, has_emc, has_pcb, has_spice |
 | ZSWatch/Watch-DevKit-HW | Sensor boards / IoT | mixed | 387 | 4 | 9 | 100 | 97 | 4_layer, has_emc, has_gerbers, has_pcb |
+| ZSWatch/Watch-DevKit-HW@bede75a | Sensor boards / IoT | kicad10 | 387 | 4 | 9 | 100 | 97 | 4_layer, has_emc, has_pcb, has_spice |
 | ZT-715/avr-asm-weighing-scale | Arduino recreations | mixed | 67 | 2 | 29 | 40 | 89 | 2_layer, analog, has_emc, has_pcb |
 | zukaitis/midi-grid | STM32 | mixed | 646 | 2 | 13 | 40 | 99 | 2_layer, has_emc, has_gerbers, has_pcb |
+| zutroy97/jukebox5 | Miscellaneous KiCad  | kicad10 | 140 | 2 | 23 | 40 | 97 | 2_layer, has_emc, has_pcb, has_spice |
 | zwilson14/STM32F4---Schematic-Capture-and-PCB-Layout | STM32 | mixed | 50 | 4 | 36 | 40 | 99 | 4_layer, has_emc, has_pcb, has_spice |
 | zxinfo-diy-electronics/zx-interface-2-rom | Retro computing | mixed | 8 | 2 | 12 | 40 | 100 | 2_layer, has_emc, has_gerbers, has_pcb |
 | zxinfo-diy-electronics/zx-specdrum-re-created | Retro computing | mixed | 29 | 2 | 38 | 40 | 100 | 2_layer, analog, has_emc, has_pcb |
