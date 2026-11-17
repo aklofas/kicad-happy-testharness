@@ -1817,6 +1817,8 @@ It then takes `min(board, max(area, max fill))`. VS-001 (`:1547-1550`) reads the
 
 **2026-11-17 addendum (Wave 12b, `d79f1247`): partly fixed, stays open.** the output half is fixed (`_has_cap_to_ground`, `signal_detectors.py:4256`; class `d2-regcaps-unnamed`, about 1,445 corpus records): sfines digital clock U1 LM7805 output `__unnamed_8` (C3) is no longer reported missing. The input half stays open for 12c (`:4252` unchanged): 2,177 records / 1,553 units (product census), 149 on the Task 14 A/B units; e.g. Apex Motherboard U2 MIC23050 still reports missing input caps on `__unnamed_31` with C16 4.7 µF on it. A GND pin on a voltage-named net is a wiring fault and is not counted as ground (4 records: 1vers1on, C-yue28, EBOThor). (harness agents at `7ed10f3e` vs `f254cb23`.)
 
+**2026-11-17 note (lock):** FND-00000383-AST-02 (OLIMEX BB-ADS1262 Rev.A1) asserts the input-half false positive (U2 MT3608 has C18 on `__unnamed_9`); the product withdrew its graduation, and it is retired or inverted at the regen. The input-half fix flips it pass → fail.
+
 ### KH-1045: VM-001's regulator-likeness is a part-number prefix list that misses most regulators PR-DET finds, so their enables are checked as logic inputs
 
 **Severity:** LOW (false VM-001 / `needs_level_shifter` on EN pins of unlisted regulator families; it also blocks KH-1036)
