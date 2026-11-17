@@ -35,9 +35,13 @@ NET_RE = re.compile(
     r'\(net\s+\(code[^\)]*\)\s*\(name\s+"([^"]+)"\)(.*?)(?=\(net\s+\(code|\Z)',
     re.DOTALL,
 )
+# A pin may have an empty number (`(pin "")`, e.g. a `~` number below KiCad 20250318); such a
+# node is keyed by its pinfunction so it is not dropped.
 NODE_RE = re.compile(
-    r'\(node\s+\(ref\s+"?([^")\s]+)"?\)\s*\(pin\s+"?([^")\s]+)"?\)'
+    r'\(node\s+\(ref\s+"?([^")\s]+)"?\)\s*\(pin\s+"?([^")\s]*)"?\)'
+    r'(?:\s*\(pinfunction\s+"([^"]*)"\))?'
 )
+COMP_RE = re.compile(r'\(comp\s+\(ref\s+"?([^")\s]+)"?\)')
 
 
 def export_netlist(sch_path: str, out_path: str, kicad_cli: str = "kicad-cli",
@@ -59,14 +63,29 @@ def parse_netlist(path: str) -> dict[str, set[tuple[str, str]]]:
     text = Path(path).read_text(encoding="utf-8")
     nets: dict[str, set[tuple[str, str]]] = {}
     for name, body in NET_RE.findall(text):
-        nets[name] = set(NODE_RE.findall(body))
+        nets[name] = {(ref, pin or func) for ref, pin, func in NODE_RE.findall(body)}
     return nets
+
+
+def netlist_refs(path: str) -> set[str]:
+    """The component references listed in a kicad-cli netlist export."""
+    return set(COMP_RE.findall(Path(path).read_text(encoding="utf-8")))
+
+
+def oracle_blind(oracle: dict[str, set[tuple[str, str]]], kicad_refs: set[str],
+                 analyzer_refs: set[str]) -> bool:
+    """True when KiCad's netlist cannot see the design: it has no nodes, or it leaves out a
+    real symbol the analyzer reads (KiCad drops `on_board no` symbols from the netlist)."""
+    if not any(oracle.values()):
+        return True
+    return any(not r.startswith("#") and r not in kicad_refs for r in analyzer_refs)
 
 
 def analyzer_nets(analysis_json_path: str) -> dict[str, set[tuple[str, str]]]:
     """Load analyze_schematic.py JSON output into {net_key: {(component, pin_number)}}.
 
-    Skips pin-less nets (e.g. phantom bus-name entries with no pins attached).
+    Skips pin-less nets (e.g. phantom bus-name entries with no pins attached). A pin with an
+    empty number is keyed by its name, as parse_netlist keys it by pinfunction.
     """
     data = json.loads(Path(analysis_json_path).read_text(encoding="utf-8"))
     nets: dict[str, set[tuple[str, str]]] = {}
@@ -74,7 +93,7 @@ def analyzer_nets(analysis_json_path: str) -> dict[str, set[tuple[str, str]]]:
         pins = net.get("pins") or []
         if not pins:
             continue
-        nets[key] = {(p["component"], p["pin_number"]) for p in pins}
+        nets[key] = {(p["component"], p["pin_number"] or p.get("pin_name") or "") for p in pins}
     return nets
 
 

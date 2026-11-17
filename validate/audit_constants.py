@@ -1114,17 +1114,18 @@ def _corpus_bonus(flags):
 _SECTION_TO_CONSTANTS = {
     "power_regulators": [
         "_REGULATOR_VREF", "reg_lib_keywords", "_non_reg_exclude",
-        "_switching_kw",
+        "_switching_kw", "LOAD_SWITCH_KEYWORDS",
     ],
     "crystal_circuits": ["_osc_keywords", "_osc_exclude", "_xtal_pin_re"],
-    "current_sense": ["_SENSE_PIN_PREFIXES", "_SENSE_IC_KEYWORDS", "_integrated_csa_pins"],
+    "current_sense": ["_SENSE_PIN_PREFIXES", "_SENSE_AMP_PN", "_integrated_csa_pins"],
     "voltage_dividers": [],
     "rc_filters": [],
     "lc_filters": [],
-    "opamp_circuits": ["opamp_lib_keywords"],
-    "protection_devices": ["tvs_keywords"],
+    "opamp_circuits": ["opamp_lib_keywords", "_INAMP_PN", "_INAMP_WORDS"],
+    "protection_devices": ["_TVS_FAMILIES", "_TVS_WORDS"],
     "transistor_circuits": [
         "_GENERIC_TRANSISTOR_PREFIXES", "_GENERIC_TYPE_LABELS", "_PIN_LETTER_NAMES",
+        "_PCHANNEL_FET_PARTS",
     ],
     "ethernet_interfaces": ["_eth_tx_rx_re", "_eth_net_re"],
     "memory_interfaces": ["memory_keywords"],

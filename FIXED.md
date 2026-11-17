@@ -11,6 +11,717 @@ regressions, understanding analyzer evolution, and onboarding collaborators.
 
 ---
 
+## 2026-11-17 — KH-718: family Vref table values are wrong for members of the family (TPS6102x/3x, TPS561201, LT8606, TPS562212, TPS563240)
+
+**Severity:** MEDIUM
+**File:** regulator Vref table (`signal_detectors.py` `_lookup_vref`)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** TPS61025/32 (`TPS6102`/`TPS6103` 0.595), TPS561201 (`TPS561` 0.6), LT8606 (`LT860` 0.97), TPS562212 (`TPS562` 0.768), TPS563240 (`TPS5632` 0.76). SPICE no longer uses a shorter key as a criterion (R35), but these values drive analyzer `estimated_vout`.
+
+**Fix direction / budget:** fix from datasheets; analyzer budget on `estimated_vout` / `rail_voltages`.
+
+**Addendum 2026-11-07 (v3.0.2 Wave 11b-1, candidate `f53d107e`, partly fixed by 28487ee0):** fixed: `TPS6103` uses TPS61030's 0.5 V reference (`parts.py:30`). Still open: `TPS6102` 0.595 (`:29`), `TPS561` (`:39`), `TPS562` (`:40`), `TPS5632` (`:41`), `LT860` (`:78`) unchanged until a data sheet is cited. The fixed half is gated in the Wave 11b-1 gate (results/v302_w11b1_gate*).
+
+- **Closed:** fixed; product `9ece787a + 9c637fba + 34ecb917` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): TPS half (9ece787a): family keys TPS6102/TPS561/TPS562/TPS5632 removed, per-member keys: TPS61020/28/29 0.5, 61021 0.795, 61022 0.6, 61023 0.595 (local SLVSF14 PDF: VREF at FB), TPS561201/208 0.768, TPS561243 0.6 (local PDF VFB 600 mV), TPS562212 0.6, TPS563240 0.6, TPS563200 0.765. Fixed members (9c637fba): TPS61024 3.0, 61025 3.3, 61026/27 5.0, 61031 3.3, 61032 5.0 fixed_suffix (TPS61025DRCR, TPS61032PWPR too). LT860 half (34ecb917): LT860 key removed, LT8606/7/8 0.778, LT8608S/8609S 0.774, LT8609 0.782; LT8607EMSE-5 / LT8609AEDDM-5 / LT8610AEMSE-5 = 5.0 fixed. Units: cryptoAlgorithm HapticDriver TPS561201DDCR 2.592 -> 3.318 (+3V3); AstraOperatingSystem astra-pwr TPS563240DDC 6.323 -> 4.992 (5V); drewsum Nixie pos3p3 LT8609A-DD 4.109 -> 3.313; hackclub 5v-boost TPS61032PWPR 5.0 lookup -> 5.0 fixed_suffix. Note: Side effect: LT8600-LT8605 (and LT8602.UJ, 2 corpus units) lose the old 0.97 value and now give none; not a KH-718 item.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-729: the regulator detector types an MCU and gate drivers as regulators
+
+**Severity:** LOW
+**File:** regulator detection (`signal_detectors.py`)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** bluerobotics ping-dev-kit: an MCU and gate drivers become regulator records.
+
+**Fix direction / budget:** budget PR-DET on the affected units.
+
+- **Closed:** fixed; product `b5baaa47` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): b5baaa47 _NON_REGULATOR_PREFIX (dac/epc23/ncp8115/adp311/ltc706). bluerobotics ping-dev-kit PingDevKit.kicad_sch at head: PR-DET drops U601/U602/U1202 DAC53401 and U1501/U1502 EPC23104; at @a95dde0 it drops U601/U602/U1201 DAC and U1501/U1502 EPC. Regulators are kept. Note: The candidate adds a PR-DET for the MCU, U301 STM32H563AII3Q, typed ic_with_internal_regulator (from KH-1014's SMPS rule; sw __unnamed_86, inductor L301, in 3V3). This is a real internal-SMPS record, not KH-729 coming back. Don't file it as one.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-732: Vref table rows waiting for cited datasheets — LTC3558, LM2731x, LMR33640
+
+**Severity:** LOW
+**File:** regulator Vref table (`_lookup_vref`)
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** LTC3558 (0.8 V; restores a true `+4V` mismatch), LM2731x (1.23 V), LMR33640 (a full-core row would turn alexnaet's true 86 % divider error from info back to fail; no local SNVSB37).
+
+**Fix direction / budget:** add with cited datasheets; small regulator budget.
+
+**Addendum 2026-11-07 (v3.0.2 Wave 11b-1, candidate `f53d107e`, partly fixed by 28487ee0):** fixed: an LTC3558 row at 0.8 V (`parts.py:81`). Still open: no LM2731x row; LMR33640 is still covered by `LMR336` 1.0 V (`:57`). The fixed half is gated in the Wave 11b-1 gate (results/v302_w11b1_gate*).
+
+- **Closed:** fixed; product `9ece787a` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): 9ece787a parts.py: LMR33640 1.0 (SNVSB99C; LMR33640ADDA/SDDA now key LMR33640, vref_key_covers_part True, LMR33630 still LMR336), LM2731 1.23 and LM27313 1.23 (incl. XMF/YMF order codes via _X_OPTION_KEYS); were (None,'') at baseline. LTC3558 0.8 present both sides. alexnaet USB_3_SWITCHER POWER_SUPPLY U6 LMR33640ADDA schematic record unchanged (24.148 V on +3.3V, Vref 1.0 either way). Note: As the KH predicted, the full-core LMR33640 row makes alexnaet's true divider error a part-specific criterion in SPICE (spice_results.py:832 covers check) — expect that lane to move from info to fail there.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-747: Vref key core cut — fixed-output parts cut to a covering core; wildcard values make a key cover
+
+**Severity:** LOW
+**File:** regulator Vref key matching
+**Discovered:** 2026-10-28, product 3.0.x Wave 4 Part A handoff; filed by the harness
+
+**Symptom:** `LD33`/`NCP1117ST33` fixed-output parts cut to a covering core; wildcard values (`TPS6103x`, `LM259x`) make a key cover (a simple rule breaks `TPS560430X`).
+
+**Fix direction:** per-pattern rule with tests for the cases above.
+
+**Addendum 2026-11-07 (v3.0.2 Wave 11b-1, candidate `f53d107e`, partly fixed by 28487ee0):** fixed: a Vref key no longer covers a part when a fixed-voltage code follows the key (`parts.py:292-305` `_FIXED_PART_KEYS`). Still open: wildcard values (`TPS6103X`, `LM259X`) still match (`:301-305`). The fixed half is gated in the Wave 11b-1 gate (results/v302_w11b1_gate*).
+
+- **Closed:** fixed; product `9ece787a + 9c637fba` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): Wildcard half (9ece787a vref_key_covers_part): covers(TPS6103,TPS6103X) / (LM259,LM259X) / (LM2596,LM2596X) True -> False; TPS560430X(DBVR) and LM2731XMF still cover (X option keys), as intended. Core-cut half: covers(LD33,LD33) / (LD1117,LD1117S33TR) / (NCP1117,NCP1117ST33T3G) False on both sides; NCP1117ST33T3G now decodes to 3.3 fixed_suffix (9c637fba). LD33 re-probe at the candidate: LD33, LD33CV, LD33V, LD1117S33(TR/CTR), LD1117V33, LD1117AV33, LD1117DT33, LD1117S12/18/25/50 all give (1.25,'lookup') key LD33/LD1117, unchanged from baseline, no fixed Vout; corpus records (38 LD1117S33x/V33/S50 records, e.g. GNB-UAM UAMSense3 U2) show estimated_vout None on both sides, so the 1.25 is never used as a Vout and SPICE treats it as not part-specific. Note: LD33-type values (LD33, LD33CV, LD1117S33 / V33 / DT33 and the other ST order codes) still read (1.25, lookup) at the candidate, as at the base: the ST fixed-order-code decode is filed new (KH-1284), not part of this KH (key coverage + wildcard X).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-884: `0R/2A` (a zero-ohm link with its current rating) now reads None
+
+**Severity:** LOW (0 corpus records per the product)
+**File:** `skills/kicad/scripts/kicad_core/values.py:33-35` (`_IMPEDANCE_SLASH`), `:125`
+**Discovered:** 2026-11-03, product 3.0.x Wave 8b (from KH-850); verified harness-side at `0efc012` (`parse_value('0R/2A')`, `'1R/2A'`, `'0 Ohm/2A'` all None for every component type; `0R/0805` 0.0)
+
+**Symptom:** the KH-850 rule treats any `<n>R/<current>` as ferrite impedance notation, so a jumper or low-ohm resistor with a current rating loses its value.
+
+**Fix direction / budget:** exclude a resistor-typed part, or a zero value, from the slash rule. Output-changing only where such values exist (none measured). Post-3.0.
+
+**Addendum 2026-11-07 (v3.0.2 Wave 11b-1, candidate `f53d107e`, partly fixed by 285054a6):** fixed: values below 1 ohm with an ampere rating (`0R/2A`, `0.1R/3A`) keep their value (`values.py:36-37`, `:129` `_LOW_OHM_RATED`). Still open: `1R/2A` (a listed symptom) still reads None. The fixed half is gated in the Wave 11b-1 gate (results/v302_w11b1_gate*).
+
+- **Closed:** fixed; product `af7eedb4` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): values.py:40-41,150-151: on a resistor-typed part, '1R/2A' = 1.0 and '10R/0.5A' = 10.0 (None at baseline); untyped and inductor/ferrite '1R/2A' stay None; '0R/2A' still 0.0. Note: The fix is limited to resistor-typed parts, which matches the fix direction.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-917: regulator suffix voltages: integer-volt families get no value, and package names the token list misses still read as a voltage
+
+**Severity:** LOW (PR-DET `estimated_vout` and the thermal estimate)
+**File:** `skills/kicad/scripts/kicad_core/parts.py:201-204` (`_PACKAGE_TOKEN`), `:208` (`_AMBIGUOUS_SUFFIXES`), `:233-237` (two-digit suffix read as a decimal), `:238-241` (fall-through to `_REGULATOR_VREF`), at `8c42799`
+**Discovered:** 2026-11-04, product 3.0.x Waves 9b + 9c handoff (`L9B/task-5-report.md`, `task-5-review.md`; `D/surveys/survey-sch.md` P2)
+
+**Symptom:** three parts.
+- The ambiguous suffixes `-05/-09/-10/-12/-15/-24/-48` give no value, on purpose (ruling 16a refined), so 35 corpus parts lose a correct estimate (task-5-report :36: LM2678S-12 x4, LM2940-12 x4, LM2596S-12 x4, NCP1117-12 x3, TL780-12/15 x4, …).
+- An ambiguous fixed part falls through to the adjustable Vref table: probe at `8c42799`, `lookup_regulator_vref("LM2596S-12", "")` = `(1.23, "lookup")`.
+- `_PACKAGE_TOKEN` has no MLP, WLCSP, PowerPAD, SO, LFCSP, TSOP, HSOP, ESOP, DSBGA, UQFN, QSOP, PQFN or DDPAK. Probe: `REG_MLP-16` → 1.6 V, `REG_WLCSP-25` → 2.5 V, `REG_PowerPAD-20` → 2.0 V, all `fixed_suffix`. This was already so in the base (task-5-review :19).
+
+**Fix direction / budget:** option b of P2: integer-volt families for the ambiguous suffixes (LM2596/LM2940/NCP1117/LM2678/TL780/… `-12` = 12 V). An ambiguous fixed part should give no value rather than an adjustable-table Vref. Widen `_PACKAGE_TOKEN`. Output-changing: PR-DET `estimated_vout` / `vref_source` on those parts, thermal `skipped_components`. v3.0.2.
+
+**Addendum 2026-11-04 (3.0.x Waves 9b + 9c gate):** the decimal-suffix rule also gives a wrong value: `LC78_03-05` (der-pw/hm_stm32_2ch_dimmer, `Kicad_STM32_2CH_Dimmer.sch`) reads `_03` as 0.3 V, and EMC now adds a PD-001 "VCC PDN anti-resonance exceeds target" at Vout = 0.3 V, target 0.034 Ω (std gate EMC lane, PD-001 +1). The part is a 3.3 V module; a suffix followed by another `-NN` group needs the family rule too.
+
+**Addendum 2026-11-04 (3.0.x Wave 9f, `2a9db0b3`, gated at `246ee5a`):** the low-suffix case is fixed — a two-digit suffix below 0.5 V gives no value. Std gate: 4 units move (BerkeleyLab/Marble `design_Power`, `design_Power_SW`, `design_Marble` ADM7155ACPZ-02-R7; der-pw/hm_stm32_2ch_dimmer LC78_03-05, whose EMC PD-001 at Vout 0.3 V goes); faoziaziz/qris_iot UM1750S-00 does not move in the output (its Vout comes from the feedback divider on both sides). Still open (v3.0.2): integer-volt families (`-05/-09/-10/-12/-15/-24/-48`) and the package tokens `_PACKAGE_TOKEN` misses.
+
+**Addendum 2026-11-07 (v3.0.2 Wave 11b-1, candidate `f53d107e`, partly fixed by 28487ee0):** fixed: the missing package tokens (`parts.py:203-207`), the ambiguous two-digit suffix skip (`:237-268`) and a per-family integer-volt table (`:213-221`). Still open: LM2678S-12 (named in the issue), LM2676, LM2575, LM1085 and LM340 now give no value instead of the right one; a fixed-suffix part with an FB divider is still overwritten by the heuristic sweep (`signal_detectors.py:2122-2150`, hackclub LM2596S-12 reads 6.6 V; filed separately). The fixed half is gated in the Wave 11b-1 gate (results/v302_w11b1_gate*).
+
+- **Closed:** fixed; product `7cbfdbf9 + 9c637fba (package-token part fixed before the range)` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): Package tokens: REG_MLP-16 / REG_WLCSP-25 / REG_PowerPAD-20 / REG_SO-8 / REG_DSBGA-12 give (None,'') at the BASELINE clone already (fixed at 28487ee0, present at de28149d) and at the candidate; LC78_03-05 None both. Ambiguous fallthrough: LM2596S-12 = 12.0 fixed_suffix both sides (no 1.23 lookup). Integer-volt families (9c637fba parts.py _FIXED_SUFFIX_FAMILIES): LM2678S-12, LM2676S(X)-12, LM2575(HVS)-12/T-15, LM1085(IT)-12, LM340(T)-12/-15 None -> 12/15 V fixed_suffix; LM2940/NCP1117/TL780/LM2596/LM2576/XL1509 -12/-15 unchanged correct. Fixed-Vout-over-divider half = KH-1006, fixed (see there). Note: Residue (no value, never a wrong one): LM3480-12, LT1084-12, LT1086-12, LT1109CS8-12, NID30S48-24 (5 units). The generic `-NNV` rule was not adopted (ruling C-P4).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-963: power-budget LDO block has no same-sign guard; an inverting buck read as an LDO gets a dropout
+
+**Severity:** LOW (power_mW is 0 on the known case; the root cause is an upstream LDO misclassification)
+**File:** `skills/kicad/scripts/schematic/system_analyses.py:1578-1589` (`analyze_power_budget`: `abs(v_in) > abs(v_out)` only), compared with `skills/kicad/scripts/signal_detectors.py:2331` (`vin * vout > 0` guard) at `2abc8496`
+**Discovered:** 2026-11-05, product 3.0.x Wave 10b handoff (pre-existing: at `e60d03b5` the block was already there with dropout 20.1 V; Wave 10b's `abs()` changed it to 10.1 V)
+
+**Symptom:** horychen's U2 (LM2675M-5.0, ×5 units) is a buck used inverting, +15V1 in and −5 V out. The regulator detector classifies it as `LDO`. `_estimate_regulator_dissipation` now skips it, because the rails differ in sign. `analyze_power_budget` still writes `ldo_dissipation` with dropout 10.1 V, which means nothing for this part. The two LDO paths disagree on the same regulator.
+
+**Fix direction / budget:** Add the same-sign guard to the power-budget block. Separately, stop classifying a fixed-suffix switcher (LM2675) as an LDO. Standard lane: `ldo_dissipation` removed on the 5 horychen units, a `missing` delta outside this wave's value-only dropout class.
+
+**Addendum 2026-11-07 (v3.0.2 Wave 11b-1, candidate `f53d107e`, partly fixed by b3a0c596):** fixed: the power-budget LDO block has the regulator detector's same-sign guard (`system_analyses.py:1614-1617`). Still open: LM2675 (a fixed-suffix switcher) is still classified as an LDO: it is missing from `_KNOWN_FREQS` (`parts.py:324`), so it falls to `signal_detectors.py:2017`. The fixed half is gated in the Wave 11b-1 gate (results/v302_w11b1_gate*).
+
+- **Closed:** fixed; product `ac52e1bd` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): The open half is closed: LM2675 260 kHz is in _KNOWN_FREQS. horychen inverter_V0.3 inverter_power U2 LM2675M-5.0 goes from LDO (no freq) to switching 260 kHz lookup_table; 4 more horychen units carry the same value. ldo_dissipation is absent on both sides, because the same-sign half was already fixed in 11b-1.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-974: `parse_value("100N")` returns None — an uppercase `N` (nano) is not a multiplier
+
+**Severity:** MEDIUM (a capacitor value written `100N` / `10N` reads as no value, so every detector that needs it skips the part)
+**File:** `skills/kicad/scripts/kicad_core/values.py:90` `parse_value`, multiplier map `:174-178` (`p n u m k K M G R r`; no `N`, `U`, `P`)
+**Discovered:** 2026-11-06, product v3.0.2 survey (candidate list); verified by the harness at `4c2a0d6` (= `7d9d4d9f` analyzer tree)
+
+**Symptom:** `parse_value("100N")` → None; `"100n"` → 1e-7, `"100nF"` → 1e-7.
+
+**Fix direction:** accept `N` / `U` / `P` (unambiguous: `M` stays mega, `m` milli); size the corpus values that change before the wave.
+
+- **Closed:** fixed; product `af7eedb4` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): values.py:56-57,206-210: parse_value('100N','capacitor')=1e-7, '4U7' 4.7e-6, '22P' 22e-12, '2U2' on an inductor 2.2e-6 (all None at baseline); 1N4148 stays None. Ganesh-Solapure 'STM 32 PCB': 8 caps (2N2, 2U2) get a parsed_value (None at baseline). Note: Only typed capacitors and inductors are covered. An untyped parse_value('100N') is still None by design, and one untyped caller remains: domain_detectors.py:1469, the RF-matching large-value filter.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-995: ADC resolution stems `max1161` and `ad7606` cover parts of another resolution (MAX11610/11 10-bit read 12, AD7606C-18 read 16)
+
+**Severity:** LOW (`resolution_bits` in AD-DET when no extraction is present)
+**File:** `skills/kicad/scripts/domain_detectors.py:3054-3070` `_ADC_RESOLUTION_MAP` (`:3061` `max1161`, `:3065` `ad7606`), read by `_infer_adc_resolution` `:3076-3086` (first substring stem)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe)
+
+**Symptom:** probe: `MAX11610` → 12 and `MAX11611` → 12 (the MAX11606–MAX11611 family is 10-bit; MAX11612–17 are 12-bit). `AD7606C-18` → 16 (it is 18-bit; `AD7606C-16`, `AD7606B`, `AD7606-4` are 16). Correction to the handoff: `MAX11636` / `MAX11637` give None, not 12 (no stem matches). The KH-468 entry recorded `max1161` 12 as verified for its whole family; that verification is wrong for MAX11610/11 (constants registry CONST-553).
+
+**Fix direction:** key `max1161` per part (`max11612`..`max11617`, plus `max11610`/`max11611` at 10). Give `ad7606c-18` its own longer stem at 18. Re-mark CONST-553's `max1161` verification.
+
+- **Closed:** fixed; product `ad9b86ce` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): _ADC_RESOLUTION_MAP is keyed per part (ad9b86ce). Probe base -> cand: MAX11610/11611 12->10, MAX11612/11617 12->12, AD7606C-18 16->18; AD7606C-16/AD7606B/AD7606-4 stay 16. MAX11636 is None on both sides. The longest-first stem order makes ad7606c-18 win over ad7606. Note: Harness side: CONST-553 still needs the max1161 verification re-marked in reference/constants_registry.json.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1000: the CERT-001 RF-chain suggestion lists empty component names (`components: [""]`)
+
+**Severity:** LOW (output shape; the FCC suggestion names no part)
+**File:** `skills/kicad/scripts/domain_detectors.py:5616` (`c.get("reference", c.get("ref", ""))` over `rf_chains[:3]`); RF-DET records `:1195-1219` carry `components`, not `reference` / `ref`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + corpus)
+
+**Symptom:** every "FCC Part 15 — RF transceiver detected (N chain(s))" finding has one `""` per chain. Candidate snaps: HNBN9/kestrel `pcb/kestrel.kicad_sch` and jarrod89/pocketPSU `elec_main_microcontroller.kicad_sch` show `components: ['']`; their CE RED twin has `[]`.
+
+**Fix direction:** name the chain's transceiver (`transceivers[0].reference`) or take the chain's `components`; give the CE RED suggestion the same list.
+
+- **Closed:** fixed; product `cd3160d1` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): domain_detectors.py:5621-5639 names the chain's transceivers, or else its components, on both FCC and CE RED. Runs: HNBN9 kestrel goes from FCC [''] / CE [] to ['U1','U3'] on both; jarrod89 pocketPSU microcontroller goes from [''] / [] to ['U1','U2'] on both.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1006: a fixed-suffix regulator with a divider on FB runs the heuristic Vref sweep, which overwrites its fixed output voltage
+
+**Severity:** MEDIUM (wrong `estimated_vout` / `rail_voltages`, read by DO-DET, derating, power budget, inrush, EMC, thermal and SPICE; 55 corpus records)
+**File:** `skills/kicad/scripts/signal_detectors.py:2090-2101` (fixed estimate set), `:2121-2125` (comment says "Skip feedback divider analysis for fixed-output parts" but only sets `known_vref = None`), `:2153-2172` (heuristic estimate overwrites)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe + corpus)
+
+**Symptom:** `_lookup_regulator_vref("LM2596S-12")` → (12.0, fixed_suffix); with the hackclub 10k/1k divider on FB the record becomes 6.6 V heuristic. Census of the candidate snaps (36,276 schematic units): 55 PR-DET records with `vref_source: heuristic` and a `feedback_divider` whose part number gives a fixed_suffix voltage, e.g. Animal-Crate LM2596T-3.3 at 1.56 / 1.61 / 2.52 V (5 units).
+
+**Fix direction:** for a fixed_suffix part, keep the fixed estimate and skip the divider sweep (record the divider, do not estimate from it). Optionally flag a divider on a fixed part's FB pin.
+
+- **Closed:** fixed; product `7cbfdbf9` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): 7cbfdbf9 signal_detectors.py:~2312 fixed_part = fixed_vout_is_explicit(...) -> divider recorded, not used. Units: hackclub OnBoard buck LM2596S-12 6.6 heuristic -> 12.0 fixed_suffix; Animal-Crate Power System LM2596T-3.3 1.56 -> 3.3; embeddedalpha XESC ADP2302ARDZ-3.3 1.2 -> 3.3; hedong2023 ovobot EZS-02 XL1509-12 8.1 -> 12.0. Census of baseline outputs (69 heuristic-over-fixed_suffix records / 62 units): at the candidate 21 keep the written-out Vout, 35 no longer read fixed (Diodes -13 reel code: AP64501SP-13, AP66200FVBW-13, AP1513SG-13), 13 keep the divider because the voltage is only a bare implied-decimal or a borrowed symbol (SC4215 on RT9025-25GSP, MCP73123T-22, MIC2253-06YML). Note: The fix also makes FS-001 'divider impedance too low' fire on fixed parts (hackclub LM2596S-12 909R, Animal-Crate LM2596T-3.3 615R) via KH-1008: expected movement, budget it.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1007: the FB-at-top cross-reference attaches any divider hanging from a direct-sense regulator's output rail as its feedback (DDR VREF read as feedback, false FS-001)
+
+**Severity:** LOW (false FS-001 info and a wrong `feedback_divider` on the regulator record)
+**File:** `skills/kicad/scripts/signal_detectors.py:2267-2290` `_cross_reference_feedback_dividers` (first divider with `top_net == fb_net`)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + corpus)
+
+**Symptom:** Gherkin/logix-core `logix-core.kicad_sch`: U2's FB4 senses `+1V5` directly. The cross-reference attaches R17/R18 (1k/1k from +1V5 to DDR_VREF, the DDR3 VREFCA/VREFDQ divider) as `fb_at_top`, and FS-001 reports "Regulator U2: feedback divider impedance too low (500R)". Pre-existing (727d0ab3 reports the same finding); this wave's multi-FB pick re-exposed it.
+
+**Fix direction:** attach an FB-at-top divider only when its mid net reaches another pin of the same regulator (or the part is known FB-at-top). A direct-sense FB on the output rail takes no divider.
+
+- **Closed:** fixed; product `94723614` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): 94723614 _cross_reference_feedback_dividers: an FB-at-top divider attaches only when its mid net reaches another pin of the same regulator. Gherkin/logix-core U2 MP5470GL: feedback_divider R17/R18 + FS-001 'impedance too low (500R)' -> no divider, no FS-001; output_rail +1V5 kept. Of 257 baseline units with fb_at_top dividers, 2 spot-checked: daisho power TPS62420 R105/R104 kept; FusIon-Pack LMR16006 R2/R4 dropped (its mid net does not return to U1; the old attachment was not the real feedback either).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1008: the FS-001 "too low" exemption for LM2596 / LM2576 matches by substring, so fixed-output variants (LM2596S-5.0, LM2576T-5.0) are exempt too
+
+**Severity:** LOW (a low-impedance divider on a fixed part's FB goes unremarked; the datasheet R1 range is for the ADJ version)
+**File:** `skills/kicad/scripts/validation_detectors.py:1465` `_LOW_DIVIDER_R1_RANGE`, `:1503-1507` (`match_ic_keywords(comp, (kw,))`)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe)
+
+**Symptom:** probe: `match_ic_keywords` on `LM2596S-5.0`, `LM2596S-12`, `LM2596S-ADJ` all match `lm2596`; `LM2576T-5.0` matches `lm2576`. A fixed variant whose FB carries a 240 Ω–1.5 kΩ R1 (it should tie to the output directly) is exempt from FS-001. It reaches FS-001 at all because of KH-1006.
+
+**Fix direction:** apply the range only when the part is the adjustable variant (no fixed suffix from `_lookup_regulator_vref`).
+
+- **Closed:** fixed; product `53cc11c6` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): 53cc11c6 validation_detectors.py:~1511 exemption needs lookup_regulator_vref(...)[1] != 'fixed_suffix'. Probe: LM2596S-5.0, LM2596S-12, LM2576T-5.0 fixed_suffix (no exemption); LM2596S-ADJ (1.23 lookup) and LM2576HVT-ADJ (None) stay exempt. Units: hackclub LM2596S-12 now FS-001 909R, Animal-Crate LM2596T-3.3 FS-001 615R (both absent at baseline).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1010: a library nickname containing "invert" makes a regulator inverting; LM2675's switch pin named VOUT is taken as the output rail
+
+**Severity:** LOW (negative `estimated_vout`, wrong output rail and topology on one corpus family)
+**File:** `skills/kicad/scripts/signal_detectors.py:1806` (`lib_val_lower` includes the full lib_id), `:2041-2043` (`inverting_kw` substring); output rail from the pin named VOUT
+**Discovered:** 2026-11-07, harness, while verifying the Wave 11b-1 inrush candidate at `f53d107e` (corpus)
+
+**Symptom:** horychen/ProjectEureka `InverterLem.kicad_sch` U2 `inverter-altium-import:root_0_LM2675` `LM2675M-5.0`: PR-DET `inverting: True`, `estimated_vout: -5.0`, topology LDO, `output_rail: __unnamed_16`. That net is pin 8 (switch node, symbol name VOUT) plus only the 10 nF bootstrap cap C23 to CB, so inrush correctly finds no output cap. FB ties to +5V1, the real output. 5 records.
+
+**Fix direction:** read only the symbol name for keyword tests. For an FB-sensed fixed part, take the FB net as the output rail when the VOUT-named pin's net holds no cap to ground.
+
+- **Closed:** fixed; product `2d09c3b0 (a) + 155757fd (b)` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): (a) 2d09c3b0: inverting is read from value + symbol name, or a lib nickname containing 'inverting'. (b) 155757fd: a switch pin named OUT is not the output rail. horychen/ProjectEureka LM2675M-5.0 on all 4 units checked (InverterLem U2, inverter_V0.2 and V0.3 inverter_power U2, inverter.kicad_sch U2): inverting True, vout -5.0, LDO, output __unnamed_* → inverting None, vout 5.0, switching, output +5V1. inverter.kicad_sch VIPER22A U1 inverting True → None (the 5th record).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1012: `led_color` reads `Infrared` as red, because colours are plain substrings tested in table order
+
+**Severity:** LOW (no LED in the 36,463 candidate schematic outputs has "infrared" in its value or lib_id; latent)
+**File:** `skills/kicad/scripts/kicad_core/parts.py:535-543` `led_color`; table `:522-525`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe)
+
+**Symptom:** every colour except `ir` is a substring test on value + full lib_id, in dict order, and `red` comes first.
+- Probe: value `Infrared` gives `red`, as do `Infrared 940nm` and lib `LED:LED_Infrared`. The `ir` word rule never fires on "infrared", which has no `ir` substring.
+- The LED then gets red's 2.0 V nominal and 1.5 V LA-004 floor instead of IR's 1.2 V and no floor (consumers `detector_helpers.py:365`, `domain_detectors.py:5051`).
+- Same shape: value `Green` on lib `MyLib:LED_Red_0805` gives `red`, because the lib nickname is searched. `Ultraviolet` gives `None` (the 2.0 V default), not `uv`.
+
+**Fix direction:** match colour words as words, map `infrared` → `ir` and `ultraviolet` → `uv`, prefer the value over the lib_id, and do not search the library nickname. Covers the "yellow checked before amber" note too.
+
+- **Closed:** fixed; product `c59e7ba3` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): parts.py led_color (c59e7ba3): whole words, value first, no nickname. Probe base→cand: Infrared / 'Infrared 940nm' / LED_Infrared red→ir; Green on MyLib:LED_Red_0805 red→green; Ultraviolet None→uv; MyRedLib:LED red→None. Residue: hyphenated 'Infra-red' still → red (latent; KH already latent with 0 corpus hits).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1013: regulator feedback-divider match takes the first divider on the FB net, not the one topped by the output rail (LTC3558 picks a compensation resistor)
+
+**Severity:** LOW (one corpus unit seen; the info DO-DET Vout is wrong)
+**File:** `skills/kicad/scripts/signal_detectors.py:2134-2135` `_build_regulator_record`; channel choice `:2108-2114`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + corpus read)
+
+**Symptom:** the channel choice (`:2108-2114`) prefers a divider whose `top_net` is the output rail. The divider loop then takes the first divider whose `mid_net` is the FB net, whatever its top.
+- On `Dzalex/NeedleDCF77`, U1 LTC3558 FB2 (`__unnamed_37`) carries two dividers: R11 270k from `+4V` over R14 68k (the real one), and R15 15k over R14. R15's top is `__unnamed_72`, whose only other part is C18, the compensation capacitor to `Vc2`.
+- The record takes R15/R14: `estimated_vout` is 0.976 V and DO-DET reads "Regulator U1 estimated Vout=0.976V" on +4V. R11/R14 gives 0.8 × (1 + 270/68) = 3.98 V.
+
+**Fix direction:** in the divider loop, prefer the divider whose `top_net` is the output rail, as the channel choice already does. Separately, reject a divider whose top net has no DC path, such as a resistor-capacitor compensation leg.
+
+**Addendum 2026-11-11 (TH-109 triage, FND-00001776-AST-03/07):** LTC3536 on the same pattern: the analyzer takes R15 (6K49, the R15-C8 compensation branch on FB) as `r_top` and reports 0.618 V; the reviewed divider R17/R16 gives 3.315 V. The old FND lock could not fail and hid it.
+
+- **Closed:** fixed; product `b73716ff` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): b73716ff: FB dividers sorted with top_net == output_rail first, and _top_has_dc_path drops R-C compensation legs (both fix-direction halves). Dzalex/NeedleDCF77 U1 LTC3558: R15/R14 0.976 V -> R11/R14 3.976 V; Nxe5 Macropad_Mini_Module U7 LTC3536 (addendum): R15/R16 0.618 V -> R17/R16 3.315 V.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1014: MCU internal-SMPS switch pins (`VLXSMPS`) are not switch pins, so the SMPS node gets RS-001 "no declared source"
+
+**Severity:** LOW (a false warning on STM32H7/WB/U5 boards that use the internal SMPS)
+**File:** `skills/kicad/scripts/signal_detectors.py:1746` `_screen_regulator_candidate` (switch tokens `{"SW","PH","LX"}` on the stripped pin name); RS-001 rail admission `:4661-4673`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + corpus read)
+
+**Symptom:**
+- **Aerolotl:** on `stanford-ssi/Aerolotl_KiCAD/aerolotl.kicad_sch`, the STM32H755 U1 pin `VLXSMPS` (typed `power_in` by its symbol) sits on net `VLX`, with L1 to `VFBSMPS` / `VCAP`. No regulator record covers it, so RS-001 warns "VLX has no declared source".
+- **Why the base was silent:** port-H GPIO pins (PH0, PH1) made the MCU a false `ic_with_internal_regulator` record whose switch pin happened to stand in. Now that PH is no longer a switch pin, the SMPS node has no source.
+- **Same pattern:** the STM32WB55 and STM32H7A3 records on nets `SMPSLXL` and `SMPS_out` are lost.
+- **Not this defect:** the Apple IIGS clock-phase chips (PH0..PH3 and no other port pins) keep false regulator records, which is the opposite case.
+
+**Fix direction:** read `VLXSMPS` / `VLX` (an LX token after a `V` prefix) as an internal-regulator switch node, so the MCU gets an `ic_with_internal_regulator` record that sources the switch and `VFBSMPS` nets.
+
+- **Closed:** fixed; product `0c2c8a7d` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): 0c2c8a7d. Aerolotl U1 STM32H755: RS-001 'VLX has no declared source' → gone, PR-DET ic_with_internal_regulator sw VLX out VFBSMPS in +3V3 added. fiskebolle30 Microcontroller.kicad_sch STM32H7A3 U2: no record → out SMPS_out. Hamidrezanobari STM32WB55 U3: no record → sw SMPSLX out SMPSFB. Extras: atharvap8 OBhai_BLDC_Controller_V2 MCU.kicad_sch STSPIN32G4 IC1 false PR-DET (out PHASE_U) and PG10 power_good_signal removed. STSPIN32G4_Breakout IC1 has_bootstrap True→None and PG10 power-good removed. gpio_port_pins keeps a regulator's PG1/PG2.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1016: NC-pin skips test only `no_connect`, so KiCad 5 NC pins (read as `unconnected`) stay in ESD audits
+
+**Severity:** LOW (legacy boards; about 300 EP-AUD records on 126 units)
+**File:** `skills/kicad/scripts/domain_detectors.py:2460-2463` `_nc_pins_only`; `skills/kicad/scripts/cross_analysis.py:341-342` (inline copy); legacy pin type map `skills/kicad/scripts/schematic/legacy_reader.py:36` (`"N": "unconnected"`)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + corpus read)
+
+**Symptom:** the legacy reader types an NC pin `unconnected`. Other readers accept both spellings (`connectivity.py:672`, `ic_analysis.py:305`, `erc_pins.py:51`). The two NC predicates test `no_connect` only, so an unused legacy connector pin counts as an unprotected signal. Corpus: 300 EP-AUD findings on 126 `.sch` units list a net whose only pins are `unconnected`, for example `Meshinger/Meshinger/Meshinger.sch` J5 (ethernet) NC pin and baldengineer Commodore VIC-20 P6 NC.
+
+**Fix direction:** accept `unconnected` in both predicates, ideally through one shared helper (or `erc_pins` normalisation). Output-changing: EP-AUD coverage and records on legacy units.
+
+- **Closed:** fixed; product `e26814b9` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): domain_detectors.py _nc_pins_only and cross_analysis.py:341 now use erc_pins.pin_kind, which maps 'unconnected' to no_connect (e26814b9). EP-AUD records listing an NC-only net: Meshinger.sch 1→0 (__unnamed_26); Commodore-Vic-20.sch 2→0 (__unnamed_68, __unnamed_107). EP-AUD record counts are unchanged (7, 10).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1018: OA-DET admits instrumentation amplifiers and labels them `comparator_or_open_loop`
+
+**Severity:** LOW (info findings with a false configuration; at least 31 on 25 units in a third of the corpus)
+**File:** `skills/kicad/scripts/signal_detectors.py:2834-2851` `detect_opamp_circuits` (value prefixes `ad8`, `ina10`..`ina13`; description keyword `instrumentation`); INA exclusion `:2855-2857`; configuration `:3084-3085`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + corpus read)
+
+**Symptom:**
+- **Topology:** an instrumentation amp sets its gain with RG between its RG pins, with no feedback resistor to −IN, so the op-amp topology code falls to `comparator_or_open_loop`.
+- **ExoFlex:** `ExoFlex-Inc/Electrique` ExoFlex_Kicad and loadcells U25-U27, `SymLib:INA823DR`, value "INST OP-AMP", admitted through the description "Instrumentation Amplifier". The `ina8` exclusion misses because it tests the start of `value + lib_part`, and the value comes first.
+- **Elsewhere:** Gunethra/ecg U2 `Amplifier_Instrumentation:AD620`, BlueJayRacing bjr_kicad IC1/IC2/U5 AD8237, OeMga-me U1 AD8233.
+
+**Fix direction:** recognise instrumentation amps (library `Amplifier_Instrumentation`, an RG pin pair, or the description) and give them their own configuration, with gain from RG where it can be found. Do not run op-amp topology on them.
+
+- **Closed:** fixed; product `7e66713d` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): is_instrumentation_amp (library Amplifier_Instrumentation, description, PN table, or an RG pin pair) skips OA-DET (signal_detectors.py:2948). Runs, base -> cand OA-DET on the in-amps: ExoFlex loadcells U25-U27 INA823 3 -> 0; Gunethra ecg U2 AD620 1 -> 0 (the other op-amp stays); BlueJayRacing Analog IC1/IC2 AD8237 2 -> 0; OeMga-me U1 AD8233 1 -> 0. EMC ML-001 adds in-amps to its sensitive set. Note: In-amps are only excluded: no in-amp configuration and no RG gain record is emitted (the fix direction's 'own configuration' was not built; R12b ruling accepted). Difference amps are a separate new filing.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1022: inductors written `<n> OHM@<f>` (or `Ohm@`) are not typed ferrite beads, so RM-DET walks them as RF matching elements
+
+**Severity:** LOW (info findings; 2 corpus units seen)
+**File:** `skills/kicad/scripts/kicad_core/classify.py:236-240` (ferrite-notation test `\d+[Rr]\s*[/@]\s*\d` only); RM-DET ferrite skip `skills/kicad/scripts/domain_detectors.py:1389-1398`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + probe + corpus read)
+
+**Symptom:**
+- **Typing:** the ferrite test knows the `<n>R@` / `<n>R/` notation only.
+- **Probe:** on `Device:L` or `Device:L_Iron_Small`, `330 OHM@100MHZ`, `600Ohm@100MHz` and `600 Ohm @ 100MHz` are typed `inductor`, while `600R@100MHz` and `120R/200mA` are `ferrite_bead`.
+- **RM-DET:** its skip looks for `ferrite` / `bead` / `emi` in the description, keywords or value, so an `OHM@` value passes.
+- **Corpus:** on faoziaziz/FMU_tampantech `fmu_v1` and `memory`, L14 `330 OHM@100MHZ` (parsed_value None) becomes RM-DET "RF matching_network matching network at D50".
+
+**Fix direction:** extend the ferrite notation to `<n>\s*(R|Ω|ohm)s?\s*[@/]\s*<n>`, case-insensitive. Same family as KH-883 (parse side).
+
+- **Closed:** fixed; product `b0bf44c8` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): classify.py:278-283: on Device:L / L_Iron_Small, '330 OHM@100MHZ', '600Ohm@100MHz' and '600 Ohm @ 100MHz' are typed ferrite_bead (inductor at baseline). '10uH/2A' stays an inductor, and '4.7uH 0.1R/3A' moves ferrite_bead to inductor. faoziaziz fmu_v1 + memory L13/L14 inductor to ferrite_bead.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1023: RM-DET takes any `*_Small` symbol as an antenna, because the antenna library keyword `sma` matches `Small`
+
+**Severity:** MEDIUM (about 89 % of corpus RM-DET seeds are not antennas: 658 of 739 findings, 180 units, in the files scanned)
+**File:** `skills/kicad/scripts/domain_detectors.py:1340` (`_ant_lib_keywords` includes `"sma"`), substring test `:1347` `detect_rf_matching`
+**Discovered:** 2026-11-07, harness verification of the Wave 11b-1 candidate `rm-ferrite-at-value` at `f53d107e` (code read + corpus read)
+
+**Symptom:**
+- **The seed:** `"sma" in lib_lower` is true for `Device:C_Small`, `R_Small`, `L_Small`, `D_TVS_Small_Filled` and the like, so each becomes the "antenna" that the matching-network walk starts from.
+- **faoziaziz:** D50 `Device:D_TVS_Small_Filled` (PTVS5V0Z1USK) is the "antenna" of the KH-1022 finding.
+- **martinribelotta/h730duino:** `power.sch` gets "RF matching_network matching network at C19 / C20" from buck output caps beside 4.7 µH inductors.
+- **pfork pitchfork:** each `_Small` part of a real pi network emits its own RM-DET.
+
+**Fix direction:** match `sma` as a token (an SMA connector: `Connector_Coaxial:SMA*`, `\bsma\b`), not a substring. Output-changing: most corpus RM-DET findings go away; measure first.
+
+- **Closed:** fixed; product `347be197` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): domain_detectors.py:1337-1362: 'sma' dropped from the substring list, replaced by the _SMA_WORD letter-bounded regex plus the Connector_Coaxial SMA/U.FL/MMCX footprint seed. faoziaziz fmu_v1 + memory D50 RM-DET 1 to 0; h730duino power.sch C19/C20 2 to 0; pitchfork small + nokia 8 to 1 (the remaining seed is Y1 'CHIP_ANTENNA' on an antenna footprint, correct). 6,000-file sample: 195 of 241 baseline RM-DET seeds drop, all C/R/L/R_Small/Crystal_Small symbols, no real antenna lost; coax-footprint seeds are 254 connectors + 5 'ic'. Note: A minor residual remains: the 'sma' word still matches SMA-package diodes (benjolin 'D-SMA', 'SMA6T68AY' TVS, 7 diodes in the sample, since a digit may follow). None produced an RM-DET on the 2 units run.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1025: the current-sense IC keyword `ina` is a bare substring over value + full lib_id
+
+**Severity:** LOW (pre-existing; no false CS-DET found in a 13k-file scan)
+**File:** `skills/kicad/scripts/signal_detectors.py:1362-1369` (`_SENSE_IC_KEYWORDS`, also `"asc"`); matched at `:1322-1323` `_sense_ics_across`, `:1462-1466`, `:1574-1580` `detect_current_sense`
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b-1 handoff (new-KH candidates); verified by the harness at `f53d107e` (code read + corpus read)
+
+**Symptom:**
+- **The match:** `"ina"` is a plain substring of `value + " " + lib_id` on any `ic`-typed part. It matches instrumentation amps (INA128, INA333, the INA82x family) as sense amplifiers, and library nicknames or symbol names containing "china", "terminal" or "Trinamic". `"asc"` is equally loose.
+- **Scope:** only IC-typed parts are tested, so "terminal" matters only on an IC's lib_id.
+- **Corpus:** the only non-INA-sense hit was RCMgames RCM-Hardware-BYTE, where TMC7300 matches through `TMC7300-Trinamic`. Its BRA/BRB shunts are real, so that one is right by luck.
+
+**Fix direction:** match sense-amp families by anchored part-number prefixes on the value or MPN (`ina1[89]x`, `ina2xx`, `ina3xx`…), not substrings of the lib_id. Exclude instrumentation amps.
+
+- **Closed:** fixed; product `f44214af` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): parts.py _SENSE_AMP_PN (f44214af) replaces the substring list; the bare 'ina' and 'asc' are gone. Probe: INA128/333/821/823/826/188/217/2128, TMC7300-Trinamic, 'china', 'terminal' and MAX4714 -> False; INA219/226/180/240/3221/2180/139/169/199/301/381/190, ACS712, MAX4080S, LTC6101, ZXCT1009, AD8217 -> True. Note: Side effect by design (ruling E-P4): RCMgames RCM-Hardware-BYTE R3-R10 lose 8 true CS-DET (TMC7300 BRA/BRB). They are covered by a new filing, not by this KH.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1030: AD-DET admits any IC whose library nickname names an ADC, and takes its resolution from that nickname (OLIMEX BB-ADS1262: MT3608 and AP2127K reported as 32-bit ADCs)
+
+**Severity:** LOW (false AD-DET records on boards whose project library is named after their ADC)
+**File:** `skills/kicad/scripts/domain_detectors.py:3027-3032` `_ADC_IC_KEYWORDS`, `:3210-3222` (admission over value + full `lib_id`), `:3250` (`_infer_adc_resolution(value, lib_id)` falls back to the lib_id)
+**Discovered:** 2026-11-07, product v3.0.2 Wave 11b survey B1 (harness ask 5); verified by the harness at `f53d107e` (code read + probe + corpus)
+
+**Symptom:** probe: `MT3608` / `BB-ADS1262:MT3608` and `AP2127K` / `BB-ADS1262:AP2127K` pass the `ads1` keyword and resolve to 32 bits. Candidate snap OLIMEX/BB-ADS1262 `BB-ADS1262-Rev.A.sch`: AD-DET U1 ADS1262 32, U2 `MT3608(SOT23-6)` 32, U3 `AP2127K-ADJ` 32. Pre-existing; this wave's table change moved them 24 → 32. The VREF phase (`:3131-3145`) has the same nickname read.
+
+**Fix direction:** match keywords and stems on value, MPN and the symbol name only (drop the nickname), as `match_family` does.
+
+**Addendum 2026-11-11 (TH-109 triage, FND-00000383-AST-02):** on both OLIMEX BB-ADS1262 revisions (Rev.A, Rev.A1) the MT3608 (U2) and AP2127K-ADJ (U3) have no `detect_power_regulators` finding and no regulator_caps observation at product `6138b126`; they appear only in the ADC findings with U1. The reviewed finding says Rev.A once reported both regulators, so the misclassification also loses the regulator record.
+
+**Addendum 2026-11-15 (product v3.0.3 triage survey at `6b9767e1`):** a second site: `_opamp_adc_exclude` (`signal_detectors.py:1900-1906`) applies the same exclusion.
+
+- **Closed:** fixed; product `2d09c3b0 + b5baaa47` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): domain_detectors.py:3160/:3239/:3271 (admission, VREF phase, resolution) use symbol_name; _opamp_adc_exclude and the RF/power-mux part lists read value + symbol name (2d09c3b0). OLIMEX BB-ADS1262 Rev.A and Rev.A1: AD-DET U1/U2/U3 (all 32-bit) → U1 only. U2 MT3608 regains PR-DET switching and U3 AP2127K-ADJ PR-DET LDO (the TH-109 addendum). Note: The non-regulator category words (eeprom/flash/rtc/uart/buffer/logic_/encoder) are still read from the whole lib_id, nickname included (signal_detectors.py _non_reg_categories). This is out of KH-1030's two sites, but the nickname leak remains for those words.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1044: the shared `LOAD_SWITCH_KEYWORDS` misses the AP2265x / AP2280x / AP2261x / AP255x / SiP32 / MIC20xx / FPF families, so 58 load switches are PR-DET LDOs; VM-001's local family list matches substrings anywhere in the text
+
+**Severity:** LOW (false regulator records feed power tree, rail sources and power_path)
+**File:** `skills/kicad/scripts/kicad_core/parts.py:7-17` (`LOAD_SWITCH_KEYWORDS`, used by the regulator screen `signal_detectors.py:1692` / `:1841`, the power-path detector and the RS-001 switch chain); `skills/kicad/scripts/validation_detectors.py:528` (`_LOAD_SWITCH_FAMILIES`, VM-001 only), `:542-544` (bare substring over MPN + value + lib_id)
+**Discovered:** 2026-11-08, harness, v3.0.2 Wave 11b-2 gate (from the product handoff slug `KH-new-load-switch-families`; survey G2, ruling P1)
+**Target:** v3.0.3
+
+**Symptom:** census of the gate candidate schematic snaps: exactly 58 PR-DET records on 52 units are one of the VM-001-local families, all typed `LDO`. Leading values: AP22653 23, AP22615 8, MIC2025 5, AP22802 5, AP22652 4. The VM-001-local tuple (225 parts / 156 units hit) is a plain substring over value, MPN and the full lib_id, so the symbol name decides. TDA2002 (an audio amplifier) drawn on an `FPF2002` symbol, and LP5907 (an LDO) on a `MIC20XX` symbol, both read as load switches.
+
+**Fix direction:** fold `_LOAD_SWITCH_FAMILIES` into the shared list (ruling P1), match family prefixes at a part-number boundary on value / MPN before the lib_id, and budget the ~58 PR-DET removals plus power_path / RS-001 moves. Related: KH-920 (load switches typed LDO, fixed for the listed families) and KH-946.
+
+- **Closed:** fixed; product `46bfe0a6` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): parts.py is_load_switch_part (46bfe0a6): boundary-anchored prefixes on value/MPN, symbol only when no part is named; VM-001 _LOAD_SWITCH_FAMILIES folded into the shared list. Probe: AP22653/AP22615/MIC2025/AP22802/AP22652/SiP32431/FPF2123/AP2553 True; TDA2002 on FPF2002 and LP5907 on MIC20XX False. cinnamondev CM4Carrier MIC2025 U1: PR-DET LDO → PP-DET load_switch. hatlabs HALPI2 SDCard AP2553 U42 gains PP-DET.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1049: MIC2305x (4 MHz) is not in `_KNOWN_FREQS`, so it gets the 500 kHz topology default
+
+**Severity:** LOW (EMC harmonic bands, VS-002 spacing and power estimates use 1/8 of the real frequency)
+**File:** `skills/kicad/scripts/kicad_core/parts.py:349` (`_KNOWN_FREQS`, no MIC2305 key), `:472-481` lookup, `:484-498` defaults
+**Discovered:** 2026-11-08, harness, v3.0.2 Wave 11b-2 gate (from the product handoff slug `KH-new-mic2305x-frequency`)
+
+**Symptom:** gate candidate schematic snaps: 14 PR-DET records on 9 units are MIC23050 (`-SYML`, `-4YML`, `-GYML`, and legacy `_SYML` / `_GYML`), all `switching_frequency_hz: 500000.0`, `freq_source: topology_default`. Units: Wren6991 RISCBoy, Apex-Ottawa-Team Motherboard, embeddedalpha IMU_V100 ×3, cmcquinn replicookie ×2, lnsru melexisToFcamera4layer ×2. The MIC23050 is a 4 MHz part. Downstream: full-chain EMC SW-001 harmonics and the VS-002 text above.
+
+**Fix direction:** add `MIC2305` at 4 MHz (datasheet-cited; Checklist 11 entry). Budget PR-DET `switching_frequency_hz` / `freq_source` on the 9 units and the EMC / cross text. KH-476 is the same table-gap class for other parts.
+
+- **Closed:** fixed; product `ac52e1bd` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): parts.py _KNOWN_FREQS MIC23050 4.0e6 (ac52e1bd) + digit guard. Every corpus spelling (-SYML/-4YML/-GYML, _SYML/_GYML; Wren6991 RISCBoy, cmcquinn replicookie, embeddedalpha, lnsru) reads 4 MHz. Run: RISCBoy U2/U5 and replicookie U401 go from 500 kHz topology_default to 4 MHz lookup_table.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1054: a multi-letter `P…` reference whose library does not resolve falls back to `P` = connector, over a Device R / C / L / LED symbol
+
+**Severity:** LOW (false EG-001 on one board seen; the parts vanish from type-keyed detectors)
+**File:** `skills/kicad/scripts/kicad_core/classify.py:113` (`"P": "connector"`), single-letter fallback `:393-403` (the Device R/C/L override applies only when the fallback type is resistor or inductor); lib fallbacks `:300-389` test `"resistor" in lib`, not `Device:R_Small`, and an LED needs `led` + `diode` in the lib
+**Discovered:** 2026-11-08, harness, v3.0.2 Wave 11b-2 gate (from the product handoff slug `KH-new-pd-prefix-resistor-connector`; ruling X4 concern)
+
+**Symptom:** probe at the candidate: `classify_component("PD1", "Device:R_Small", "10K")`, `("PWR1", "Device:LED", "RED")`, `("PS1", "Device:R", "1k")`, `("PL1", "Device:L", "10u")`, `("PC1", "Device:C", "1u")` all return `connector`. Gate candidate schematic snaps: PD refs typed connector 16 (11 `Device:R_Small` on 2 CRImier units, incl. vaio_re PD1..PD10, plus an LED and a PLUS153DN). PWR refs typed connector 128 on 77 units, of which at least 20 are LEDs (sirboard ×8, HadesFCS ×2, MAIANA ×3 …) and one an SPDT switch (`Korean Hroparts Elec SPDT:K3-1270L-F1`, ORBIT). vaio_re PD1 gets the 1 accepted false EG-001.
+
+**Fix direction:** let a stock Device passive / LED symbol outrank the `P` fallback, as it does for `R` / `L`. Budget `components[].type` and downstream on the affected units. Same principle as KH-1033 (`V` fallback).
+
+- **Closed:** fixed; product `ae203e6b` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): classify.py:110-116,516-523 (_symbol_designator outranks the first letter): PD1 R_Small, PS1 R, PL1 L, PC1 C give resistor/resistor/inductor/capacitor, and PWR1 LED / LED_Small give led (all connector at baseline). CRImier vaio_re PD1..PD10 connector to resistor (10); sirboard CP2102N_20 PWR1 Device:LED connector to led (LED findings 0 to 3). Note: The non-Device parts named in the block stay connector: the ORBIT SPDT switch 'Korean Hroparts Elec SPDT:K3-1270L-F1' on a PWR ref, and PD11 arcade:PLUS153DN. These are outside the fix direction. PS-prefixed regulators on custom symbols (RT9013, AP63356, LD39050, R-78CK) also stay connector.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1075: `detect_protection_devices` misses TVS diodes named outside its 15-keyword list (SMF5V0A, SM6T, SMF24A, SM712 …) and never reads the symbol keywords or description; USB VBUS then reads unprotected
+
+**Severity:** MEDIUM (false UC-002 warning "No ESD/TVS protection on VBUS" and `vbus_esd_protection: fail`; 452 TVS-keyworded diodes on 224 units / 82 repos at `4c2a0d6` are missing from PD-DET)
+**File:** `skills/kicad/scripts/signal_detectors.py:2575-2586` (`tvs_keywords`; `is_tvs` tests value / lib_id only; `description` is read for Schottky only, `keywords` never); `schematic/system_analyses.py:2611-2614` (the VBUS ESD test, with its own 5-word list); `detector_helpers.py:133-140` `_PROTECTION_KEYWORDS` (31 entries incl. `sm712`, `h5vu`, `bsd5c`); `signal_detectors.py:3356` `_CLAMP_DIODE_WORDS` (a fourth list)
+**Discovered:** 2026-11-11, harness, from the product's TH-109 rulings (lock FND-00000419-AST-03); verified at `6138b126`
+
+**Symptom:** janc18/CAE32 `Pedals.kicad_sch` D5 is `Diode:SMF5V0A`, typed `diode`, with symbol `keywords` "diode TVS voltage suppressor" and an empty description. It sits on `+5V` (= J15 VBUS A4/A9/B4/B9) and `GNDREF` (classed ground). PD-DET lists only D4 and F2. `usb_compliance` J15 reports `vbus_esd_protection: fail`, and UC-002 fires (warning) on a board that has a VBUS TVS. The most common corpus misses are `Diode:SM712_SOT23` (124 parts), `Diode:SMF24A` (32), `Diode:SM6T10A` (28), `Diode:SMF5V0A` (17), `Diode:SM6T6V8A` (16), and the vendor-library BSD5C and H5VU families.
+
+**Fix direction:** one shared TVS recogniser for PD-DET, the USB VBUS check and the clamp-diode test. It should read value, lib_id, symbol `keywords` and `description` ("TVS", "transient voltage suppressor"), and use `_PROTECTION_KEYWORDS` plus the SMF/SMA/SMB/SMC, SM6T/SM8T/SM15T and P4KE families. Output-changing: PD-DET additions, UC-002 / `vbus_esd_protection` removals, and the protected nets seen by ES-001 / EG-001.
+
+- **Closed:** fixed; product `25617165` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): detector_helpers.py is_tvs_diode (25617165), used by PD-DET, analyze_usb_compliance and _is_clamp_diode. janc18/CAE32 Pedals.kicad_sch: D5 SMF5V0A added to PD-DET (+5V/GNDREF); J15 vbus_esd_protection fail→pass; UC-002 gone. Probe True for SM712_SOT23, SMF24A, SM6T10A, SM6T6V8A, BSD5C, H5VU, and a 'Transient voltage suppressor' description; False for 1N4148/SS34. Note: The differential-pair ESD check (`detector_helpers.is_protection_part`, `schematic/net_analysis.py:1528`) still matches protection keywords only; it is outside this KH's fix direction (PD-DET, the VBUS check and the clamp test).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1076: the `hx711` entry in the op-amp/ADC exclusion drops the HX711's own regulator (VFB + BASE driving an external PNP to AVDD) from `detect_power_regulators`
+
+**Severity:** LOW (the AVDD rail has no recorded source; long-standing, absent at `7d9d4d9f`, `f53d107` and `6138b126`)
+**File:** `skills/kicad/scripts/signal_detectors.py:1845-1850` (`_opamp_adc_exclude` includes `"hx711"`, added in `0d9a018c` "op-amp exclusion", v1.3.0~136; FIXED.md:8691 points to a KH-260 for those 17 records, but neither tracker has a KH-260 entry)
+**Discovered:** 2026-11-11, harness, from the product's TH-109 rulings (lock FND-00001467-AST-05); verified at `6138b126`
+
+**Symptom:** SparkFun OpenScale-BT U3 (HX711, 16 pins) has VSUP on `5V`, BASE on `__unnamed_14` = Q2.B, AVDD on `__unnamed_15` = Q2.C/L2/R12, and VFB on `__unnamed_16` = R9/R12 (divider). This is the datasheet LDO controller with an external PNP pass transistor (Q2.E on 5V). `detect_power_regulators` lists only U4 RT9080. When the lock was written, U3 was reported as `ic_with_internal_regulator`.
+
+**Fix direction:** remove `hx711` from the exclusion or recognise it on its pins (VFB + BASE + AVDD → regulator controller with an external pass element). Without the exclusion the existing logic gives `ic_with_internal_regulator`: VFB is 1 regulator pin of 16, below 20 % (`:2031-2039`). A better record would name AVDD as the output, with the R9/R12 divider. If the product picks a different topology, the lock (`topology == ic_with_internal_regulator`) has to follow it.
+
+- **Closed:** fixed; product `855043ef` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): 855043ef: hx711 dropped from the op-amp/ADC exclusion, BASE+VFB+AVDD read as a pass-transistor LDO controller, HX711 Vref 1.25 (datasheet VBG; local HX711 PDF: VAVDD=VBG*(R1+R2)/R1). SparkFun OpenScale-BT U3: base no record -> cand LDO, VSUP 5V -> AVDD __unnamed_15, R12/R9 20k/8.2k, estimated_vout 4.299 V (= SparkFun's 4.3 V AVDD), rail_voltages gains __unnamed_15 4.299. Note: Lock FND-00001467-AST-05 (topology == ic_with_internal_regulator) now fails: re-anchor to topology LDO (the KH said the lock must follow the chosen topology).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1077: multi-pin TVS / ESD arrays report `clamp_net: null`, drop the power rails they clamp, and list no-connect pins as protected nets
+
+**Severity:** LOW (every `esd_ic` record carries a null `clamp_net` by construction; its protected-net list is wrong when an array is used on rails)
+**File:** `skills/kicad/scripts/signal_detectors.py:2595-2628` (the multi-pin diode branch: `protected` drops power and ground nets (`:2601`), `clamp_net: None` (`:2612`), `protected_net = sorted_nets[0]`); the same shape in the IC-ESD branch (`:2789`)
+**Discovered:** 2026-11-11, harness, from the product's TH-109 rulings (lock FND-00001453-AST-14); verified at `6138b126`
+
+**Symptom:** SparkFun Qwiic GNSS SAM-M8Q D7 (PESD3V3L4UG, `D_TVS_ESD_4_3.3V`) has A on `GND`, K2 on `3.3V`, K4 on `V_BCKP`, and K1 / K3 on the single-pin nets `__unnamed_17` / `__unnamed_18`, both `no_connect: true`. The record is `type: esd_ic`, `protected_nets: [__unnamed_17, __unnamed_18]` (the two NC pins), `protected_net: __unnamed_17`, `clamp_net: null`. The two rails it actually clamps are missing.
+
+**Fix direction:** set `clamp_net` to the common-anode or ground pin net. Keep rail pins as protected nets when the array is placed on rails, and drop pins whose net is no-connect or single-pin.
+
+- **Closed:** fixed; product `1e1a1fe0` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): signal_detectors.py _clamp_array_nets (1e1a1fe0), diode branch keep_rails=True, IC branch keep_rails=False. SparkFun Qwiic GNSS SAM-M8Q D7: protected [__unnamed_17, __unnamed_18] clamp null → [3.3V, V_BCKP] clamp GND. UM980_connectors D9/D10/D11 clamp null→GND; D11 drops NC __unnamed_6. IC branch: aaronw2 t962.sch USBLC6 D1 clamp null→GND. Note: Small side effect: the USBLC6 D1 record now lists its VBUS pin net +5V as a protected net.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1105: NCP1117 order codes (`NCP1117ST33T3G`, `NCP1117DT33G`, ...) read as the adjustable 1.25 V reference
+**Severity:** MEDIUM (wrong value, v3.0.3)
+**File:** `skills/kicad/scripts/kicad_core/parts.py:244-277` (`_regulator_candidates`: the fixed-suffix patterns need a `-` / `_` before the voltage digits, so the ON Semi `ST<vv>` / `DT<vv>` order code falls through to the `_REGULATOR_VREF` prefix lookup `NCP1117` = 1.25), at 206403e8
+**Discovered:** 2026-11-13, product CHANGELOG accuracy pass for v3.0.2 Wave 11d (handoff), re-read by the harness at `206403e8`
+**Symptom:** probe `lookup_regulator_vref(value, '')`: `NCP1117ST12T3G`, `NCP1117ST33T3G`, `NCP1117ST50T3G`, `NCP1117DT33RKG`, `NCP1117ST18T3G`, `NCP1117ST15T3G` all give `(1.25, 'lookup')`; only `NCP1117-12` gives `(12.0, 'fixed_suffix')`. Every one of these is a fixed-output part (NCP1117 order codes: the two digits after ST/DT give the output voltage: 12 = 12 V, 15 = 1.5 V, 18 = 1.8 V, 33 = 3.3 V, 50 = 5.0 V). 67 corpus schematic outputs carry an `NCP1117ST..` / `NCP1117DT..` string (most common `NCP1117ST33T3G` 358 occurrences, `NCP1117ST50T3G` 160, `NCP1117DT33G` 74).
+**Fix direction:** decode the NCP1117 (and same-scheme ON Semi LDO) order code `ST|DT<vv>`, mapping each code to its datasheet voltage (12 is 12 V; 15/18/25/33/50 are implied decimals), and read it as fixed before the prefix lookup; add the order codes to the parts tests.
+**Gate budget (when fixed):** regulator Vref / output-voltage values and their downstream findings (PR-DET, VD-DET feedback checks, rail voltages) on the units carrying these order codes.
+
+- **Closed:** fixed; product `9c637fba` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): 9c637fba parts.py _NCP1117_CODE/_NCP1117_VOLTS: NCP1117ST12/15/18/25/33/50T3G -> 12/1.5/1.8/2.5/3.3/5.0, DT33RKG/DT33G 3.3, ST285 2.85, NCV1117ST33 3.3, NCP1117LPST33 3.3; STAT3G/DTAT4G stay 1.25 (adjustable), all matching the local onsemi NCP1117 ordering table. Units: martinribelotta Board-RZA1L U6 NCP1117ST33T3G None -> 3.3, U9 NCP1117ST12T3G None -> 12.0 (on a +1.2V rail: design label, the datasheet says 12 V); hackclub YARLoRa U3 NCP1117DT33G None -> 3.3. Note: Residue: industrial codes NCP1117IST18/33/50T3G and NCP1117IDT33/50T4G (same datasheet table) still read (1.25,'lookup'); 0 corpus values.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1122: SPICE source symbols (`Simulation_SPICE:VDC` / `VSIN` / `VPULSE`, `pspice:VSOURCE`, ref `V1`) are typed `varistor` and feed PD-DET
+
+**Severity:** MEDIUM (false protection-device detections)
+**File:** `skills/kicad/scripts/kicad_core/classify.py:108`, `:389-404` (the `V` prefix → varistor), at `6b9767e1`
+**Discovered:** 2026-11-15, product v3.0.3 triage survey (`.superpowers/sdd/2026-11-15-v3.0.3-planning/survey/` in the product repo); magnitudes at regen 2 (`365aea94`, schematic `--no-hierarchy`)
+**Symptom:** 1,550 SPICE source parts on 622 units are typed `varistor`; 243 PD-DET findings on the first 121 units.
+**Fix direction:** a simulation-source lib_id / `Sim.*` field check ahead of the `V` → varistor prefix rule. Group with KH-1033.
+**Gate budget (when fixed):** type changes on the 1,550 parts, PD-DET removals on their units.
+
+- **Closed:** fixed; product `b66c8bae` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased).
+- **Verification:** harness agents at `7ed10f3e` (base `f254cb23` = `de28149d` analyzer): classify.py:86,123-127 (_SPICE_SOURCE_SYMBOL before V to varistor): Simulation_SPICE VDC/VSIN/VPULSE/VPWL/VEXP/VAM/VSFFM/VTRNOISE/VTRRANDOM and pspice:VSOURCE/ISOURCE give 'other'. Corpus outputs: 1,218 Simulation_SPICE/pspice parts on V refs (483 units) typed varistor at baseline; none stays varistor (1,212 other, 6 Simulation_SPICE NMOS/PMOS on V/VT refs to transistor); project copies (vdc_pspice:VDC_PSPICE ×291, VSIN ×126, VPULSE ×75) also go to other. joseluizmendonca driver_sim: V2/V3 varistor to other, PD-DET 2 to 0.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1195: RF-matching (RM-DET) finding ids were positional (`#N`): identity keyed on `antenna_ref`, which the record never carries
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `rm-det-identity`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** `detection_schema.py:410` keyed rf_matching identity on `antenna_ref`, which the record never carries. Every RM-DET id was positional (`#N`), and any removal renumbered the rest. Now keyed on `antenna`, so every surviving RM-DET id changes once (about 500 corpus records) and then stays stable (R12b-5).
+
+- **Fixed:** `6eb6e12f` fix(schematic): RF matching findings keep their ids when others change (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class rm-det-renumber.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: detection_schema.py:410 identity antenna_ref -> antenna (records carry `antenna`, never `antenna_ref`). Baseline results/outputs: all 2,304 RM-DET ids share hash 0d787597b353 (1,651 with #N). alvarop/chaac antenna-test.sch: base AE1/C14/C16 = ...0d787597b353, #1, #2; cand AE1 = rf_matching-b1d15390163f. Note: Related to open KH-598 (ordinal ids): this removes RM-DET from it; say so in the filing or as a KH-598 addendum. The ~500 corpus id changes were not measured here.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1196: Diodes Inc. reel code `-13` read as a 1.3 V fixed output (AP64501SP-13, AP33772DKZ-13, AP2501M8-13 …)
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `reel-code-as-fixed-voltage`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** Diodes Inc. reel code `-13` was read as a 1.3 V fixed output (AP64501SP-13, AP33772DKZ-13, AP2501M8-13, AP2152SG-13, AL8861Y-13, ZXTR2005ZQ-13). Now a dedicated skip in the implied-decimal branch, citing DS41980 Rev. 5-2. `AP7361C-33E-13` and `AP1509-50SG-13` still read 3.3 / 5.0 V. Bare two-digit codes never outrank a divider (R12b-3). 16 records / 13 units.
+
+- **Fixed:** `7cbfdbf9` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class pr-det-reel-code, pr-det-kh1006.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: Probe lookup_regulator_vref: AP64501SP-13, AP33772DKZ-13, AP2501M8-13, AP2152SG-13, AL8861Y-13, ZXTR2005ZQ-13 (1.3, fixed_suffix) -> (None, ''); AP7361C-33E-13 3.3 and AP1509-50SG-13 5.0 unchanged. CelestineOverflow Afterburner USBPD IC8 AP33772DKZ-13 Vout 1.3 -> None; greatscottgadgets tycho AP2152 rail_voltages VBUS_0 1.3 -> 5.0. AP33772 datasheet ordering info: '13: 13 inch Tape and Reel'.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1197: Dead or mistyped `_REGULATOR_VREF` keys (`LT810`/`LT811`, `LT361`/`LT362`, `TPS5654`) and a missing LT8640 row
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `vref-key-typos`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** Five dead or mistyped Vref keys: `LT810`/`LT811` → `LT8610`/`LT8614`; `LT361`/`LT362` → `LTC3610`/`LTC3620`; `TPS5654` removed; `LT860` (meant LT8640) → `LT8640`. The LT8606/7/8/8S/9/9S keys were added from the datasheets (0.778 / 0.774 / 0.782 V). New `_ADI_FIXED_CODES` keep fixed members off the new keys: LT8607-5, LT8609A-5, LT8610A/AB-5, LTC3620-1.
+
+- **Fixed:** `34ecb917` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class c5-vref-key-typos, c5-adi-fixed-order-codes.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: Probe: LT8610/LT8614/LTC3610/LTC3620/LT8640 None -> 0.97/0.97/0.6/0.6/0.97; TPS5654x 0.6 -> None; LT8606/7/8 0.97 -> 0.778, LT8609 0.97 -> 0.782, LT8608S/LT8609S 0.97 -> 0.774; LT8607EMSE-5 / LT8609AEDDM-5 0.97 lookup -> 5.0 fixed; LT8601/LT8602 0.97 -> None. Local datasheets: LT8606/7/8 Rev. D 0.778 V, LT8609 Rev. J 0.782 V, LT8607-5 5 V, LT8610AB Rev. C 0.97 V all confirmed. LT8608S / LT8609S 0.774 V not verified (analog.com unreachable from here). **Correction to the product text:** Partly a duplicate of open KH-718: its LT860 half (LT8606 read 0.97 V) is closed by close-list item 23 with the same commit, so the LT860 -> LT8640 change and the LT8606/7/8/8S/9/9S rows belong to KH-718, not a new KH. Also: six keys, not five (LT810, LT811, LT361, LT362, TPS5654, LT860), and LT860 was not dead: it gave 0.97 V to LT8601/8602/8606-8609S, fixed -5 members included. The new KH should cover the dead LT810/LT811/LT361/LT362 keys (LT8610/LT8614/LTC3610/LTC3620 read nothing), the dead TPS5654 key, the missing LT8640 row and the ADI fixed codes.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1198: LMR36506MSC5 / MSC3 (fixed 5.0 / 3.3 V members) read no output voltage
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `lmr365-fixed-order-code`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** LMR36506MSC5 / MSC3 are the fixed 5.0 / 3.3 V members (SNVSB91C p3) and read no voltage. GEODE U802 LMR36506MSC5RPERQ1: 9 records.
+
+- **Fixed:** `34ecb917` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class c5-lmr365-fixed-order-code.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: Probe: LMR36506MSC5RPERQ1 None -> (5.0, fixed_suffix), LMR36506MSC3 None -> 3.3, MSCQ stays None. SNVSB91C device comparison table: MSC5 '5-V Fixed', MSC3 '3.3-V Fixed', MSCQ 'Adjustable'.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1199: Missing per-member Vref rows exposed by the KH-1013 divider pick: TPS73101, TPS79301, LM5122
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `vref-rows-exposed-by-divider-pick`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** The KH-1013 divider pick exposed missing per-member rows: TPS73101 1.204 V (SBVS034P p5), TPS79301 1.225 V (SLVS348L p6), LM5122 1.2 V (SNVS954H p8). Fixed TPS731xx/TPS793xx members take no reference. 56 records.
+
+- **Fixed:** `34ecb917` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class c5-vref-row-tps793 / -tps731 / -lm5122.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: ce-box crazyflie Power.kicad_sch: TPS79301 U9 VCC 1.444 -> 2.948, U7 VCCA 1.38 -> 2.817 (heuristic 0.6 -> lookup 1.225). ERZehr Boost_Audio U11 LM5122 7.011 -> 14.022. Datasheets: TPS73101 VFB 1.204 V (local SBVS034O p5; product cites rev P), TPS79301 1.225 V (SLVS348L p6), LM5122 VREF 1.2 V (SNVS954H p8). TPS73133 / TPS79333 None both sides.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1200: A value naming another part took the library symbol's Vref family key (TPS54202 on a TPS563200 rescue symbol read 13.1 V)
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `vref-from-borrowed-symbol`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** A value naming another part took the library symbol's family key: TPS54202 on a `TPS563200-…-rescue` symbol read 13.1 V; LM338 on LM337; TC2117 on NCP1117. Now the symbol's key applies only when the value names no part. 18 records. Known-lost right-by-luck lookups are listed in known-false.
+
+- **Fixed:** `34ecb917` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class c5-vref-from-borrowed-symbol.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: Probe: TPS54202 on a TPS563200 rescue symbol 0.76 -> None; TC2117 on NCP1117ST33T3G 1.25 -> None; TPS564208DDCT on TPS54308 0.596 -> None; LM338_TO220 on LM337 1.25 -> None. cracked-machine RevC PowerSupply U22 TPS54202DDCR Vout 13.018 (lookup 0.76) -> 10.277 (heuristic 0.6). **Correction to the product text:** LM338 on LM337 is not a wrong-value example: the LM338 reference is 1.25 V, so the borrowed 1.25 V was right by luck (the class says LM338 x4 / SPX1117 x4 changed vref_source only). Drop LM338 from the defect text and add LM338 x4 and SPX1117-ADJ to the known-false right-by-luck list, which names only bondus and larus. Residual: TPS54202 still has no row of its own (0.596 V), so it now reads the 0.6 V heuristic.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1201: RECOM `R-78<series><Vout>-<Iout>` read with Vout = the current suffix (R-78E3.3-1.0 → 1.0 V), overwriting right rail voltages
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `r78-current-suffix`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** RECOM `R-78<series><Vout>-<Iout>` was read with Vout = the current (R-78E3.3-1.0 → 1.0 V; R-78E5.0-0.5 → 0.5 V), and Task 4's retyping then overwrote right `rail_voltages`. Now decoded per cited series (none, B, C, CK, E, HB, K). A model name never has its `-Iout` read as a voltage. A label value's own voltage outranks a borrowed order code. `is_r78_module` types RECOM modules switching on any symbol: coastalwarming's 923 °C TS-001 is gone. Filed by survey B as a later-wave KH; brought into 12b by the Task 4 ruling.
+
+- **Fixed:** `9c637fba` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class c2-r78.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: Probe: R-78E3.3-1.0 1.0 -> 3.3, R-78E5.0-0.5 0.5 -> 5.0, R-78B5.0-1.5 1.5 -> 5.0, R-78HB12-0.5 0.5 -> 12.0, R-785.0-1.0 None -> 5.0. Alexandr-Filatov SupplyPower_3 U1 Vout 1.0 -> 3.3, rail_voltages +3V3 1.0 -> 3.3. coastalwarming Back_Panel U1 R-78C3.3-1.0 LDO 1.0 V -> switching 3.3 V; thermal on the same pcb JSON: base TS-001 'Tj 923 C' and TS-004 '5.98 W' -> both gone. Note: Not a duplicate. Related to KH-1084 (RECOM R-78E typed `switch`), which is a separate typing defect.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1202: TPS565201 / TPS565208 took the `TPS5652` 0.6 V row; their VFBTH is 0.76 V
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `tps56520x-vref`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** The `TPS5652` family row gave 0.6 V to TPS565201 / TPS565208, whose VFBTH is 760 mV (SLVSE71 p5, SLVSE72B p5). Per-member rows were added; the 0.6 V row now cites TPS565242 (SLUSEN1A p5). 6 records / 4 units.
+
+- **Fixed:** `34ecb917` (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class c5-tps5652x.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: Probe: TPS565201 / TPS565208 / TPS565201DDCR 0.6 -> 0.76; TPS565242 stays 0.6. Datasheets: TPS565201 VFBTH 753/760/767 mV (SLVSE71 p5), TPS565208 760 mV (SLVSE72B p5), TPS565242 VREF 600 mV (SLUSEN1A p5).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1203: LR-001 asked addressable LEDs (WS2812, SK6812, APA102 …) for a series current-limiting resistor
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `lr001-addressable-led`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** LR-001 had no addressable-LED skip, unlike the LED audit, which had one. It raised "no current-limiting resistor" errors on WS2812 / SK6812 / SK6805 / WS2813 / APA102 / NeoPixel parts, plus "current too high / dissipation" on their supply resistors. Now there is one shared predicate, `detector_helpers.is_addressable_led`. About 7,838 corpus records, 0 adds.
+
+- **Fixed:** `6de0c47c` fix(schematic): addressable LEDs are not asked for a series resistor (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class sch-lr001-addressable.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: ry/ws2812-2020-breakout: LR-001 'no current-limiting resistor' D1-D4: 4 -> 0. detector_helpers.is_addressable_led is shared by LR-001 (validation_detectors) and the LED audit. Not KH-740 (other LR-001 residue); KH-051/122 (closed) are about typing. Note: Note: the predicate matches the family word anywhere in the whole lib_id, library nickname included, so a plain LED in a library nicknamed e.g. `neopixel_*` is skipped as well. Not measured.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1204: LD-DET followed a drain / collector pull-up to a supply rail and credited any LED on that rail (joewing q2: 253 false records on D69)
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `lddet-pullup-to-rail`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** `enrich_transistor_led_drivers` followed a pull-up from a drain / collector to a rail and credited any LED on that rail: joewing q2 had 253 false LD-DET on unrelated LED D69 even before Task 26. It now skips a resistor whose far net is a supply or ground, unless that net is an unpowered LED node. It also skips a ground load net, and an N-channel MOSFET whose drain is a rail. LD-DET −1,008 → TR-DET; LA-AUD +283 / −11.
+
+- **Fixed:** `f1b95cb6` fix(schematic): a transistor is not an LED driver through a pull-up to a supply rail (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class F-lddet-pullup.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: joewing q2 q2.kicad_sch (hierarchical): LD-DET 277 -> 24, records on D69 254 -> 1; TR-DET 165 -> 736. The product says 253 false on D69 at the base: 254 measured, 1 kept. Note: Not KH-730 (half bridges), although the budget group calls it a KH-730 follow-up.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1205: LMR51610 Vref row 0.6 V (datasheet 0.8 V) and the X / Y frequency option read as a family wildcard
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `lmr5161x-vref-and-xy-option`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** The `_REGULATOR_VREF` row `LMR51610 = 0.6 V` was wrong (0.8 V, TI SLUSEY1B June 2023 rev. Dec 2023, 6.5 p5; 7.3 p13), and a bare X in `LMR51610X` was read as a family wildcard (X = 400 kHz, Y = 1.1 MHz are order options, 4 p3). Now `LMR51606` and `LMR51610` have cited 0.8 V rows and both join `_X_OPTION_KEYS`. Fixed on filing (found by the integrated reconcile, ruled into the fix wave). 11 of 15 LMR516xx units moved, every record right: Vout estimates now match the rails, SPICE fail -> pass x4 and info -> pass x3, EMC TH-001 +2 true. LMR51620 / LMR51630 rows stay uncited (open: `lmr51620-lmr51630-vref-uncited`).
+
+- **Fixed:** `e945e23b` fix(schematic): LMR5161x feedback reference is 0.8 V and the X/Y suffix is a frequency option (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class fix-lmr5161x-vref.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: Probe: LMR51610 / LMR51610X / XDBVR / YDBVR 0.6 -> 0.8; LMR51606 None -> 0.8; LMR51620/30 stay 0.6. MootSeeker BekantX powerSupply U9 LMR51610XDBVR +3V3 2.495 -> 3.327. SLUSEY1B (rev. Dec 2023) 6.5 p5: Vfb 0.788/0.8/0.812 V; section 4: X = 400 kHz, Y = 1100 kHz. **Correction to the product text:** The 'bare X read as a family wildcard' half was never at the baseline. The wildcard-X rule came in this wave (9ece787a); at f254cb2, vref_key_covers_part('LMR51610','LMR51610X') is True and the lookup gave 0.6 regardless. File only the 0.6 -> 0.8 V row error and the missing LMR51606 row, and call the X/Y part an in-wave regression fixed before ship.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1206: An NPN transistor with its collector on a supply rail (emitter follower) was credited as that rail's LED driver
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `lddet-npn-collector`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** The fix for the NPN half of open filing `bjt-polarity-unread`: LD-DET credited an LED on the rail of an emitter follower (UncleRus quorum KT315 x10 and the rest of the 117). Polarity is read from the symbol, keywords, description or 50 cited NPN part numbers (`parts.names_npn_bjt`); a complementary pair reads neither; an emitter-side LED is still credited. LD-DET -102, TR-DET +102, LA-AUD +44, SPICE transistor_circuit +102, 47 units.
+
+- **Fixed:** `35e61947` fix(schematic): an NPN transistor with its collector on a supply rail is not that rail's LED driver (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class fix-lddet-npn-collector.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: The baseline defect is real: durangoretro v2.2 v2-eia.sch, BC548 Q3/Q5/Q609/Q611 -> D6, LD-DET 4 -> 0. UncleRus Quorum-BK04 / Quorum-64 / Magic-05: 0 LD-DET at both base and candidate. **Correction to the product text:** The lead example, UncleRus quorum KT315 x10, is not a baseline defect. Those records came in this wave once Task 7 typed VT as a transistor (reconcile-wave12b.md), and the -102 / 47u is measured against the pre-fix tip, not de28149d. Lead the KH with baseline examples instead (durangoretro BC548, jotego TR1-3). Item 25 stays open for: BJTs whose polarity is not read, the PNP side, and its literal symptom (candidate TR-DET records still carry no NPN/PNP field).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — KH-1207: A P-channel switch was not counted as the source of the rail on its drain (false RS-001 / RS-002)
+
+**Severity:** LOW (fixed on filing)
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b (`fixes-wave12b.md` new-KH row `rs001-pfet-drain-source`); verified by the harness at `7ed10f3e`
+**Symptom (baseline `de28149d`):** The fix for the fixed half of open filing `rs001-pfet-switched-rail`: a P-FET whose source rail is sourced sources its drain rail, with an input-side guard (gate tied or pulled to ground or a rail, IC GATE pin, VBUS drain). RS-001 -54 / 35u, RS-002 -2 (the two false Twisted-Fields cm4 errors). The open half stays in the filing (about 20 right removals the guard skips).
+
+- **Fixed:** `bab60583` fix(schematic): a P-channel switch counts as the source of the rail on its drain (v3.0.3 Wave 12b, `de28149d..7ed10f3e`, unreleased); budget class fix-rs-pfet-drain-source.
+- **Verification:** harness agent at `7ed10f3e` vs `f254cb23`: Twisted-Fields cm4-robot (hierarchical): base RS-001 9, including 'warning' 5V_switched and 5V_switched_CAN 'has no declared source'; cand RS-001 6 (both gone, plus +5V). RS-002 is 0 at both base and candidate. Charading Saturn60: +5V_LED_RAIL and +5V_LED_SRC RS-001 at both base and candidate. **Correction to the product text:** The two 'false Twisted-Fields cm4 RS-002 errors' were added in this wave (Task 14 step 155757fd, reconcile section 2). At the baseline, cm4 had RS-001 warnings on those rails, not RS-002 errors. Base to candidate, the KH is RS-001 removals only; the RS-002 -2 is in-wave churn. Item 58 stays open for the input-side-guard skips (~20 records: VBUS drains, gate-on-rail muxes, ...) and for drains whose FET source rail is itself unsourced (Saturn60, confirmed unmoved).
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
+## 2026-11-17 — TH-121: the netlist oracle dropped `(pin "")` nodes and read a blind KiCad netlist as `kicad_same`
+
+**Severity:** MEDIUM (the upgrade-lane oracle called 6 units "KiCad same" that KiCad's netlist could not see)
+**File:** `regression/netlist_oracle.py` (`NODE_RE` needed a non-empty pin); `results/v303_refresh/lane_oracle.py` + `lane_summary.py` (untracked lane tools)
+**Discovered:** 2026-11-16, product Track H survey (`survey-H-lane-triage.md` section 3, TH-NEW); ruled H-7 (RULINGS-12b section 4)
+**Symptom:** jotego twin16 (all pin numbers empty): every `(pin "")` node was dropped, so 4 units read `kicad_same` while KiCad's netlist changed by 24-30 nets. baldengineer `sockets_1` and chatelao `zero-ohm-array-x2` (every symbol `on_board no`): KiCad's netlist has 0 nets / 0 components, and the empty partitions compared equal.
+
+- **Fixed:** `NODE_RE` accepts an empty pin and keys the node by its `pinfunction`; `analyzer_nets` keys an empty pin number by its pin name; new `netlist_refs` + `oracle_blind` (no nodes, or a real analyzer ref missing from KiCad's components); the lane oracle reports `oracle_blind` instead of `kicad_same` (test `tests/test_netlist_oracle_parse.py`, 6 tests). Re-run on the 16 kept lane schematic units: jotego ×4 `kicad_same` → False (KiCad's netlist changed), baldengineer + chatelao → `oracle_blind`, the other 10 unchanged (S1 / S2 units) = survey-H. Real jotego netlist: 645 / 645 nodes parsed (was 120).
+- **Also (H-6):** the five declared-expected lane sentences S3, S4, S5, L6, L7 are in `results/v303_refresh/declared_expected.json`, verbatim.
+- **Gate:** v3.0.3 Wave 12b gate `de28149d..7ed10f3e` vs `product_f254cb2` (ledger `f254cb2.json`, `CLAUDECODE=1`), 2026-11-17: standard 171,434 compared units (moved: schematic 8,064 / emc 551 / thermal 353 / cross 580; pcb and gerber 0) + full-chain 29,873 (1,293 / 140 / 71 / 93), 0 candidate failures; every moved record located to its range commit by a 42-step stepwise run (step 42 = the gate candidate on every unit) and claimed by a `budget-wave12b.json` class of that commit, by a derived block of a claimed step, or as downstream of the unit's claimed schematic step; the remainder (budget under-declared kinds and follow-on rules) hand-classified to the commit's mechanism, 0 unexplained; spice-offline 646 / 8,677 reports attributed; text oracle = the declared `usb_dual_esd` `clamp_net` delta only; `--schema` x6 and distributor-offline (0 / 310) identical; tiers 3,810 / 0 / 8 / 3 (`results/v303_w12b_gate_aux/w12b_verdict.json`).
+
+---
+
 ## 2026-11-16 — TH-042: `test_schema_completeness_zebra_x` fails — 7 new v1.4 detectors lack `SCHEMAS` entries
 
 **Severity:** LOW
