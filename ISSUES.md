@@ -928,17 +928,15 @@ On the alias-stripped 007785, KiCad joins M25 with S30 and V20 in `/Registers/HS
 
 **Harness check (`7ed10f3e`):** analyze_thermal.py:695-745 has no unplaced-board test. Micro-DMM Isolated_ADS1256: 75/75 footprints at (0,0); 7ed10f3 sch+pcb+thermal run gives 62 TP-001, all 'is 0.0mm from U2 (TPS7A4901DGNR)' (0 at 365aea9).
 
-### KH-1216: DRV8871 / DRV8243 / DRV883x pins `OUT1`/`OUT2` strip to `OUT` and read as a regulator output (PR-DET `ic_with_internal_regulator`)
+### KH-1216: DRV8874 / DRV8876 / DRV8245 motor-driver pins `OUT1`/`OUT2` strip to `OUT` and read as a regulator output (PR-DET `ic_with_internal_regulator` on a motor net)
 
 **Severity:** LOW
-**Discovered:** 2026-11-17, product v3.0.3 Wave 12b handoff (`kh-filings-wave12b.md` A item 10 `motor-driver-out-pins`); checked by the harness at `7ed10f3e`
+**Discovered:** 2026-11-17, product v3.0.3 Wave 12b handoff (`kh-filings-wave12b.md` A item 10 `motor-driver-out-pins`); checked by the harness at `7ed10f3e`; part list corrected by the product's 12b acceptance reply (2026-11-17)
 
-- Symptom: DRV8871 / DRV8243 / DRV883x pins `OUT1`/`OUT2` strip to `OUT` and read as a regulator output (PR-DET `ic_with_internal_regulator`).
-- Reach: 20 records.
-- Evidence: `D/surveys/survey-D2.md` "New KHs".
+- Symptom: the pin-role parse strips trailing digits (`signal_detectors.py:1877`), so `OUT1`/`OUT2` read as `OUT` (Vout) and `IN1`/`IN2` as `IN` (Vin). DRV8874 / DRV8876 / DRV8245 motor drivers then get a PR-DET `ic_with_internal_regulator` record whose rail is a motor output net, plus a DO-DET "missing capacitors" twin.
+- Reach (product list, re-counted by the harness on the 12b std candidate snaps): 17 PR-DET records + 17 DO-DET twins in 10 units: edwindertien/foundscape anarchitechno-box U11/U12/U20/U21 (DRV8245); humanlab-network/bionico U5; bismarx-v1/Sumec-MiniSumo-HW MK IV IC2/IC3, MK V Pro U2/U3, MK V IC2/IC3 (DRV8874); airsoftak25/NeoSumec MK3 v1.5 IC1/IC2 (DRV8874); brown-studios/minuet v3 + v4 U6 and MadsRudolph/curtain-drive (both revs) U2 (DRV8876). Also Filip83 BuildingBlocks U45 DRV8837 (PR-DET LDO, input rail `IN1`). DRV8301 / DRV8302 / DRV8323 records on +5V / VDD / VCC are right (real internal regulators) and stay.
+- Evidence: `D/surveys/survey-D2.md` "New KHs" (it named DRV8871 / DRV8243 / DRV883x, the wrong parts: 0 PR-DET on 63 such files).
 - Wave: 12d.
-
-**Harness check (`7ed10f3e`):** Pin parse strips digits (signal_detectors.py:1877): OUT1->OUT (vout), IN1->IN (vin). Filip83 BuildingBlocks.sch U45 DRV8837DSGR = PR-DET LDO, input_rail IN1, output __unnamed_226 at both f254cb2 and 7ed10f3 (run). But 365aea9 outputs: 0 PR-DET on 63 files with Driver_Motor:DRV8871/DRV8243/DRV883x, only 3 DRV8837 records (LDO x1, unknown x2); DRV8871 units T3nk4I Tenn, berkeleyauv NOGGIN, adeboni ir_transmitter give none at 7ed10f3. **Correction:** Not reproduced as '20 records, ic_with_internal_regulator': measured 3 records (Filip83 DRV8837, LDO/unknown). The mechanism also needs IN1/IN2 stripping to IN (the input). Ask the product for its 20-record list before quoting reach.
 
 ### KH-1215: an ESD array whose only return is `Earth` (PESD1CAN, TPD4E02B04) gets no `clamp_net`, and its rail pins stay unlisted
 
