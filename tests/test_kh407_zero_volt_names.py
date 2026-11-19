@@ -19,13 +19,20 @@ sys.path.insert(0, os.path.join(_KH, "skills", "kicad", "scripts"))
 
 from kicad_core.netnames import is_ground_name, is_power_net_name  # noqa: E402
 
-ZERO = ("0V", "0VA", "0Vo", "0VANA", "0VCC", "0V_A", "+0V", "0VD", "/Power/0VA")
+ZERO = ("0V", "0VA", "0Vo", "0VANA", "0V_A", "+0V", "0VD", "/Power/0VA")
 ZERO_DIGIT = ("0V9", "0V85", "0V95", "0V5")
+# Channel-0 supplies beside 1VCC .. 7VCC (corpus: jericholab rdl), not 0 V grounds (ruling G2-3)
+ZERO_INDEX_SUPPLY = ("0VCC", "0VDD")
 
 
 def test_zero_volt_spellings_are_ground():
     for n in ZERO:
         assert is_ground_name(n), n
+
+
+def test_zero_index_supply_names_are_not_ground():
+    for n in ZERO_INDEX_SUPPLY:
+        assert not is_ground_name(n), n
 
 
 def test_zero_volt_spellings_are_not_power():

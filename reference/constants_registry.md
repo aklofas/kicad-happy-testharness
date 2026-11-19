@@ -2,16 +2,16 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-11-17T17:09:07.678707+00:00
+**Last scan:** 2026-11-19T17:25:04.633214+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 1077 |
-| Verified | 193 |
-| Unverified | 854 |
-| Stale (changed since verification) | 30 |
+| Total constants | 1130 |
+| Verified | 205 |
+| Unverified | 893 |
+| Stale (changed since verification) | 32 |
 | Critical risk | 6 |
 | High risk | 15 |
 
@@ -437,6 +437,7 @@
 |---|---|---|---|---|---|---|---|
 | CONST-278 | `_PROTECTION_KEYWORDS` | keyword_classification | 32 | unverified | 0.5 | 0.0 | **high** (0.5) |
 | CONST-886 | `_DRIVER_PIN_TYPES` | standard | 3 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1086 | `_SAFETY_CLASS_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-887 | `_PARALLEL_VALUE_NOUN` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-888 | `group` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-889 | `part` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -553,8 +554,6 @@
 | CONST-544 | `_ENABLE_PINS` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-545 | `_CC_PINS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-546 | `_SBU_PINS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-892 | `_CC_RP_5V` | unknown | 3 | unverified | 0.0 | 0.0 | **low** (0.0) |
-| CONST-893 | `_CC_RP_3V3` | unknown | 3 | unverified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-177 | `detect_power_path:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-548 | `_ADC_IC_KEYWORDS` | keyword_classification | 17 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-549 | `_VREF_IC_KEYWORDS` | keyword_classification | 18 | unverified | 0.4 | 0.0 | **medium** (0.4) |
@@ -795,6 +794,9 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-1087 | `_COMMA_DECIMAL` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1088 | `_P_DECIMAL` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1089 | `_PIN_NAMED_NET` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-827 | `USB_DATA_NET_MARKERS` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-828 | `_SIGNAL_PREFIXES` | keyword_classification | 45 | unverified | 0.5 | 0.0 | **high** (0.5) |
 | CONST-829 | `_POWER_PREFIXES` | keyword_classification | 25 | unverified | 0.4 | 0.0 | **medium** (0.4) |
@@ -806,12 +808,22 @@
 | CONST-1019 | `_V_NUMBER_RAIL_WORDS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1020 | `_V_NUMBER_VOLTAGE_SUFFIXES` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1021 | `_V_NUMBER` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1090 | `_RAIL_MONITOR_TAILS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1091 | `_RAIL_SENSE_TAILS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1092 | `_ADC_TAP_RAILS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1093 | `_SPACED_NOT_RAIL_WORDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1094 | `_POWER_LED_NODE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-809 | `_USB_D_SUFFIX` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-969 | `_USB_SIGNAL_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-898 | `IC_SIGNAL_PIN_TYPES` | standard | 6 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1022 | `_GROUND_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1023 | `_VIRTUAL_GROUND_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-1024 | `_SPLIT_RAIL_N_LEAF` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1095 | `_GROUND_SIGNAL_TAILS` | keyword_classification | 19 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-1096 | `_LEADING_VOLTAGE_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1097 | `_BACKGROUND_TAIL` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1098 | `_EARTH_NAMES` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1099 | `_SPLIT_RAIL_TWINS` | unknown | 5 | unverified | 0.0 | 0.0 | **low** (0.0) |
+| CONST-1100 | `_V_NUMBER_PAIR` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-078 | `_UUID_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 
 ## skills/kicad/scripts/kicad_core/netquery.py
@@ -828,19 +840,33 @@
 | CONST-839 | `LOAD_SWITCH_KEYWORDS` | keyword_classification | 32 | unverified | 0.5 | 0.0 | **high** (0.5) |
 | CONST-1046 | `_LOAD_SWITCH_PREFIX` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-800 | `_LOAD_SWITCH_WORDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-833 | `_REGULATOR_VREF` | datasheet_lookup | 153 | stale | 1.0 | 0.0 | **medium** (0.4) |
+| CONST-833 | `_REGULATOR_VREF` | datasheet_lookup | 155 | stale | 1.0 | 0.0 | **medium** (0.4) |
 | CONST-834 | `_LOAD_TYPE_KEYWORDS` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-967 | `_PACKAGE_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-968 | `_AMBIGUOUS_SUFFIXES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-1003 | `_FIXED_SUFFIX_FAMILIES` | keyword_classification | 12 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-1047 | `_FIXED_OUTPUT_PARTS` | datasheet_lookup | 8 | verified | 0.7 | 0.1 | **low** (0.1) |
+| CONST-1003 | `_FIXED_SUFFIX_FAMILIES` | keyword_classification | 17 | stale | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-1047 | `_FIXED_OUTPUT_PARTS` | datasheet_lookup | 14 | verified | 0.7 | 0.1 | **medium** (0.3) |
+| CONST-1101 | `_SPX1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1102 | `_SPX1117_FIXED_NAME` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1048 | `_ADI_FIXED_CODES` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-1049 | `_ADI_FIXED_CODE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1050 | `_NCP1117_CODE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1051 | `_NCP1117_VOLTS` | keyword_classification | 9 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-1052 | `_NCP1117LP_VOLTS` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1103 | `_NCP1117I_VOLTS` | keyword_classification | 3 | verified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1104 | `_LD1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1105 | `_LD1117_VOLTS` | keyword_classification | 5 | verified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1106 | `_LD1117A_VOLTS` | keyword_classification | 3 | verified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1107 | `_LDL1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1108 | `_LDL1117_VOLTS` | keyword_classification | 7 | verified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1109 | `_MIC23050_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1110 | `_MIC23050_VOLTS` | keyword_classification | 4 | verified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1111 | `_ST78_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1112 | `_ST78_CODES` | keyword_classification | 6 | verified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1113 | `_NEGATIVE_79XX` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1114 | `_NEGATIVE_79XX_CODES` | keyword_classification | 8 | verified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1053 | `_R78_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-1054 | `_R78_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-1054 | `_R78_CODE` | standard | 1 | stale | 0.1 | 0.0 | **low** (0.1) |
 | CONST-801 | `_LABEL_WORDS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1055 | `_X_OPTION_KEYS` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-835 | `_KNOWN_FREQS` | datasheet_lookup | 107 | stale | 0.8 | 0.0 | **low** (0.0) |
@@ -924,6 +950,10 @@
 | CONST-1071 | `_LAST_GROUP` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1072 | `_VALUE_THEN_FIELDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1073 | `_UPPER_PREFIX` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1115 | `_GLUED_RATING` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1116 | `_TYPE_LETTER` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1117 | `_FIELD_VALUE` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1118 | `_PREFIX_THEN_R` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-854 | `_MANTISSA` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-855 | `multipliers` | standard | 10 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-848 | `_E_SERIES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -934,6 +964,10 @@
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-856 | `_AMBIGUOUS_RECORD_CAP` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-1119 | `_SYMBOL_TYPES` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1120 | `_CONVERTER_OUTPUT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1121 | `_NEGATIVE_CONVERTER_OUTPUT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1122 | `_POSITIVE_CONVERTER_OUTPUT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 
 ## skills/kicad/scripts/lifecycle_engine.py
 
@@ -1266,6 +1300,7 @@
 |---|---|---|---|---|---|---|---|
 | CONST-337 | `MAX_TESTED_FORMAT_VERSION` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-908 | `_VOLTAGE_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1123 | `_NAME_VOLTAGE_TOLERANCE` | physics | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-864 | `_LIBRARY_RECORD_CAP` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-117 | `ps` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-118 | `_sev_counts` | heuristic_threshold | 3 | unverified | 0.4 | 0.0 | **medium** (0.4) |
@@ -1305,6 +1340,10 @@
 | CONST-054 | `cap_entry` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-055 | `rail_result` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-371 | `SLEEP_PULL_MIN_OHM` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-1124 | `_CELL_V` | unknown | 5 | unverified | 0.0 | 0.0 | **low** (0.0) |
+| CONST-1125 | `_CELL_COUNT` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1126 | `_EXPLICIT_V` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1127 | `_LI_ION_NOMINAL_V` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-372 | `_battery_rail_re` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-056 | `_iq_estimates_uA` | datasheet_lookup | 16 | verified | 0.9 | 0.0 | **low** (0.0) |
 | CONST-120 | `_DERATING_PROFILES` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -1315,7 +1354,12 @@
 | CONST-219 | `pkg_sizes` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-220 | `entry_result` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-179 | `_rs232_keywords` | keyword_classification | 13 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1128 | `_LED_NON_TERMINAL_NAMES` | keyword_classification | 14 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1129 | `_LED_TERMINAL_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1130 | `_MIN_LED_SERIES_OHMS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-1131 | `_LED_DATA_PINS` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-057 | `ic_current_estimates` | datasheet_lookup | 48 | verified | 1.0 | 0.0 | **low** (0.0) |
+| CONST-1132 | `_die_color` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-058 | `rail_info` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-059 | `dep_entry` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-462 | `analyze_power_sequencing:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
@@ -1331,10 +1375,15 @@
 | CONST-070 | `difficulty_counts` | heuristic_threshold | 3 | stale | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-187 | `_extract_package_info:kw1` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-965 | `_TYPE_C_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1133 | `_USB_DEVICE_PORT` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1134 | `_USB_DUAL_ROLE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1135 | `_USB_DATA_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1136 | `_USB_DEVICE_VBUS_MAX_UF` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-073 | `conn_checks` | heuristic_threshold | 4 | verified | 0.4 | 0.0 | **low** (0.0) |
-| CONST-114 | `_PD_CONTROLLER_KEYWORDS` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-114 | `_PD_CONTROLLER_KEYWORDS` | keyword_classification | 11 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-115 | `r_info` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-075 | `esd_keywords` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1137 | `analyze_usb_compliance:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-381 | `_uc_specs` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-076 | `all_checks` | heuristic_threshold | 3 | stale | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-077 | `rail_entry` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -1363,6 +1412,7 @@
 | CONST-131 | `_SENSE_PIN_PREFIXES` | keyword_classification | 17 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-238 | `_SENSE_IC_EXCLUDE` | keyword_classification | 30 | verified | 0.5 | 0.0 | **low** (0.0) |
 | CONST-133 | `_integrated_csa_pins` | keyword_classification | 20 | verified | 0.4 | 0.0 | **low** (0.0) |
+| CONST-1138 | `_NEG_SUPPLY_DASH` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1075 | `_NON_REGULATOR_PREFIX` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1011 | `_GPIO_PORT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1076 | `_SWITCH_OUT_GND_PINS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -1411,6 +1461,8 @@
 | CONST-152 | `source_sense` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-247 | `_jfet_kw` | keyword_classification | 20 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-259 | `postfilter_vd_and_dedup:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-1139 | `_SUPPLY_INPUT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1140 | `_REF_NET_SUPPLY_PINS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-265 | `detect_design_observations:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-175 | `obs` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-268 | `detect_design_observations:kw2` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
@@ -1419,6 +1471,7 @@
 | CONST-974 | `_SWITCH_INPUT_PINS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-975 | `_SWITCH_OUTPUT_PINS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-771 | `_MODULE_INTERNAL_RAIL_PATTERNS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1141 | `_INTERNAL_REG_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-458 | `MAX_HOPS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 
 ## skills/kicad/scripts/summarize_findings.py

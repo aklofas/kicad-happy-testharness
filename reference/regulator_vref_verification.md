@@ -103,7 +103,7 @@ Verified: 2026-03-31. Sources: TI/ADI/Maxim/Richtek/MPS/Diodes/ST/ON/Renesas pro
 | AP73 | 0.6V | AP7362/63 | Diodes datasheet |
 | AP2112 | 0.8V | AP2112 adj | Diodes datasheet |
 | AP3015 | 1.23V | AP3015A | Diodes datasheet |
-| LD1117/LDL1117/LD33 | 1.25V | LD1117 family | ST datasheet |
+| LD1117 | 1.25 V | LD1117 adjustable | ST DocID2572 Rev 38 Table 8 p14 |
 | NCP1117 | 1.25V | NCP1117 | ON Semi datasheet |
 
 ### Maxim / Renesas
