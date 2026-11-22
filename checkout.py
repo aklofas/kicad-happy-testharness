@@ -146,12 +146,13 @@ def pin_hash_in_repos_md(url: str, full_hash: str):
 
 # Corpus clones are attacker-shaped: a repo can bloat its default-branch tip or name its own
 # git-lfs endpoint in .lfsconfig. Skip LFS smudging (the analyzers never read LFS objects)
-# and bound every network git call.
+# and bound every network git call. A repo that went private answers with a credential
+# prompt, so never let git ask.
 CLONE_TIMEOUT_S = 600
 
 
 def corpus_git_env():
-    return {**os.environ, "GIT_LFS_SKIP_SMUDGE": "1"}
+    return {**os.environ, "GIT_LFS_SKIP_SMUDGE": "1", "GIT_TERMINAL_PROMPT": "0"}
 
 
 def clone_repo(url: str, dest: Path) -> bool:
