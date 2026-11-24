@@ -3192,6 +3192,29 @@ required tiers after the summary prints. A tool-gated test must be listed in
 must not depend on a tool being present (TH-097). A pin that re-keys baselines (scan coverage,
 test adoptions) is valid only for product bases at or after the gated candidate.
 
+### 26q. Multi-commit output-changing waves: commit-bound judge
+
+A product budget is path-level and first-match, so it cannot show that a moved record belongs to
+the commit that claims it. Run the gate with an empty draft budget (`--kind output-changing`), then
+locate and judge every moved record. The current tools are in `results/v303_w12d_gate_aux/` (Wave
+12d; earlier versions in the 12b / 12c aux dirs):
+
+1. `step/sKK/skills` = `git archive <commit> skills` per range commit, `step/commits.txt` = `k sha`.
+2. `moved_units.py ANALYZER OUT.jsonl` per analyzer, then `stepwise.py ANALYZER OUT.jsonl --jobs 16`:
+   per unit, bisect the range (only located steps are kept, gzipped). Every unit must end at the gate
+   candidate (`end_ok`); a step that fails to run is a run failure, not a change.
+3. `judge12d.py ANALYZER PREFIX`: each located step must be claimed by a class whose task's commits
+   (or the class's own `commit`) include that step, by kind, rule and top-level key. Rollups and
+   derived blocks ride with a claimed record of the same unit-step; chained analyzers fall back to
+   "downstream of the claimed input step". The loose tier (`~class`) counts records whose class names
+   the commit and key but not the record kind or field. Report it separately.
+4. `audit_paths.py ANALYZER OUT.json`: lists the strict claims that match a class only by top-level
+   key, and groups the loose tier by step and field. Read every group. A 0-residual judge is not
+   the verdict until those groups are read.
+
+Map the budget's task numbers to integrated SHAs by subject (`task_commits.py`) when lanes were
+cherry-picked without `-x`.
+
 ## Checklist 27: Era bump for a new analyzer era (v3.0 and beyond)
 
 When the analyzer ships a new era with material detector behavior changes,

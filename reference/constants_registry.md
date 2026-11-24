@@ -2,17 +2,17 @@
 
 *Auto-generated from `constants_registry.json` — do not edit manually.*
 
-**Last scan:** 2026-11-19T17:25:04.633214+00:00
+**Last scan:** 2026-11-24T09:21:29.147220+00:00
 
 ## Summary
 
 | Metric | Count |
 |--------|-------|
-| Total constants | 1130 |
-| Verified | 205 |
-| Unverified | 893 |
+| Total constants | 1172 |
+| Verified | 206 |
+| Unverified | 934 |
 | Stale (changed since verification) | 32 |
-| Critical risk | 6 |
+| Critical risk | 7 |
 | High risk | 15 |
 
 ## skills/bom/scripts/bom_fields.py
@@ -435,15 +435,32 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-1142 | `I2C_SDA_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1143 | `I2C_SCL_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1144 | `_I2C_LINE_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1145 | `_SAI_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1146 | `_SPI_SELECT_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1147 | `_SPI_CLOCK_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1148 | `_SPI_DATA_IN_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1149 | `_I2C_PIN_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1150 | `_DISPLAY_NET_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1151 | `_BRIDGED_PADS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1152 | `_CAN_SPLIT_PIN_NAMES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1153 | `CAN_H_PIN_NAMES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1154 | `CAN_L_PIN_NAMES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1155 | `_CAN_NUMBERED_LINE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-278 | `_PROTECTION_KEYWORDS` | keyword_classification | 32 | unverified | 0.5 | 0.0 | **high** (0.5) |
 | CONST-886 | `_DRIVER_PIN_TYPES` | standard | 3 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1086 | `_SAFETY_CLASS_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1156 | `_CLAMP_IC_WORDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1157 | `_names_clamp_ic:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-887 | `_PARALLEL_VALUE_NOUN` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-888 | `group` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-889 | `part` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1032 | `_ADDRESSABLE_LED_WORDS` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1033 | `_TVS_FAMILIES` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1034 | `_TVS_WORDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1158 | `TYPE_C_CC_CONTROLLERS` | datasheet_lookup | 27 | unverified | 0.7 | 0.0 | **critical** (0.7) |
 
 ## skills/kicad/scripts/diff_analysis.py
 
@@ -479,8 +496,13 @@
 | CONST-1035 | `iso_words` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-474 | `detect_isolation_barriers:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-166 | `detect_isolation_barriers:kw2` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
-| CONST-890 | `_INTEGRATED_MAG_KEYWORDS` | keyword_classification | 34 | unverified | 0.5 | 0.0 | **high** (0.5) |
-| CONST-475 | `eth_phy_keywords` | keyword_classification | 21 | verified | 0.4 | 0.0 | **low** (0.0) |
+| CONST-890 | `_INTEGRATED_MAG_KEYWORDS` | keyword_classification | 35 | unverified | 0.5 | 0.0 | **high** (0.5) |
+| CONST-1159 | `_MAG_JACK_WORDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1160 | `_NO_MAG_WORDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1161 | `_CENTRE_TAP_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1162 | `_ETH_PAIR_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1163 | `_ETH_PHY_WORDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-475 | `eth_phy_keywords` | keyword_classification | 16 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-476 | `magnetics_keywords` | keyword_classification | 9 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-167 | `detect_ethernet_interfaces:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-478 | `_eth_tx_rx_re` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
@@ -548,7 +570,6 @@
 | CONST-537 | `_DEBUG_CONNECTOR_KEYWORDS` | keyword_classification | 12 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-538 | `required` | keyword_classification | 4 | unverified | 0.3 | 0.1 | **medium** (0.3) |
 | CONST-540 | `_IDEAL_DIODE_KEYWORDS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-541 | `_USB_PD_KEYWORDS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-542 | `_POWER_IN_PINS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-543 | `_POWER_OUT_PINS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-544 | `_ENABLE_PINS` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -586,12 +607,13 @@
 | CONST-575 | `_SENSOR_INT_PINS` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-576 | `_SENSOR_SPI_PINS` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-577 | `_LEVEL_SHIFTER_KEYWORDS` | keyword_classification | 24 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-1164 | `_LOGIC_GATE_PATTERNS` | keyword_classification | 22 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-578 | `_VCCA_PINS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-579 | `_VCCB_PINS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-580 | `_LS_ENABLE_PINS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-581 | `_BIDIR_KEYWORDS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-582 | `_UNIDIR_KEYWORDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-583 | `_logic_gate_patterns` | keyword_classification | 22 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-1165 | `_DUAL_SUPPLY_PART` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-182 | `detect_level_shifters:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-585 | `_AUDIO_AMP_KEYWORDS` | keyword_classification | 18 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-587 | `_I2S_PINS` | keyword_classification | 13 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -739,6 +761,7 @@
 | CONST-367 | `classify_ic_function:kw12` | keyword_classification | 27 | unverified | 0.4 | 0.2 | **medium** (0.4) |
 | CONST-433 | `classify_ic_function:kw13` | keyword_classification | 22 | unverified | 0.4 | 0.2 | **medium** (0.4) |
 | CONST-437 | `classify_ic_function:kw14` | keyword_classification | 18 | unverified | 0.4 | 0.2 | **medium** (0.4) |
+| CONST-1166 | `_FOOTPRINT_SIZE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-472 | `classify_connector:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-473 | `classify_connector:kw2` | keyword_classification | 6 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-477 | `classify_connector:kw3` | keyword_classification | 5 | unverified | 0.3 | 0.2 | **medium** (0.3) |
@@ -794,6 +817,7 @@
 
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
+| CONST-1167 | `_SHEET_ID_PATH` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1087 | `_COMMA_DECIMAL` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1088 | `_P_DECIMAL` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1089 | `_PIN_NAMED_NET` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
@@ -840,31 +864,31 @@
 | CONST-839 | `LOAD_SWITCH_KEYWORDS` | keyword_classification | 32 | unverified | 0.5 | 0.0 | **high** (0.5) |
 | CONST-1046 | `_LOAD_SWITCH_PREFIX` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-800 | `_LOAD_SWITCH_WORDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-833 | `_REGULATOR_VREF` | datasheet_lookup | 155 | stale | 1.0 | 0.0 | **medium** (0.4) |
+| CONST-833 | `_REGULATOR_VREF` | datasheet_lookup | 155 | stale | 1.0 | 0.0 | **medium** (0.3) |
 | CONST-834 | `_LOAD_TYPE_KEYWORDS` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-967 | `_PACKAGE_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-968 | `_AMBIGUOUS_SUFFIXES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1003 | `_FIXED_SUFFIX_FAMILIES` | keyword_classification | 17 | stale | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-1047 | `_FIXED_OUTPUT_PARTS` | datasheet_lookup | 14 | verified | 0.7 | 0.1 | **medium** (0.3) |
-| CONST-1101 | `_SPX1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-1102 | `_SPX1117_FIXED_NAME` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1047 | `_FIXED_OUTPUT_PARTS` | datasheet_lookup | 14 | verified | 0.7 | 0.1 | **low** (0.1) |
+| CONST-1101 | `_SPX1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-1102 | `_SPX1117_FIXED_NAME` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
 | CONST-1048 | `_ADI_FIXED_CODES` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-1049 | `_ADI_FIXED_CODE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1050 | `_NCP1117_CODE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1051 | `_NCP1117_VOLTS` | keyword_classification | 9 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-1052 | `_NCP1117LP_VOLTS` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-1103 | `_NCP1117I_VOLTS` | keyword_classification | 3 | verified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-1104 | `_LD1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-1105 | `_LD1117_VOLTS` | keyword_classification | 5 | verified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-1106 | `_LD1117A_VOLTS` | keyword_classification | 3 | verified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-1107 | `_LDL1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-1108 | `_LDL1117_VOLTS` | keyword_classification | 7 | verified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-1109 | `_MIC23050_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-1110 | `_MIC23050_VOLTS` | keyword_classification | 4 | verified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-1111 | `_ST78_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-1112 | `_ST78_CODES` | keyword_classification | 6 | verified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-1113 | `_NEGATIVE_79XX` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.1) |
-| CONST-1114 | `_NEGATIVE_79XX_CODES` | keyword_classification | 8 | verified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1103 | `_NCP1117I_VOLTS` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1104 | `_LD1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-1105 | `_LD1117_VOLTS` | keyword_classification | 5 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1106 | `_LD1117A_VOLTS` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1107 | `_LDL1117_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-1108 | `_LDL1117_VOLTS` | keyword_classification | 7 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1109 | `_MIC23050_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-1110 | `_MIC23050_VOLTS` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1111 | `_ST78_CODE` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-1112 | `_ST78_CODES` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1113 | `_NEGATIVE_79XX` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-1114 | `_NEGATIVE_79XX_CODES` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-1053 | `_R78_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1054 | `_R78_CODE` | standard | 1 | stale | 0.1 | 0.0 | **low** (0.1) |
 | CONST-801 | `_LABEL_WORDS` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -881,6 +905,7 @@
 | CONST-1058 | `_PCHANNEL_FET_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1059 | `_NPN_BJT_PARTS` | keyword_classification | 50 | unverified | 0.5 | 0.0 | **high** (0.5) |
 | CONST-1060 | `_NPN_BJT_RE` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1168 | `_ANALOG_SWITCH_PN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1061 | `_SENSE_AMP_PN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1062 | `_INAMP_PN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1063 | `_INAMP_WORDS` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
@@ -1287,8 +1312,11 @@
 | CONST-112 | `_detect_sdio_buses:kw1` | keyword_classification | 10 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-234 | `can_keywords` | keyword_classification | 8 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-235 | `can_transceiver_kw` | keyword_classification | 12 | verified | 0.3 | 0.0 | **low** (0.0) |
+| CONST-1169 | `_detect_can_buses:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-236 | `_rs485_kw` | keyword_classification | 28 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-905 | `_CS_TOKEN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1170 | `_CS_PIN_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1171 | `_NOT_SELECT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-237 | `buses` | keyword_classification | 4 | verified | 0.3 | 0.0 | **low** (0.0) |
 | CONST-244 | `_diff_suffix_pairs` | unknown | 14 | verified | 0.0 | 0.0 | **low** (0.0) |
 | CONST-906 | `term` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -1358,6 +1386,7 @@
 | CONST-1129 | `_LED_TERMINAL_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1130 | `_MIN_LED_SERIES_OHMS` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-1131 | `_LED_DATA_PINS` | keyword_classification | 10 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1172 | `_NAME_WORD` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-057 | `ic_current_estimates` | datasheet_lookup | 48 | verified | 1.0 | 0.0 | **low** (0.0) |
 | CONST-1132 | `_die_color` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-058 | `rail_info` | keyword_classification | 3 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -1380,10 +1409,10 @@
 | CONST-1135 | `_USB_DATA_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1136 | `_USB_DEVICE_VBUS_MAX_UF` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
 | CONST-073 | `conn_checks` | heuristic_threshold | 4 | verified | 0.4 | 0.0 | **low** (0.0) |
-| CONST-114 | `_PD_CONTROLLER_KEYWORDS` | keyword_classification | 11 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1137 | `analyze_usb_compliance:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-115 | `r_info` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-075 | `esd_keywords` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
-| CONST-1137 | `analyze_usb_compliance:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
+| CONST-1173 | `analyze_usb_compliance:kw2` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-381 | `_uc_specs` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-076 | `all_checks` | heuristic_threshold | 3 | stale | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-077 | `rail_entry` | keyword_classification | 6 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -1393,13 +1422,18 @@
 | ID | Name | Category | # | Status | Impact | Overfit | Risk |
 |---|---|---|---|---|---|---|---|
 | CONST-652 | `_BOOTSTRAP_PIN_TOKENS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1174 | `_RETURN_NET_TOKENS` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-653 | `_VOUT_PIN_NAMES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1175 | `_CRYSTAL_MIN_HZ` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-1176 | `_CRYSTAL_MAX_HZ` | heuristic_threshold | 1 | unverified | 0.4 | 0.1 | **medium** (0.4) |
+| CONST-1177 | `_BARE_DECIMAL` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-434 | `_CRYSTAL_DEFAULT_CL` | keyword_classification | 17 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-654 | `_classify_divider_purpose:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-655 | `_classify_divider_purpose:kw2` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-656 | `_classify_divider_purpose:kw3` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-657 | `_classify_divider_purpose:kw4` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-124 | `divider` | keyword_classification | 6 | stale | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1178 | `_SOURCE_LIKE_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-909 | `part` | keyword_classification | 3 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-125 | `rc_entry` | keyword_classification | 8 | stale | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-126 | `lc_entry` | keyword_classification | 5 | stale | 0.3 | 0.0 | **medium** (0.3) |
@@ -1462,6 +1496,8 @@
 | CONST-247 | `_jfet_kw` | keyword_classification | 20 | verified | 0.4 | 0.0 | **low** (0.0) |
 | CONST-259 | `postfilter_vd_and_dedup:kw1` | keyword_classification | 3 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-1139 | `_SUPPLY_INPUT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1179 | `_STRAP_OUTPUT_PIN` | keyword_classification | 15 | unverified | 0.4 | 0.0 | **medium** (0.4) |
+| CONST-1180 | `_DATA_OUTPUT_PIN` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1140 | `_REF_NET_SUPPLY_PINS` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-265 | `detect_design_observations:kw1` | keyword_classification | 4 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-175 | `obs` | keyword_classification | 10 | verified | 0.3 | 0.0 | **low** (0.0) |
@@ -1495,11 +1531,19 @@
 | CONST-781 | `_INTERNAL_EN_PULLUP_REGULATOR_PREFIXES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-677 | `validate_pullups:kw1` | keyword_classification | 6 | unverified | 0.3 | 0.2 | **medium** (0.3) |
 | CONST-783 | `_VOLTAGE_THRESHOLDS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1181 | `_IO_SUPPLY_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1182 | `_SIDE_SUPPLY_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1183 | `_SUPPLY_INPUT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1184 | `_SUPPLY_PIN_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1185 | `_SUPPLY_NAMED_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-911 | `_EN_PIN_PATTERNS` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-912 | `_PG_PIN_PATTERNS` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-1014 | `_is_regulator_like:kw1` | keyword_classification | 18 | unverified | 0.4 | 0.2 | **medium** (0.4) |
 | CONST-976 | `_DATA_PAIR_NAME` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-1015 | `_OD_STATUS_NAMES` | keyword_classification | 5 | unverified | 0.3 | 0.0 | **medium** (0.3) |
+| CONST-1186 | `_TRISTATE_STAT_PARTS` | standard | 1 | verified | 0.1 | 0.0 | **low** (0.0) |
+| CONST-1187 | `_DRIVING_PIN_TYPES` | standard | 5 | unverified | 0.1 | 0.0 | **low** (0.1) |
+| CONST-1188 | `_SERIAL_OUT_PIN` | standard | 1 | unverified | 0.1 | 0.0 | **low** (0.1) |
 | CONST-786 | `_I2C_IC_KEYWORDS` | keyword_classification | 51 | unverified | 0.5 | 0.0 | **high** (0.5) |
 | CONST-787 | `_I2C_SDA_NAMES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-788 | `_I2C_SCL_NAMES` | keyword_classification | 7 | unverified | 0.3 | 0.0 | **medium** (0.3) |
@@ -1507,8 +1551,6 @@
 | CONST-790 | `_SPI_IC_KEYWORDS` | keyword_classification | 29 | unverified | 0.4 | 0.0 | **medium** (0.4) |
 | CONST-791 | `_SPI_CS_NAMES` | keyword_classification | 9 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-792 | `_CAN_IC_KEYWORDS` | keyword_classification | 19 | unverified | 0.4 | 0.0 | **medium** (0.4) |
-| CONST-793 | `_CAN_H_NAMES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
-| CONST-794 | `_CAN_L_NAMES` | keyword_classification | 4 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-795 | `_USB_DP_NAMES` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-796 | `_USB_DM_NAMES` | keyword_classification | 6 | unverified | 0.3 | 0.0 | **medium** (0.3) |
 | CONST-797 | `_ENABLE_PIN_NAMES` | keyword_classification | 8 | unverified | 0.3 | 0.0 | **medium** (0.3) |

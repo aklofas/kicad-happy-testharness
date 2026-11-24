@@ -16,6 +16,14 @@ sys.path.insert(0, str(MAIN_REPO_ROOT / "skills" / "datasheets"))
 # Helpers
 # ---------------------------------------------------------------------------
 
+def _domains(voltage_by_ref):
+    """A stand-in for validation_detectors._ic_logic_domains: one logic level per IC."""
+    def fake(ctx_arg, ref):
+        v = voltage_by_ref(ref)
+        return ((v,), frozenset((v,)), {}, False) if v is not None else ((), frozenset(), {}, False)
+    return fake
+
+
 def _make_ctx(source="test"):
     """Minimal AnalysisContext with cache_dir attribute."""
     from kicad_types import build_analysis_context
@@ -39,7 +47,7 @@ def test_vm_001_helper_smoke_missing_mpn(tmp_path):
 def test_vm_001_domain_crossing_emits_heuristic(tmp_path):
     """Two ICs at different rail voltages sharing a signal net emits VM-001 at heuristic.
 
-    Uses mocked get_unique_ics and _estimate_rail_voltage_for_ic to control
+    Uses mocked get_unique_ics and _ic_logic_domains to control
     fixture without building full net topology. Verifies:
     - confidence='heuristic' preserved
     - evidence_source='topology' preserved
@@ -56,7 +64,7 @@ def test_vm_001_domain_crossing_emits_heuristic(tmp_path):
         {'reference': 'U2', 'mpn': 'SN74HC', 'value': 'SN74HC'},
     ]
 
-    def fake_voltage(ctx_arg, ref):
+    def fake_voltage(ref):
         return {'U1': 3.3, 'U2': 5.0}.get(ref)
 
     # A shared signal net with pins from both ICs
@@ -78,7 +86,7 @@ def test_vm_001_domain_crossing_emits_heuristic(tmp_path):
     }
 
     with patch.object(validation_detectors, 'get_unique_ics', return_value=fake_ics), \
-         patch.object(validation_detectors, '_estimate_rail_voltage_for_ic', side_effect=fake_voltage), \
+         patch.object(validation_detectors, '_ic_logic_domains', side_effect=_domains(fake_voltage)), \
          patch.object(validation_detectors, 'get_facts', return_value=None), \
          patch.object(validation_detectors, 'get_regulator_features', return_value=None):
         findings = validation_detectors.validate_voltage_levels(ctx)
@@ -117,7 +125,7 @@ def test_vm_001_probe_wiring_get_facts_called(tmp_path):
         {'reference': 'U1', 'mpn': 'LM358', 'value': 'LM358'},
     ]
 
-    def fake_voltage(ctx_arg, ref):
+    def fake_voltage(ref):
         return 5.0
 
     ctx.nets = {}
@@ -125,7 +133,7 @@ def test_vm_001_probe_wiring_get_facts_called(tmp_path):
 
     mock_get_facts = MagicMock(return_value=None)
     with patch.object(validation_detectors, 'get_unique_ics', return_value=fake_ics), \
-         patch.object(validation_detectors, '_estimate_rail_voltage_for_ic', side_effect=fake_voltage), \
+         patch.object(validation_detectors, '_ic_logic_domains', side_effect=_domains(fake_voltage)), \
          patch.object(validation_detectors, 'get_facts', mock_get_facts):
         validation_detectors.validate_voltage_levels(ctx)
 
@@ -157,7 +165,7 @@ def test_vm_001_facts_present_confidence_stays_heuristic(tmp_path):
         {'reference': 'U2', 'mpn': 'SN74HC', 'value': 'SN74HC'},
     ]
 
-    def fake_voltage(ctx_arg, ref):
+    def fake_voltage(ref):
         return {'U1': 3.3, 'U2': 5.0}.get(ref)
 
     ctx.nets = {
@@ -178,7 +186,7 @@ def test_vm_001_facts_present_confidence_stays_heuristic(tmp_path):
     }
 
     with patch.object(validation_detectors, 'get_unique_ics', return_value=fake_ics), \
-         patch.object(validation_detectors, '_estimate_rail_voltage_for_ic', side_effect=fake_voltage), \
+         patch.object(validation_detectors, '_ic_logic_domains', side_effect=_domains(fake_voltage)), \
          patch.object(validation_detectors, 'get_facts', return_value=fake_facts), \
          patch.object(validation_detectors, 'get_regulator_features', return_value=None):
         findings = validation_detectors.validate_voltage_levels(ctx)
